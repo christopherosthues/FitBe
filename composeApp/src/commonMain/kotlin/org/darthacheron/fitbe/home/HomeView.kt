@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import kotlinx.serialization.Serializable
 import org.darthacheron.fitbe.dependencies.MyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -16,7 +17,7 @@ object Home
 
 @Composable
 @Preview
-fun HomeView() {
+fun HomeView(navController: NavController) {
     val viewModel = koinViewModel<MyViewModel>()
     Box(
         modifier = Modifier.fillMaxSize(),
