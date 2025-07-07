@@ -4,7 +4,7 @@ import org.darthacheron.fitbe.dependencies.MyRepository
 import org.darthacheron.fitbe.dependencies.MyRepositoryImp
 import org.darthacheron.fitbe.dependencies.MyViewModel
 import org.darthacheron.fitbe.nutrition.NutritionOverviewViewModel
-import org.darthacheron.fitbe.nutrition.WaterConsumptionViewModel
+import org.darthacheron.fitbe.nutrition.water.WaterConsumptionViewModel
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.koin.core.module.Module
