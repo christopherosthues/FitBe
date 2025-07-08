@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -25,11 +26,14 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_home
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.Page
+import org.darthacheron.fitbe.nutrition.water.WaterIntakeViewModel
+import org.darthacheron.fitbe.nutrition.water.WaterScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinApplication
+import org.koin.compose.viewmodel.koinViewModel
 
 sealed class BottomBarNavigationItem(
     val icon: DrawableResource,
@@ -37,13 +41,13 @@ sealed class BottomBarNavigationItem(
     val route: String
 ) {
     data object Home : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Home", "/home")
-    data object Page1 : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Page 1", "/page1")
+    data object Water : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Water", "/water")
     data object Page2 : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Page 2", "/page2")
 }
 
 val items = listOf(
     BottomBarNavigationItem.Home,
-    BottomBarNavigationItem.Page1,
+    BottomBarNavigationItem.Water,
     BottomBarNavigationItem.Page2
 )
 
@@ -91,17 +95,21 @@ fun App() {
                     }
                 }
             }) {
-
+                padding ->
                 NavHost(
                     navController = navHostController,
-                    startDestination = BottomBarNavigationItem.Home.route
+                    startDestination = BottomBarNavigationItem.Home.route,
+                    modifier = Modifier.padding(padding)
                 ) {
                     composable(route = BottomBarNavigationItem.Home.route) {
                         HomeView(
                             navHostController
                         )
                     }
-                    composable(route = BottomBarNavigationItem.Page1.route) { Page(navHostController) }
+                    composable(route = BottomBarNavigationItem.Water.route) {
+                        val viewModel = koinViewModel<WaterIntakeViewModel>()
+                        WaterScreen(viewModel)
+                    }
                     composable(route = BottomBarNavigationItem.Page2.route) { Page(navHostController) }
                 }
 
