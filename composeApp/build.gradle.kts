@@ -104,6 +104,12 @@ kotlin {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
+    }
+}
+
 android {
     namespace = "org.darthacheron.fitbe"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

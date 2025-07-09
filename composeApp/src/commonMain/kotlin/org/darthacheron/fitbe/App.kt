@@ -1,12 +1,9 @@
 package org.darthacheron.fitbe
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -21,13 +18,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.savedstate.savedState
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_home
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.Page
-import org.darthacheron.fitbe.nutrition.water.WaterIntakeViewModel
-import org.darthacheron.fitbe.nutrition.water.WaterScreen
+import org.darthacheron.fitbe.nutrition.beverages.BeverageViewModel
+import org.darthacheron.fitbe.nutrition.beverages.BeverageView
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.jetbrains.compose.resources.DrawableResource
@@ -41,13 +37,13 @@ sealed class BottomBarNavigationItem(
     val route: String
 ) {
     data object Home : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Home", "/home")
-    data object Water : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Water", "/water")
+    data object Beverage : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Beverage", "/beverage")
     data object Page2 : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Page 2", "/page2")
 }
 
 val items = listOf(
     BottomBarNavigationItem.Home,
-    BottomBarNavigationItem.Water,
+    BottomBarNavigationItem.Beverage,
     BottomBarNavigationItem.Page2
 )
 
@@ -106,9 +102,9 @@ fun App() {
                             navHostController
                         )
                     }
-                    composable(route = BottomBarNavigationItem.Water.route) {
-                        val viewModel = koinViewModel<WaterIntakeViewModel>()
-                        WaterScreen(viewModel)
+                    composable(route = BottomBarNavigationItem.Beverage.route) {
+                        val viewModel = koinViewModel<BeverageViewModel>()
+                        BeverageView(Modifier.padding(padding), viewModel)
                     }
                     composable(route = BottomBarNavigationItem.Page2.route) { Page(navHostController) }
                 }
