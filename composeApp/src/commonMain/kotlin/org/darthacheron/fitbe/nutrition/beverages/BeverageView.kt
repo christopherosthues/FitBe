@@ -10,8 +10,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
@@ -52,6 +55,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_beverage
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.PI
@@ -94,7 +98,16 @@ fun BeverageView(modifier: Modifier, beverageViewModel: BeverageViewModel) {
         }
         beverages.forEach {
             item {
-                Text(text = "${it.amount} ${it.unit} ${it.beverage}")
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Icon(
+                        painterResource(it.unit.iconResource()),
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                        Text(text = it.localizedString())
+                }
             }
         }
     }
@@ -218,6 +231,7 @@ fun AddBeverageDialog(
                 Spacer(Modifier.height(8.dp))
 
                 DropdownMenuWithSelected(
+                    amount = amountText.toIntOrNull() ?: 0,
                     selectedOption = selectedUnit,
                     onOptionSelected = { selectedUnit = it }
                 )
@@ -241,6 +255,7 @@ fun AddBeverageDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownMenuWithSelected(
+    amount: Int,
     selectedOption: FluidUnit,
     onOptionSelected: (FluidUnit) -> Unit
 ) {
@@ -251,7 +266,8 @@ fun DropdownMenuWithSelected(
         expanded = isExpanded,
         onExpandedChange = { isExpanded = it }
     ) {
-        TextField(value = selectedOption.toString(),
+        TextField(
+            value = selectedOption.localizedString(amount),
             onValueChange = {},
             readOnly = true,
             trailingIcon = {
@@ -268,8 +284,9 @@ fun DropdownMenuWithSelected(
         unitOptions.forEach { option ->
             DropdownMenuItem(
                 text = {
-                    Text(option.toString())
+                    Text(option.localizedString(amount))
                 },
+                leadingIcon = { Icon(painterResource(option.iconResource()), contentDescription = null) },
                 onClick = {
                     onOptionSelected(option)
                     isExpanded = false

@@ -1,3 +1,51 @@
 <resources>
     <string name="add_beverage">Add beverage</string>
+    <plurals name="fluid_unit_cup">
+        <item quantity="zero">cups</item>
+        <item quantity="one">cup</item>
+        <item quantity="other">cups</item>
+    </plurals>
+    <plurals name="fluid_unit_small_glass">
+        <item quantity="zero">small glasses</item>
+        <item quantity="one">small glass</item>
+        <item quantity="other">small glasses</item>
+    </plurals>
+    <plurals name="fluid_unit_normal_glass">
+        <item quantity="zero">normal glasses</item>
+        <item quantity="one">normal glass</item>
+        <item quantity="other">normal glasses</item>
+    </plurals>
+    <plurals name="fluid_unit_large_glass">
+        <item quantity="zero">large glasses</item>
+        <item quantity="one">large glass</item>
+        <item quantity="other">large glasses</item>
+    </plurals>
+    <string name="fluid_unit_milliliter">ml</string>
+    <string name="fluid_unit_centiliter">cl</string>
+    <string name="fluid_unit_deciliter">dl</string>
+    <string name="fluid_unit_liter">l</string>
+    <plurals name="beverage_in_cup">
+        <item quantity="zero">%1$d cups %2$s</item>
+        <item quantity="one">%1$d cup %2$s</item>
+        <item quantity="other">%1$d cups %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_small_glass">
+        <item quantity="zero">%1$d small glasses %2$s</item>
+        <item quantity="one">%1$d small glass %2$s</item>
+        <item quantity="other">%1$d small glasses %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_normal_glass">
+        <item quantity="zero">%1$d normal glasses %2$s</item>
+        <item quantity="one">%1$d normal glass %2$s</item>
+        <item quantity="other">%1$d normal glasses %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_large_glass">
+        <item quantity="zero">%1$d large glasses %2$s</item>
+        <item quantity="one">%1$d large glass %2$s</item>
+        <item quantity="other">%1$d large glasses %2$s</item>
+    </plurals>
+    <string name="beverage_in_milliliter">%1$d ml %2$s</string>
+    <string name="beverage_in_centiliter">%1$d cl %2$s</string>
+    <string name="beverage_in_deciliter">%1$d dl %2$s</string>
+    <string name="beverage_in_liter">%1$d l %2$s</string>
 </resources>

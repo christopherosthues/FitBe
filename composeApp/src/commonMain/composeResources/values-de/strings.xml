@@ -1,3 +1,51 @@
 <resources>
     <string name="add_beverage">Getr\u00e4nk hinzuf\u00fcgen</string>
+    <plurals name="fluid_unit_cup">
+        <item quantity="zero">Tassen</item>
+        <item quantity="one">Tasse</item>
+        <item quantity="other">Tassen</item>
+    </plurals>
+    <plurals name="fluid_unit_small_glass">
+        <item quantity="zero">kleine Gl\u00e4ser</item>
+        <item quantity="one">kleines Glas</item>
+        <item quantity="other">kleine Gl\u00e4ser</item>
+    </plurals>
+    <plurals name="fluid_unit_normal_glass">
+        <item quantity="zero">normale Gl\u00e4ser</item>
+        <item quantity="one">normales Glas</item>
+        <item quantity="other">normale Gl\u00e4ser</item>
+    </plurals>
+    <plurals name="fluid_unit_large_glass">
+        <item quantity="zero">gro\u00dfe Gl\u00e4ser</item>
+        <item quantity="one">gro\u00dfes Glas</item>
+        <item quantity="other">gro\u00dfe Gl\u00e4ser</item>
+    </plurals>
+    <string name="fluid_unit_milliliter">ml</string>
+    <string name="fluid_unit_centiliter">cl</string>
+    <string name="fluid_unit_deciliter">dl</string>
+    <string name="fluid_unit_liter">l</string>
+    <plurals name="beverage_in_cup">
+        <item quantity="zero">%1$d Tassen %2$s</item>
+        <item quantity="one">%1$d Tasse %2$s</item>
+        <item quantity="other">%1$d Tassen %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_small_glass">
+        <item quantity="zero">%1$d kleine Gl\u00e4ser %2$s</item>
+        <item quantity="one">%1$d kleines Glas %2$s</item>
+        <item quantity="other">%1$d kleine Gl\u00e4ser %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_normal_glass">
+        <item quantity="zero">%1$d normale Gl\u00e4ser %2$s</item>
+        <item quantity="one">%1$d normales Glas %2$s</item>
+        <item quantity="other">%1$d normale Gl\u00e4ser %2$s</item>
+    </plurals>
+    <plurals name="beverage_in_large_glass">
+        <item quantity="zero">%1$d gro\u00dfe Gl\u00e4ser %2$s</item>
+        <item quantity="one">%1$d gro\u00dfes Glas %2$s</item>
+        <item quantity="other">%1$d gro\u00dfe Gl\u00e4ser %2$s</item>
+    </plurals>
+    <string name="beverage_in_milliliter">%1$d ml %2$s</string>
+    <string name="beverage_in_centiliter">%1$d cl %2$s</string>
+    <string name="beverage_in_deciliter">%1$d dl %2$s</string>
+    <string name="beverage_in_liter">%1$d l %2$s</string>
 </resources>
