@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition.beverages
+package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
@@ -10,14 +10,14 @@ import fitbe.composeapp.generated.resources.beverage_in_liter
 import fitbe.composeapp.generated.resources.beverage_in_milliliter
 import fitbe.composeapp.generated.resources.beverage_in_normal_glass
 import fitbe.composeapp.generated.resources.beverage_in_small_glass
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.Centiliter
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.Cup
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.Deciliter
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.LargeGlass
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.Liter
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.Milliliter
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.NormalGlass
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit.SmallGlass
+import org.darthacheron.fitbe.health.beverages.FluidUnit.Centiliter
+import org.darthacheron.fitbe.health.beverages.FluidUnit.Cup
+import org.darthacheron.fitbe.health.beverages.FluidUnit.Deciliter
+import org.darthacheron.fitbe.health.beverages.FluidUnit.LargeGlass
+import org.darthacheron.fitbe.health.beverages.FluidUnit.Liter
+import org.darthacheron.fitbe.health.beverages.FluidUnit.Milliliter
+import org.darthacheron.fitbe.health.beverages.FluidUnit.NormalGlass
+import org.darthacheron.fitbe.health.beverages.FluidUnit.SmallGlass
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi

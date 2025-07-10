@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.database
 
 import androidx.room.TypeConverter
-import org.darthacheron.fitbe.nutrition.beverages.FluidUnit
+import org.darthacheron.fitbe.health.beverages.FluidUnit
 
 class FluidUnitConverter {
     @TypeConverter

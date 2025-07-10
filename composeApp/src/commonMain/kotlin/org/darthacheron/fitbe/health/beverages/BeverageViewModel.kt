@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition.beverages
+package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

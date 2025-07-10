@@ -6,9 +6,9 @@ import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.dependencies.MyRepository
 import org.darthacheron.fitbe.dependencies.MyRepositoryImp
 import org.darthacheron.fitbe.dependencies.MyViewModel
-import org.darthacheron.fitbe.nutrition.NutritionOverviewViewModel
-import org.darthacheron.fitbe.nutrition.beverages.BeverageRepository
-import org.darthacheron.fitbe.nutrition.beverages.BeverageViewModel
+import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
+import org.darthacheron.fitbe.health.beverages.BeverageRepository
+import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.koin.core.module.Module

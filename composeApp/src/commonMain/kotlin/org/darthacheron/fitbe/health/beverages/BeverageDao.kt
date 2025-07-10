@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition.beverages
+package org.darthacheron.fitbe.health.beverages
 
 import androidx.room.Dao
 import androidx.room.Query

@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition.beverages
+package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

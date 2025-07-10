@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition.beverages
+package org.darthacheron.fitbe.health.beverages
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

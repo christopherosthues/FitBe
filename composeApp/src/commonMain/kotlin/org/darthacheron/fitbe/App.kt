@@ -22,8 +22,8 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_home
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.Page
-import org.darthacheron.fitbe.nutrition.beverages.BeverageViewModel
-import org.darthacheron.fitbe.nutrition.beverages.BeverageView
+import org.darthacheron.fitbe.health.beverages.BeverageViewModel
+import org.darthacheron.fitbe.health.beverages.BeverageView
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.jetbrains.compose.resources.DrawableResource

@@ -4,8 +4,8 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import org.darthacheron.fitbe.nutrition.beverages.BeverageDao
-import org.darthacheron.fitbe.nutrition.beverages.BeverageEntity
+import org.darthacheron.fitbe.health.beverages.BeverageDao
+import org.darthacheron.fitbe.health.beverages.BeverageEntity
 
 @Database(entities = [BeverageEntity::class], version = 1)
 @TypeConverters(FluidUnitConverter::class, UuidConverter::class)

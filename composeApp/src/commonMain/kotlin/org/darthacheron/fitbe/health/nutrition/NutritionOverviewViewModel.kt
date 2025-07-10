@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.nutrition
+package org.darthacheron.fitbe.health.nutrition
 
 import androidx.lifecycle.ViewModel
 
