@@ -10,6 +10,6 @@ interface BeverageDao {
     @Upsert
     suspend fun upsertDrink(intake: BeverageEntity)
 
-    @Query("SELECT * FROM beverages WHERE date = :today")
+    @Query("SELECT * FROM beverages WHERE dateUtc = :today")
     fun getTodayDrinks(today: String): Flow<List<BeverageEntity>>
 }

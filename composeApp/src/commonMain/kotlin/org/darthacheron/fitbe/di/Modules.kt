@@ -9,6 +9,8 @@ import org.darthacheron.fitbe.dependencies.MyViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
+import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
+import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.koin.core.module.Module
@@ -22,6 +24,7 @@ expect val platformModule: Module
 val sharedModule = module {
     singleOf(::MyRepositoryImp).bind<MyRepository>()
     singleOf(::BeverageRepository)
+    singleOf(::SleepRepository)
 
     single {
         get<DatabaseFactory>().create()
@@ -29,10 +32,12 @@ val sharedModule = module {
             .build()
     }
     single { get<FitBeDatabase>().waterConsumptionDao }
+    single { get<FitBeDatabase>().sleepDao }
 
     viewModelOf(::MyViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::BeverageViewModel)
+    viewModelOf(::SleepOverviewViewModel)
 }

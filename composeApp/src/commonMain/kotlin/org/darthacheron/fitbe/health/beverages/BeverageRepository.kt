@@ -21,7 +21,7 @@ class BeverageRepository(private val dao: BeverageDao) {
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun addDrink(amount: Int, beverage: String, unit: FluidUnit) {
-        dao.upsertDrink(BeverageEntity(date = today, amount = amount, beverage = beverage, unit = unit))
+        dao.upsertDrink(BeverageEntity(dateUtc = today, amount = amount, beverage = beverage, unit = unit))
     }
 }
 
@@ -29,8 +29,8 @@ class BeverageRepository(private val dao: BeverageDao) {
 fun BeverageEntity.toDomain(): Beverage {
     return Beverage(
         id = id,
-        dateUtc = date,
-        dateLocal = LocalDate.parse(date).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
+        dateUtc = dateUtc,
+        dateLocal = LocalDate.parse(dateUtc).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
         amount = amount,
         beverage = beverage,
         unit = unit
@@ -42,8 +42,8 @@ fun BeverageEntity?.toDomainOrNull(): Beverage? {
     return this?.let {
         Beverage(
             id = id,
-            dateUtc = date,
-            dateLocal = LocalDate.parse(date).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
+            dateUtc = dateUtc,
+            dateLocal = LocalDate.parse(dateUtc).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
             amount = it.amount,
             beverage = beverage,
             unit = unit

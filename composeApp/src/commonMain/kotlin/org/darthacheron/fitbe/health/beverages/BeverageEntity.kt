@@ -13,7 +13,7 @@ import kotlin.uuid.Uuid
 @Entity(tableName = "beverages")
 data class BeverageEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
-    val date: String = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toString(),
+    val dateUtc: String = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.toString(),
     val amount: Int,
     val beverage: String,
     val unit: FluidUnit
