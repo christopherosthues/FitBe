@@ -20,7 +20,7 @@ class BeverageRepository(private val dao: BeverageDao) {
         .map { beverageEntities -> beverageEntities.map { it.toDomain() } }
 
     @OptIn(ExperimentalUuidApi::class)
-    suspend fun addDrink(amount: Int, beverage: String, unit: FluidUnit) {
+    suspend fun addBeverage(amount: Int, beverage: String, unit: FluidUnit) {
         dao.upsertDrink(BeverageEntity(dateUtc = today, amount = amount, beverage = beverage, unit = unit))
     }
 }

@@ -90,6 +90,7 @@ kotlin {
             implementation(libs.kotlinx.dateime)
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.koala.plot)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

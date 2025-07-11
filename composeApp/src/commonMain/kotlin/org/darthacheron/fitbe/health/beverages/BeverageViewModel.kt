@@ -13,9 +13,9 @@ class BeverageViewModel(private val repository: BeverageRepository) : ViewModel(
         listOf()
     )
 
-    fun setIntake(amount: Int, unit: FluidUnit, beverage: String) {
+    fun addBeverage(amount: Int, unit: FluidUnit, beverage: String) {
         viewModelScope.launch {
-            repository.addDrink(amount = amount, beverage =  beverage, unit = unit)
+            repository.addBeverage(amount = amount, beverage =  beverage, unit = unit)
         }
     }
 }

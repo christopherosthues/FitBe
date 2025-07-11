@@ -8,6 +8,7 @@ import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
+import org.darthacheron.fitbe.health.weight.BodyWeightDao
 
 @Database(entities = [BeverageEntity::class, SleepEntity::class], version = 1)
 @TypeConverters(FluidUnitConverter::class, UuidConverter::class, DateConverter::class)
@@ -15,6 +16,7 @@ import org.darthacheron.fitbe.health.sleep.SleepEntity
 abstract class FitBeDatabase : RoomDatabase() {
     abstract val waterConsumptionDao: BeverageDao
     abstract val sleepDao: SleepDao
+    abstract val bodyWeightDao: BodyWeightDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

@@ -10,5 +10,4 @@ data class Sleep(
     val minutes: Int,
     val dateUtc: String,
     val dateLocal: String,
-) {
-}
+)

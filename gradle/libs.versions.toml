@@ -23,6 +23,7 @@ kotlinSerialization = "1.9.0"
 ksp = "2.2.0-2.0.2"
 sqlite = "2.5.2"
 room = "2.7.2"
+koala-plot = "0.9.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +55,8 @@ kotlinx-dateime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+koala-plot = { module = "io.github.koalaplot:koalaplot-core", version.ref = "koala-plot" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -116,7 +116,7 @@ fun BeverageView(modifier: Modifier, beverageViewModel: BeverageViewModel) {
         AddBeverageDialog(
             initialAmount = 0,
             onSet = { amount, unit, beverage ->
-                beverageViewModel.setIntake(amount, unit, beverage)
+                beverageViewModel.addBeverage(amount, unit, beverage)
                 showDialog = false
             },
             onDismiss = { showDialog = false }

@@ -24,6 +24,8 @@ import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.Page
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
+import org.darthacheron.fitbe.health.sleep.SleepOverviewView
+import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import org.jetbrains.compose.resources.DrawableResource
@@ -38,13 +40,13 @@ sealed class BottomBarNavigationItem(
 ) {
     data object Home : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Home", "/home")
     data object Beverage : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Beverage", "/beverage")
-    data object Page2 : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Page 2", "/page2")
+    data object Sleep : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Sleep", "/sleep")
 }
 
 val items = listOf(
     BottomBarNavigationItem.Home,
     BottomBarNavigationItem.Beverage,
-    BottomBarNavigationItem.Page2
+    BottomBarNavigationItem.Sleep
 )
 
 @Composable
@@ -106,7 +108,9 @@ fun App() {
                         val viewModel = koinViewModel<BeverageViewModel>()
                         BeverageView(Modifier.padding(padding), viewModel)
                     }
-                    composable(route = BottomBarNavigationItem.Page2.route) { Page(navHostController) }
+                    composable(route = BottomBarNavigationItem.Sleep.route) {
+                        val viewModel = koinViewModel<SleepViewModel>()
+                        SleepOverviewView(viewModel) }
                 }
 
             }
