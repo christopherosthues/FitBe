@@ -31,7 +31,7 @@ val sharedModule = module {
             .setDriver(BundledSQLiteDriver())
             .build()
     }
-    single { get<FitBeDatabase>().waterConsumptionDao }
+    single { get<FitBeDatabase>().beverageDao }
     single { get<FitBeDatabase>().sleepDao }
     single { get<FitBeDatabase>().bodyWeightDao }
 

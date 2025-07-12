@@ -5,13 +5,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 
 class SleepRepository(private val dao: SleepDao) {
-    fun getSleepsBetween(start: Long, end: Long): Flow<List<Sleep>> =
-        dao.getSleepsBetween(start, end)
+    @OptIn(ExperimentalTime::class)
+    fun getSleepsBetween(start: Instant, end: Instant): Flow<List<Sleep>> {
+        val dateSpan = toDateSpan(start, end)
+        return dao.getSleepsBetween(dateSpan.first.toString(), dateSpan.second.toString())
             .map { sleepEntities -> sleepEntities.map { it.toDomain() } }
+    }
 
     suspend fun addSleep(sleep: SleepEntity) = dao.upsertSleep(sleep)
 }
@@ -21,7 +28,7 @@ fun SleepEntity.toDomain(): Sleep {
     return Sleep(
         id = id,
         dateUtc = dateUtc,
-        dateLocal = LocalDate.parse(dateUtc).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
+        dateLocal = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
         minutes = minutes,
         hours = hours,
     )

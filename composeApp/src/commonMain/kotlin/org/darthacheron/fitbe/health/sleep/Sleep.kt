@@ -1,13 +1,15 @@
 package org.darthacheron.fitbe.health.sleep
 
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Sleep(
     val id: Uuid,
     val hours: Int,
     val minutes: Int,
-    val dateUtc: String,
-    val dateLocal: String,
+    val dateUtc: Instant,
+    val dateLocal: Instant,
 )

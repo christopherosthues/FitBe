@@ -20,14 +20,15 @@ import org.darthacheron.fitbe.health.beverages.FluidUnit.NormalGlass
 import org.darthacheron.fitbe.health.beverages.FluidUnit.SmallGlass
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Beverage(
     val id: Uuid,
-    val dateUtc: String,
-    val dateLocal: String,
+    val dateUtc: Instant,
     val amount: Int,
     val beverage: String,
     val unit: FluidUnit

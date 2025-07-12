@@ -10,13 +10,23 @@ import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
 class DateConverter {
+//    @TypeConverter
+//    fun fromDate(value: String): Long {
+//        return LocalDate.parse(value).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+//    }
+//
+//    @TypeConverter
+//    fun toDate(value: Long): String {
+//        return Instant.fromEpochMilliseconds(value).toLocalDateTime(TimeZone.UTC).date.toString()
+//    }
+
     @TypeConverter
-    fun fromDate(value: String): Long {
-        return LocalDate.parse(value).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+    fun fromString(value: String?): Instant? {
+        return value?.let { Instant.parse(it) } // Parses UTC ISO 8601
     }
 
     @TypeConverter
-    fun toDate(value: Long): String {
-        return Instant.fromEpochMilliseconds(value).toLocalDateTime(TimeZone.UTC).date.toString()
+    fun instantToString(instant: Instant?): String? {
+        return instant?.toString() // Converts to UTC ISO 8601 string
     }
 }
