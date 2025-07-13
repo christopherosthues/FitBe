@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -16,20 +15,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
@@ -54,8 +60,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
+import androidx.room.util.TableInfo
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
+import fitbe.composeapp.generated.resources.ic_add
+import fitbe.composeapp.generated.resources.ic_arrow_back
+import fitbe.composeapp.generated.resources.ic_arrow_forward
+import fitbe.composeapp.generated.resources.ic_arrow_left
+import fitbe.composeapp.generated.resources.ic_arrow_right
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_edit_calendar
 import io.github.koalaplot.core.ChartLayout
@@ -81,32 +93,87 @@ import kotlin.time.Instant
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun SleepOverviewView(viewModel: SleepViewModel) {
+fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
     val sleeps by viewModel.sleeps.collectAsState()
     val viewType by viewModel.viewType.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize()
-        .padding(16.dp)) {
-        Row {
-            Button(onClick = { viewModel.setViewType(SleepViewType.WEEK) }) { Text("Week") }
-            Button(onClick = { viewModel.setViewType(SleepViewType.MONTH) }) { Text("Month") }
-            Button(onClick = { viewModel.setViewType(SleepViewType.YEAR) }) { Text("Year") }
+//    Column(modifier = modifier.fillMaxSize()
+//        .padding(16.dp)) {
+////        Row {
+////            Button(onClick = { viewModel.setViewType(SleepViewType.WEEK) }) { Text("Week") }
+////            Button(onClick = { viewModel.setViewType(SleepViewType.MONTH) }) { Text("Month") }
+////            Button(onClick = { viewModel.setViewType(SleepViewType.YEAR) }) { Text("Year") }
+////        }
+//        Button(onClick = { showAddDialog = true }) { Text("Add Sleep") }
+////        Spacer(Modifier.height(8.dp))
+////        Row {
+////            Text("From: $startDate")
+////            Spacer(Modifier.width(8.dp))
+////            Text("To: $endDate")
+////        }
+////        Spacer(Modifier.height(8.dp))
+//        if (!sleeps.isEmpty()) {
+//            Plot(sleeps)
+//        }
+//    }
+    Column() {
+        Row() {
+            TextButton(
+                onClick = {},
+            ) {
+                Row() {
+                    Text(text = startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString())
+                    Icon(
+                        painterResource(Res.drawable.ic_date_range),
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            }
+            TextButton(
+                onClick = {},
+            ) {
+                Row() {
+                    Text(text = endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString())
+                    Icon(
+                        painterResource(Res.drawable.ic_date_range),
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
+            }
+            Dropdown(viewType) {
+                viewModel.setViewType(it)
+            }
         }
-        Button(onClick = { showAddDialog = true }) { Text("Add Sleep") }
-        Spacer(Modifier.height(8.dp))
-        Row {
-            Text("From: $startDate")
-            Spacer(Modifier.width(8.dp))
-            Text("To: $endDate")
-        }
-        Spacer(Modifier.height(8.dp))
-        if (!sleeps.isEmpty()) {
-            Plot(sleeps)
+        Box(modifier = modifier.fillMaxSize()) {
+            if (!sleeps.isEmpty()) {
+                Plot(sleeps)
+            }
+            IconButton(
+                onClick = {},
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_arrow_back), contentDescription = null)
+            }
+            IconButton(
+                onClick = {},
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_arrow_forward), contentDescription = null)
+            }
+            FilledIconButton(
+                onClick = { showAddDialog = true },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+            }
         }
     }
+
     if (showAddDialog) {
         DatePickerDocked()
 //        AdvancedTimePickerExample(
@@ -122,6 +189,75 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
 //            },
 //            onDismiss = { showAddDialog = false }
 //        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Dropdown(
+    selectedOption: SleepViewType,
+    onOptionSelected: (SleepViewType) -> Unit
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    val options = SleepViewType.entries
+
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = it }
+    ) {
+        TextField(
+            value = selectedOption.localizedString(),
+            onValueChange = {},
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable))
+    }
+
+    DropdownMenu(
+        expanded = isExpanded,
+        onDismissRequest = { isExpanded = false }
+    ) {
+        options.forEach { option ->
+            DropdownMenuItem(
+                text = {
+                    Text(option.localizedString())
+                },
+                onClick = {
+                    onOptionSelected(option)
+                    isExpanded = false
+                })
+        }
+    }
+}
+
+@Composable
+fun StackedElements() {
+    Box(
+        modifier = Modifier
+            .size(200.dp)
+            .background(Color.LightGray) // Background of the Box
+    ) {
+        Box(
+            modifier = Modifier
+                .size(150.dp)
+                .background(Color.Blue)
+        )
+
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+                .align(Alignment.Center)
+                .background(Color.Red)
+        )
+
+        Text(
+            text = "Top",
+            color = Color.White,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 

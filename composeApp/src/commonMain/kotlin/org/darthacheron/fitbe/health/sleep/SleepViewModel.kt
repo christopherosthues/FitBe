@@ -1,7 +1,13 @@
 package org.darthacheron.fitbe.health.sleep
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.sleep_view_type_day
+import fitbe.composeapp.generated.resources.sleep_view_type_month
+import fitbe.composeapp.generated.resources.sleep_view_type_week
+import fitbe.composeapp.generated.resources.sleep_view_type_year
 import io.github.koalaplot.core.xygraph.Point
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -16,6 +22,7 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.serializers.DayBasedDateTimeUnitSerializer
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.round
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -31,6 +38,16 @@ enum class SleepViewType {
             WEEK -> DateTimeUnit.WEEK
             MONTH -> DateTimeUnit.MONTH
             YEAR -> DateTimeUnit.YEAR
+        }
+    }
+
+    @Composable
+    fun localizedString(): String {
+        return when(this) {
+            DAY -> stringResource(Res.string.sleep_view_type_day)
+            WEEK -> stringResource(Res.string.sleep_view_type_week)
+            MONTH -> stringResource(Res.string.sleep_view_type_month)
+            YEAR -> stringResource(Res.string.sleep_view_type_year)
         }
     }
 }

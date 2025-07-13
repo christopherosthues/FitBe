@@ -21,13 +21,11 @@ import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_home
 import org.darthacheron.fitbe.home.HomeView
-import org.darthacheron.fitbe.home.Page
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
 import org.darthacheron.fitbe.health.sleep.SleepOverviewView
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinApplication
@@ -110,7 +108,7 @@ fun App() {
                     }
                     composable(route = BottomBarNavigationItem.Sleep.route) {
                         val viewModel = koinViewModel<SleepViewModel>()
-                        SleepOverviewView(viewModel) }
+                        SleepOverviewView(Modifier.padding(padding), viewModel) }
                 }
 
             }

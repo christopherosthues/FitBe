@@ -48,4 +48,8 @@
     <string name="beverage_in_centiliter">%1$d cl %2$s</string>
     <string name="beverage_in_deciliter">%1$d dl %2$s</string>
     <string name="beverage_in_liter">%1$d l %2$s</string>
+    <string name="sleep_view_type_day">Tag</string>
+    <string name="sleep_view_type_week">Woche</string>
+    <string name="sleep_view_type_month">Monat</string>
+    <string name="sleep_view_type_year">Jahr</string>
 </resources>
