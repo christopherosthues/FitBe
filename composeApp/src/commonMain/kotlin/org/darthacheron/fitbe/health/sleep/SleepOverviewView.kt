@@ -17,10 +17,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +44,7 @@ import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -79,16 +84,27 @@ import io.github.koalaplot.core.xygraph.CategoryAxisModel
 import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.format
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.DateRangePickerModal
+import org.darthacheron.fitbe.utils.PastOrPresentSelectableDates
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
 import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import androidx.compose.runtime.*
+import kotlinx.datetime.*
+import kotlin.time.toDuration
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
@@ -98,50 +114,27 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
     val viewType by viewModel.viewType.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
+    var showDateRangeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
 
-//    Column(modifier = modifier.fillMaxSize()
-//        .padding(16.dp)) {
-////        Row {
-////            Button(onClick = { viewModel.setViewType(SleepViewType.WEEK) }) { Text("Week") }
-////            Button(onClick = { viewModel.setViewType(SleepViewType.MONTH) }) { Text("Month") }
-////            Button(onClick = { viewModel.setViewType(SleepViewType.YEAR) }) { Text("Year") }
-////        }
-//        Button(onClick = { showAddDialog = true }) { Text("Add Sleep") }
-////        Spacer(Modifier.height(8.dp))
-////        Row {
-////            Text("From: $startDate")
-////            Spacer(Modifier.width(8.dp))
-////            Text("To: $endDate")
-////        }
-////        Spacer(Modifier.height(8.dp))
-//        if (!sleeps.isEmpty()) {
-//            Plot(sleeps)
-//        }
-//    }
     Column() {
         Row() {
             TextButton(
-                onClick = {},
+                onClick = { showDateRangeDialog = true },
             ) {
                 Row() {
-                    Text(text = startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString())
+                    Column {
+                        Text(text =
+                            startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                        )
+                        Text(text =
+                            endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                        )
+                    }
                     Icon(
                         painterResource(Res.drawable.ic_date_range),
                         contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                }
-            }
-            TextButton(
-                onClick = {},
-            ) {
-                Row() {
-                    Text(text = endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString())
-                    Icon(
-                        painterResource(Res.drawable.ic_date_range),
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp).align(Alignment.CenterVertically)
                     )
                 }
             }
@@ -174,8 +167,33 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
         }
     }
 
+    if (showDateRangeDialog) {
+        DateRangePickerModal(
+            onDateRangeSelected = {
+                if (it.first != null) {
+                    viewModel.setStartDate(
+                        Instant.fromEpochMilliseconds(it.first!!)
+                    )
+                }
+                if (it.second != null) {
+                    viewModel.setEndDate(
+                        Instant.fromEpochMilliseconds(it.second!!)
+                    )
+                }
+                showDateRangeDialog = false
+            },
+            onDismiss = { showDateRangeDialog = false }
+        )
+    }
+
     if (showAddDialog) {
-        DatePickerDocked()
+        AddSleepDialog(
+            onAdd = { start, end ->
+//                 viewModel.addSleep(start, end)
+                showAddDialog = false
+            },
+            onDismiss = { showAddDialog = false }
+        )
 //        AdvancedTimePickerExample(
 //            onConfirm = {
 //                showAddDialog = false
@@ -233,39 +251,10 @@ fun Dropdown(
     }
 }
 
-@Composable
-fun StackedElements() {
-    Box(
-        modifier = Modifier
-            .size(200.dp)
-            .background(Color.LightGray) // Background of the Box
-    ) {
-        Box(
-            modifier = Modifier
-                .size(150.dp)
-                .background(Color.Blue)
-        )
-
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .align(Alignment.Center)
-                .background(Color.Red)
-        )
-
-        Text(
-            text = "Top",
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun Plot(sleeps: List<Point<LocalDate, Double>>) {
     ChartLayout(
-
     ) {
         val dates = sleeps.map { it.x }
         XYGraph(
@@ -339,55 +328,6 @@ fun SleepTrackingDialog(onAdd: (Int, Int, Instant) -> Unit, onDismiss: () -> Uni
     )
 }
 
-@OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-@Composable
-fun AdvancedTimePickerExample(
-    onConfirm: (TimePickerState) -> Unit,
-    onDismiss: () -> Unit,
-) {
-
-    val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.hour,
-        initialMinute = currentTime.minute,
-        is24Hour = true,
-    )
-
-    /** Determines whether the time picker is dial or input */
-    var showDial by remember { mutableStateOf(true) }
-
-    /** The icon used for the icon button that switches from dial to input */
-    val toggleIcon = if (showDial) {
-        Res.drawable.ic_edit_calendar
-    } else {
-        Res.drawable.ic_access_time
-    }
-
-    AdvancedTimePickerDialog(
-        onDismiss = { onDismiss() },
-        onConfirm = { onConfirm(timePickerState) },
-        toggle = {
-            IconButton(onClick = { showDial = !showDial }) {
-                Icon(
-                    painter = painterResource(toggleIcon),
-                    contentDescription = "Time picker type toggle",
-                )
-            }
-        },
-    ) {
-        if (showDial) {
-            TimePicker(
-                state = timePickerState,
-            )
-        } else {
-            TimeInput(
-                state = timePickerState,
-            )
-        }
-    }
-}
-
 @Composable
 fun AdvancedTimePickerDialog(
     title: String = "Select Time",
@@ -439,222 +379,166 @@ fun AdvancedTimePickerDialog(
     }
 }
 
-
-
-//@Composable
-//fun SleepDialog(
-//    initialSleepTime: LocalDateTime = LocalDateTime.now(),
-//    initialWakeTime: LocalDateTime = LocalDateTime.now().plusHours(8),
-//    onDismiss: () -> Unit,
-//    onSave: (sleepTime: LocalDateTime, wakeTime: LocalDateTime, durationHours: Int, durationMinutes: Int) -> Unit
-//) {
-//    val context = LocalContext.current
-//    var sleepTime by remember { mutableStateOf(initialSleepTime) }
-//    var wakeTime by remember { mutableStateOf(initialWakeTime) }
-//
-//    var durationHours by remember { mutableStateOf("8") }
-//    var durationMinutes by remember { mutableStateOf("0") }
-//
-//    AlertDialog(
-//        onDismissRequest = onDismiss,
-//        title = { Text("Sleep Tracker") },
-//        text = {
-//            Column(modifier = Modifier.fillMaxWidth()) {
-//                // Sleep Time
-//                Text("Sleep Time")
-//                DateTimeSelector(
-//                    selectedDateTime = sleepTime,
-//                    onDateTimeSelected = { sleepTime = it }
-//                )
-//
-//                Spacer(modifier = Modifier.height(16.dp))
-//
-//                // Wake Time
-//                Text("Wake Time")
-//                DateTimeSelector(
-//                    selectedDateTime = wakeTime,
-//                    onDateTimeSelected = { wakeTime = it }
-//                )
-//
-//                Spacer(modifier = Modifier.height(16.dp))
-//
-//                // Duration fields
-//                Row(verticalAlignment = Alignment.CenterVertically) {
-//                    OutlinedTextField(
-//                        value = durationHours,
-//                        onValueChange = { durationHours = it.filter { c -> c.isDigit() } },
-//                        label = { Text("Hours") },
-//                        modifier = Modifier.weight(1f),
-//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//                    )
-//
-//                    Spacer(modifier = Modifier.width(8.dp))
-//
-//                    OutlinedTextField(
-//                        value = durationMinutes,
-//                        onValueChange = { durationMinutes = it.filter { c -> c.isDigit() } },
-//                        label = { Text("Minutes") },
-//                        modifier = Modifier.weight(1f),
-//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//                    )
-//                }
-//            }
-//        },
-//        confirmButton = {
-//            TextButton(onClick = {
-//                val hours = durationHours.toIntOrNull() ?: 0
-//                val minutes = durationMinutes.toIntOrNull() ?: 0
-//                onSave(sleepTime, wakeTime, hours, minutes)
-//            }) {
-//                Text("Save")
-//            }
-//        },
-//        dismissButton = {
-//            TextButton(onClick = onDismiss) {
-//                Text("Cancel")
-//            }
-//        }
-//    )
-//}
-//
-//@Composable
-//fun DateTimeSelector(
-//    selectedDateTime: LocalDateTime,
-//    onDateTimeSelected: (LocalDateTime) -> Unit
-//) {
-//    val context = LocalContext.current
-//    val calendar = Calendar.getInstance()
-//
-//    // DatePicker
-//    val datePickerDialog = remember {
-//        DatePickerDialog(
-//            context,
-//            { _, year, month, dayOfMonth ->
-//                val newDate = selectedDateTime.withYear(year).withMonth(month + 1).withDayOfMonth(dayOfMonth)
-//                onDateTimeSelected(newDate)
-//            },
-//            selectedDateTime.year,
-//            selectedDateTime.monthValue - 1,
-//            selectedDateTime.dayOfMonth
-//        )
-//    }
-//
-//    // TimePicker
-//    val timePickerDialog = remember {
-//        TimePickerDialog(
-//            context,
-//            { _, hour, minute ->
-//                val newTime = selectedDateTime.withHour(hour).withMinute(minute)
-//                onDateTimeSelected(newTime)
-//            },
-//            selectedDateTime.hour,
-//            selectedDateTime.minute,
-//            true
-//        )
-//    }
-//
-//    Row(
-//        horizontalArrangement = Arrangement.SpaceBetween,
-//        modifier = Modifier.fillMaxWidth()
-//    ) {
-//        TextButton(onClick = { datePickerDialog.show() }) {
-//            Text("Date: ${selectedDateTime.toLocalDate()}")
-//        }
-//
-//        TextButton(onClick = { timePickerDialog.show() }) {
-//            Text("Time: ${selectedDateTime.toLocalTime().truncatedTo(ChronoUnit.MINUTES)}")
-//        }
-//    }
-//}
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
-fun DatePickerDocked() {
-    var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
-    } ?: ""
+fun AddSleepDialog(
+    onAdd: (start: LocalDateTime, end: LocalDateTime) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var startDateTime by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) }
+    var endDateTime by remember { mutableStateOf(Clock.System.now().plus(value = 8, unit = DateTimeUnit.HOUR).toLocalDateTime(TimeZone.currentSystemDefault())) }
 
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { },
-            label = { Text("DOB") },
-            readOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { showDatePicker = !showDatePicker }) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_date_range),
-                        contentDescription = "Select date"
+    var showStartDatePicker by remember { mutableStateOf(false) }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndDatePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
+
+    val duration = remember(startDateTime, endDateTime) {
+        val diff = endDateTime.toInstant(TimeZone.currentSystemDefault())
+            .minus(startDateTime.toInstant(TimeZone.currentSystemDefault()))
+        if (diff.isNegative()) Duration.ZERO else diff
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Add Sleep") },
+        text = {
+            Column {
+                // Start Date & Time
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = startDateTime.date.toString(),
+                        onValueChange = {},
+                        label = { Text("Start Date") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showStartDatePicker = true }) {
+                                Icon(painterResource(Res.drawable.ic_date_range), contentDescription = null)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = "${startDateTime.hour.toString().padStart(2, '0')}:${startDateTime.minute.toString().padStart(2, '0')}",
+                        onValueChange = {},
+                        label = { Text("Start Time") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showStartTimePicker = true }) {
+                                Icon(painterResource(Res.drawable.ic_access_time), contentDescription = null)
+                            }
+                        },
+                        modifier = Modifier.weight(0.75f)
                     )
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-        )
 
-        if (showDatePicker) {
-            Popup(
-                onDismissRequest = { showDatePicker = false },
-                alignment = Alignment.TopStart
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 64.dp)
-                        .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
+                // End Date & Time
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedTextField(
+                        value = endDateTime.date.toString(),
+                        onValueChange = {},
+                        label = { Text("End Date") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showEndDatePicker = true }) {
+                                Icon(painterResource(Res.drawable.ic_date_range), contentDescription = null)
+                            }
+                        },
+                        modifier = Modifier.padding(top = 16.dp).weight(1f)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = "${endDateTime.hour.toString().padStart(2, '0')}:${endDateTime.minute.toString().padStart(2, '0')}",
+                        onValueChange = {},
+                        label = { Text("End Time") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showEndTimePicker = true }) {
+                                Icon(painterResource(Res.drawable.ic_access_time), contentDescription = null)
+                            }
+                        },
+                        modifier = Modifier.padding(top = 16.dp).weight(0.75f)
                     )
                 }
+
+                // Duration
+                Spacer(Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = formatDuration(duration),
+                    onValueChange = {},
+                    label = { Text("Sleeping Time") },
+                    readOnly = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
+        },
+        confirmButton = {
+            TextButton(onClick = { onAdd(startDateTime, endDateTime) }) { Text("Add") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
         }
+    )
+
+    // Date/Time pickers
+    if (showStartDatePicker) {
+        DatePickerModal(
+            onDateSelected = { millis ->
+                millis?.let {
+                    val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    startDateTime = LocalDateTime(date, startDateTime.time)
+//                    startDateTime = startDateTime.copy(date = date)
+                }
+                showStartDatePicker = false
+            },
+            onDismiss = { showStartDatePicker = false }
+        )
+    }
+    if (showStartTimePicker) {
+        TimePickerDialog(
+            initialHour = startDateTime.hour,
+            initialMinute = startDateTime.minute,
+            onTimeSelected = { hour, minute ->
+                startDateTime = LocalDateTime(startDateTime.date, LocalTime(hour, minute))
+//                startDateTime = startDateTime.copy(hour = hour, minute = minute)
+                showStartTimePicker = false
+            },
+            onDismiss = { showStartTimePicker = false }
+        )
+    }
+    if (showEndDatePicker) {
+        DatePickerModal(
+            onDateSelected = { millis ->
+                millis?.let {
+                    val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    endDateTime = LocalDateTime(date, endDateTime.time)
+//                    endDateTime = endDateTime.copy(date = date)
+                }
+                showEndDatePicker = false
+            },
+            onDismiss = { showEndDatePicker = false }
+        )
+    }
+    if (showEndTimePicker) {
+        TimePickerDialog(
+            initialHour = endDateTime.hour,
+            initialMinute = endDateTime.minute,
+            onTimeSelected = { hour, minute ->
+                endDateTime = LocalDateTime(endDateTime.date, LocalTime(hour, minute))
+//                endDateTime = endDateTime.copy(hour = hour, minute = minute)
+                showEndTimePicker = false
+            },
+            onDismiss = { showEndTimePicker = false }
+        )
     }
 }
 
-@Composable
-fun DatePickerFieldToModal(modifier: Modifier = Modifier) {
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
-    var showModal by remember { mutableStateOf(false) }
-
-    OutlinedTextField(
-        value = selectedDate?.let { convertMillisToDate(it) } ?: "",
-        onValueChange = { },
-        label = { Text("DOB") },
-        placeholder = { Text("MM/DD/YYYY") },
-        trailingIcon = {
-            Icon(painterResource(Res.drawable.ic_date_range), contentDescription = "Select date")
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    // Modifier.clickable doesn't work for text fields, so we use Modifier.pointerInput
-                    // in the Initial pass to observe events before the text field consumes them
-                    // in the Main pass.
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
-                }
-            }
-    )
-
-    if (showModal) {
-        DatePickerModal(
-            onDateSelected = { selectedDate = it },
-            onDismiss = { showModal = false }
-        )
-    }
+// Helper to format duration as "Xh Ym"
+fun formatDuration(duration: Duration): String {
+    val hours = duration.toLong(DurationUnit.HOURS)
+    val minutes = (duration.inWholeMinutes % 60)
+    return "${hours}h ${minutes}m"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -685,8 +569,23 @@ fun DatePickerModal(
     }
 }
 
-fun convertMillisToDate(millis: Long): String {
-//    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-//    return formatter.format(Date(millis))
-    return ""
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerDialog(
+    initialHour: Int,
+    initialMinute: Int,
+    onTimeSelected: (Int, Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val timePickerState = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute,
+        is24Hour = true
+    )
+    AdvancedTimePickerDialog(
+        onDismiss = onDismiss,
+        onConfirm = { onTimeSelected(timePickerState.hour, timePickerState.minute) }
+    ) {
+        TimePicker(state = timePickerState)
+    }
 }
