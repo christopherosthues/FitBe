@@ -1,9 +1,6 @@
 package org.darthacheron.fitbe.health.sleep
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,18 +10,11 @@ import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,11 +30,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,27 +41,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.Popup
-import androidx.room.util.TableInfo
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
-import fitbe.composeapp.generated.resources.ic_arrow_left
-import fitbe.composeapp.generated.resources.ic_arrow_right
 import fitbe.composeapp.generated.resources.ic_date_range
-import fitbe.composeapp.generated.resources.ic_edit_calendar
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.gestures.GestureConfig
 import io.github.koalaplot.core.line.StairstepPlot
@@ -87,13 +66,12 @@ import io.github.koalaplot.core.xygraph.XYGraph
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.format
+import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DateRangePickerModal
-import org.darthacheron.fitbe.utils.PastOrPresentSelectableDates
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
@@ -102,9 +80,6 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import androidx.compose.runtime.*
-import kotlinx.datetime.*
-import kotlin.time.toDuration
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
@@ -194,19 +169,6 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
             },
             onDismiss = { showAddDialog = false }
         )
-//        AdvancedTimePickerExample(
-//            onConfirm = {
-//                showAddDialog = false
-//            },
-//            onDismiss = { showAddDialog = false }
-//        )
-//        SleepTrackingDialog(
-//            onAdd = { h, m, d ->
-//                viewModel.addSleep(h, m, d)
-//                showAddDialog = false
-//            },
-//            onDismiss = { showAddDialog = false }
-//        )
     }
 }
 
@@ -294,38 +256,6 @@ fun Plot(sleeps: List<Point<LocalDate, Double>>) {
             )
         }
     }
-}
-
-@OptIn(ExperimentalTime::class)
-@Composable
-fun SleepTrackingDialog(onAdd: (Int, Int, Instant) -> Unit, onDismiss: () -> Unit) {
-    var hours by remember { mutableStateOf("") }
-    var minutes by remember { mutableStateOf("") }
-    var date by remember {
-        mutableStateOf(
-            Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(
-                TimeZone.UTC
-            )
-        )
-    }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add Sleep") },
-        text = {
-            Column {
-                OutlinedTextField(value = hours, onValueChange = { hours = it }, label = { Text("Hours") })
-                OutlinedTextField(value = minutes, onValueChange = { minutes = it }, label = { Text("Minutes") })
-                // Date picker placeholder
-                Text("Date: $date")
-            }
-        },
-        confirmButton = {
-            Button(onClick = {
-                onAdd(hours.toIntOrNull() ?: 0, minutes.toIntOrNull() ?: 0, date)
-            }) { Text("Add") }
-        },
-        dismissButton = { Button(onClick = onDismiss) { Text("Cancel") } }
-    )
 }
 
 @Composable
@@ -488,7 +418,6 @@ fun AddSleepDialog(
                 millis?.let {
                     val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
                     startDateTime = LocalDateTime(date, startDateTime.time)
-//                    startDateTime = startDateTime.copy(date = date)
                 }
                 showStartDatePicker = false
             },
@@ -501,7 +430,6 @@ fun AddSleepDialog(
             initialMinute = startDateTime.minute,
             onTimeSelected = { hour, minute ->
                 startDateTime = LocalDateTime(startDateTime.date, LocalTime(hour, minute))
-//                startDateTime = startDateTime.copy(hour = hour, minute = minute)
                 showStartTimePicker = false
             },
             onDismiss = { showStartTimePicker = false }
@@ -513,7 +441,6 @@ fun AddSleepDialog(
                 millis?.let {
                     val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
                     endDateTime = LocalDateTime(date, endDateTime.time)
-//                    endDateTime = endDateTime.copy(date = date)
                 }
                 showEndDatePicker = false
             },
@@ -526,7 +453,6 @@ fun AddSleepDialog(
             initialMinute = endDateTime.minute,
             onTimeSelected = { hour, minute ->
                 endDateTime = LocalDateTime(endDateTime.date, LocalTime(hour, minute))
-//                endDateTime = endDateTime.copy(hour = hour, minute = minute)
                 showEndTimePicker = false
             },
             onDismiss = { showEndTimePicker = false }
