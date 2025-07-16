@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.di
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
+import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
@@ -35,4 +36,5 @@ val sharedModule = module {
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::BeverageViewModel)
     viewModelOf(::SleepViewModel)
+    viewModelOf(::HealthOverviewViewModel)
 }

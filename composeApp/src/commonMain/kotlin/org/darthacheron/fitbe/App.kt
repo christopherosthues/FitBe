@@ -19,7 +19,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.ic_exercise
+import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_home
+import kotlinx.serialization.Serializable
+import org.darthacheron.fitbe.health.HealthOverviewView
+import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
@@ -37,14 +42,31 @@ sealed class BottomBarNavigationItem(
     val route: String
 ) {
     data object Home : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Home", "/home")
-    data object Beverage : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Beverage", "/beverage")
-    data object Sleep : BottomBarNavigationItem(icon = Res.drawable.ic_home, "Sleep", "/sleep")
+    data object Exercises : BottomBarNavigationItem(icon = Res.drawable.ic_exercise, "Exercises", "/exercises")
+    data object Health : BottomBarNavigationItem(icon = Res.drawable.ic_health, "Health", "/health")
+}
+
+sealed class NavigationRoutes {
+    @Serializable
+    object Home
+
+    @Serializable
+    object Exercises
+
+    @Serializable
+    object Health
+
+    @Serializable
+    object Sleeps
+
+    @Serializable
+    object Beverages
 }
 
 val items = listOf(
     BottomBarNavigationItem.Home,
-    BottomBarNavigationItem.Beverage,
-    BottomBarNavigationItem.Sleep
+    BottomBarNavigationItem.Exercises,
+    BottomBarNavigationItem.Health
 )
 
 @Composable
@@ -98,17 +120,26 @@ fun App() {
                     modifier = Modifier.padding(padding)
                 ) {
                     composable(route = BottomBarNavigationItem.Home.route) {
-                        HomeView(
-                            navHostController
-                        )
+                        HomeView(navHostController)
                     }
-                    composable(route = BottomBarNavigationItem.Beverage.route) {
+                    composable(route = BottomBarNavigationItem.Exercises.route) {
                         val viewModel = koinViewModel<BeverageViewModel>()
                         BeverageView(Modifier.padding(padding), viewModel)
                     }
-                    composable(route = BottomBarNavigationItem.Sleep.route) {
+                    composable(route = BottomBarNavigationItem.Health.route) {
+                        val viewModel = koinViewModel<HealthOverviewViewModel>()
+                        HealthOverviewView(viewModel, navHostController)
+                    }
+                    composable<NavigationRoutes.Sleeps> {
                         val viewModel = koinViewModel<SleepViewModel>()
-                        SleepOverviewView(Modifier.padding(padding), viewModel) }
+                        SleepOverviewView(Modifier.padding(padding), viewModel)
+                    }
+                    composable<NavigationRoutes.Beverages> {
+                        val viewModel = koinViewModel<BeverageViewModel>()
+                        BeverageView(Modifier.padding(padding), viewModel)
+                    }
+//                        val viewModel = koinViewModel<SleepViewModel>()
+//                        SleepOverviewView(Modifier.padding(padding), viewModel) }
                 }
 
             }
