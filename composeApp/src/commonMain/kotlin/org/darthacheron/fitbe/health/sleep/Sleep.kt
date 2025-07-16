@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.health.sleep
 
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

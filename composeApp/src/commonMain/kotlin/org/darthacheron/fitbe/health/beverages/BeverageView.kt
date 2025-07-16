@@ -23,14 +23,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
@@ -55,6 +50,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_beverage
+import org.darthacheron.fitbe.components.DropdownSelection
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -213,6 +209,7 @@ fun AddBeverageDialog(
     var selectedUnit by remember { mutableStateOf(FluidUnit.Milliliter) }
     var amountText by remember { mutableStateOf((initialAmount ?: "").toString()) }
     var beverage by remember { mutableStateOf("") }
+    val unitOptions = FluidUnit.entries
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -230,10 +227,25 @@ fun AddBeverageDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                DropdownMenuWithSelected(
-                    amount = amountText.toIntOrNull() ?: 0,
-                    selectedOption = selectedUnit,
-                    onOptionSelected = { selectedUnit = it }
+                DropdownSelection(
+                    initialState = false,
+                    items = unitOptions,
+                    title = "Choose a unit",
+                    itemContent = { item, onClick ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(item.localizedString(amountText.toIntOrNull() ?: 0))
+                            },
+                            leadingIcon = { Icon(painterResource(item.iconResource()), contentDescription = null) },
+                            onClick = onClick
+                        )
+                    },
+                    itemToString = {
+                        it.localizedString(amountText.toIntOrNull() ?: 0)
+                    },
+                    onItemSelected = {
+                        selectedUnit = unitOptions[it]
+                    }
                 )
             }
         },
@@ -250,47 +262,4 @@ fun AddBeverageDialog(
             }
         }
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DropdownMenuWithSelected(
-    amount: Int,
-    selectedOption: FluidUnit,
-    onOptionSelected: (FluidUnit) -> Unit
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val unitOptions = FluidUnit.entries
-
-    ExposedDropdownMenuBox(
-        expanded = isExpanded,
-        onExpandedChange = { isExpanded = it }
-    ) {
-        TextField(
-            value = selectedOption.localizedString(amount),
-            onValueChange = {},
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable))
-    }
-
-    DropdownMenu(
-        expanded = isExpanded,
-        onDismissRequest = { isExpanded = false }
-    ) {
-        unitOptions.forEach { option ->
-            DropdownMenuItem(
-                text = {
-                    Text(option.localizedString(amount))
-                },
-                leadingIcon = { Icon(painterResource(option.iconResource()), contentDescription = null) },
-                onClick = {
-                    onOptionSelected(option)
-                    isExpanded = false
-                })
-        }
-    }
 }

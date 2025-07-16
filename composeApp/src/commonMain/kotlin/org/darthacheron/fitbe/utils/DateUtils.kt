@@ -9,9 +9,9 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {

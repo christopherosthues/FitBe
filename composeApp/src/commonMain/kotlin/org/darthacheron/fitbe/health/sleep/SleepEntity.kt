@@ -3,7 +3,7 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

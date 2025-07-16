@@ -16,11 +16,10 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.seedDatabase
-import org.darthacheron.fitbe.dependencies.MyViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
 
 @Serializable

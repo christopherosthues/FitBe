@@ -16,7 +16,7 @@ import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
 import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import kotlin.random.Random
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 

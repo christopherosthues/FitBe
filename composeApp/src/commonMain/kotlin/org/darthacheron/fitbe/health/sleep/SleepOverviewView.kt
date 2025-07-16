@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.health.sleep
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -75,11 +76,12 @@ import org.darthacheron.fitbe.components.DateRangePickerModal
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
+import kotlinx.datetime.Instant
+import org.darthacheron.fitbe.components.DropdownSelection
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
@@ -91,13 +93,16 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
     val endDate by viewModel.endDate.collectAsState()
     var showDateRangeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
+    val viewTypes = SleepViewType.entries
 
-    Column() {
-        Row() {
+    Column {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             TextButton(
                 onClick = { showDateRangeDialog = true },
             ) {
-                Row() {
+                Row {
                     Column {
                         Text(text =
                             startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
@@ -113,9 +118,23 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
                     )
                 }
             }
-            Dropdown(viewType) {
-                viewModel.setViewType(it)
-            }
+            DropdownSelection(
+                initialState = false,
+                items = SleepViewType.entries,
+                title = "Choose an option",
+                itemContent = { item, onClick ->
+                    DropdownMenuItem(
+                        text = { Text(item.localizedString()) },
+                        onClick = onClick
+                    )
+                },
+                itemToString = {
+                    it.localizedString()
+                },
+                onItemSelected = {
+                    viewModel.setViewType(viewTypes[it])
+                }
+            )
         }
         Box(modifier = modifier.fillMaxSize()) {
             if (!sleeps.isEmpty()) {
@@ -169,47 +188,6 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
             },
             onDismiss = { showAddDialog = false }
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Dropdown(
-    selectedOption: SleepViewType,
-    onOptionSelected: (SleepViewType) -> Unit
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val options = SleepViewType.entries
-
-    ExposedDropdownMenuBox(
-        expanded = isExpanded,
-        onExpandedChange = { isExpanded = it }
-    ) {
-        TextField(
-            value = selectedOption.localizedString(),
-            onValueChange = {},
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-            },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable))
-    }
-
-    DropdownMenu(
-        expanded = isExpanded,
-        onDismissRequest = { isExpanded = false }
-    ) {
-        options.forEach { option ->
-            DropdownMenuItem(
-                text = {
-                    Text(option.localizedString())
-                },
-                onClick = {
-                    onOptionSelected(option)
-                    isExpanded = false
-                })
-        }
     }
 }
 
