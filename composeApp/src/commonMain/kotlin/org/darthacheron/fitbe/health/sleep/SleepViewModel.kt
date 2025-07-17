@@ -95,8 +95,8 @@ class SleepViewModel(private val repository: SleepRepository) : ViewModel() {
         viewModelScope.launch {
             repository.addSleep(
                 SleepEntity(
-                    hours = hours,
-                    minutes = minutes,
+                    hours = hours.toInt(),
+                    minutes = minutes.toInt(),
                     dateUtc = date
                 )
             )
