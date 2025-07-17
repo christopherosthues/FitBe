@@ -22,6 +22,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.ic_back
 import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_settings
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
@@ -65,7 +66,7 @@ fun RootScreen(navigateToSettings: () -> Unit) {
                             onClick = { navHostController.navigateUp() }
                         ) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_health),
+                                painter = painterResource(Res.drawable.ic_back),
                                 contentDescription = null
                             )
                         }

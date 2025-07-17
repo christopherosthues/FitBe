@@ -9,6 +9,7 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_exercise
 import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_home
+import fitbe.composeapp.generated.resources.ic_profile
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
@@ -35,7 +36,7 @@ sealed class BottomBarDestination(
     data object Profile: BottomBarDestination(
         screen = Screen.Profile,
         label = Res.string.bottom_bar_profile,
-        icon = Res.drawable.ic_add
+        icon = Res.drawable.ic_profile
     )
 }
 
