@@ -8,8 +8,8 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Sleep(
     val id: Uuid,
-    val hours: Int,
-    val minutes: Int,
+    val hours: UInt,
+    val minutes: UInt,
     val dateUtc: Instant,
     val dateLocal: Instant,
 )

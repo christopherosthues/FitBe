@@ -1,11 +1,11 @@
-package org.darthacheron.fitbe.database
+package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.Instant
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class DateConverter {
+class InstantConverter {
     @TypeConverter
     fun fromString(value: String?): Instant? {
         return value?.let { Instant.parse(it) } // Parses UTC ISO 8601

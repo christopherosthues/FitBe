@@ -91,7 +91,7 @@ class SleepViewModel(private val repository: SleepRepository) : ViewModel() {
     fun setEndDate(date: Instant) { _endDate.value = date }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addSleep(hours: Int, minutes: Int, date: Instant) {
+    fun addSleep(hours: UInt, minutes: UInt, date: Instant) {
         viewModelScope.launch {
             repository.addSleep(
                 SleepEntity(

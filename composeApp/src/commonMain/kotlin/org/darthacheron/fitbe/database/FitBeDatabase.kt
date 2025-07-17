@@ -17,11 +17,16 @@ import org.darthacheron.fitbe.health.sleep.SleepEntity
 import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import kotlin.random.Random
 import kotlinx.datetime.Clock
+import org.darthacheron.fitbe.database.converters.InstantConverter
+import org.darthacheron.fitbe.database.converters.FluidUnitConverter
+import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
+import org.darthacheron.fitbe.database.converters.UuidConverter
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 @Database(entities = [BeverageEntity::class, SleepEntity::class], version = 1)
-@TypeConverters(FluidUnitConverter::class, UuidConverter::class, DateConverter::class)
+@TypeConverters(FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
+    LocalDateTimeConverter::class)
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {
     abstract val beverageDao: BeverageDao

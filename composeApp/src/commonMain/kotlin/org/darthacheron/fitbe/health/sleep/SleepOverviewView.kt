@@ -183,7 +183,7 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
     if (showAddDialog) {
         AddSleepDialog(
             onAdd = { start, end ->
-//                 viewModel.addSleep(start, end)
+//                 viewModel.addSleep(start.toUInt(), end.toUInt(), )
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
@@ -290,7 +290,7 @@ fun AdvancedTimePickerDialog(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun AddSleepDialog(
-    onAdd: (start: LocalDateTime, end: LocalDateTime) -> Unit,
+    onAdd: (hours: Long, minutes: Long) -> Unit,
     onDismiss: () -> Unit
 ) {
     var startDateTime by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) }
@@ -382,7 +382,13 @@ fun AddSleepDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onAdd(startDateTime, endDateTime) }) { Text("Add") }
+            TextButton(onClick = {
+                val hours = duration.toLong(DurationUnit.HOURS)
+                val minutes = (duration.inWholeMinutes % 60)
+                onAdd(hours, minutes)
+            }) {
+                Text("Add")
+            }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text("Cancel") }

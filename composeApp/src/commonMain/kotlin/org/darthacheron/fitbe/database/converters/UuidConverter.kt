@@ -1,8 +1,10 @@
-package org.darthacheron.fitbe.database
+package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
+import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class UuidConverter {
     @TypeConverter
     fun fromUUID(uuid: Uuid): String {

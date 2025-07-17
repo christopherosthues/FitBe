@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.database
+package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
 import org.darthacheron.fitbe.health.beverages.FluidUnit
