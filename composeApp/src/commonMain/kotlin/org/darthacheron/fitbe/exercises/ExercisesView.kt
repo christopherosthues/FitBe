@@ -1,10 +1,12 @@
-package org.darthacheron.fitbe.settings
+package org.darthacheron.fitbe.exercises
+
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun SettingsView(settingsViewModel: SettingsViewModel) {
+fun ExercisesView(exercisesViewModel: ExercisesViewModel) {
 
 }
+

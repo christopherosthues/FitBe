@@ -1,0 +1,47 @@
+package org.darthacheron.fitbe.navigation
+
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.bottom_bar_exercises
+import fitbe.composeapp.generated.resources.bottom_bar_health
+import fitbe.composeapp.generated.resources.bottom_bar_home
+import fitbe.composeapp.generated.resources.bottom_bar_profile
+import fitbe.composeapp.generated.resources.ic_add
+import fitbe.composeapp.generated.resources.ic_exercise
+import fitbe.composeapp.generated.resources.ic_health
+import fitbe.composeapp.generated.resources.ic_home
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
+
+sealed class BottomBarDestination(
+    val screen: Screen,
+    val label: StringResource,
+    val icon: DrawableResource
+) {
+    data object Home: BottomBarDestination(
+        screen = Screen.Home,
+        label = Res.string.bottom_bar_home,
+        icon = Res.drawable.ic_home
+    )
+    data object Exercises: BottomBarDestination(
+        screen = Screen.Exercises,
+        label = Res.string.bottom_bar_exercises,
+        icon = Res.drawable.ic_exercise
+    )
+    data object Health: BottomBarDestination(
+        screen = Screen.Health,
+        label = Res.string.bottom_bar_health,
+        icon = Res.drawable.ic_health
+    )
+    data object Profile: BottomBarDestination(
+        screen = Screen.Profile,
+        label = Res.string.bottom_bar_profile,
+        icon = Res.drawable.ic_add
+    )
+}
+
+val bottomBarDestinations = listOf(
+    BottomBarDestination.Home,
+    BottomBarDestination.Exercises,
+    BottomBarDestination.Health,
+    BottomBarDestination.Profile,
+)

@@ -59,7 +59,7 @@ import kotlin.math.sin
 
 @Preview
 @Composable
-fun BeverageView(modifier: Modifier, beverageViewModel: BeverageViewModel) {
+fun BeverageView(beverageViewModel: BeverageViewModel) {
     val beverages by beverageViewModel.todayIntake.collectAsState()
     val total = beverages.sumOf { it.unit.toMilliliter(it.amount) }
     val goal = 2000

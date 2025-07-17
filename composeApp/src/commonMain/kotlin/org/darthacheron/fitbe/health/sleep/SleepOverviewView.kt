@@ -86,7 +86,7 @@ import org.darthacheron.fitbe.components.DropdownSelection
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
+fun SleepOverviewView(viewModel: SleepViewModel) {
     val sleeps by viewModel.sleeps.collectAsState()
     val viewType by viewModel.viewType.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
@@ -136,7 +136,7 @@ fun SleepOverviewView(modifier: Modifier, viewModel: SleepViewModel) {
                 }
             )
         }
-        Box(modifier = modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
             if (!sleeps.isEmpty()) {
                 Plot(sleeps)
             }

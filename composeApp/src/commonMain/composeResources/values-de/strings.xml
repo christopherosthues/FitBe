@@ -52,4 +52,15 @@
     <string name="sleep_view_type_week">Woche</string>
     <string name="sleep_view_type_month">Monat</string>
     <string name="sleep_view_type_year">Jahr</string>
+    <string name="bottom_bar_home">Start</string>
+    <string name="bottom_bar_exercises">\u00dcbungen</string>
+    <string name="bottom_bar_health">Gesundheit</string>
+    <string name="bottom_bar_profile">Profil</string>
+    <string name="top_bar_title_home">Start</string>
+    <string name="top_bar_title_exercises">\u00dcbungen</string>
+    <string name="top_bar_title_health">Gesundheit</string>
+    <string name="top_bar_title_profile">Profil</string>
+    <string name="top_bar_title_sleeps">Schlaf</string>
+    <string name="top_bar_title_beverages">Trinken</string>
+    <string name="top_bar_title_settings">Einstellungen</string>
 </resources>
