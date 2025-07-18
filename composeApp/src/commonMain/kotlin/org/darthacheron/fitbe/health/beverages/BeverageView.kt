@@ -110,7 +110,7 @@ fun BeverageView(beverageViewModel: BeverageViewModel) {
 
     if (showDialog) {
         AddBeverageDialog(
-            initialAmount = 0,
+            initialAmount = 0u,
             onSet = { amount, unit, beverage ->
                 beverageViewModel.addBeverage(amount, unit, beverage)
                 showDialog = false
@@ -202,8 +202,8 @@ fun CustomCircularProgressIndicator(
 
 @Composable
 fun AddBeverageDialog(
-    initialAmount: Int?,
-    onSet: (Int, FluidUnit, String) -> Unit,
+    initialAmount: UInt?,
+    onSet: (UInt, FluidUnit, String) -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectedUnit by remember { mutableStateOf(FluidUnit.Milliliter) }
@@ -251,7 +251,7 @@ fun AddBeverageDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                onSet(amountText.toInt(), selectedUnit, beverage)
+                onSet(amountText.toUInt(), selectedUnit, beverage)
             }) {
                 Text("Save")
             }

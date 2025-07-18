@@ -11,6 +11,7 @@ import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.darthacheron.fitbe.profile.ProfileViewModel
+import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf

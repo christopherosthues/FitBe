@@ -1,0 +1,60 @@
+package org.darthacheron.fitbe.settings
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
+import java.util.Properties
+import java.io.File
+import org.darthacheron.fitbe.utils.DesktopPaths
+
+class DesktopSettingsRepository : SettingsRepository {
+    private val settingsFlow = MutableStateFlow(Settings())
+    private val settingsFile = File(
+        DesktopPaths.getAppDataDir(), "${SettingsKeys.FILE_NAME}.properties"
+    )
+
+    init {
+        loadSettings()
+    }
+
+    private fun loadSettings() {
+        runCatching {
+            if (!settingsFile.exists()) return
+
+            Properties().apply {
+                settingsFile.inputStream().use { load(it) }
+
+                val settings = Settings(
+                    weightUnit = getProperty(SettingsKeys.WEIGHT_UNIT)?.let {
+                        WeightUnit.valueOf(it)
+                    } ?: WeightUnit.KG,
+                    distanceUnit = getProperty(SettingsKeys.DISTANCE_UNIT)?.let {
+                        DistanceUnit.valueOf(it)
+                    } ?: DistanceUnit.KM,
+                    themeMode = getProperty(SettingsKeys.THEME_MODE)?.let {
+                        ThemeMode.valueOf(it)
+                    } ?: ThemeMode.SYSTEM
+                )
+                settingsFlow.value = settings
+            }
+        }.onFailure { it.printStackTrace() }
+    }
+
+    override suspend fun saveSettings(settings: Settings) {
+        withContext(Dispatchers.IO) {
+            runCatching {
+                Properties().apply {
+                    setProperty(SettingsKeys.WEIGHT_UNIT, settings.weightUnit.name)
+                    setProperty(SettingsKeys.DISTANCE_UNIT, settings.distanceUnit.name)
+                    setProperty(SettingsKeys.THEME_MODE, settings.themeMode.name)
+                    settingsFile.outputStream().use { store(it, null) }
+                }
+                settingsFlow.value = settings
+            }.onFailure { it.printStackTrace() }
+        }
+    }
+
+    override fun getSettingsFlow(): Flow<Settings> = settingsFlow
+    override suspend fun getSettings(): Settings = settingsFlow.value
+}

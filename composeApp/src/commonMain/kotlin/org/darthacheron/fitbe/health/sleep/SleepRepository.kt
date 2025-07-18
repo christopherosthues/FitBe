@@ -27,7 +27,7 @@ fun SleepEntity.toDomain(): Sleep {
         id = id,
         dateUtc = dateUtc,
         dateLocal = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
-        minutes = minutes,
-        hours = hours,
+        minutes = minutes.toUInt(),
+        hours = hours.toUInt(),
     )
 }
