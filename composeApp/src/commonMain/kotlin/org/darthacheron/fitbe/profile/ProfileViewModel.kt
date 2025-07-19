@@ -7,13 +7,26 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class ProfileViewModel(private val profileRepository: ProfileRepository) : ViewModel() {
+class ProfileViewModel(
+    private val profileRepository: ProfileRepository,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
     private val _currentProfile = MutableStateFlow<Profile?>(null)
     val currentProfile: StateFlow<Profile?> = _currentProfile
+
+    init {
+        viewModelScope.launch {
+            val settings = settingsRepository.getSettings()
+            settings.selectedProfileId?.let { id ->
+                _currentProfile.value = profileRepository.getProfileById(id)
+            }
+        }
+    }
 
     val profiles = profileRepository.profiles.stateIn(
         viewModelScope,
@@ -48,6 +61,9 @@ class ProfileViewModel(private val profileRepository: ProfileRepository) : ViewM
     fun switchProfile(profileId: Uuid) {
         viewModelScope.launch {
             _currentProfile.value = profileRepository.getProfileById(profileId)
+            // Persist selected profile
+            val currentSettings = settingsRepository.getSettings()
+            settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = profileId))
         }
     }
 }

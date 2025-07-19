@@ -9,8 +9,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
+import kotlin.uuid.Uuid
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = SettingsKeys.FILE_NAME)
 
@@ -21,6 +23,7 @@ class AndroidSettingsRepository(
         val WEIGHT_UNIT = stringPreferencesKey(SettingsKeys.WEIGHT_UNIT)
         val DISTANCE_UNIT = stringPreferencesKey(SettingsKeys.DISTANCE_UNIT)
         val THEME_MODE = stringPreferencesKey(SettingsKeys.THEME_MODE)
+        val SELECTED_PROFILE_ID = stringPreferencesKey(SettingsKeys.SELECTED_PROFILE_ID)
     }
 
     override suspend fun saveSettings(settings: Settings) {
@@ -28,6 +31,7 @@ class AndroidSettingsRepository(
             preferences[PreferencesKeys.WEIGHT_UNIT] = settings.weightUnit.name
             preferences[PreferencesKeys.DISTANCE_UNIT] = settings.distanceUnit.name
             preferences[PreferencesKeys.THEME_MODE] = settings.themeMode.name
+            preferences[PreferencesKeys.SELECTED_PROFILE_ID] = settings.selectedProfileId?.toString() ?: ""
         }
     }
 
@@ -48,11 +52,11 @@ class AndroidSettingsRepository(
                     } ?: DistanceUnit.KM,
                     themeMode = preferences[PreferencesKeys.THEME_MODE]?.let {
                         ThemeMode.valueOf(it)
-                    } ?: ThemeMode.SYSTEM
+                    } ?: ThemeMode.SYSTEM,
+                    selectedProfileId = preferences[PreferencesKeys.SELECTED_PROFILE_ID]?.takeIf { it.isNotBlank() }
+                        ?.let { Uuid.parse(it) }
                 )
             }
     }
-
-    override suspend fun getSettings(): Settings = getSettingsFlow().map { it }.single()
 }
 

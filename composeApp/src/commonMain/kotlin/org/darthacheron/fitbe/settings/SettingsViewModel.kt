@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class SettingsViewModel : ViewModel(), KoinComponent {
     private val repository: SettingsRepository by inject()
 

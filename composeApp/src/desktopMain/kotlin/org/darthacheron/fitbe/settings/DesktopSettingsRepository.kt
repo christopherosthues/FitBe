@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import java.util.Properties
 import java.io.File
 import org.darthacheron.fitbe.utils.DesktopPaths
+import kotlin.uuid.Uuid
 
 class DesktopSettingsRepository : SettingsRepository {
     private val settingsFlow = MutableStateFlow(Settings())
@@ -20,10 +21,15 @@ class DesktopSettingsRepository : SettingsRepository {
 
     private fun loadSettings() {
         runCatching {
-            if (!settingsFile.exists()) return
+            if (!settingsFile.exists()) {
+                return
+            }
 
             Properties().apply {
                 settingsFile.inputStream().use { load(it) }
+
+                val selectedProfileIdStr = getProperty(SettingsKeys.SELECTED_PROFILE_ID)
+                val selectedProfileId = selectedProfileIdStr?.takeIf { it.isNotBlank() }?.let { Uuid.parse(it) }
 
                 val settings = Settings(
                     weightUnit = getProperty(SettingsKeys.WEIGHT_UNIT)?.let {
@@ -34,7 +40,8 @@ class DesktopSettingsRepository : SettingsRepository {
                     } ?: DistanceUnit.KM,
                     themeMode = getProperty(SettingsKeys.THEME_MODE)?.let {
                         ThemeMode.valueOf(it)
-                    } ?: ThemeMode.SYSTEM
+                    } ?: ThemeMode.SYSTEM,
+                    selectedProfileId = selectedProfileId
                 )
                 settingsFlow.value = settings
             }
@@ -48,6 +55,7 @@ class DesktopSettingsRepository : SettingsRepository {
                     setProperty(SettingsKeys.WEIGHT_UNIT, settings.weightUnit.name)
                     setProperty(SettingsKeys.DISTANCE_UNIT, settings.distanceUnit.name)
                     setProperty(SettingsKeys.THEME_MODE, settings.themeMode.name)
+                    setProperty(SettingsKeys.SELECTED_PROFILE_ID, settings.selectedProfileId?.toString() ?: "")
                     settingsFile.outputStream().use { store(it, null) }
                 }
                 settingsFlow.value = settings

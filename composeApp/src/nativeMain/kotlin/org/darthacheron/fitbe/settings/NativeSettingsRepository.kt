@@ -3,7 +3,10 @@ package org.darthacheron.fitbe.settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import platform.Foundation.*
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class NativeSettingsRepository : SettingsRepository {
     private val settingsFlow = MutableStateFlow(Settings())
     private val fileManager = NSFileManager.defaultManager
@@ -23,9 +26,14 @@ class NativeSettingsRepository : SettingsRepository {
 
     private fun loadSettings() {
         runCatching {
-            if (!fileManager.fileExistsAtPath(settingsFile)) return
+            if (!fileManager.fileExistsAtPath(settingsFile)) {
+                return
+            }
 
             (NSDictionary.dictionaryWithContentsOfFile(settingsFile))?.let { dict ->
+                val selectedProfileIdStr = dict.getValue(SettingsKeys.SELECTED_PROFILE_ID) as? String
+                val selectedProfileId = selectedProfileIdStr?.takeIf { it.isNotBlank() }?.let { Uuid.parse(it) }
+
                 val settings = Settings(
                     weightUnit = (dict.getValue(SettingsKeys.WEIGHT_UNIT) as? String)?.let {
                         WeightUnit.valueOf(it)
@@ -35,7 +43,8 @@ class NativeSettingsRepository : SettingsRepository {
                     } ?: DistanceUnit.KM,
                     themeMode = (dict.getValue(SettingsKeys.THEME_MODE) as? String)?.let {
                         ThemeMode.valueOf(it)
-                    } ?: ThemeMode.SYSTEM
+                    } ?: ThemeMode.SYSTEM,
+                    selectedProfileId = selectedProfileId
                 )
                 settingsFlow.value = settings
             }
@@ -47,7 +56,8 @@ class NativeSettingsRepository : SettingsRepository {
             val dict = mutableMapOf(
                 SettingsKeys.WEIGHT_UNIT to settings.weightUnit.name,
                 SettingsKeys.DISTANCE_UNIT to settings.distanceUnit.name,
-                SettingsKeys.THEME_MODE to settings.themeMode.name
+                SettingsKeys.THEME_MODE to settings.themeMode.name,
+                SettingsKeys.SELECTED_PROFILE_ID to (settings.selectedProfileId?.toString() ?: "")
             )
 
             (dict as NSDictionary).writeToFile(settingsFile, true)
