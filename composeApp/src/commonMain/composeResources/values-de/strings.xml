@@ -74,7 +74,6 @@
     <string name="settings_theme_dark">Dunkel</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Auf Standard zurücksetzen</string>
-    <string name="profile_title">Profile</string>
     <string name="profile_add">Profil hinzufügen</string>
     <string name="profile_edit">Bearbeiten</string>
     <string name="profile_delete">Löschen</string>

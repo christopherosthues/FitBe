@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.profile
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -8,7 +9,7 @@ import kotlin.uuid.Uuid
 @Dao
 interface ProfileDao {
     @Query("SELECT * FROM profiles")
-    suspend fun getAllProfiles(): List<ProfileEntity>
+    fun getAllProfiles(): Flow<List<ProfileEntity>>
 
     @Query("SELECT * FROM profiles WHERE id = :id")
     suspend fun getProfileById(id: Uuid): ProfileEntity?

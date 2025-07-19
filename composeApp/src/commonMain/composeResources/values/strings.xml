@@ -74,7 +74,6 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Reset to Defaults</string>
-    <string name="profile_title">Profiles</string>
     <string name="profile_add">Add Profile</string>
     <string name="profile_edit">Edit</string>
     <string name="profile_delete">Delete</string>
