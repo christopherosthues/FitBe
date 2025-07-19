@@ -11,38 +11,46 @@ import org.koin.core.component.inject
 
 class SettingsViewModel : ViewModel(), KoinComponent {
     private val repository: SettingsRepository by inject()
-    var settings by mutableStateOf(Settings())
+
+    // Persistent settings
+    private var persistedSettings by mutableStateOf(Settings())
+
+    // Temporary settings for editing
+    var currentSettings by mutableStateOf(Settings())
         private set
 
     init {
         viewModelScope.launch {
             repository.getSettingsFlow().collect {
-                settings = it
+                persistedSettings = it
+                currentSettings = it
             }
         }
     }
 
     fun setWeightUnit(unit: WeightUnit) {
-        viewModelScope.launch {
-            settings.copy(weightUnit = unit).also {
-                repository.saveSettings(it)
-            }
-        }
+        currentSettings = currentSettings.copy(weightUnit = unit)
     }
 
     fun setDistanceUnit(unit: DistanceUnit) {
-        viewModelScope.launch {
-            settings.copy(distanceUnit = unit).also {
-                repository.saveSettings(it)
-            }
-        }
+        currentSettings = currentSettings.copy(distanceUnit = unit)
     }
 
     fun setThemeMode(mode: ThemeMode) {
+        currentSettings = currentSettings.copy(themeMode = mode)
+    }
+
+    fun saveSettings() {
         viewModelScope.launch {
-            settings.copy(themeMode = mode).also {
-                repository.saveSettings(it)
-            }
+            repository.saveSettings(currentSettings)
         }
+    }
+
+    fun resetToDefaults() {
+        currentSettings = Settings() // Uses default values from data class
+    }
+
+    fun revertChanges() {
+        currentSettings = persistedSettings
     }
 }

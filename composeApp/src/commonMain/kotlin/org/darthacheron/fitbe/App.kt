@@ -18,7 +18,7 @@ fun App() {
         val settingsViewModel = remember { SettingsViewModel() }
 
         // Apply theme at the root of the app
-        AppTheme(themeMode = settingsViewModel.settings.themeMode) {
+        AppTheme(themeMode = settingsViewModel.currentSettings.themeMode) {
             MaterialTheme {
                 val navHostController = rememberNavController()
                 RootNavGraph(navHostController = navHostController)

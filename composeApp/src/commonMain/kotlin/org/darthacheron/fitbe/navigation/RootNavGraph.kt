@@ -23,7 +23,7 @@ fun RootNavGraph(navHostController: NavHostController) {
         }
         composable<Screen.Settings> {
             val viewModel = koinViewModel<SettingsViewModel>()
-            SettingsView(viewModel)
+            SettingsView(navHostController, viewModel)
         }
     }
 }

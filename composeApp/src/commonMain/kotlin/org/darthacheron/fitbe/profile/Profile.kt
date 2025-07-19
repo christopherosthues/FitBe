@@ -13,3 +13,5 @@ data class Profile(
     val targetSleepMinutes: UInt,
     val targetSteps: UInt
 )
+
+// Implement the profiles feature. There already exists the model class with the required properties. Use for the sleep time the TimeInput.
