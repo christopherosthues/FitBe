@@ -10,6 +10,8 @@ import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
+import org.darthacheron.fitbe.profile.ProfileDao
+import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.SettingsViewModel
@@ -23,6 +25,7 @@ expect val platformModule: Module
 val sharedModule = module {
     singleOf(::BeverageRepository)
     singleOf(::SleepRepository)
+    singleOf(::ProfileRepository)
 
     single {
         get<DatabaseFactory>().create()
@@ -32,6 +35,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().beverageDao }
     single { get<FitBeDatabase>().sleepDao }
     single { get<FitBeDatabase>().bodyWeightDao }
+    single { get<FitBeDatabase>().profileDao }
 
     viewModelOf(::SettingsViewModel)
     viewModelOf(::ProfileViewModel)
@@ -40,4 +44,5 @@ val sharedModule = module {
     viewModelOf(::SleepViewModel)
     viewModelOf(::HealthOverviewViewModel)
     viewModelOf(::ExercisesViewModel)
+    viewModelOf(::ProfileViewModel)
 }

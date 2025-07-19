@@ -21,10 +21,12 @@ import org.darthacheron.fitbe.database.converters.InstantConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
+import org.darthacheron.fitbe.profile.ProfileDao
+import org.darthacheron.fitbe.profile.ProfileEntity
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
-@Database(entities = [BeverageEntity::class, SleepEntity::class], version = 1)
+@Database(entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class], version = 1)
 @TypeConverters(FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
     LocalDateTimeConverter::class)
 @ConstructedBy(FitBeDatabaseConstructor::class)
@@ -32,6 +34,7 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val beverageDao: BeverageDao
     abstract val sleepDao: SleepDao
     abstract val bodyWeightDao: BodyWeightDao
+    abstract val profileDao: ProfileDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

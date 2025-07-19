@@ -68,11 +68,13 @@ This project uses **Kotlin**, **Compose Multiplatform** from JetBrains and Gradl
 - All utility classes and functions reside in the utils package.
 - The application uses the MVVM and Repository patterns. The repositories uses the specific Room DAOs.
 - For each feature there should be a separate DAO interface.
-- The FitBeDatabase has a property for each DAO.
+- The org.darthacheron.fitbar.database.FitBeDatabase has a property for each DAO.
 - Each DAO is registered as a singleton in the Koin module class (Modules.kt in the di package of
-  the composeApp module)
+  the composeApp module). The creation is handled by the FitBeDatabase. The registration has to be
+  done by invoking the property of the FitBeDatabase.
 - All entity classes should have the suffix Entity.
 - Use in the model classes the UInt class, for entity classes the Int class.
+- All entity classes should be listed in the @Database() annotation of the FitBeDatabase class.
 - All ViewModel classes should inherit from androidx.lifecycle.ViewModel
 - All Screen classes should follow the naming pattern <FeatureName>View.
 - All libraries and plugins are maintained in a version catalogue.

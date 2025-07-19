@@ -74,4 +74,20 @@
     <string name="settings_theme_dark">Dunkel</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Auf Standard zurücksetzen</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_add">Profil hinzufügen</string>
+    <string name="profile_edit">Bearbeiten</string>
+    <string name="profile_delete">Löschen</string>
+    <string name="profile_switch">Wechseln</string>
+    <string name="profile_add_title">Profil hinzufügen</string>
+    <string name="profile_edit_title">Profil bearbeiten</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_target_kcal">Ziel-Kcal</string>
+    <string name="profile_target_beverage">Ziel-Getränk (ml)</string>
+    <string name="profile_target_weight">Zielgewicht (kg)</string>
+    <string name="profile_target_sleep_hours">Ziel-Schlafstunden</string>
+    <string name="profile_target_sleep_minutes">Ziel-Schlafminuten</string>
+    <string name="profile_target_steps">Ziel-Schritte</string>
+    <string name="profile_save">Speichern</string>
+    <string name="profile_cancel">Abbrechen</string>
 </resources>
