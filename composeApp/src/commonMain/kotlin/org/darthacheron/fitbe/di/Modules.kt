@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
@@ -36,6 +37,8 @@ val sharedModule = module {
     single { get<FitBeDatabase>().sleepDao }
     single { get<FitBeDatabase>().bodyWeightDao }
     single { get<FitBeDatabase>().profileDao }
+
+    singleOf(::StartUpService)
 
     viewModelOf(::SettingsViewModel)
     viewModelOf(::ProfileViewModel)

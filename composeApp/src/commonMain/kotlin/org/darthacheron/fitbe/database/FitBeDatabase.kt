@@ -21,6 +21,7 @@ import org.darthacheron.fitbe.database.converters.InstantConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.GenderConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
+import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
@@ -30,7 +31,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Database(entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class], version = 1)
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
-    LocalDateTimeConverter::class, GenderConverter::class
+    LocalDateTimeConverter::class, GenderConverter::class, LocalTimeConverter::class
 )
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {

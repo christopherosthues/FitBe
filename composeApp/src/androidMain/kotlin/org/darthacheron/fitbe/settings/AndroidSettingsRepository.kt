@@ -9,9 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.single
 import kotlin.uuid.Uuid
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = SettingsKeys.FILE_NAME)
@@ -22,6 +20,7 @@ class AndroidSettingsRepository(
     private object PreferencesKeys {
         val WEIGHT_UNIT = stringPreferencesKey(SettingsKeys.WEIGHT_UNIT)
         val DISTANCE_UNIT = stringPreferencesKey(SettingsKeys.DISTANCE_UNIT)
+        val BODY_MEASUREMENT_UNIT = stringPreferencesKey(SettingsKeys.BODY_MEASUREMENT_UNIT)
         val THEME_MODE = stringPreferencesKey(SettingsKeys.THEME_MODE)
         val SELECTED_PROFILE_ID = stringPreferencesKey(SettingsKeys.SELECTED_PROFILE_ID)
     }
@@ -30,6 +29,7 @@ class AndroidSettingsRepository(
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.WEIGHT_UNIT] = settings.weightUnit.name
             preferences[PreferencesKeys.DISTANCE_UNIT] = settings.distanceUnit.name
+            preferences[PreferencesKeys.BODY_MEASUREMENT_UNIT] = settings.bodyMeasurementUnit.name
             preferences[PreferencesKeys.THEME_MODE] = settings.themeMode.name
             preferences[PreferencesKeys.SELECTED_PROFILE_ID] = settings.selectedProfileId?.toString() ?: ""
         }
@@ -50,6 +50,9 @@ class AndroidSettingsRepository(
                     distanceUnit = preferences[PreferencesKeys.DISTANCE_UNIT]?.let {
                         DistanceUnit.valueOf(it)
                     } ?: DistanceUnit.KM,
+                    bodyMeasurementUnit = preferences[PreferencesKeys.BODY_MEASUREMENT_UNIT]?.let {
+                        BodyMeasurementUnit.valueOf(it)
+                    } ?: BodyMeasurementUnit.CM,
                     themeMode = preferences[PreferencesKeys.THEME_MODE]?.let {
                         ThemeMode.valueOf(it)
                     } ?: ThemeMode.SYSTEM,

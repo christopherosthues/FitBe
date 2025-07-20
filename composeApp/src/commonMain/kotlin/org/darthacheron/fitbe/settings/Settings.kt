@@ -10,6 +10,7 @@ import kotlin.uuid.Uuid
 data class Settings(
     val weightUnit: WeightUnit = WeightUnit.KG,
     val distanceUnit: DistanceUnit = DistanceUnit.KM,
+    val bodyMeasurementUnit: BodyMeasurementUnit = BodyMeasurementUnit.CM,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val selectedProfileId: Uuid? = null
 )

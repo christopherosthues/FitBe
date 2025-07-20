@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.profile
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -14,8 +15,7 @@ data class ProfileEntity(
     val targetKcal: Int,
     val targetBeverageInMilliliter: Int,
     val targetWeight: Double,
-    val targetSleepHours: Int,
-    val targetSleepMinutes: Int,
+    val targetSleepDuration: LocalTime,
     val targetSteps: Int
 ) {
     fun toProfile(): Profile = Profile(
@@ -25,8 +25,7 @@ data class ProfileEntity(
         targetKcal = targetKcal.toUInt(),
         targetBeverageInMilliliter = targetBeverageInMilliliter.toUInt(),
         targetWeight = targetWeight,
-        targetSleepHours = targetSleepHours.toUInt(),
-        targetSleepMinutes = targetSleepMinutes.toUInt(),
+        targetSleepDuration = targetSleepDuration,
         targetSteps = targetSteps.toUInt()
     )
 
@@ -38,8 +37,7 @@ data class ProfileEntity(
             targetKcal = profile.targetKcal.toInt(),
             targetBeverageInMilliliter = profile.targetBeverageInMilliliter.toInt(),
             targetWeight = profile.targetWeight,
-            targetSleepHours = profile.targetSleepHours.toInt(),
-            targetSleepMinutes = profile.targetSleepMinutes.toInt(),
+            targetSleepDuration = profile.targetSleepDuration,
             targetSteps = profile.targetSteps.toInt()
         )
     }

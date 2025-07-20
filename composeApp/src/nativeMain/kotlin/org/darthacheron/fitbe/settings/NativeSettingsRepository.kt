@@ -41,6 +41,9 @@ class NativeSettingsRepository : SettingsRepository {
                     distanceUnit = (dict.getValue(SettingsKeys.DISTANCE_UNIT) as? String)?.let {
                         DistanceUnit.valueOf(it)
                     } ?: DistanceUnit.KM,
+                    bodyMeasurementUnit = (dict.getValue(SettingsKeys.BODY_MEASUREMENT_UNIT) as? String)?.let {
+                        BodyMeasurementUnit.valueOf(it)
+                    } ?: BodyMeasurementUnit.CM,
                     themeMode = (dict.getValue(SettingsKeys.THEME_MODE) as? String)?.let {
                         ThemeMode.valueOf(it)
                     } ?: ThemeMode.SYSTEM,
@@ -56,6 +59,7 @@ class NativeSettingsRepository : SettingsRepository {
             val dict = mutableMapOf(
                 SettingsKeys.WEIGHT_UNIT to settings.weightUnit.name,
                 SettingsKeys.DISTANCE_UNIT to settings.distanceUnit.name,
+                SettingsKeys.BODY_MEASUREMENT_UNIT to settings.bodyMeasurementUnit.name,
                 SettingsKeys.THEME_MODE to settings.themeMode.name,
                 SettingsKeys.SELECTED_PROFILE_ID to (settings.selectedProfileId?.toString() ?: "")
             )

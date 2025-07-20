@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import java.util.Properties
 import java.io.File
 import org.darthacheron.fitbe.utils.DesktopPaths
@@ -38,6 +39,9 @@ class DesktopSettingsRepository : SettingsRepository {
                     distanceUnit = getProperty(SettingsKeys.DISTANCE_UNIT)?.let {
                         DistanceUnit.valueOf(it)
                     } ?: DistanceUnit.KM,
+                    bodyMeasurementUnit = getProperty(SettingsKeys.BODY_MEASUREMENT_UNIT)?.let {
+                        BodyMeasurementUnit.valueOf(it)
+                    } ?: BodyMeasurementUnit.CM,
                     themeMode = getProperty(SettingsKeys.THEME_MODE)?.let {
                         ThemeMode.valueOf(it)
                     } ?: ThemeMode.SYSTEM,
@@ -54,6 +58,7 @@ class DesktopSettingsRepository : SettingsRepository {
                 Properties().apply {
                     setProperty(SettingsKeys.WEIGHT_UNIT, settings.weightUnit.name)
                     setProperty(SettingsKeys.DISTANCE_UNIT, settings.distanceUnit.name)
+                    setProperty(SettingsKeys.BODY_MEASUREMENT_UNIT, settings.bodyMeasurementUnit.name)
                     setProperty(SettingsKeys.THEME_MODE, settings.themeMode.name)
                     setProperty(SettingsKeys.SELECTED_PROFILE_ID, settings.selectedProfileId?.toString() ?: "")
                     settingsFile.outputStream().use { store(it, null) }

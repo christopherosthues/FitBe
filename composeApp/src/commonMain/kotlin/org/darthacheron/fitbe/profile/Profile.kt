@@ -1,5 +1,7 @@
 package org.darthacheron.fitbe.profile
 
+import kotlinx.datetime.LocalTime
+import kotlin.time.Duration
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -11,9 +13,6 @@ data class Profile(
     val targetKcal: UInt,
     val targetBeverageInMilliliter: UInt,
     val targetWeight: Double,
-    val targetSleepHours: UInt,
-    val targetSleepMinutes: UInt,
+    val targetSleepDuration: LocalTime,
     val targetSteps: UInt
 )
-
-// Implement the profiles feature. There already exists the model class with the required properties. Use for the sleep time the TimeInput.

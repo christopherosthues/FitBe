@@ -1,11 +1,13 @@
 package org.darthacheron.fitbe.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,23 +35,23 @@ fun <T>DropdownSelection(
     var expanded by remember { mutableStateOf(initialState) }
     var selectedOption by remember { mutableStateOf(items[selectedIndex]) }
 
+    val isExpanded = expanded && isEnabled
     ExposedDropdownMenuBox(
-        expanded = expanded && isEnabled,
-
+        expanded = isExpanded,
         onExpandedChange = { expanded = !expanded }
     ) {
-        TextField(
+        OutlinedTextField(
             value = itemToString(selectedOption),
             onValueChange = {},
             readOnly = true,
             label = { Text(title) },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
             },
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(
-            expanded = expanded && isEnabled,
+            expanded = isExpanded,
             onDismissRequest = { expanded = false }
         ) {
             items.forEachIndexed { index, selectionOption ->
