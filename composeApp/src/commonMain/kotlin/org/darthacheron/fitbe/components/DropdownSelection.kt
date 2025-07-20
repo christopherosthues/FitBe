@@ -23,6 +23,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun <T>DropdownSelection(
     initialState: Boolean,
     items: List<T>,
+    isEnabled: Boolean = true,
     selectedIndex: Int = 0,
     title: String,
     itemContent: @Composable (T, () -> Unit) -> Unit,
@@ -33,7 +34,8 @@ fun <T>DropdownSelection(
     var selectedOption by remember { mutableStateOf(items[selectedIndex]) }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
+        expanded = expanded && isEnabled,
+
         onExpandedChange = { expanded = !expanded }
     ) {
         TextField(
@@ -47,7 +49,7 @@ fun <T>DropdownSelection(
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
         ExposedDropdownMenu(
-            expanded = expanded,
+            expanded = expanded && isEnabled,
             onDismissRequest = { expanded = false }
         ) {
             items.forEachIndexed { index, selectionOption ->

@@ -34,9 +34,16 @@ class ProfileViewModel(
         listOf()
     )
 
-    fun addProfile(profile: Profile) {
+    fun addAndSelectProfile(profile: Profile) {
         viewModelScope.launch {
             profileRepository.upsertProfile(profile)
+            val savedProfile = profileRepository.getProfileById(profile.id)
+            if (savedProfile != null) {
+                _currentProfile.value = savedProfile
+                // Update settings
+                val currentSettings = settingsRepository.getSettings()
+                settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = profile.id))
+            }
         }
     }
 

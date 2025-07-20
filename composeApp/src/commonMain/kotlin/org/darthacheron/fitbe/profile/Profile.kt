@@ -5,8 +5,9 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class Profile(
-    val id: Uuid,
-    val name: String, // Added name for profile identification
+    val id: Uuid = Uuid.random(),
+    val name: String,
+    val gender: Gender,
     val targetKcal: UInt,
     val targetBeverageInMilliliter: UInt,
     val targetWeight: Double,

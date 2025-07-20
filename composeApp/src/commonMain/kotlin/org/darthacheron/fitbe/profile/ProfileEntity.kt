@@ -10,6 +10,7 @@ import kotlin.uuid.Uuid
 data class ProfileEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val name: String,
+    val gender: Gender,
     val targetKcal: Int,
     val targetBeverageInMilliliter: Int,
     val targetWeight: Double,
@@ -20,6 +21,7 @@ data class ProfileEntity(
     fun toProfile(): Profile = Profile(
         id = id,
         name = name,
+        gender = gender,
         targetKcal = targetKcal.toUInt(),
         targetBeverageInMilliliter = targetBeverageInMilliliter.toUInt(),
         targetWeight = targetWeight,
@@ -32,6 +34,7 @@ data class ProfileEntity(
         fun fromProfile(profile: Profile): ProfileEntity = ProfileEntity(
             id = profile.id,
             name = profile.name,
+            gender = profile.gender,
             targetKcal = profile.targetKcal.toInt(),
             targetBeverageInMilliliter = profile.targetBeverageInMilliliter.toInt(),
             targetWeight = profile.targetWeight,

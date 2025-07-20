@@ -28,6 +28,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.profile_add
 import fitbe.composeapp.generated.resources.profile_cancel
+import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
 import fitbe.composeapp.generated.resources.profile_save
 import fitbe.composeapp.generated.resources.profile_switch
@@ -37,7 +38,6 @@ import fitbe.composeapp.generated.resources.profile_target_sleep_hours
 import fitbe.composeapp.generated.resources.profile_target_sleep_minutes
 import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
-import kotlin.uuid.Uuid
 import kotlin.uuid.ExperimentalUuidApi
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.jetbrains.compose.resources.painterResource
@@ -50,6 +50,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
     val currentProfile by profileViewModel.currentProfile.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
+    var newGender by remember { mutableStateOf(Gender.MALE) }
     var newTargetKcal by remember { mutableStateOf("") }
     var newTargetBeverage by remember { mutableStateOf("") }
     var newTargetWeight by remember { mutableStateOf("") }
@@ -112,6 +113,24 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             onValueChange = { newName = it },
                             label = { Text(stringResource(Res.string.profile_name)) }
                         )
+                        val genders = Gender.entries
+                        val selectedIndex = genders.indexOf(currentProfile?.gender)
+                        DropdownSelection(
+                            initialState = false,
+                            items = genders,
+                            selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
+                            title = stringResource(Res.string.profile_gender),
+                            itemContent = { gender, onClick ->
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(gender.localizedString())) },
+                                    onClick = onClick
+                                )
+                            },
+                            itemToString = { stringResource(it.localizedString()) },
+                            onItemSelected = { index ->
+                                newGender = genders[index]
+                            }
+                        )
                         TextField(
                             value = newTargetKcal,
                             onValueChange = { newTargetKcal = it.filter { c -> c.isDigit() } },
@@ -155,22 +174,22 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                         onClick = {
                             // Basic validation
                             if (newName.isNotBlank()) {
-                                profileViewModel.addProfile(
-                                    Profile(
-                                        id = Uuid.random(),
-                                        name = newName,
-                                        targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
-                                        targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
-                                            ?: 0u,
-                                        targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
-                                        targetSleepHours = newTargetSleepHours.toUIntOrNull() ?: 0u,
-                                        targetSleepMinutes = newTargetSleepMinutes.toUIntOrNull()
-                                            ?: 0u,
-                                        targetSteps = newTargetSteps.toUIntOrNull() ?: 0u
-                                    )
+                                val profile = Profile(
+                                    name = newName,
+                                    gender = newGender,
+                                    targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
+                                    targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
+                                        ?: 0u,
+                                    targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
+                                    targetSleepHours = newTargetSleepHours.toUIntOrNull() ?: 0u,
+                                    targetSleepMinutes = newTargetSleepMinutes.toUIntOrNull()
+                                        ?: 0u,
+                                    targetSteps = newTargetSteps.toUIntOrNull() ?: 0u
                                 )
+                                profileViewModel.addAndSelectProfile(profile)
                                 // Reset fields
                                 newName = ""
+                                newGender = Gender.UNKNOWN
                                 newTargetKcal = ""
                                 newTargetBeverage = ""
                                 newTargetWeight = ""
@@ -198,6 +217,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 fun ProfileDetails(profile: Profile) {
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(text = "${stringResource(Res.string.profile_name)}: ${profile.name}")
+        Text(text = "${stringResource(Res.string.profile_gender)}: ${stringResource(profile.gender.localizedString())}")
         Text(text = "${stringResource(Res.string.profile_target_kcal)}: ${profile.targetKcal}")
         Text(text = "${stringResource(Res.string.profile_target_beverage)}: ${profile.targetBeverageInMilliliter}")
         Text(text = "${stringResource(Res.string.profile_target_weight)}: ${profile.targetWeight}")

@@ -75,8 +75,13 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Reset to Defaults</string>
     <string name="profile_add">Add Profile</string>
-    <string name="profile_edit">Edit</string>
-    <string name="profile_delete">Delete</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_gender_unknown">Unknown</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
+    <string name="profile_gender_other">Other</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_delete">Delete profile</string>
     <string name="profile_switch">Switch</string>
     <string name="profile_add_title">Add Profile</string>
     <string name="profile_edit_title">Edit Profile</string>
