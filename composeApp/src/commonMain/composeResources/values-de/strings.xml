@@ -69,6 +69,9 @@
     <string name="settings_distance_unit">Entfernungseinheit</string>
     <string name="settings_km">km</string>
     <string name="settings_miles">Meilen</string>
+    <string name="settings_body_measurement_unit">Körpermaßeinheit</string>
+    <string name="settings_cm">cm</string>
+    <string name="settings_inch">Inch</string>
     <string name="settings_theme">Thema</string>
     <string name="settings_theme_light">Hell</string>
     <string name="settings_theme_dark">Dunkel</string>
@@ -93,4 +96,5 @@
     <string name="profile_target_steps">Ziel-Schritte</string>
     <string name="profile_save">Speichern</string>
     <string name="profile_cancel">Abbrechen</string>
+    <string name="profile_body_height">Körpergröße</string>
 </resources>

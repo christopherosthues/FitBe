@@ -67,14 +67,7 @@ fun SettingsView(
                             selected = settings.weightUnit == unit,
                             onClick = { viewModel.setWeightUnit(unit) }
                         )
-                        Text(
-                            text = stringResource(
-                                when (unit) {
-                                    WeightUnit.KG -> Res.string.settings_kg
-                                    WeightUnit.POUND -> Res.string.settings_pound
-                                }
-                            )
-                        )
+                        Text(text = stringResource(unit.localizedString()))
                     }
                 }
             }
@@ -90,14 +83,23 @@ fun SettingsView(
                             selected = settings.distanceUnit == unit,
                             onClick = { viewModel.setDistanceUnit(unit) }
                         )
-                        Text(
-                            stringResource(
-                                when (unit) {
-                                    DistanceUnit.KM -> Res.string.settings_km
-                                    DistanceUnit.MILES -> Res.string.settings_miles
-                                }
-                            )
+                        Text(stringResource(unit.localizedString()))
+                    }
+                }
+            }
+
+            Text(
+                text = stringResource(Res.string.settings_body_measurement_unit),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Row {
+                BodyMeasurementUnit.entries.forEach { unit ->
+                    Row {
+                        RadioButton(
+                            selected = settings.bodyMeasurementUnit == unit,
+                            onClick = { viewModel.setBodyMeasurementUnit(unit) }
                         )
+                        Text(stringResource(unit.localizedString()))
                     }
                 }
             }
@@ -114,13 +116,7 @@ fun SettingsView(
                             onClick = { viewModel.setThemeMode(mode) }
                         )
                         Text(
-                            text = stringResource(
-                                when (mode) {
-                                    ThemeMode.LIGHT -> Res.string.settings_theme_light
-                                    ThemeMode.DARK -> Res.string.settings_theme_dark
-                                    ThemeMode.SYSTEM -> Res.string.settings_theme_system
-                                }
-                            )
+                            text = stringResource(mode.localizedString())
                         )
                     }
                 }

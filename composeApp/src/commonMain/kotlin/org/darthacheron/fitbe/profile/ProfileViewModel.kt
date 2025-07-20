@@ -50,6 +50,7 @@ class ProfileViewModel(
     fun editProfile(updatedProfile: Profile) {
         viewModelScope.launch {
             profileRepository.upsertProfile(updatedProfile)
+            _currentProfile.value = profileRepository.getProfileById(updatedProfile.id)
         }
     }
 

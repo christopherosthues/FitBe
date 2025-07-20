@@ -11,9 +11,7 @@ import org.koin.core.component.inject
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class SettingsViewModel : ViewModel(), KoinComponent {
-    private val repository: SettingsRepository by inject()
-
+class SettingsViewModel(private val repository: SettingsRepository) : ViewModel() {
     // Persistent settings
     private var persistedSettings by mutableStateOf(Settings())
 
@@ -36,6 +34,10 @@ class SettingsViewModel : ViewModel(), KoinComponent {
 
     fun setDistanceUnit(unit: DistanceUnit) {
         currentSettings = currentSettings.copy(distanceUnit = unit)
+    }
+
+    fun setBodyMeasurementUnit(unit: BodyMeasurementUnit) {
+        currentSettings = currentSettings.copy(bodyMeasurementUnit = unit)
     }
 
     fun setThemeMode(mode: ThemeMode) {
