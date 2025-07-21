@@ -36,12 +36,14 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
+import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_add
 import fitbe.composeapp.generated.resources.profile_body_height
 import fitbe.composeapp.generated.resources.profile_cancel
+import fitbe.composeapp.generated.resources.profile_delete
 import fitbe.composeapp.generated.resources.profile_edit
 import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
@@ -202,6 +204,37 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                     readOnly = !isEditing,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AnimatedVisibility(!isEditing) {
+                FloatingActionButton(
+                    onClick = {
+                        currentProfile?.let { profile ->
+                            profileViewModel.deleteProfile(profile.id)
+
+                            // If no profiles left, create and select a default one
+                            if (profiles.size <= 1) {
+                                val defaultProfile = Profile()
+                                profileViewModel.addAndSelectProfile(defaultProfile)
+                            } else {
+                                profileViewModel.switchProfile(profiles.first { it.id != profile.id }.id )
+                            }
+                        }
+                    },
+                    containerColor = Color.Red,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_delete),
+                        contentDescription = stringResource(Res.string.profile_delete)
+                    )
+                }
             }
         }
 
