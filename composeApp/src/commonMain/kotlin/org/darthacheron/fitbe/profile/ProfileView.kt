@@ -3,22 +3,25 @@ package org.darthacheron.fitbe.profile
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,10 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
-import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_save
-import fitbe.composeapp.generated.resources.profile_add
+import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_body_height
 import fitbe.composeapp.generated.resources.profile_edit
 import fitbe.composeapp.generated.resources.profile_gender
@@ -47,15 +49,14 @@ import fitbe.composeapp.generated.resources.profile_target_kcal
 import fitbe.composeapp.generated.resources.profile_target_sleep_duration
 import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
-import kotlinx.datetime.LocalDateTime
-import kotlin.uuid.ExperimentalUuidApi
+import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.DropdownSelection
+import org.darthacheron.fitbe.health.sleep.AdvancedTimePickerDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlinx.datetime.LocalTime
-import org.darthacheron.fitbe.health.sleep.AdvancedTimePickerDialog
-import org.darthacheron.fitbe.health.sleep.TimePickerDialog
 import kotlin.collections.indexOf
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -72,49 +73,42 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
     var newTargetSteps by remember { mutableStateOf("") }
     var newBodyHeightInCm by remember { mutableStateOf("") }
     var showSleepDurationTimePicker by remember { mutableStateOf(false) }
+    var showProfileDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState())  // Add scrolling capability
+                .verticalScroll(rememberScrollState())
         ) {
-            if (profiles.isNotEmpty()) {
-                val selectedIndex = profiles.indexOf(currentProfile)
-                DropdownSelection(
-                    initialState = false,
-                    items = profiles,
-                    selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
-                    title = stringResource(Res.string.profile_select),
-                    itemContent = { profile, onClick ->
-                        DropdownMenuItem(
-                            text = { Text(profile.name) },
-                            onClick = onClick
-                        )
-                    },
-                    itemToString = { it.name },
-                    onItemSelected = { index ->
-                        profileViewModel.switchProfile(profiles[index].id)
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             currentProfile?.let { profile ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    OutlinedTextField(
-                        value = if (isEditing) newName else profile.name,
-                        onValueChange = { if (isEditing) newName = it },
-                        label = { Text(stringResource(Res.string.profile_name)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedTextField(
+                            value = if (isEditing) newName else profile.name,
+                            onValueChange = { if (isEditing) newName = it },
+                            label = { Text(stringResource(Res.string.profile_name)) },
+                            readOnly = !isEditing,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        IconButton(onClick = { showProfileDialog = true }) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_switch),
+                                contentDescription = stringResource(Res.string.profile_select)
+                            )
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -172,9 +166,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                     // Replace separate TextFields with TimeInput
                     OutlinedTextField(
-                        value = "${
-                            profile.targetSleepDuration.hour.toString().padStart(2, '0')
-                        }:${profile.targetSleepDuration.minute.toString().padStart(2, '0')}",
+                        value = sleepDurationText(if (isEditing) newTargetSleepDuration else profile.targetSleepDuration),
                         onValueChange = {},
                         label = { Text(text = stringResource(Res.string.profile_target_sleep_duration)) },
                         readOnly = true,
@@ -268,18 +260,69 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
             }
         }
 
+        if (showProfileDialog && profiles.isNotEmpty()) {
+            ProfileSelectionDialog(
+                profiles = profiles,
+                selectedProfileId = currentProfile?.id,
+                onProfileSelected = {
+                    profileViewModel.switchProfile(it.id)
+                    showProfileDialog = false
+                },
+                onDismiss = { showProfileDialog = false }
+            )
+        }
+
         if (showSleepDurationTimePicker) {
             TimePickerDialog2(
                 initialHour = newTargetSleepDuration.hour,
                 initialMinute = newTargetSleepDuration.minute,
                 onTimeSelected = { hour, minute ->
                     newTargetSleepDuration = LocalTime(hour, minute)
+
                     showSleepDurationTimePicker = false
                 },
                 onDismiss = { showSleepDurationTimePicker = false }
             )
         }
     }
+}
+
+private fun sleepDurationText(sleepDuration: LocalTime): String = "${
+    sleepDuration.hour.toString().padStart(2, '0')
+}:${sleepDuration.minute.toString().padStart(2, '0')}"
+
+@OptIn(ExperimentalUuidApi::class)
+@Composable
+fun ProfileSelectionDialog(
+    profiles: List<Profile>,
+    selectedProfileId: Uuid?,
+    onProfileSelected: (Profile) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        title = { Text(text = stringResource(Res.string.profile_select)) },
+        text = {
+            val selectedIndex = profiles.indexOfFirst { it.id == selectedProfileId }
+            DropdownSelection(
+                initialState = false,
+                items = profiles,
+                selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
+                title = stringResource(Res.string.profile_select),
+                itemContent = { profile, onClick ->
+                    DropdownMenuItem(
+                        text = { Text(profile.name) },
+                        onClick = onClick
+                    )
+                },
+                itemToString = { it.name },
+                onItemSelected = { index ->
+                    onProfileSelected(profiles[index])
+                }
+            )
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
