@@ -34,10 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
+import fitbe.composeapp.generated.resources.ic_add
+import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_switch
+import fitbe.composeapp.generated.resources.profile_add
 import fitbe.composeapp.generated.resources.profile_body_height
+import fitbe.composeapp.generated.resources.profile_cancel
 import fitbe.composeapp.generated.resources.profile_edit
 import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
@@ -61,6 +65,7 @@ import kotlin.uuid.Uuid
 fun ProfileView(profileViewModel: ProfileViewModel) {
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
+    var isAdding by remember { mutableStateOf(false) }
     var isEditing by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
     var newGender by remember { mutableStateOf(Gender.MALE) }
@@ -200,58 +205,209 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
             }
         }
 
-        // Floating Action Button for adding a new profile
-        FloatingActionButton(
-            onClick = {
-                if (isEditing) {
-                    // Save profile
-                    currentProfile?.let {
-                        val updatedProfile = it.copy(
-                            name = newName,
-                            gender = newGender,
-                            targetKcal = newTargetKcal.toUIntOrNull() ?: it.targetKcal,
-                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
-                                ?: it.targetBeverageInMilliliter,
-                            targetWeight = newTargetWeight.toDoubleOrNull() ?: it.targetWeight,
-                            targetSleepDuration = newTargetSleepDuration,
-                            targetSteps = newTargetSteps.toUIntOrNull() ?: it.targetSteps,
-                            bodyHeightInCm = newBodyHeightInCm.toUIntOrNull() ?: it.bodyHeightInCm
-                        )
-                        profileViewModel.editProfile(updatedProfile)
-                    }
-                } else {
-                    // Entering edit mode: initialize input fields once
-                    currentProfile?.let {
-                        newName = it.name
-                        newGender = it.gender
-                        newTargetKcal = it.targetKcal.toString()
-                        newTargetBeverage = it.targetBeverageInMilliliter.toString()
-                        newTargetWeight = it.targetWeight.toString()
-                        newTargetSleepDuration = it.targetSleepDuration
-                        newTargetSteps = it.targetSteps.toString()
-                        newBodyHeightInCm = it.bodyHeightInCm.toString()
-                    }
-                }
-                isEditing = !isEditing
-            },
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            containerColor = Color(0xFF2196F3) // Example: blue
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(!isEditing) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_edit),
-                    contentDescription = stringResource(Res.string.profile_edit)
-                )
-            }
             AnimatedVisibility(isEditing) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_save),
-                    contentDescription = stringResource(Res.string.profile_save)
-                )
+                FloatingActionButton(
+                    onClick = {
+                        // Cancel editing and reset fields
+                        currentProfile?.let {
+                            newName = it.name
+                            newGender = it.gender
+                            newTargetKcal = it.targetKcal.toString()
+                            newTargetBeverage = it.targetBeverageInMilliliter.toString()
+                            newTargetWeight = it.targetWeight.toString()
+                            newTargetSleepDuration = it.targetSleepDuration
+                            newTargetSteps = it.targetSteps.toString()
+                            newBodyHeightInCm = it.bodyHeightInCm.toString()
+                        }
+                        isEditing = false
+                        isAdding = false
+                    },
+                    containerColor = Color.Red,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_cancel),
+                        contentDescription = stringResource(Res.string.profile_cancel)
+                    )
+                }
+            }
+
+            AnimatedVisibility(isEditing) {
+                FloatingActionButton(
+                    onClick = {
+                        // Save profile
+                        val profile = Profile(
+                            id = if (isAdding) Uuid.random() else currentProfile?.id ?: Uuid.random(),
+                            name = newName,
+                            gender = newGender,
+                            targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
+                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull() ?: 0u,
+                            targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
+                            targetSleepDuration = newTargetSleepDuration,
+                            targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
+                            bodyHeightInCm = newBodyHeightInCm.toUIntOrNull() ?: 0u
+                        )
+                        if (isAdding) {
+                            profileViewModel.addAndSelectProfile(profile)
+                        } else {
+                            profileViewModel.editProfile(profile)
+                        }
+                        isEditing = false
+                        isAdding = false
+                    },
+                    containerColor = Color(0xFF2196F3)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_save),
+                        contentDescription = stringResource(Res.string.profile_save)
+                    )
+                }
             }
         }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+            AnimatedVisibility(!isEditing) {
+                FloatingActionButton(
+                    onClick = {
+                        currentProfile?.let {
+                            newName = it.name
+                            newGender = it.gender
+                            newTargetKcal = it.targetKcal.toString()
+                            newTargetBeverage = it.targetBeverageInMilliliter.toString()
+                            newTargetWeight = it.targetWeight.toString()
+                            newTargetSleepDuration = it.targetSleepDuration
+                            newTargetSteps = it.targetSteps.toString()
+                            newBodyHeightInCm = it.bodyHeightInCm.toString()
+                        }
+                        isEditing = true
+                    },
+                    containerColor = Color(0xFF2196F3),
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_edit),
+                        contentDescription = stringResource(Res.string.profile_edit)
+                    )
+                }
+            }
+
+            AnimatedVisibility(!isEditing) {
+                FloatingActionButton(
+                    onClick = {
+                        currentProfile?.let {
+                            val newProfile = Profile()
+                            newName = newProfile.name
+                            newGender = newProfile.gender
+                            newTargetKcal = newProfile.targetKcal.toString()
+                            newTargetBeverage = newProfile.targetBeverageInMilliliter.toString()
+                            newTargetWeight = newProfile.targetWeight.toString()
+                            newTargetSleepDuration = newProfile.targetSleepDuration
+                            newTargetSteps = newProfile.targetSteps.toString()
+                            newBodyHeightInCm = newProfile.bodyHeightInCm.toString()
+                        }
+                        isEditing = true
+                        isAdding = true
+                    },
+                    containerColor = Color(0xFF2196F3)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_add),
+                        contentDescription = stringResource(Res.string.profile_add)
+                    )
+                }
+            }
+        }
+
+//        if (isEditing) {
+//            IconButton(
+//                onClick = {
+//                    currentProfile?.let {
+//                        newName = it.name
+//                        newGender = it.gender
+//                        newTargetKcal = it.targetKcal.toString()
+//                        newTargetBeverage = it.targetBeverageInMilliliter.toString()
+//                        newTargetWeight = it.targetWeight.toString()
+//                        newTargetSleepDuration = it.targetSleepDuration
+//                        newTargetSteps = it.targetSteps.toString()
+//                        newBodyHeightInCm = it.bodyHeightInCm.toString()
+//                    }
+//                    isEditing = false
+//                },
+//                modifier = Modifier
+//                    .align(Alignment.TopEnd)
+//                    .padding(16.dp)
+//            ) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_cancel),
+//                    contentDescription = stringResource(Res.string.profile_cancel)
+//                )
+//            }
+//        }
+//
+//        Row {  }
+//        // Floating Action Button for adding a new profile
+//        FloatingActionButton(
+//            onClick = {
+//                if (isEditing) {
+//                    // Save profile
+//                    currentProfile?.let {
+//                        val updatedProfile = it.copy(
+//                            name = newName,
+//                            gender = newGender,
+//                            targetKcal = newTargetKcal.toUIntOrNull() ?: it.targetKcal,
+//                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
+//                                ?: it.targetBeverageInMilliliter,
+//                            targetWeight = newTargetWeight.toDoubleOrNull() ?: it.targetWeight,
+//                            targetSleepDuration = newTargetSleepDuration,
+//                            targetSteps = newTargetSteps.toUIntOrNull() ?: it.targetSteps,
+//                            bodyHeightInCm = newBodyHeightInCm.toUIntOrNull() ?: it.bodyHeightInCm
+//                        )
+//                        profileViewModel.editProfile(updatedProfile)
+//                    }
+//                } else {
+//                    // Entering edit mode: initialize input fields once
+//                    currentProfile?.let {
+//                        newName = it.name
+//                        newGender = it.gender
+//                        newTargetKcal = it.targetKcal.toString()
+//                        newTargetBeverage = it.targetBeverageInMilliliter.toString()
+//                        newTargetWeight = it.targetWeight.toString()
+//                        newTargetSleepDuration = it.targetSleepDuration
+//                        newTargetSteps = it.targetSteps.toString()
+//                        newBodyHeightInCm = it.bodyHeightInCm.toString()
+//                    }
+//                }
+//                isEditing = !isEditing
+//            },
+//            modifier = Modifier
+//                .align(Alignment.BottomEnd)
+//                .padding(16.dp),
+//            containerColor = Color(0xFF2196F3) // Example: blue
+//        ) {
+//            AnimatedVisibility(!isEditing) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_edit),
+//                    contentDescription = stringResource(Res.string.profile_edit)
+//                )
+//            }
+//            AnimatedVisibility(isEditing) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_save),
+//                    contentDescription = stringResource(Res.string.profile_save)
+//                )
+//            }
+//        }
 
         if (showProfileDialog && profiles.isNotEmpty()) {
             ProfileSelectionDialog(

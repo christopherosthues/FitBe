@@ -16,21 +16,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
@@ -64,7 +59,9 @@ import io.github.koalaplot.core.xygraph.CategoryAxisModel
 import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -73,22 +70,20 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DateRangePickerModal
+import org.darthacheron.fitbe.components.DropdownSelection
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
-import kotlinx.datetime.Clock
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
-import kotlinx.datetime.Instant
-import org.darthacheron.fitbe.components.DropdownSelection
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun SleepOverviewView(viewModel: SleepViewModel) {
     val sleeps by viewModel.sleeps.collectAsState()
-    val viewType by viewModel.viewType.collectAsState()
+    var selectedViewTypeIndex by remember { mutableStateOf(0) }
     val startDate by viewModel.startDate.collectAsState()
     val endDate by viewModel.endDate.collectAsState()
     var showDateRangeDialog by remember { mutableStateOf(false) }
@@ -120,6 +115,7 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
             }
             DropdownSelection(
                 initialState = false,
+                selectedIndex = selectedViewTypeIndex,
                 items = SleepViewType.entries,
                 title = "Choose an option",
                 itemContent = { item, onClick ->
@@ -132,6 +128,7 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
                     it.localizedString()
                 },
                 onItemSelected = {
+                    selectedViewTypeIndex = it
                     viewModel.setViewType(viewTypes[it])
                 }
             )
