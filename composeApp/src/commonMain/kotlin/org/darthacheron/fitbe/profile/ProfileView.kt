@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -54,7 +53,6 @@ import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.health.sleep.AdvancedTimePickerDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.collections.indexOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -83,128 +81,122 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
             currentProfile?.let { profile ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        OutlinedTextField(
-                            value = if (isEditing) newName else profile.name,
-                            onValueChange = { if (isEditing) newName = it },
-                            label = { Text(stringResource(Res.string.profile_name)) },
-                            readOnly = !isEditing,
-                            modifier = Modifier.weight(1f)
+                    OutlinedTextField(
+                        value = if (isEditing) newName else profile.name,
+                        onValueChange = { if (isEditing) newName = it },
+                        label = { Text(stringResource(Res.string.profile_name)) },
+                        readOnly = !isEditing,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    IconButton(onClick = { showProfileDialog = true }) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_switch),
+                            contentDescription = stringResource(Res.string.profile_select)
                         )
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        IconButton(onClick = { showProfileDialog = true }) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_switch),
-                                contentDescription = stringResource(Res.string.profile_select)
-                            )
-                        }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    val genders = Gender.entries
-                    val selectedIndex = genders.indexOf(if (isEditing) newGender else profile.gender)
-                    DropdownSelection(
-                        initialState = false,
-                        items = genders,
-                        selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
-                        title = stringResource(Res.string.profile_gender),
-                        isEnabled = isEditing,
-                        itemContent = { gender, onClick ->
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(gender.localizedString())) },
-                                onClick = onClick
-                            )
-                        },
-                        itemToString = { stringResource(it.localizedString()) },
-                        onItemSelected = { index ->
-                            if (isEditing) newGender = genders[index]
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = if (isEditing) newTargetKcal else profile.targetKcal.toString(),
-                        onValueChange = { if (isEditing) newTargetKcal = it },
-                        label = { Text(stringResource(Res.string.profile_target_kcal)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = if (isEditing) newTargetBeverage else profile.targetBeverageInMilliliter.toString(),
-                        onValueChange = { if (isEditing) newTargetBeverage = it },
-                        label = { Text(stringResource(Res.string.profile_target_beverage)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = if (isEditing) newTargetWeight else profile.targetWeight.toString(),
-                        onValueChange = { if (isEditing) newTargetWeight = it },
-                        label = { Text(stringResource(Res.string.profile_target_weight)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Replace separate TextFields with TimeInput
-                    OutlinedTextField(
-                        value = sleepDurationText(if (isEditing) newTargetSleepDuration else profile.targetSleepDuration),
-                        onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.profile_target_sleep_duration)) },
-                        readOnly = true,
-                        trailingIcon = {
-                            IconButton(
-                                enabled = isEditing,
-                                onClick = {
-                                     showSleepDurationTimePicker = true
-                                }) {
-                                Icon(
-                                    painterResource(Res.drawable.ic_access_time),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = if (isEditing) newTargetSteps else profile.targetSteps.toString(),
-                        onValueChange = { if (isEditing) newTargetSteps = it },
-                        label = { Text(stringResource(Res.string.profile_target_steps)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedTextField(
-                        value = if (isEditing) newBodyHeightInCm else profile.bodyHeightInCm.toString(),
-                        onValueChange = { if (isEditing) newBodyHeightInCm = it },
-                        label = { Text(stringResource(Res.string.profile_body_height)) },
-                        readOnly = !isEditing,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                val genders = Gender.entries
+                val selectedIndex = genders.indexOf(if (isEditing) newGender else profile.gender)
+                DropdownSelection(
+                    initialState = false,
+                    items = genders,
+                    selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
+                    title = stringResource(Res.string.profile_gender),
+                    isEnabled = isEditing,
+                    itemContent = { gender, onClick ->
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(gender.localizedString())) },
+                            onClick = onClick
+                        )
+                    },
+                    itemToString = { stringResource(it.localizedString()) },
+                    onItemSelected = { index ->
+                        if (isEditing) newGender = genders[index]
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newTargetKcal else profile.targetKcal.toString(),
+                    onValueChange = { if (isEditing) newTargetKcal = it },
+                    label = { Text(stringResource(Res.string.profile_target_kcal)) },
+                    readOnly = !isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newTargetBeverage else profile.targetBeverageInMilliliter.toString(),
+                    onValueChange = { if (isEditing) newTargetBeverage = it },
+                    label = { Text(stringResource(Res.string.profile_target_beverage)) },
+                    readOnly = !isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newTargetWeight else profile.targetWeight.toString(),
+                    onValueChange = { if (isEditing) newTargetWeight = it },
+                    label = { Text(stringResource(Res.string.profile_target_weight)) },
+                    readOnly = !isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Replace separate TextFields with TimeInput
+                OutlinedTextField(
+                    value = sleepDurationText(if (isEditing) newTargetSleepDuration else profile.targetSleepDuration),
+                    onValueChange = {},
+                    label = { Text(text = stringResource(Res.string.profile_target_sleep_duration)) },
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(
+                            enabled = isEditing,
+                            onClick = {
+                                showSleepDurationTimePicker = true
+                            }) {
+                            Icon(
+                                painterResource(Res.drawable.ic_access_time),
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newTargetSteps else profile.targetSteps.toString(),
+                    onValueChange = { if (isEditing) newTargetSteps = it },
+                    label = { Text(stringResource(Res.string.profile_target_steps)) },
+                    readOnly = !isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newBodyHeightInCm else profile.bodyHeightInCm.toString(),
+                    onValueChange = { if (isEditing) newBodyHeightInCm = it },
+                    label = { Text(stringResource(Res.string.profile_body_height)) },
+                    readOnly = !isEditing,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
 
@@ -218,7 +210,8 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             name = newName,
                             gender = newGender,
                             targetKcal = newTargetKcal.toUIntOrNull() ?: it.targetKcal,
-                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull() ?: it.targetBeverageInMilliliter,
+                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
+                                ?: it.targetBeverageInMilliliter,
                             targetWeight = newTargetWeight.toDoubleOrNull() ?: it.targetWeight,
                             targetSleepDuration = newTargetSleepDuration,
                             targetSteps = newTargetSteps.toUIntOrNull() ?: it.targetSteps,

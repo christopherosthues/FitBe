@@ -8,5 +8,5 @@ import org.koin.dsl.module
 
 actual val platformModule = module {
     single { DatabaseFactory(androidApplication()) }
-    single<SettingsRepository> { AndroidSettingsRepository(get()) }
+    single<SettingsRepository> { AndroidSettingsRepository(androidApplication()) }
 }
