@@ -96,5 +96,5 @@
     <string name="profile_target_steps">Target Steps</string>
     <string name="profile_save">Save</string>
     <string name="profile_cancel">Cancel</string>
-    <string name="profile_body_height">Body height</string>
+    <string name="profile_body_height">Body height (cm)</string>
 </resources>

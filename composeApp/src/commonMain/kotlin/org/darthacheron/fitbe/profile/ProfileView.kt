@@ -1,6 +1,8 @@
 package org.darthacheron.fitbe.profile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,9 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
@@ -20,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -38,6 +46,8 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
+import fitbe.composeapp.generated.resources.ic_profile
+import fitbe.composeapp.generated.resources.ic_profile_selected
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_add
@@ -362,86 +372,6 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
             }
         }
 
-//        if (isEditing) {
-//            IconButton(
-//                onClick = {
-//                    currentProfile?.let {
-//                        newName = it.name
-//                        newGender = it.gender
-//                        newTargetKcal = it.targetKcal.toString()
-//                        newTargetBeverage = it.targetBeverageInMilliliter.toString()
-//                        newTargetWeight = it.targetWeight.toString()
-//                        newTargetSleepDuration = it.targetSleepDuration
-//                        newTargetSteps = it.targetSteps.toString()
-//                        newBodyHeightInCm = it.bodyHeightInCm.toString()
-//                    }
-//                    isEditing = false
-//                },
-//                modifier = Modifier
-//                    .align(Alignment.TopEnd)
-//                    .padding(16.dp)
-//            ) {
-//                Icon(
-//                    painter = painterResource(Res.drawable.ic_cancel),
-//                    contentDescription = stringResource(Res.string.profile_cancel)
-//                )
-//            }
-//        }
-//
-//        Row {  }
-//        // Floating Action Button for adding a new profile
-//        FloatingActionButton(
-//            onClick = {
-//                if (isEditing) {
-//                    // Save profile
-//                    currentProfile?.let {
-//                        val updatedProfile = it.copy(
-//                            name = newName,
-//                            gender = newGender,
-//                            targetKcal = newTargetKcal.toUIntOrNull() ?: it.targetKcal,
-//                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull()
-//                                ?: it.targetBeverageInMilliliter,
-//                            targetWeight = newTargetWeight.toDoubleOrNull() ?: it.targetWeight,
-//                            targetSleepDuration = newTargetSleepDuration,
-//                            targetSteps = newTargetSteps.toUIntOrNull() ?: it.targetSteps,
-//                            bodyHeightInCm = newBodyHeightInCm.toUIntOrNull() ?: it.bodyHeightInCm
-//                        )
-//                        profileViewModel.editProfile(updatedProfile)
-//                    }
-//                } else {
-//                    // Entering edit mode: initialize input fields once
-//                    currentProfile?.let {
-//                        newName = it.name
-//                        newGender = it.gender
-//                        newTargetKcal = it.targetKcal.toString()
-//                        newTargetBeverage = it.targetBeverageInMilliliter.toString()
-//                        newTargetWeight = it.targetWeight.toString()
-//                        newTargetSleepDuration = it.targetSleepDuration
-//                        newTargetSteps = it.targetSteps.toString()
-//                        newBodyHeightInCm = it.bodyHeightInCm.toString()
-//                    }
-//                }
-//                isEditing = !isEditing
-//            },
-//            modifier = Modifier
-//                .align(Alignment.BottomEnd)
-//                .padding(16.dp),
-//            containerColor = Color(0xFF2196F3) // Example: blue
-//        ) {
-//            AnimatedVisibility(!isEditing) {
-//                Icon(
-//                    painter = painterResource(Res.drawable.ic_edit),
-//                    contentDescription = stringResource(Res.string.profile_edit)
-//                )
-//            }
-//            AnimatedVisibility(isEditing) {
-//                Icon(
-//                    painter = painterResource(Res.drawable.ic_save),
-//                    contentDescription = stringResource(Res.string.profile_save)
-//                )
-//            }
-//        }
-
         if (showProfileDialog && profiles.isNotEmpty()) {
             ProfileSelectionDialog(
                 profiles = profiles,
@@ -481,31 +411,99 @@ fun ProfileSelectionDialog(
     onProfileSelected: (Profile) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val initialSelectedIndex = profiles.indexOfFirst { it.id == selectedProfileId }.coerceAtLeast(0)
+    var tempSelectedIndex by remember { mutableStateOf(initialSelectedIndex) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {},
         title = { Text(text = stringResource(Res.string.profile_select)) },
         text = {
-            val selectedIndex = profiles.indexOfFirst { it.id == selectedProfileId }
-            DropdownSelection(
-                initialState = false,
-                items = profiles,
-                selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
-                title = stringResource(Res.string.profile_select),
-                itemContent = { profile, onClick ->
-                    DropdownMenuItem(
-                        text = { Text(profile.name) },
-                        onClick = onClick
-                    )
-                },
-                itemToString = { it.name },
-                onItemSelected = { index ->
-                    onProfileSelected(profiles[index])
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 300.dp) // Limit height to enable scrolling if needed
+            ) {
+                itemsIndexed(profiles) { index, profile ->
+                    val isSelected = tempSelectedIndex == index
+                    val color = if (isSelected) Color.Blue else Color.Black
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = tempSelectedIndex == index,
+                                onClick = { tempSelectedIndex = index }
+                            )
+                            .padding(vertical = 4.dp)
+                            .border(2.dp, color, RoundedCornerShape(5.dp))
+                            .padding(vertical = 8.dp, horizontal = 16.dp)
+                            .clickable(
+                                onClick = { tempSelectedIndex = index }
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(if (isSelected) Res.drawable.ic_profile_selected else Res.drawable.ic_profile),
+                            tint = color,
+                            contentDescription = null
+                        )
+                        Text(
+                            text = profile.name,
+                            color = color,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
                 }
-            )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onProfileSelected(profiles[tempSelectedIndex])
+                }
+            ) {
+                Text(text = stringResource(Res.string.profile_select))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(Res.string.profile_cancel))
+            }
         }
     )
 }
+//@OptIn(ExperimentalUuidApi::class)
+//@Composable
+//fun ProfileSelectionDialog(
+//    profiles: List<Profile>,
+//    selectedProfileId: Uuid?,
+//    onProfileSelected: (Profile) -> Unit,
+//    onDismiss: () -> Unit
+//) {
+//    AlertDialog(
+//        onDismissRequest = onDismiss,
+//        confirmButton = {},
+//        title = { Text(text = stringResource(Res.string.profile_select)) },
+//        text = {
+//            val selectedIndex = profiles.indexOfFirst { it.id == selectedProfileId }
+//            DropdownSelection(
+//                initialState = false,
+//                items = profiles,
+//                selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
+//                title = stringResource(Res.string.profile_select),
+//                itemContent = { profile, onClick ->
+//                    DropdownMenuItem(
+//                        text = { Text(profile.name) },
+//                        onClick = onClick
+//                    )
+//                },
+//                itemToString = { it.name },
+//                onItemSelected = { index ->
+//                    onProfileSelected(profiles[index])
+//                }
+//            )
+//        }
+//    )
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

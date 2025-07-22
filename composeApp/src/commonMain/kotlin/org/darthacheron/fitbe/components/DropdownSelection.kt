@@ -33,7 +33,7 @@ fun <T>DropdownSelection(
     onItemSelected: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(initialState) }
-    var selectedOption = items[selectedIndex]
+    val selectedOption = items[selectedIndex]
 
     val isExpanded = expanded && isEnabled
     ExposedDropdownMenuBox(
