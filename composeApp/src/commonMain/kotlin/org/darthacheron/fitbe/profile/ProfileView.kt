@@ -84,7 +84,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             currentProfile?.let { profile ->
