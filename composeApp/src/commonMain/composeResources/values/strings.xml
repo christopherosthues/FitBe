@@ -105,4 +105,5 @@
     <string name="profile_error_steps">Enter a value between 0 and 500,000.</string>
     <string name="profile_error_height_cm">Enter a value between 0 and 300 cm.</string>
     <string name="profile_error_height_inch">Enter a value between 0 and 118.11 inches.</string>
+    <string name="profile_date_of_birth">Date of birth</string>
 </resources>
