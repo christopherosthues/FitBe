@@ -20,7 +20,9 @@ import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
+import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 
 @Preview
@@ -50,7 +52,8 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
             }
             composable<Screen.Profile> {
                 val viewModel = koinViewModel<ProfileViewModel>()
-                ProfileView(viewModel)
+                val settingsRepository = getKoin().get<SettingsRepository>()
+                ProfileView(viewModel, settingsRepository)
             }
         }
         composable<Screen.Sleeps> {

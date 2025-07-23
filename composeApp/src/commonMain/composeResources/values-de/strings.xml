@@ -71,7 +71,7 @@
     <string name="settings_miles">Meilen</string>
     <string name="settings_body_measurement_unit">Körpermaßeinheit</string>
     <string name="settings_cm">cm</string>
-    <string name="settings_inch">Inch</string>
+    <string name="settings_inch">Zoll</string>
     <string name="settings_theme">Thema</string>
     <string name="settings_theme_light">Hell</string>
     <string name="settings_theme_dark">Dunkel</string>
@@ -90,11 +90,19 @@
     <string name="profile_edit_title">Profil bearbeiten</string>
     <string name="profile_name">Name</string>
     <string name="profile_target_kcal">Ziel-kcal</string>
-    <string name="profile_target_beverage">Ziel-Getränk (ml)</string>
-    <string name="profile_target_weight">Zielgewicht (kg)</string>
+    <string name="profile_target_beverage">Ziel-Getränk (%1$s)</string>
+    <string name="profile_target_weight">Zielgewicht (%1$s)</string>
     <string name="profile_target_sleep_duration">Ziel-Schlafdauer</string>
     <string name="profile_target_steps">Ziel-Schritte</string>
     <string name="profile_save">Speichern</string>
     <string name="profile_cancel">Abbrechen</string>
-    <string name="profile_body_height">Körpergröße (cm)</string>
+    <string name="profile_body_height">Körpergröße (%1$s)</string>
+    <string name="profile_error_name">Der Name muss eindeutig und darf nicht leer sein.</string>
+    <string name="profile_error_kcal">Geben Sie einen Wert zwischen 0 und 10.000 ein.</string>
+    <string name="profile_error_beverage">Geben Sie einen Wert zwischen 0 und 5.000 %1$s ein.</string>
+    <string name="profile_error_weight_kg">Geben Sie einen Wert zwischen 0 und 350 kg ein.</string>
+    <string name="profile_error_weight_lb">Geben Sie einen Wert zwischen 0 und 771,618 lb ein.</string>
+    <string name="profile_error_steps">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
+    <string name="profile_error_height_cm">Geben Sie einen Wert zwischen 0 und 300 cm ein.</string>
+    <string name="profile_error_height_inch">Geben Sie einen Wert zwischen 0 und 118,11 Zoll ein.</string>
 </resources>

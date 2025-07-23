@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.fluid_unit_milliliter
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
@@ -55,6 +56,14 @@ import fitbe.composeapp.generated.resources.profile_body_height
 import fitbe.composeapp.generated.resources.profile_cancel
 import fitbe.composeapp.generated.resources.profile_delete
 import fitbe.composeapp.generated.resources.profile_edit
+import fitbe.composeapp.generated.resources.profile_error_beverage
+import fitbe.composeapp.generated.resources.profile_error_height_cm
+import fitbe.composeapp.generated.resources.profile_error_height_inch
+import fitbe.composeapp.generated.resources.profile_error_kcal
+import fitbe.composeapp.generated.resources.profile_error_name
+import fitbe.composeapp.generated.resources.profile_error_steps
+import fitbe.composeapp.generated.resources.profile_error_weight_kg
+import fitbe.composeapp.generated.resources.profile_error_weight_lb
 import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
 import fitbe.composeapp.generated.resources.profile_save
@@ -67,6 +76,10 @@ import fitbe.composeapp.generated.resources.profile_target_weight
 import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.health.sleep.AdvancedTimePickerDialog
+import org.darthacheron.fitbe.settings.BodyMeasurementUnit
+import org.darthacheron.fitbe.settings.Settings
+import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -74,9 +87,13 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileView(profileViewModel: ProfileViewModel) {
+fun ProfileView(
+    profileViewModel: ProfileViewModel,
+    settingsRepository: SettingsRepository
+) {
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
+    val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     var isAdding by remember { mutableStateOf(false) }
     var isEditing by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
@@ -90,11 +107,19 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
     var showSleepDurationTimePicker by remember { mutableStateOf(false) }
     var showProfileDialog by remember { mutableStateOf(false) }
 
+    var nameError by remember { mutableStateOf(false) }
+    var kcalError by remember { mutableStateOf(false) }
+    var beverageError by remember { mutableStateOf(false) }
+    var weightError by remember { mutableStateOf(false) }
+    var stepsError by remember { mutableStateOf(false) }
+    var heightError by remember { mutableStateOf(false) }
+
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp)
+                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             currentProfile?.let { profile ->
@@ -104,15 +129,30 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                 ) {
                     OutlinedTextField(
                         value = if (isEditing) newName else profile.name,
-                        onValueChange = { if (isEditing) newName = it },
+                        onValueChange = {
+                            if (isEditing) {
+                                newName = it
+                                nameError =
+                                    it.isBlank() || profiles.any { profile ->
+                                        profile.name == it && profile.id != currentProfile?.id
+                                    }
+                            }
+                        },
                         label = { Text(stringResource(Res.string.profile_name)) },
                         readOnly = !isEditing,
+                        isError = nameError,
+                        supportingText = {
+                            if (nameError) Text(stringResource(Res.string.profile_error_name))
+                        },
                         modifier = Modifier.weight(1f)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    IconButton(onClick = { showProfileDialog = true }) {
+                    IconButton(
+                        onClick = { showProfileDialog = true },
+                        enabled = !isEditing
+                    ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_switch),
                             contentDescription = stringResource(Res.string.profile_select)
@@ -146,9 +186,18 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                 OutlinedTextField(
                     value = if (isEditing) newTargetKcal else profile.targetKcal.toString(),
-                    onValueChange = { if (isEditing) newTargetKcal = it },
+                    onValueChange = {
+                        if (isEditing) {
+                            newTargetKcal = it
+                            kcalError = it.toUIntOrNull()?.let { kcal -> kcal > 10_000u } ?: true
+                        }
+                    },
                     label = { Text(stringResource(Res.string.profile_target_kcal)) },
                     readOnly = !isEditing,
+                    isError = kcalError,
+                    supportingText = {
+                        if (kcalError) Text(stringResource(Res.string.profile_error_kcal))
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -156,9 +205,30 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                 OutlinedTextField(
                     value = if (isEditing) newTargetBeverage else profile.targetBeverageInMilliliter.toString(),
-                    onValueChange = { if (isEditing) newTargetBeverage = it },
-                    label = { Text(stringResource(Res.string.profile_target_beverage)) },
+                    onValueChange = {
+                        if (isEditing) {
+                            newTargetBeverage = it
+                            beverageError = it.toUIntOrNull()?.let { b -> b > 5000u } ?: true
+                        }
+                    },
+                    label = {
+                        Text(
+                            stringResource(
+                                Res.string.profile_target_beverage,
+                                stringResource(Res.string.fluid_unit_milliliter)
+                            )
+                        )
+                    },
                     readOnly = !isEditing,
+                    isError = beverageError,
+                    supportingText = {
+                        if (beverageError) Text(
+                            stringResource(
+                                Res.string.profile_error_beverage,
+                                stringResource(Res.string.fluid_unit_milliliter)
+                            )
+                        )
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -166,9 +236,29 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                 OutlinedTextField(
                     value = if (isEditing) newTargetWeight else profile.targetWeight.toString(),
-                    onValueChange = { if (isEditing) newTargetWeight = it },
-                    label = { Text(stringResource(Res.string.profile_target_weight)) },
+                    onValueChange = {
+                        if (isEditing) {
+                            newTargetWeight = it
+                            val kg = it.toDoubleOrNull()
+                            weightError = kg == null || kg < 0.0 || kg > 350.0
+                        }
+                    },
+                    label = {
+                        Text(
+                            stringResource(
+                                Res.string.profile_target_weight,
+                                stringResource(settings.weightUnit.localizedString())
+                            )
+                        )
+                    },
                     readOnly = !isEditing,
+                    isError = weightError,
+                    supportingText = {
+                        if (weightError) Text(stringResource(when(settings.weightUnit){
+                            WeightUnit.KG -> Res.string.profile_error_weight_kg
+                            WeightUnit.POUND -> Res.string.profile_error_weight_lb
+                        }))
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -199,9 +289,18 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                 OutlinedTextField(
                     value = if (isEditing) newTargetSteps else profile.targetSteps.toString(),
-                    onValueChange = { if (isEditing) newTargetSteps = it },
+                    onValueChange = {
+                        if (isEditing) {
+                            newTargetSteps = it
+                            stepsError = it.toUIntOrNull()?.let { s -> s > 500_000u } ?: true
+                        }
+                    },
                     label = { Text(stringResource(Res.string.profile_target_steps)) },
                     readOnly = !isEditing,
+                    isError = stepsError,
+                    supportingText = {
+                        if (stepsError) Text(stringResource(Res.string.profile_error_steps))
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -209,10 +308,30 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
 
                 OutlinedTextField(
                     value = if (isEditing) newBodyHeightInCm else profile.bodyHeight.toString(),
-                    onValueChange = { if (isEditing) newBodyHeightInCm = it },
-                    label = { Text(stringResource(Res.string.profile_body_height)) },
+                    onValueChange = {
+                        if (isEditing) {
+                            newBodyHeightInCm = it
+                            val cm = it.toDoubleOrNull()
+                            heightError = cm == null || cm < 0.0 || cm > 300.0
+                        }
+                    },
+                    label = {
+                        Text(
+                            stringResource(
+                                Res.string.profile_body_height,
+                                stringResource(settings.bodyMeasurementUnit.localizedString())
+                            )
+                        )
+                    },
                     readOnly = !isEditing,
-                    modifier = Modifier.fillMaxWidth()
+                    isError = heightError,
+                    supportingText = {
+                        if (heightError) Text(stringResource(when(settings.bodyMeasurementUnit){
+                            BodyMeasurementUnit.CM -> Res.string.profile_error_height_cm
+                            BodyMeasurementUnit.INCH -> Res.string.profile_error_height_inch
+                        }))
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 48.dp)
                 )
             }
         }
@@ -270,6 +389,13 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                         }
                         isEditing = false
                         isAdding = false
+
+                        nameError = false
+                        kcalError = false
+                        beverageError = false
+                        weightError = false
+                        stepsError = false
+                        heightError = false
                     },
                     containerColor = Color.Red,
                     modifier = Modifier.padding(end = 16.dp)
@@ -282,29 +408,36 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
             }
 
             AnimatedVisibility(isEditing) {
+                val isFormValid = listOf(
+                    !nameError, !kcalError, !beverageError, !weightError,
+                    !stepsError, !heightError
+                ).all { it }
                 FloatingActionButton(
                     onClick = {
                         // Save profile
-                        val profile = Profile(
-                            id = if (isAdding) Uuid.random() else currentProfile?.id ?: Uuid.random(),
-                            name = newName,
-                            gender = newGender,
-                            targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
-                            targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull() ?: 0u,
-                            targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
-                            targetSleepDuration = newTargetSleepDuration,
-                            targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
-                            bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0
-                        )
-                        if (isAdding) {
-                            profileViewModel.addAndSelectProfile(profile)
-                        } else {
-                            profileViewModel.editProfile(profile)
+                        if (isFormValid) {
+                            val profile = Profile(
+                                id = if (isAdding) Uuid.random() else currentProfile?.id
+                                    ?: Uuid.random(),
+                                name = newName,
+                                gender = newGender,
+                                targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
+                                targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull() ?: 0u,
+                                targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
+                                targetSleepDuration = newTargetSleepDuration,
+                                targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
+                                bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0
+                            )
+                            if (isAdding) {
+                                profileViewModel.addAndSelectProfile(profile)
+                            } else {
+                                profileViewModel.editProfile(profile)
+                            }
+                            isEditing = false
+                            isAdding = false
                         }
-                        isEditing = false
-                        isAdding = false
                     },
-                    containerColor = Color(0xFF2196F3)
+                    containerColor = if (isFormValid) Color(0xFF2196F3) else Color.Gray
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
@@ -471,39 +604,6 @@ fun ProfileSelectionDialog(
         }
     )
 }
-//@OptIn(ExperimentalUuidApi::class)
-//@Composable
-//fun ProfileSelectionDialog(
-//    profiles: List<Profile>,
-//    selectedProfileId: Uuid?,
-//    onProfileSelected: (Profile) -> Unit,
-//    onDismiss: () -> Unit
-//) {
-//    AlertDialog(
-//        onDismissRequest = onDismiss,
-//        confirmButton = {},
-//        title = { Text(text = stringResource(Res.string.profile_select)) },
-//        text = {
-//            val selectedIndex = profiles.indexOfFirst { it.id == selectedProfileId }
-//            DropdownSelection(
-//                initialState = false,
-//                items = profiles,
-//                selectedIndex = if (selectedIndex != -1) selectedIndex else 0,
-//                title = stringResource(Res.string.profile_select),
-//                itemContent = { profile, onClick ->
-//                    DropdownMenuItem(
-//                        text = { Text(profile.name) },
-//                        onClick = onClick
-//                    )
-//                },
-//                itemToString = { it.name },
-//                onItemSelected = { index ->
-//                    onProfileSelected(profiles[index])
-//                }
-//            )
-//        }
-//    )
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
