@@ -1,7 +1,6 @@
 package org.darthacheron.fitbe.profile
 
 import kotlinx.datetime.LocalTime
-import kotlin.time.Duration
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -15,5 +14,5 @@ data class Profile(
     val targetWeight: Double = 70.0,
     val targetSleepDuration: LocalTime = LocalTime(8, 0),
     val targetSteps: UInt = 10000u,
-    var bodyHeightInCm: UInt = 170u
+    var bodyHeight: Double = 170.0
 )

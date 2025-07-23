@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.health.weight
 
+import org.darthacheron.fitbe.settings.WeightUnit
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

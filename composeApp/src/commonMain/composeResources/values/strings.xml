@@ -65,7 +65,7 @@
     <string name="top_bar_title_settings">Settings</string>
     <string name="settings_weight_unit">Weight Unit</string>
     <string name="settings_kg">kg</string>
-    <string name="settings_pound">pound</string>
+    <string name="settings_pound">lb</string>
     <string name="settings_distance_unit">Distance Unit</string>
     <string name="settings_km">km</string>
     <string name="settings_miles">miles</string>

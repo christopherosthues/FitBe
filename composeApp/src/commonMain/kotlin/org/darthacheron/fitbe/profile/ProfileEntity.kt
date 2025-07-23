@@ -17,7 +17,7 @@ data class ProfileEntity(
     val targetWeight: Double,
     val targetSleepDuration: LocalTime,
     val targetSteps: Int,
-    val bodyHeightInCm: Int,
+    val bodyHeightInCm: Double,
 ) {
     fun toProfile(): Profile = Profile(
         id = id,
@@ -28,7 +28,7 @@ data class ProfileEntity(
         targetWeight = targetWeight,
         targetSleepDuration = targetSleepDuration,
         targetSteps = targetSteps.toUInt(),
-        bodyHeightInCm = bodyHeightInCm.toUInt()
+        bodyHeight = bodyHeightInCm
     )
 
     companion object {
@@ -41,7 +41,7 @@ data class ProfileEntity(
             targetWeight = profile.targetWeight,
             targetSleepDuration = profile.targetSleepDuration,
             targetSteps = profile.targetSteps.toInt(),
-            bodyHeightInCm = profile.bodyHeightInCm.toInt()
+            bodyHeightInCm = profile.bodyHeight
         )
     }
 }

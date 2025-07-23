@@ -208,7 +208,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newBodyHeightInCm else profile.bodyHeightInCm.toString(),
+                    value = if (isEditing) newBodyHeightInCm else profile.bodyHeight.toString(),
                     onValueChange = { if (isEditing) newBodyHeightInCm = it },
                     label = { Text(stringResource(Res.string.profile_body_height)) },
                     readOnly = !isEditing,
@@ -266,7 +266,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             newTargetWeight = it.targetWeight.toString()
                             newTargetSleepDuration = it.targetSleepDuration
                             newTargetSteps = it.targetSteps.toString()
-                            newBodyHeightInCm = it.bodyHeightInCm.toString()
+                            newBodyHeightInCm = it.bodyHeight.toString()
                         }
                         isEditing = false
                         isAdding = false
@@ -294,7 +294,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
                             targetSleepDuration = newTargetSleepDuration,
                             targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
-                            bodyHeightInCm = newBodyHeightInCm.toUIntOrNull() ?: 0u
+                            bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0
                         )
                         if (isAdding) {
                             profileViewModel.addAndSelectProfile(profile)
@@ -331,7 +331,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             newTargetWeight = it.targetWeight.toString()
                             newTargetSleepDuration = it.targetSleepDuration
                             newTargetSteps = it.targetSteps.toString()
-                            newBodyHeightInCm = it.bodyHeightInCm.toString()
+                            newBodyHeightInCm = it.bodyHeight.toString()
                         }
                         isEditing = true
                     },
@@ -357,7 +357,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             newTargetWeight = newProfile.targetWeight.toString()
                             newTargetSleepDuration = newProfile.targetSleepDuration
                             newTargetSteps = newProfile.targetSteps.toString()
-                            newBodyHeightInCm = newProfile.bodyHeightInCm.toString()
+                            newBodyHeightInCm = newProfile.bodyHeight.toString()
                         }
                         isEditing = true
                         isAdding = true

@@ -16,6 +16,9 @@ import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.SettingsViewModel
+import org.darthacheron.fitbe.settings.converters.BodyMeasurementUnitConverter
+import org.darthacheron.fitbe.settings.converters.DistanceUnitConverter
+import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -27,6 +30,10 @@ val sharedModule = module {
     singleOf(::BeverageRepository)
     singleOf(::SleepRepository)
     singleOf(::ProfileRepository)
+
+    singleOf(::BodyMeasurementUnitConverter)
+    singleOf(::DistanceUnitConverter)
+    singleOf(::WeightUnitConverter)
 
     single {
         get<DatabaseFactory>().create()
