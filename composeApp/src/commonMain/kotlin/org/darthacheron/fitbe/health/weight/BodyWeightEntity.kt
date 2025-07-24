@@ -13,6 +13,7 @@ import kotlin.uuid.Uuid
 @Entity(tableName = "body_weights")
 data class BodyWeightEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
+    val profileId: Uuid,
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
     val weightInKg: Double,
     val bodyFatPercentage: Double,
@@ -27,7 +28,8 @@ data class BodyWeightEntity(
         muscleMassInKg = muscleMassInKg,
         boneMassInKg = boneMassInKg,
         bodyWaterInPercentage = bodyWaterInPercentage,
-        date = dateUtc
+        date = dateUtc,
+        profileId = profileId
     )
 
     companion object {
@@ -38,7 +40,8 @@ data class BodyWeightEntity(
             muscleMassInKg = bodyWeight.muscleMassInKg,
             boneMassInKg = bodyWeight.boneMassInKg,
             bodyWaterInPercentage = bodyWeight.bodyWaterInPercentage,
-            dateUtc = bodyWeight.date
+            dateUtc = bodyWeight.date,
+            profileId = bodyWeight.profileId
         )
     }
 }
