@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.health.weight
 
-import org.darthacheron.fitbe.settings.WeightUnit
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -12,6 +12,5 @@ data class BodyWeight(
     val muscleMassInKg: Double,
     val boneMassInKg: Double,
     val bodyWaterInPercentage: Double,
-    val dateUtc: String,
-    val dateLocal: String
+    val date: LocalDate
 )
