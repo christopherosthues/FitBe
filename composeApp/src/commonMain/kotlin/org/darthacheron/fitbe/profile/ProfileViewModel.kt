@@ -38,19 +38,12 @@ class ProfileViewModel(
         profileRepository.profiles, settingsRepository.getSettingsFlow()
     ) { profiles, settings ->
         profiles.map {
-            Profile(
-                id = it.id,
-                name = it.name,
-                gender = it.gender,
-                targetKcal = it.targetKcal,
-                targetBeverageInMilliliter = it.targetBeverageInMilliliter,
+            it.copy(
                 targetWeight = weightUnitConverter.convert(
                     it.targetWeight,
                     WeightUnit.KG,
                     settings.weightUnit
                 ),
-                targetSleepDuration = it.targetSleepDuration,
-                targetSteps = it.targetSteps,
                 bodyHeight = bodyMeasurementUnitConverter.convert(
                     it.bodyHeight,
                     BodyMeasurementUnit.CM, settings.bodyMeasurementUnit
@@ -69,17 +62,16 @@ class ProfileViewModel(
         settingsRepository.getSettingsFlow()
     ) { profile, settings ->
         profile?.let {
-            Profile(
-                id = it.id,
-                name = it.name,
-                gender = it.gender,
-                targetKcal = it.targetKcal,
-                targetBeverageInMilliliter = it.targetBeverageInMilliliter,
-                targetWeight = weightUnitConverter.convert(it.targetWeight, WeightUnit.KG, settings.weightUnit),
-                targetSleepDuration = it.targetSleepDuration,
-                targetSteps = it.targetSteps,
-                bodyHeight = bodyMeasurementUnitConverter.convert(it.bodyHeight,
-                    BodyMeasurementUnit.CM, settings.bodyMeasurementUnit)
+            it.copy(
+                targetWeight = weightUnitConverter.convert(
+                    it.targetWeight,
+                    WeightUnit.KG,
+                    settings.weightUnit
+                ),
+                bodyHeight = bodyMeasurementUnitConverter.convert(
+                    it.bodyHeight,
+                    BodyMeasurementUnit.CM, settings.bodyMeasurementUnit
+                )
             )
         }
     }.stateIn(

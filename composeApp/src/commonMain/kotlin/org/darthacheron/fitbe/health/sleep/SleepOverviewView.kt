@@ -69,6 +69,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DateRangePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.jetbrains.compose.resources.painterResource
@@ -446,34 +447,6 @@ fun formatDuration(duration: Duration): String {
     val hours = duration.toLong(DurationUnit.HOURS)
     val minutes = (duration.inWholeMinutes % 60)
     return "${hours}h ${minutes}m"
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerModal(
-    onDateSelected: (Long?) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val datePickerState = rememberDatePickerState()
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = {
-                onDateSelected(datePickerState.selectedDateMillis)
-                onDismiss()
-            }) {
-                Text("OK")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    ) {
-        DatePicker(state = datePickerState)
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

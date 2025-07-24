@@ -28,8 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,6 +43,7 @@ import fitbe.composeapp.generated.resources.fluid_unit_milliliter
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
+import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_profile
@@ -54,6 +53,7 @@ import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_add
 import fitbe.composeapp.generated.resources.profile_body_height
 import fitbe.composeapp.generated.resources.profile_cancel
+import fitbe.composeapp.generated.resources.profile_date_of_birth
 import fitbe.composeapp.generated.resources.profile_delete
 import fitbe.composeapp.generated.resources.profile_edit
 import fitbe.composeapp.generated.resources.profile_error_beverage
@@ -73,9 +73,14 @@ import fitbe.composeapp.generated.resources.profile_target_kcal
 import fitbe.composeapp.generated.resources.profile_target_sleep_duration
 import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
-import org.darthacheron.fitbe.health.sleep.AdvancedTimePickerDialog
+import org.darthacheron.fitbe.components.TimeInputDialog
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -97,6 +102,7 @@ fun ProfileView(
     var isAdding by remember { mutableStateOf(false) }
     var isEditing by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
+    var newDateOfBirth by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
     var newGender by remember { mutableStateOf(Gender.MALE) }
     var newTargetKcal by remember { mutableStateOf("") }
     var newTargetBeverage by remember { mutableStateOf("") }
@@ -106,6 +112,7 @@ fun ProfileView(
     var newBodyHeightInCm by remember { mutableStateOf("") }
     var showSleepDurationTimePicker by remember { mutableStateOf(false) }
     var showProfileDialog by remember { mutableStateOf(false) }
+    var showDateOfBirthDialog by remember { mutableStateOf(false) }
 
     var nameError by remember { mutableStateOf(false) }
     var kcalError by remember { mutableStateOf(false) }
@@ -161,6 +168,28 @@ fun ProfileView(
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = if (isEditing) newDateOfBirth.toString() else profile.dateOfBirth.toString(),
+                    onValueChange = {},
+                    label = { Text(text = stringResource(Res.string.profile_date_of_birth)) },
+                    readOnly = true,
+                    trailingIcon = {
+                        IconButton(
+                            enabled = isEditing,
+                            onClick = {
+                                showDateOfBirthDialog = true
+                            }) {
+                            Icon(
+                                painterResource(Res.drawable.ic_date_range),
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
 
                 val genders = Gender.entries
                 val selectedIndex = genders.indexOf(if (isEditing) newGender else profile.gender)
@@ -264,7 +293,6 @@ fun ProfileView(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Replace separate TextFields with TimeInput
                 OutlinedTextField(
                     value = sleepDurationText(if (isEditing) newTargetSleepDuration else profile.targetSleepDuration),
                     onValueChange = {},
@@ -386,6 +414,7 @@ fun ProfileView(
                             newTargetSleepDuration = it.targetSleepDuration
                             newTargetSteps = it.targetSteps.toString()
                             newBodyHeightInCm = it.bodyHeight.toString()
+                            newDateOfBirth = it.dateOfBirth
                         }
                         isEditing = false
                         isAdding = false
@@ -426,7 +455,8 @@ fun ProfileView(
                                 targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
                                 targetSleepDuration = newTargetSleepDuration,
                                 targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
-                                bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0
+                                bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0,
+                                dateOfBirth = newDateOfBirth
                             )
                             if (isAdding) {
                                 profileViewModel.addAndSelectProfile(profile)
@@ -465,6 +495,7 @@ fun ProfileView(
                             newTargetSleepDuration = it.targetSleepDuration
                             newTargetSteps = it.targetSteps.toString()
                             newBodyHeightInCm = it.bodyHeight.toString()
+                            newDateOfBirth = it.dateOfBirth
                         }
                         isEditing = true
                     },
@@ -491,6 +522,7 @@ fun ProfileView(
                             newTargetSleepDuration = newProfile.targetSleepDuration
                             newTargetSteps = newProfile.targetSteps.toString()
                             newBodyHeightInCm = newProfile.bodyHeight.toString()
+                            newDateOfBirth = newProfile.dateOfBirth
                         }
                         isEditing = true
                         isAdding = true
@@ -517,8 +549,21 @@ fun ProfileView(
             )
         }
 
+        if (showDateOfBirthDialog) {
+            DatePickerModal(
+                onDateSelected = { millis ->
+                    millis?.let {
+                        val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
+                        newDateOfBirth = date
+                    }
+                    showDateOfBirthDialog = false
+                },
+                onDismiss = { showDateOfBirthDialog = false }
+            )
+        }
+
         if (showSleepDurationTimePicker) {
-            TimePickerDialog2(
+            TimeInputDialog(
                 initialHour = newTargetSleepDuration.hour,
                 initialMinute = newTargetSleepDuration.minute,
                 onTimeSelected = { hour, minute ->
@@ -605,23 +650,3 @@ fun ProfileSelectionDialog(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TimePickerDialog2(
-    initialHour: Int,
-    initialMinute: Int,
-    onTimeSelected: (Int, Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val timePickerState = rememberTimePickerState(
-        initialHour = initialHour,
-        initialMinute = initialMinute,
-        is24Hour = true
-    )
-    AdvancedTimePickerDialog(
-        onDismiss = onDismiss,
-        onConfirm = { onTimeSelected(timePickerState.hour, timePickerState.minute) }
-    ) {
-        TimeInput(state = timePickerState)
-    }
-}

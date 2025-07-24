@@ -14,4 +14,3 @@ data class Settings(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val selectedProfileId: Uuid? = null
 )
-
