@@ -24,12 +24,16 @@ import org.darthacheron.fitbe.database.converters.LocalDateConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
+import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
-@Database(entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class], version = 1)
+@Database(
+    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class],
+    version = 1
+)
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
     LocalDateTimeConverter::class, GenderConverter::class, LocalTimeConverter::class,

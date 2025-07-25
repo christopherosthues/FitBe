@@ -15,6 +15,7 @@ import kotlin.uuid.Uuid
 @Entity(tableName = "beverages")
 data class BeverageEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
+    val profileId: Uuid,
     val dateUtc: Instant = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
     val amount: Int,
     val beverage: String,

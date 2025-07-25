@@ -28,6 +28,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Beverage(
     val id: Uuid,
+    val profileId: Uuid,
     val dateUtc: Instant,
     val amount: Int,
     val beverage: String,

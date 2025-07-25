@@ -27,5 +27,5 @@ interface BodyWeightDao {
     suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
     @Delete
-    suspend fun deleteBVodyWeight(bodyWeight: BodyWeightEntity)
+    suspend fun deleteBodyWeight(bodyWeight: BodyWeightEntity)
 }

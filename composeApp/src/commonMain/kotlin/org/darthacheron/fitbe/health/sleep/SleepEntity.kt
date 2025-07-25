@@ -11,6 +11,7 @@ import kotlin.uuid.Uuid
 @Entity(tableName = "sleeps")
 data class SleepEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
+    val profileId: Uuid,
     val hours: Int,
     val minutes: Int,
     val dateUtc: Instant,

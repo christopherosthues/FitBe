@@ -23,10 +23,12 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.round
+import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -54,30 +56,28 @@ enum class SleepViewType {
 }
 
 @OptIn(ExperimentalTime::class)
-class SleepViewModel(private val repository: SleepRepository) : ViewModel() {
+class SleepViewModel(
+    private val repository: SleepRepository,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
     private val _viewType = MutableStateFlow(SleepViewType.WEEK)
-    private val _startDate = MutableStateFlow(
-        Clock.System.now().plus(-1, SleepViewType.WEEK.toDateTimeUnit(), TimeZone.UTC).plus(
-            1, SleepViewType.DAY.toDateTimeUnit(),
-            TimeZone.UTC
-        )
-    )
+    private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
     private val _endDate = MutableStateFlow(Clock.System.now())
 
     val viewType: StateFlow<SleepViewType> = _viewType
     val startDate: StateFlow<Instant> = _startDate
     val endDate: StateFlow<Instant> = _endDate
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
     val sleeps: StateFlow<List<Point<LocalDate, Double>>> =
-        combine(_startDate, _endDate) { start, end ->
-            repository.getSleepsBetween(start, end)
+        combine(_startDate, _endDate, settingsRepository.getSettingsFlow()) { start, end, settings ->
+            repository.getSleepsBetween(start, end, settings.selectedProfileId!!)
         }.flatMapLatest { it }
             .map { s ->
                 s.map { value ->
                     Point(
                         value.dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                        round(((value.hours.toDouble() + value.minutes.toDouble() / 60)) * 100) / 100
+                        (value.hours.toDouble() + value.minutes.toDouble() / 60).roundToDecimals(2)
                     )
                 }
             }
@@ -93,8 +93,10 @@ class SleepViewModel(private val repository: SleepRepository) : ViewModel() {
     @OptIn(ExperimentalUuidApi::class)
     fun addSleep(hours: UInt, minutes: UInt, date: Instant) {
         viewModelScope.launch {
+            val settings = settingsRepository.getSettings()
             repository.addSleep(
                 SleepEntity(
+                    profileId = settings.selectedProfileId!!,
                     hours = hours.toInt(),
                     minutes = minutes.toInt(),
                     dateUtc = date
