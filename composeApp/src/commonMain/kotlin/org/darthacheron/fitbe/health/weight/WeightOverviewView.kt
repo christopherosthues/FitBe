@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -289,6 +293,7 @@ fun AddBodyWeightDialog(
     var muscleMassError by remember { mutableStateOf(false) }
     var boneMassError by remember { mutableStateOf(false) }
     var bodyWaterError by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -311,7 +316,7 @@ fun AddBodyWeightDialog(
             OutlinedButton(onClick = onDismiss) { Text("Cancel") }
         },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(scrollState)) {
                 OutlinedTextField(
                     value = date.toString(),
                     onValueChange = {},
@@ -325,11 +330,8 @@ fun AddBodyWeightDialog(
                             )
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxWidth()
                 )
-
-                Spacer(Modifier.width(8.dp))
-
                 OutlinedTextField(
                     value = weight.toDoubleStringOrDash(),
                     onValueChange = {
@@ -349,6 +351,7 @@ fun AddBodyWeightDialog(
                             )
                         )
                     },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = bodyFat.toDoubleStringOrDash(),
@@ -361,6 +364,7 @@ fun AddBodyWeightDialog(
                             stringResource(Res.string.body_weight_body_fat_error)
                         )
                     },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = muscleMass.toDoubleStringOrDash(),
@@ -378,6 +382,7 @@ fun AddBodyWeightDialog(
                             )
                         )
                     },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = boneMass.toDoubleStringOrDash(),
@@ -395,6 +400,7 @@ fun AddBodyWeightDialog(
                             )
                         )
                     },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = bodyWater.toDoubleStringOrDash(),
@@ -407,6 +413,7 @@ fun AddBodyWeightDialog(
                             stringResource(Res.string.body_weight_body_water_error)
                         )
                     },
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

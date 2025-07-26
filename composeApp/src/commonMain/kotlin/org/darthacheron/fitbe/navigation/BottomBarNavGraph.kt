@@ -17,6 +17,8 @@ import org.darthacheron.fitbe.health.beverages.BeverageView
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewView
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
+import org.darthacheron.fitbe.health.weight.WeightOverviewView
+import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
@@ -63,6 +65,11 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
         composable<Screen.Beverages> {
             val viewModel = koinViewModel<BeverageViewModel>()
             BeverageView(viewModel)
+        }
+        composable<Screen.BodyWeights> {
+            val viewModel = koinViewModel<WeightOverviewViewModel>()
+            val settingsRepository = getKoin().get<SettingsRepository>()
+            WeightOverviewView(viewModel, settingsRepository)
         }
     }
 }

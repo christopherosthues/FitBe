@@ -29,6 +29,11 @@ fun HealthOverviewView(
         ) {
             Text(text = "Sleeps")
         }
+        TextButton(
+            onClick = { navHostController.navigate(Screen.BodyWeights) }
+        ) {
+            Text(text = "Body weight")
+        }
     }
 }
 

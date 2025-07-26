@@ -4,29 +4,30 @@ import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import kotlinx.coroutines.flow.first
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.database.converters.FluidUnitConverter
+import org.darthacheron.fitbe.database.converters.GenderConverter
+import org.darthacheron.fitbe.database.converters.InstantConverter
+import org.darthacheron.fitbe.database.converters.LocalDateConverter
+import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
+import org.darthacheron.fitbe.database.converters.LocalTimeConverter
+import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
 import org.darthacheron.fitbe.health.weight.BodyWeightDao
-import kotlin.random.Random
-import kotlinx.datetime.Clock
-import org.darthacheron.fitbe.database.converters.InstantConverter
-import org.darthacheron.fitbe.database.converters.FluidUnitConverter
-import org.darthacheron.fitbe.database.converters.GenderConverter
-import org.darthacheron.fitbe.database.converters.LocalDateConverter
-import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
-import org.darthacheron.fitbe.database.converters.LocalTimeConverter
-import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
+import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -55,6 +56,10 @@ abstract class FitBeDatabase : RoomDatabase() {
 suspend fun seedDatabase(db: FitBeDatabase) {
     val sleepDao = db.sleepDao
     val beverageDao = db.beverageDao
+    val profileDao = db.profileDao
+
+    val profile = profileDao.getAllProfiles().first().first()
+
     for (i in 1..730) {
         val sleep = SleepEntity(
             dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
@@ -62,7 +67,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                 DateTimeUnit.DAY
             ).atStartOfDayIn(TimeZone.UTC),
             hours = Random.nextInt(0, 12),
-            minutes = Random.nextInt(0, 59)
+            minutes = Random.nextInt(0, 59),
+            profileId = profile.id
         )
         sleepDao.upsertSleep(
             sleep
@@ -76,7 +82,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                 ).atStartOfDayIn(TimeZone.UTC),
                 beverage = "",
                 amount = Random.nextInt(200, 1500),
-                unit = FluidUnit.Milliliter
+                unit = FluidUnit.Milliliter,
+                profileId = profile.id
             )
             beverageDao.upsertDrink(beverage)
         }

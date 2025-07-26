@@ -29,5 +29,8 @@ sealed class Screen {
     data object Beverages : Screen()
 
     @Serializable
+    data object BodyWeights : Screen()
+
+    @Serializable
     data object Settings : Screen()
 }
