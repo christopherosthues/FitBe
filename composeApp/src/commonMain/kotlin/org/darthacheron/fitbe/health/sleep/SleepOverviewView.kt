@@ -69,6 +69,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DateRangePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
+import org.darthacheron.fitbe.components.TimePickerDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
@@ -227,57 +228,6 @@ fun Plot(sleeps: List<Point<LocalDate, Double>>) {
                     strokeWidth = 2.dp
                 )
             )
-        }
-    }
-}
-
-@Composable
-fun AdvancedTimePickerDialog(
-    title: String = "Select Time",
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    toggle: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
-) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            tonalElevation = 6.dp,
-            modifier =
-                Modifier
-                    .width(IntrinsicSize.Min)
-                    .height(IntrinsicSize.Min)
-                    .background(
-                        shape = MaterialTheme.shapes.large,
-                        color = MaterialTheme.colorScheme.surface
-                    ),
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp),
-                    text = title,
-                    style = MaterialTheme.typography.labelMedium
-                )
-                content()
-                Row(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .fillMaxWidth()
-                ) {
-                    toggle()
-                    Spacer(modifier = Modifier.weight(1f))
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
-                    TextButton(onClick = onConfirm) { Text("OK") }
-                }
-            }
         }
     }
 }
@@ -444,25 +394,4 @@ fun formatDuration(duration: Duration): String {
     val hours = duration.toLong(DurationUnit.HOURS)
     val minutes = (duration.inWholeMinutes % 60)
     return "${hours}h ${minutes}m"
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TimePickerDialog(
-    initialHour: Int,
-    initialMinute: Int,
-    onTimeSelected: (Int, Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val timePickerState = rememberTimePickerState(
-        initialHour = initialHour,
-        initialMinute = initialMinute,
-        is24Hour = true
-    )
-    AdvancedTimePickerDialog(
-        onDismiss = onDismiss,
-        onConfirm = { onTimeSelected(timePickerState.hour, timePickerState.minute) }
-    ) {
-        TimePicker(state = timePickerState)
-    }
 }

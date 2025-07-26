@@ -106,4 +106,14 @@
     <string name="profile_error_height_cm">Enter a value between 0 and 300 cm.</string>
     <string name="profile_error_height_inch">Enter a value between 0 and 118.11 inches.</string>
     <string name="profile_date_of_birth">Date of birth</string>
+
+    <string name="body_weight_total_weight_error_kg">Enter a value between 0 and 350 kg.</string>
+    <string name="body_weight_total_weight_error_lb">Enter a value between 0 and 771.618 lb.</string>
+    <string name="body_weight_body_fat_error">Enter a value between 0 and 100 %.</string>
+    <string name="body_weight_muscle_mass_error_kg">Enter a value between 0 and 350 kg.</string>
+    <string name="body_weight_muscle_mass_error_lb">Enter a value between 0 and 771.618 lb.</string>
+    <string name="body_weight_bone_mass_error_kg">Enter a value between 0 and 350 kg.</string>
+    <string name="body_weight_bone_mass_error_lb">Enter a value between 0 and 771.618 lb.</string>
+    <string name="body_weight_body_water_error">Enter a value between 0 and 100 %.</string>
+    <string name="body_weight_total_weight_sum_error">The total of the individual weights must not exceed the total weight.</string>
 </resources>

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -19,6 +20,7 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class WeightOverviewViewModel(
@@ -54,4 +56,26 @@ class WeightOverviewViewModel(
     }
     fun setStartDate(date: Instant) { _startDate.value = date }
     fun setEndDate(date: Instant) { _endDate.value = date }
+
+    fun addBodyWeight(
+        date: LocalDate,
+        weightInKg: Double,
+        bodyFatPercentage: Double,
+        muscleMassInKg: Double,
+        boneMassInKg: Double,
+        bodyWaterInPercentage: Double
+    ) {
+        viewModelScope.launch {
+            val settings = settingsRepository.getSettings()
+            bodyWeightRepository.addBodyWeight(
+                profileId = settings.selectedProfileId!!,
+                date = date,
+                weightInKg = weightInKg,
+                bodyFatPercentage = bodyFatPercentage,
+                muscleMassInKg = muscleMassInKg,
+                boneMassInKg = boneMassInKg,
+                bodyWaterInPercentage = bodyWaterInPercentage
+            )
+        }
+    }
 }
