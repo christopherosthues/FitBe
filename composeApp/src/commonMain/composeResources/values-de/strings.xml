@@ -62,6 +62,7 @@
     <string name="top_bar_title_profile">Profil</string>
     <string name="top_bar_title_sleeps">Schlaf</string>
     <string name="top_bar_title_beverages">Trinken</string>
+    <string name="top_bar_title_body_weights">Körpergewicht</string>
     <string name="top_bar_title_settings">Einstellungen</string>
     <string name="settings_weight_unit">Gewichtseinheit</string>
     <string name="settings_kg">kg</string>
@@ -115,4 +116,14 @@
     <string name="body_weight_bone_mass_error_lb">Geben Sie einen Wert zwischen 0,0 und 771,618 lb ein.</string>
     <string name="body_weight_body_water_error">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
     <string name="body_weight_total_weight_sum_error">Die Summe der Einzelgewichte darf das Gesamtgewicht nicht überschreiten.</string>
+    <string name="body_weight_add_body_weight_title">Körpergewicht eintragen</string>
+    <string name="body_weight_add_body_weight_date">Datum</string>
+    <string name="body_weight_add_body_weight_total_weight">Gesamtgewicht (%1$s)</string>
+    <string name="body_weight_add_body_weight_body_fat">Körperfett (%)</string>
+    <string name="body_weight_add_body_weight_muscle_mass">Muskelmasse (%1$s)</string>
+    <string name="body_weight_add_body_weight_bone_mass">Knochenmasse (%1$s)</string>
+    <string name="body_weight_add_body_weight_body_water">Körperwasser (%)</string>
+    <string name="body_weight_save">Speichern</string>
+    <string name="body_weight_cancel">Abbrechen</string>
+    <string name="chart_grouping">Zeitintervall</string>
 </resources>

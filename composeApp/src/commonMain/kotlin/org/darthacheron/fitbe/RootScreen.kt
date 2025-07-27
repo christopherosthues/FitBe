@@ -53,6 +53,7 @@ fun RootScreen(navigateToSettings: () -> Unit) {
                 title = {
                     Text(
                         text = topBarTitle(
+                            // TODO: Title
                             currentDestination?.substringAfterLast(".")?.substringBefore("/")
                                 ?.substringBefore("?")
                         )

@@ -16,6 +16,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,14 +39,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_body_fat
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_body_water
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_bone_mass
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_date
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_muscle_mass
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_title
+import fitbe.composeapp.generated.resources.body_weight_add_body_weight_total_weight
 import fitbe.composeapp.generated.resources.body_weight_body_fat_error
 import fitbe.composeapp.generated.resources.body_weight_body_water_error
 import fitbe.composeapp.generated.resources.body_weight_bone_mass_error_kg
 import fitbe.composeapp.generated.resources.body_weight_bone_mass_error_lb
+import fitbe.composeapp.generated.resources.body_weight_cancel
 import fitbe.composeapp.generated.resources.body_weight_muscle_mass_error_kg
 import fitbe.composeapp.generated.resources.body_weight_muscle_mass_error_lb
+import fitbe.composeapp.generated.resources.body_weight_save
 import fitbe.composeapp.generated.resources.body_weight_total_weight_error_kg
 import fitbe.composeapp.generated.resources.body_weight_total_weight_error_lb
+import fitbe.composeapp.generated.resources.chart_grouping
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
@@ -100,7 +111,8 @@ fun WeightOverviewView(
 
     Column {
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             TextButton(
                 onClick = { showDateRangeDialog = true },
@@ -128,7 +140,7 @@ fun WeightOverviewView(
                 initialState = false,
                 selectedIndex = selectedViewTypeIndex,
                 items = SleepViewType.entries,
-                title = "Choose an option",
+                title = stringResource(Res.string.chart_grouping),
                 itemContent = { item, onClick ->
                     DropdownMenuItem(
                         text = { Text(item.localizedString()) },
@@ -146,7 +158,7 @@ fun WeightOverviewView(
         }
         Box(modifier = Modifier.fillMaxSize()) {
             if (!weights.isEmpty()) {
-                Plot(weights)
+                PlotBodyWeights(weights)
             }
             IconButton(
                 onClick = {},
@@ -166,9 +178,12 @@ fun WeightOverviewView(
                     contentDescription = null
                 )
             }
-            FilledIconButton(
+            FloatingActionButton(
                 onClick = { showAddDialog = true },
-                modifier = Modifier.align(Alignment.BottomEnd)
+                containerColor = Color(0xFF2196F3),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             ) {
                 Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }
@@ -214,218 +229,6 @@ fun WeightOverviewView(
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
-        )
-    }
-}
-
-@OptIn(ExperimentalKoalaPlotApi::class)
-@Composable
-fun Plot(sleeps: List<Point<LocalDate, Double>>) {
-    ChartLayout(
-    ) {
-        val dates = sleeps.map { it.x }
-        XYGraph(
-            xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = DoubleLinearAxisModel(
-                range = 0.0..sleeps.maxOf { ceil(it.y) },
-                minorTickCount = 1
-            ),
-            xAxisLabels = {
-                Text(
-                    it.toString(),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 2.dp).graphicsLayer {
-                        rotationZ = -75f
-                    },
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-            },
-            xAxisTitle = { null },
-            gestureConfig = GestureConfig(zoomXEnabled = true, zoomYEnabled = true),
-            yAxisLabels = {
-                Text(
-                    "${it.toInt()}h",
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.absolutePadding(right = 2.dp),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-            },
-        ) {
-            StairstepPlot(
-                data = sleeps,
-                lineStyle = LineStyle(
-                    brush = SolidColor(Color.Black),
-                    strokeWidth = 2.dp
-                )
-            )
-        }
-    }
-}
-
-@Composable
-fun AddBodyWeightDialog(
-    settings: Settings,
-    onDismiss: () -> Unit,
-    onSave: (
-        date: LocalDate,
-        weightInKg: Double,
-        bodyFatPercentage: Double?,
-        muscleMassInKg: Double?,
-        boneMassInKg: Double?,
-        bodyWaterInPercentage: Double?
-    ) -> Unit
-) {
-    var weight by remember { mutableStateOf(0.0) }
-    var bodyFat by remember { mutableStateOf<Double?>(0.0) }
-    var muscleMass by remember { mutableStateOf<Double?>(0.0) }
-    var boneMass by remember { mutableStateOf<Double?>(0.0) }
-    var bodyWater by remember { mutableStateOf<Double?>(0.0) }
-    var date by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
-    var showDateDialog by remember { mutableStateOf(false) }
-    var weightError by remember { mutableStateOf(false) }
-    var bodyFatError by remember { mutableStateOf(false) }
-    var muscleMassError by remember { mutableStateOf(false) }
-    var boneMassError by remember { mutableStateOf(false) }
-    var bodyWaterError by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Add Weight Entry") },
-        confirmButton = {
-            Button(onClick = {
-                val partsSum = listOfNotNull(
-                    bodyFat,
-                    muscleMass,
-                    boneMass,
-                    bodyWater,
-                ).sum()
-
-                if (partsSum <= weight) {
-                    onSave(date, weight, bodyFat, muscleMass, boneMass, bodyWater)
-                }
-            }) { Text("Save") }
-        },
-        dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Cancel") }
-        },
-        text = {
-            Column(Modifier.verticalScroll(scrollState)) {
-                OutlinedTextField(
-                    value = date.toString(),
-                    onValueChange = {},
-                    label = { Text("Date") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(onClick = { showDateDialog = true }) {
-                            Icon(
-                                painterResource(Res.drawable.ic_date_range),
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = weight.toDoubleString(),
-                    onValueChange = {
-                        weight = it.toPositiveDouble()
-                        weightError = it.startsWith("-") && it.length > 1
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    label = { Text("Total Weight (kg)") },
-                    isError = weightError,
-                    supportingText = {
-                        if (weightError) Text(
-                            stringResource(
-                                when (settings.weightUnit) {
-                                    WeightUnit.KG -> Res.string.body_weight_total_weight_error_kg
-                                    WeightUnit.POUND -> Res.string.body_weight_total_weight_error_lb
-                                }
-                            )
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = bodyFat.toDoubleString(),
-                    onValueChange = { bodyFat = it.toPositiveDoubleOrNull() },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    label = { Text("Body Fat (%)") },
-                    isError = bodyFatError,
-                    supportingText = {
-                        if (bodyFatError) Text(
-                            stringResource(Res.string.body_weight_body_fat_error)
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = muscleMass.toDoubleString(),
-                    onValueChange = { muscleMass = it.toPositiveDoubleOrNull() },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    label = { Text("Muscle Mass (kg)") },
-                    isError = muscleMassError,
-                    supportingText = {
-                        if (muscleMassError) Text(
-                            stringResource(
-                                when (settings.weightUnit) {
-                                    WeightUnit.KG -> Res.string.body_weight_muscle_mass_error_kg
-                                    WeightUnit.POUND -> Res.string.body_weight_muscle_mass_error_lb
-                                }
-                            )
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = boneMass.toDoubleString(),
-                    onValueChange = { boneMass = it.toPositiveDoubleOrNull() },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    label = { Text("Bone Mass (kg)") },
-                    isError = boneMassError,
-                    supportingText = {
-                        if (boneMassError) Text(
-                            stringResource(
-                                when (settings.weightUnit) {
-                                    WeightUnit.KG -> Res.string.body_weight_bone_mass_error_kg
-                                    WeightUnit.POUND -> Res.string.body_weight_bone_mass_error_lb
-                                }
-                            )
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = bodyWater.toDoubleString(),
-                    onValueChange = { bodyWater = it.toPositiveDoubleOrNull() },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    label = { Text("Body Water (%)") },
-                    isError = bodyWaterError,
-                    supportingText = {
-                        if (bodyWaterError) Text(
-                            stringResource(Res.string.body_weight_body_water_error)
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-    )
-
-    if (showDateDialog) {
-        DatePickerModal(
-            onDateSelected = { millis ->
-                millis?.let {
-                    date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
-                }
-                showDateDialog = false
-            },
-            onDismiss = { showDateDialog = false }
         )
     }
 }
