@@ -16,10 +16,10 @@ data class BodyWeightEntity(
     val profileId: Uuid,
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
     val weightInKg: Double,
-    val bodyFatPercentage: Double,
-    val muscleMassInKg: Double,
-    val boneMassInKg: Double,
-    val bodyWaterInPercentage: Double,
+    val bodyFatPercentage: Double?,
+    val muscleMassInKg: Double?,
+    val boneMassInKg: Double?,
+    val bodyWaterInPercentage: Double?,
 ) {
     fun toBodyWeight(): BodyWeight = BodyWeight(
         id = id,

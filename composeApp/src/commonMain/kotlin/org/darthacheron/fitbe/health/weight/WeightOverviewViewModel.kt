@@ -60,10 +60,10 @@ class WeightOverviewViewModel(
     fun addBodyWeight(
         date: LocalDate,
         weightInKg: Double,
-        bodyFatPercentage: Double,
-        muscleMassInKg: Double,
-        boneMassInKg: Double,
-        bodyWaterInPercentage: Double
+        bodyFatPercentage: Double?,
+        muscleMassInKg: Double?,
+        boneMassInKg: Double?,
+        bodyWaterInPercentage: Double?,
     ) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()

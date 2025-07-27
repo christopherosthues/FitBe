@@ -4,10 +4,11 @@ import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.utils.roundToDecimals
 
 class BodyMeasurementUnitConverter {
-    fun convert(value: Double, from: BodyMeasurementUnit, to: BodyMeasurementUnit): Double {
-        return when(to) {
-            BodyMeasurementUnit.CM -> from.toCentimeters(value)
-            BodyMeasurementUnit.INCH -> from.toInch(value)
-        }.roundToDecimals(1)
+    fun convert(value: Double?, from: BodyMeasurementUnit, to: BodyMeasurementUnit): Double? {
+        return if (value == null) null else
+            when (to) {
+                BodyMeasurementUnit.CM -> from.toCentimeters(value)
+                BodyMeasurementUnit.INCH -> from.toInch(value)
+            }.roundToDecimals(1)
     }
 }

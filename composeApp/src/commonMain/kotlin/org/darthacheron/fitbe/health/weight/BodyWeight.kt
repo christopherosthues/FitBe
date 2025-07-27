@@ -9,9 +9,9 @@ data class BodyWeight(
     val id: Uuid,
     val profileId: Uuid,
     val weightInKg: Double,
-    val bodyFatPercentage: Double,
-    val muscleMassInKg: Double,
-    val boneMassInKg: Double,
-    val bodyWaterInPercentage: Double,
+    val bodyFatPercentage: Double?,
+    val muscleMassInKg: Double?,
+    val boneMassInKg: Double?,
+    val bodyWaterInPercentage: Double?,
     val date: LocalDate
 )

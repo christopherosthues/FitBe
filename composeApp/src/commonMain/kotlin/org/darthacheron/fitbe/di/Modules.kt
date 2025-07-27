@@ -2,6 +2,9 @@ package org.darthacheron.fitbe.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.darthacheron.fitbe.StartUpService
+import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.KcalValidator
+import org.darthacheron.fitbe.components.validators.WeightRangeValidator
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
@@ -38,6 +41,10 @@ val sharedModule = module {
     singleOf(::BodyMeasurementUnitConverter)
     singleOf(::DistanceUnitConverter)
     singleOf(::WeightUnitConverter)
+
+    singleOf(::BeverageValidator)
+    singleOf(::KcalValidator)
+    singleOf(::WeightRangeValidator)
 
     single {
         get<DatabaseFactory>().create()

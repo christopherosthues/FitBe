@@ -5,13 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -71,10 +68,12 @@ import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DateRangePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.health.sleep.SleepViewType
-import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
+import org.darthacheron.fitbe.utils.toDoubleString
+import org.darthacheron.fitbe.utils.toPositiveDouble
+import org.darthacheron.fitbe.utils.toPositiveDoubleOrNull
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -212,7 +211,6 @@ fun WeightOverviewView(
                     boneMassInKg,
                     bodyWaterInPercentage
                 )
-//                 viewModel.addSleep(start.toUInt(), end.toUInt(), )
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
@@ -275,17 +273,17 @@ fun AddBodyWeightDialog(
     onSave: (
         date: LocalDate,
         weightInKg: Double,
-        bodyFatPercentage: Double,
-        muscleMassInKg: Double,
-        boneMassInKg: Double,
-        bodyWaterInPercentage: Double
+        bodyFatPercentage: Double?,
+        muscleMassInKg: Double?,
+        boneMassInKg: Double?,
+        bodyWaterInPercentage: Double?
     ) -> Unit
 ) {
     var weight by remember { mutableStateOf(0.0) }
-    var bodyFat by remember { mutableStateOf(0.0) }
-    var muscleMass by remember { mutableStateOf(0.0) }
-    var boneMass by remember { mutableStateOf(0.0) }
-    var bodyWater by remember { mutableStateOf(0.0) }
+    var bodyFat by remember { mutableStateOf<Double?>(0.0) }
+    var muscleMass by remember { mutableStateOf<Double?>(0.0) }
+    var boneMass by remember { mutableStateOf<Double?>(0.0) }
+    var bodyWater by remember { mutableStateOf<Double?>(0.0) }
     var date by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
     var showDateDialog by remember { mutableStateOf(false) }
     var weightError by remember { mutableStateOf(false) }
@@ -300,7 +298,7 @@ fun AddBodyWeightDialog(
         title = { Text("Add Weight Entry") },
         confirmButton = {
             Button(onClick = {
-                val partsSum = listOf(
+                val partsSum = listOfNotNull(
                     bodyFat,
                     muscleMass,
                     boneMass,
@@ -333,10 +331,10 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = weight.toDoubleStringOrDash(),
+                    value = weight.toDoubleString(),
                     onValueChange = {
+                        weight = it.toPositiveDouble()
                         weightError = it.startsWith("-") && it.length > 1
-                        weight = it.toDoubleOrMinusOne()
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text("Total Weight (kg)") },
@@ -354,8 +352,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = bodyFat.toDoubleStringOrDash(),
-                    onValueChange = { bodyFat = it.toDoubleOrMinusOne() },
+                    value = bodyFat.toDoubleString(),
+                    onValueChange = { bodyFat = it.toPositiveDoubleOrNull() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text("Body Fat (%)") },
                     isError = bodyFatError,
@@ -367,8 +365,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = muscleMass.toDoubleStringOrDash(),
-                    onValueChange = { muscleMass = it.toDoubleOrMinusOne() },
+                    value = muscleMass.toDoubleString(),
+                    onValueChange = { muscleMass = it.toPositiveDoubleOrNull() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text("Muscle Mass (kg)") },
                     isError = muscleMassError,
@@ -385,8 +383,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = boneMass.toDoubleStringOrDash(),
-                    onValueChange = { boneMass = it.toDoubleOrMinusOne() },
+                    value = boneMass.toDoubleString(),
+                    onValueChange = { boneMass = it.toPositiveDoubleOrNull() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text("Bone Mass (kg)") },
                     isError = boneMassError,
@@ -403,8 +401,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = bodyWater.toDoubleStringOrDash(),
-                    onValueChange = { bodyWater = it.toDoubleOrMinusOne() },
+                    value = bodyWater.toDoubleString(),
+                    onValueChange = { bodyWater = it.toPositiveDoubleOrNull() },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text("Body Water (%)") },
                     isError = bodyWaterError,
@@ -430,12 +428,4 @@ fun AddBodyWeightDialog(
             onDismiss = { showDateDialog = false }
         )
     }
-}
-
-fun String.toDoubleOrMinusOne(): Double {
-    return this.toDoubleOrNull() ?: -1.0
-}
-
-fun Double.toDoubleStringOrDash(): String {
-    return if (this < 0) "-" else this.toString()
 }

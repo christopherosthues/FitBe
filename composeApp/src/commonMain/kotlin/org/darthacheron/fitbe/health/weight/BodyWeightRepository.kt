@@ -31,10 +31,10 @@ class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
         profileId: Uuid,
         date: LocalDate,
         weightInKg: Double,
-        bodyFatPercentage: Double,
-        muscleMassInKg: Double,
-        boneMassInKg: Double,
-        bodyWaterInPercentage: Double
+        bodyFatPercentage: Double?,
+        muscleMassInKg: Double?,
+        boneMassInKg: Double?,
+        bodyWaterInPercentage: Double?,
     ) {
         bodyWeightDao.upsertBodyWeight(BodyWeightEntity(
             profileId = profileId,

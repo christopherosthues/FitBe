@@ -75,12 +75,16 @@ import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.TimeInputDialog
+import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.KcalValidator
+import org.darthacheron.fitbe.components.validators.WeightRangeValidator
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -94,7 +98,10 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProfileView(
     profileViewModel: ProfileViewModel,
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
+    beverageValidator: BeverageValidator,
+    kcalValidator: KcalValidator,
+    weightValidator: WeightRangeValidator,
 ) {
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
@@ -102,14 +109,14 @@ fun ProfileView(
     var isAdding by remember { mutableStateOf(false) }
     var isEditing by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
-    var newDateOfBirth by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
-    var newGender by remember { mutableStateOf(Gender.MALE) }
-    var newTargetKcal by remember { mutableStateOf("") }
-    var newTargetBeverage by remember { mutableStateOf("") }
-    var newTargetWeight by remember { mutableStateOf("") }
-    var newTargetSleepDuration by remember { mutableStateOf(LocalTime(8, 0)) }
-    var newTargetSteps by remember { mutableStateOf("") }
-    var newBodyHeightInCm by remember { mutableStateOf("") }
+    var newDateOfBirth by remember { mutableStateOf<LocalDate?>(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
+    var newGender by remember { mutableStateOf(ProfileDefaults.gender) }
+    var newTargetKcal by remember { mutableStateOf(ProfileDefaults.KCAL.toString()) }
+    var newTargetBeverage by remember { mutableStateOf(ProfileDefaults.BEVERAGE.toString()) }
+    var newTargetWeight by remember { mutableStateOf(ProfileDefaults.WEIGHT_IN_KG.toString()) }
+    var newTargetSleepDuration by remember { mutableStateOf<LocalTime?>(ProfileDefaults.SLEEP_DURATION) }
+    var newTargetSteps by remember { mutableStateOf(ProfileDefaults.STEPS.toString()) }
+    var newBodyHeightInCm by remember { mutableStateOf(ProfileDefaults.BODY_HEIGHT_IN_CM.toString()) }
     var showSleepDurationTimePicker by remember { mutableStateOf(false) }
     var showProfileDialog by remember { mutableStateOf(false) }
     var showDateOfBirthDialog by remember { mutableStateOf(false) }
@@ -218,7 +225,7 @@ fun ProfileView(
                     onValueChange = {
                         if (isEditing) {
                             newTargetKcal = it
-                            kcalError = it.toUIntOrNull()?.let { kcal -> kcal > 10_000u } ?: true
+                            kcalError = kcalValidator.validate(it.toUIntOrNull())
                         }
                     },
                     label = { Text(stringResource(Res.string.profile_target_kcal)) },
@@ -237,7 +244,7 @@ fun ProfileView(
                     onValueChange = {
                         if (isEditing) {
                             newTargetBeverage = it
-                            beverageError = it.toUIntOrNull()?.let { b -> b > 5000u } ?: true
+                            beverageError = beverageValidator.validate(it.toUIntOrNull())
                         }
                     },
                     label = {
@@ -268,8 +275,7 @@ fun ProfileView(
                     onValueChange = {
                         if (isEditing) {
                             newTargetWeight = it
-                            val kg = it.toDoubleOrNull()
-                            weightError = kg == null || kg < 0.0 || kg > 350.0
+                            weightError = weightValidator.validate(it.toDoubleOrNull(), settings.weightUnit)
                         }
                     },
                     label = {
@@ -320,6 +326,7 @@ fun ProfileView(
                     onValueChange = {
                         if (isEditing) {
                             newTargetSteps = it
+                            // TODO
                             stepsError = it.toUIntOrNull()?.let { s -> s > 500_000u } ?: true
                         }
                     },
@@ -450,12 +457,12 @@ fun ProfileView(
                                     ?: Uuid.random(),
                                 name = newName,
                                 gender = newGender,
-                                targetKcal = newTargetKcal.toUIntOrNull() ?: 0u,
-                                targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull() ?: 0u,
-                                targetWeight = newTargetWeight.toDoubleOrNull() ?: 0.0,
+                                targetKcal = newTargetKcal.toUIntOrNull(),
+                                targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull(),
+                                targetWeight = newTargetWeight.toDoubleOrNull(),
                                 targetSleepDuration = newTargetSleepDuration,
-                                targetSteps = newTargetSteps.toUIntOrNull() ?: 0u,
-                                bodyHeight = newBodyHeightInCm.toDoubleOrNull() ?: 0.0,
+                                targetSteps = newTargetSteps.toUIntOrNull(),
+                                bodyHeight = newBodyHeightInCm.toDoubleOrNull(),
                                 dateOfBirth = newDateOfBirth
                             )
                             if (isAdding) {
@@ -564,8 +571,8 @@ fun ProfileView(
 
         if (showSleepDurationTimePicker) {
             TimeInputDialog(
-                initialHour = newTargetSleepDuration.hour,
-                initialMinute = newTargetSleepDuration.minute,
+                initialHour = newTargetSleepDuration?.hour ?: ProfileDefaults.SLEEP_DURATION.hour,
+                initialMinute = newTargetSleepDuration?.minute ?: ProfileDefaults.SLEEP_DURATION.minute,
                 onTimeSelected = { hour, minute ->
                     newTargetSleepDuration = LocalTime(hour, minute)
 
@@ -577,9 +584,9 @@ fun ProfileView(
     }
 }
 
-private fun sleepDurationText(sleepDuration: LocalTime): String = "${
-    sleepDuration.hour.toString().padStart(2, '0')
-}:${sleepDuration.minute.toString().padStart(2, '0')}"
+private fun sleepDurationText(sleepDuration: LocalTime?): String = "${
+    sleepDuration?.hour.toString().padStart(2, '0')
+}:${sleepDuration?.minute.toString().padStart(2, '0')}"
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
