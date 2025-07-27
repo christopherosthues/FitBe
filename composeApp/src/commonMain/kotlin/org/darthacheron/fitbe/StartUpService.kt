@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.profile.Profile
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.koin.core.logger.Logger
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -16,13 +17,17 @@ class StartUpService(
 ) {
     fun initialize() {
         CoroutineScope(Dispatchers.Default).launch {
-            val settings = settingsRepository.getSettings()
-            val profiles = profileRepository.profiles.first()
+            try {
+                val settings = settingsRepository.getSettings()
+                val profiles = profileRepository.profiles.first()
 
-            if (profiles.isEmpty()) {
-                val defaultProfile = Profile()
-                profileRepository.upsertProfile(defaultProfile)
-                settingsRepository.saveSettings(settings.copy(selectedProfileId = defaultProfile.id))
+                if (profiles.isEmpty()) {
+                    val defaultProfile = Profile()
+                    profileRepository.upsertProfile(defaultProfile)
+                    settingsRepository.saveSettings(settings.copy(selectedProfileId = defaultProfile.id))
+                }
+            } catch (exception: Exception) {
+                // TODO proper error handling
             }
         }
     }

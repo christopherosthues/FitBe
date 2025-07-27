@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
@@ -37,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.fluid_unit_milliliter
@@ -83,12 +85,18 @@ import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.TimeInputDialog
 import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.BodyHeightValidator
+import org.darthacheron.fitbe.components.validators.StepsValidator
+import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.KcalValidator
-import org.darthacheron.fitbe.components.validators.WeightRangeValidator
+import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
+import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
+import org.darthacheron.fitbe.utils.toDoubleString
+import org.darthacheron.fitbe.utils.toUintString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -98,10 +106,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProfileView(
     profileViewModel: ProfileViewModel,
-    settingsRepository: SettingsRepository,
-    beverageValidator: BeverageValidator,
-    kcalValidator: KcalValidator,
-    weightValidator: WeightRangeValidator,
+    settingsRepository: SettingsRepository
 ) {
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
@@ -221,11 +226,14 @@ fun ProfileView(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newTargetKcal else profile.targetKcal.toString(),
+                    value = if (isEditing) newTargetKcal else profile.targetKcal.toUintString(),
                     onValueChange = {
                         if (isEditing) {
                             newTargetKcal = it
-                            kcalError = kcalValidator.validate(it.toUIntOrNull())
+                            kcalError =
+                                !PositiveNumberValidator().validate(it) || !KcalValidator().validate(
+                                    it.toUIntOrNull()
+                                )
                         }
                     },
                     label = { Text(stringResource(Res.string.profile_target_kcal)) },
@@ -234,17 +242,21 @@ fun ProfileView(
                     supportingText = {
                         if (kcalError) Text(stringResource(Res.string.profile_error_kcal))
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newTargetBeverage else profile.targetBeverageInMilliliter.toString(),
+                    value = if (isEditing) newTargetBeverage else profile.targetBeverageInMilliliter.toUintString(),
                     onValueChange = {
                         if (isEditing) {
                             newTargetBeverage = it
-                            beverageError = beverageValidator.validate(it.toUIntOrNull())
+                            beverageError =
+                                !PositiveNumberValidator().validate(it) || !BeverageValidator().validate(
+                                    it.toUIntOrNull()
+                                )
                         }
                     },
                     label = {
@@ -265,17 +277,23 @@ fun ProfileView(
                             )
                         )
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newTargetWeight else profile.targetWeight.toString(),
+                    value = if (isEditing) newTargetWeight else profile.targetWeight.toDoubleString(),
                     onValueChange = {
                         if (isEditing) {
                             newTargetWeight = it
-                            weightError = weightValidator.validate(it.toDoubleOrNull(), settings.weightUnit)
+                            weightError =
+                                !PositiveDecimalValidator().validate(it) ||
+                                        !BodyWeightValidator().validate(
+                                            it.toDoubleOrNull(),
+                                            settings.weightUnit
+                                        )
                         }
                     },
                     label = {
@@ -294,6 +312,7 @@ fun ProfileView(
                             WeightUnit.POUND -> Res.string.profile_error_weight_lb
                         }))
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -322,12 +341,14 @@ fun ProfileView(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newTargetSteps else profile.targetSteps.toString(),
+                    value = if (isEditing) newTargetSteps else profile.targetSteps.toUintString(),
                     onValueChange = {
                         if (isEditing) {
                             newTargetSteps = it
-                            // TODO
-                            stepsError = it.toUIntOrNull()?.let { s -> s > 500_000u } ?: true
+                            stepsError =
+                                !PositiveNumberValidator().validate(it) || !StepsValidator().validate(
+                                    it.toUIntOrNull()
+                                )
                         }
                     },
                     label = { Text(stringResource(Res.string.profile_target_steps)) },
@@ -336,18 +357,21 @@ fun ProfileView(
                     supportingText = {
                         if (stepsError) Text(stringResource(Res.string.profile_error_steps))
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = if (isEditing) newBodyHeightInCm else profile.bodyHeight.toString(),
+                    value = if (isEditing) newBodyHeightInCm else profile.bodyHeight.toDoubleString(),
                     onValueChange = {
                         if (isEditing) {
                             newBodyHeightInCm = it
-                            val cm = it.toDoubleOrNull()
-                            heightError = cm == null || cm < 0.0 || cm > 300.0
+                            heightError =
+                                !PositiveDecimalValidator().validate(it) || !BodyHeightValidator().validate(
+                                    it.toDoubleOrNull()
+                                )
                         }
                     },
                     label = {
@@ -366,6 +390,7 @@ fun ProfileView(
                             BodyMeasurementUnit.INCH -> Res.string.profile_error_height_inch
                         }))
                     },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth().padding(bottom = 48.dp)
                 )
             }
@@ -415,12 +440,12 @@ fun ProfileView(
                         currentProfile?.let {
                             newName = it.name
                             newGender = it.gender
-                            newTargetKcal = it.targetKcal.toString()
-                            newTargetBeverage = it.targetBeverageInMilliliter.toString()
-                            newTargetWeight = it.targetWeight.toString()
+                            newTargetKcal = it.targetKcal.toUintString()
+                            newTargetBeverage = it.targetBeverageInMilliliter.toUintString()
+                            newTargetWeight = it.targetWeight.toDoubleString()
                             newTargetSleepDuration = it.targetSleepDuration
-                            newTargetSteps = it.targetSteps.toString()
-                            newBodyHeightInCm = it.bodyHeight.toString()
+                            newTargetSteps = it.targetSteps.toUintString()
+                            newBodyHeightInCm = it.bodyHeight.toDoubleString()
                             newDateOfBirth = it.dateOfBirth
                         }
                         isEditing = false
@@ -450,7 +475,6 @@ fun ProfileView(
                 ).all { it }
                 FloatingActionButton(
                     onClick = {
-                        // Save profile
                         if (isFormValid) {
                             val profile = Profile(
                                 id = if (isAdding) Uuid.random() else currentProfile?.id
@@ -459,10 +483,10 @@ fun ProfileView(
                                 gender = newGender,
                                 targetKcal = newTargetKcal.toUIntOrNull(),
                                 targetBeverageInMilliliter = newTargetBeverage.toUIntOrNull(),
-                                targetWeight = newTargetWeight.toDoubleOrNull(),
+                                targetWeight = newTargetWeight.replace(',', '.').toDoubleOrNull(),
                                 targetSleepDuration = newTargetSleepDuration,
                                 targetSteps = newTargetSteps.toUIntOrNull(),
-                                bodyHeight = newBodyHeightInCm.toDoubleOrNull(),
+                                bodyHeight = newBodyHeightInCm.replace(',', '.').toDoubleOrNull(),
                                 dateOfBirth = newDateOfBirth
                             )
                             if (isAdding) {
@@ -496,12 +520,12 @@ fun ProfileView(
                         currentProfile?.let {
                             newName = it.name
                             newGender = it.gender
-                            newTargetKcal = it.targetKcal.toString()
-                            newTargetBeverage = it.targetBeverageInMilliliter.toString()
-                            newTargetWeight = it.targetWeight.toString()
+                            newTargetKcal = it.targetKcal.toUintString()
+                            newTargetBeverage = it.targetBeverageInMilliliter.toUintString()
+                            newTargetWeight = it.targetWeight.toDoubleString()
                             newTargetSleepDuration = it.targetSleepDuration
-                            newTargetSteps = it.targetSteps.toString()
-                            newBodyHeightInCm = it.bodyHeight.toString()
+                            newTargetSteps = it.targetSteps.toUintString()
+                            newBodyHeightInCm = it.bodyHeight.toDoubleString()
                             newDateOfBirth = it.dateOfBirth
                         }
                         isEditing = true
@@ -523,12 +547,12 @@ fun ProfileView(
                             val newProfile = Profile()
                             newName = newProfile.name
                             newGender = newProfile.gender
-                            newTargetKcal = newProfile.targetKcal.toString()
-                            newTargetBeverage = newProfile.targetBeverageInMilliliter.toString()
-                            newTargetWeight = newProfile.targetWeight.toString()
+                            newTargetKcal = newProfile.targetKcal.toUintString()
+                            newTargetBeverage = newProfile.targetBeverageInMilliliter.toUintString()
+                            newTargetWeight = newProfile.targetWeight.toDoubleString()
                             newTargetSleepDuration = newProfile.targetSleepDuration
-                            newTargetSteps = newProfile.targetSteps.toString()
-                            newBodyHeightInCm = newProfile.bodyHeight.toString()
+                            newTargetSteps = newProfile.targetSteps.toUintString()
+                            newBodyHeightInCm = newProfile.bodyHeight.toDoubleString()
                             newDateOfBirth = newProfile.dateOfBirth
                         }
                         isEditing = true

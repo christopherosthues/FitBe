@@ -16,7 +16,6 @@ import org.koin.compose.getKoin
 @Preview
 fun App() {
     KoinApplication(application = {}) {
-        // Initialize settings view model (could be injected via Koin)
         val koin = getKoin()
         val settingsViewModel = remember { koin.get<SettingsViewModel>() }
         val startUpService = remember { koin.get<StartUpService>() }

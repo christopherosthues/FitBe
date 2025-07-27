@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.settings
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 
 /**
  * Platform-independent interface for settings persistence
@@ -9,6 +9,6 @@ import kotlinx.coroutines.flow.last
 interface SettingsRepository {
     suspend fun saveSettings(settings: Settings)
     fun getSettingsFlow(): Flow<Settings>
-    suspend fun getSettings(): Settings = getSettingsFlow().last()
+    suspend fun getSettings(): Settings = getSettingsFlow().first()
 }
 
