@@ -100,7 +100,8 @@ fun WeightOverviewView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
     settingsRepository: SettingsRepository
 ) {
-    val weights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
+    val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
+    val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     var selectedViewTypeIndex by remember { mutableStateOf(0) }
     val startDate by bodyWeightOverviewViewModel.startDate.collectAsState()
@@ -157,8 +158,8 @@ fun WeightOverviewView(
             )
         }
         Box(modifier = Modifier.fillMaxSize()) {
-            if (!weights.isEmpty()) {
-                PlotBodyWeights(weights)
+            if (!bodyWeights.first.isEmpty()) {
+                PlotBodyWeights(bodyWeights, maxBodyWeight, false)
             }
             IconButton(
                 onClick = {},

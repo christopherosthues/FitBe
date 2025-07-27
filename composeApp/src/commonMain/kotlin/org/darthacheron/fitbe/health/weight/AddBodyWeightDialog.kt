@@ -45,9 +45,6 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.WeightUnit
-import org.darthacheron.fitbe.utils.toDoubleString
-import org.darthacheron.fitbe.utils.toPositiveDouble
-import org.darthacheron.fitbe.utils.toPositiveDoubleOrNull
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,11 +61,11 @@ fun AddBodyWeightDialog(
         bodyWaterInPercentage: Double?
     ) -> Unit
 ) {
-    var weight by remember { mutableStateOf(0.0) }
-    var bodyFat by remember { mutableStateOf<Double?>(0.0) }
-    var muscleMass by remember { mutableStateOf<Double?>(0.0) }
-    var boneMass by remember { mutableStateOf<Double?>(0.0) }
-    var bodyWater by remember { mutableStateOf<Double?>(0.0) }
+    var weight by remember { mutableStateOf(0.0.toString()) }
+    var bodyFat by remember { mutableStateOf(0.0.toString()) }
+    var muscleMass by remember { mutableStateOf(0.0.toString()) }
+    var boneMass by remember { mutableStateOf(0.0.toString()) }
+    var bodyWater by remember { mutableStateOf(0.0.toString()) }
     var date by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
     var showDateDialog by remember { mutableStateOf(false) }
     var weightError by remember { mutableStateOf(false) }
@@ -84,14 +81,21 @@ fun AddBodyWeightDialog(
         confirmButton = {
             TextButton(onClick = {
                 val partsSum = listOfNotNull(
-                    bodyFat,
-                    muscleMass,
-                    boneMass,
-                    bodyWater,
+                    bodyFat.toDoubleOrNull(),
+                    muscleMass.toDoubleOrNull(),
+                    boneMass.toDoubleOrNull(),
+                    bodyWater.toDoubleOrNull(),
                 ).sum()
 
-                if (partsSum <= weight) {
-                    onSave(date, weight, bodyFat, muscleMass, boneMass, bodyWater)
+                if (partsSum <= weight.toDouble()) {
+                    onSave(
+                        date,
+                        weight.toDouble(),
+                        bodyFat.toDoubleOrNull(),
+                        muscleMass.toDoubleOrNull(),
+                        boneMass.toDoubleOrNull(),
+                        bodyWater.toDoubleOrNull()
+                    )
                 }
             }) { Text(stringResource(Res.string.body_weight_save)) }
         },
@@ -116,9 +120,9 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = weight.toDoubleString(),
+                    value = weight,
                     onValueChange = {
-                        weight = it.toPositiveDouble()
+                        weight = it
                         weightError = it.startsWith("-") && it.length > 1
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
@@ -144,8 +148,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = bodyFat.toDoubleString(),
-                    onValueChange = { bodyFat = it.toPositiveDoubleOrNull() },
+                    value = bodyFat,
+                    onValueChange = { bodyFat = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text(stringResource(Res.string.body_weight_add_body_weight_body_fat)) },
                     isError = bodyFatError,
@@ -157,8 +161,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = muscleMass.toDoubleString(),
-                    onValueChange = { muscleMass = it.toPositiveDoubleOrNull() },
+                    value = muscleMass,
+                    onValueChange = { muscleMass = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = {
                         Text(
@@ -182,8 +186,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = boneMass.toDoubleString(),
-                    onValueChange = { boneMass = it.toPositiveDoubleOrNull() },
+                    value = boneMass,
+                    onValueChange = { boneMass = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = {
                         Text(
@@ -207,8 +211,8 @@ fun AddBodyWeightDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
-                    value = bodyWater.toDoubleString(),
-                    onValueChange = { bodyWater = it.toPositiveDoubleOrNull() },
+                    value = bodyWater,
+                    onValueChange = { bodyWater = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     label = { Text(stringResource(Res.string.body_weight_add_body_weight_body_water)) },
                     isError = bodyWaterError,
