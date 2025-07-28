@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -37,6 +39,8 @@ import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.KoalaPlotTheme
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
+import io.github.koalaplot.core.util.VerticalRotation
+import io.github.koalaplot.core.util.rotateVertically
 import io.github.koalaplot.core.util.toString
 import io.github.koalaplot.core.xygraph.AnchorPoint
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
@@ -145,16 +149,18 @@ fun PlotBodyWeights(
                     )
                 }
             },
-//            yAxisTitle = {
-//                if (!thumbnail) {
-//                    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-//                        AxisTitle(
-//                            "Population (Millions)",
-//                            modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
-//                        )
-//                    }
-//                }
-//            }
+            yAxisTitle = {
+                if (!thumbnail) {
+                    Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+                        Text(
+                            stringResource(settings.weightUnit.localizedString()),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
+                        )
+                    }
+                }
+            }
         ) {
             if (dates.size > 1) {
                 val yData =
@@ -169,7 +175,7 @@ fun PlotBodyWeights(
                     },
                     AreaBaseline.ConstantLine(0.0)
                 )
-                annotations(dates, yData, thumbnail)
+                Annotations(dates, yData, thumbnail)
             } else if (dates.size == 1) {
                 StackedVerticalBarPlot(
                     bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights),
@@ -235,7 +241,7 @@ fun PlotBodyWeights(
 
 @Suppress("MagicNumber")
 @Composable
-private fun XYGraphScope<LocalDate, Double>.annotations(
+private fun XYGraphScope<LocalDate, Double>.Annotations(
     dates: List<LocalDate>,
     bodyWeightData: List<List<Double>>,
     thumbnail: Boolean
