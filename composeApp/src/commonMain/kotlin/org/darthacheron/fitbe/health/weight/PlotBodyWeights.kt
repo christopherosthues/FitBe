@@ -10,6 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +35,7 @@ import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.StackedVerticalBarPlot
 import io.github.koalaplot.core.line.AreaBaseline
+import io.github.koalaplot.core.line.LinePlot
 import io.github.koalaplot.core.line.StackedAreaPlot
 import io.github.koalaplot.core.line.StackedAreaPlotEntry
 import io.github.koalaplot.core.line.StackedAreaStyle
@@ -89,12 +93,20 @@ class StackedAreaPlotDoubleDataAdapter<X>(
 
 @Suppress("MagicNumber")
 private val colorPalette = listOf(
-    Color(0xFF00498F),
-    Color(0xFF37A78F),
-    Color(0xFFC05050),
-    Color(0xFFED7D31),
+    Color(0xFFE3DAC9),
+    Color(0xFFCC6666),
+    Color(0xFFE6BC00),
+    Color(0xFF0F5E9C),
     Color(0xFF8068A0)
 )
+//@Suppress("MagicNumber")
+//private val colorPalette = listOf(
+//    Color(0xFF00498F),
+//    Color(0xFF37A78F),
+//    Color(0xFFC05050),
+//    Color(0xFFED7D31),
+//    Color(0xFF8068A0)
+//)
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
@@ -111,6 +123,7 @@ fun PlotBodyWeights(
 //        legendLocation = LegendLocation.BOTTOM
     ) {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
+        val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
@@ -160,25 +173,25 @@ fun PlotBodyWeights(
                         )
                     }
                 }
-            }
+            },
         ) {
             if (dates.size > 1) {
                 val yData =
                     bodyWeightOverviewViewModel.toVerticalStackedAreaBodyWeightData(bodyWeights)
                 StackedAreaPlot(
-                    StackedAreaPlotDoubleDataAdapter(dates, yData),
-                    colorPalette.map {
+                    data = StackedAreaPlotDoubleDataAdapter(dates, yData),
+                    styles = colorPalette.map {
                         StackedAreaStyle(
                             LineStyle(brush = SolidColor(Color.White), strokeWidth = 8.dp),
                             AreaStyle(brush = SolidColor(it))
                         )
                     },
-                    AreaBaseline.ConstantLine(0.0)
+                    firstBaseline = AreaBaseline.ConstantLine(0.0)
                 )
                 Annotations(dates, yData, thumbnail)
             } else if (dates.size == 1) {
                 StackedVerticalBarPlot(
-                    bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights),
+                    data = bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights),
                     barWidth = 0.8f,
                     bar = { xIndex, barIndex ->
                         DefaultVerticalBar(
@@ -201,13 +214,13 @@ fun PlotBodyWeights(
                                                 0 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_bone_mass_value,
                                                     bodyWeight.boneMassInKg!!,
-                                                    settings.weightUnit.localizedString()
+                                                    stringResource(settings.weightUnit.localizedString())
                                                 )
 
                                                 1 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_muscle_mass_value,
                                                     bodyWeight.muscleMassInKg!!,
-                                                    settings.weightUnit.localizedString()
+                                                    stringResource(settings.weightUnit.localizedString())
                                                 )
 
                                                 2 -> stringResource(
@@ -223,7 +236,7 @@ fun PlotBodyWeights(
                                                 else -> stringResource(
                                                     Res.string.body_weight_chart_annotation_total_weight_value,
                                                     bodyWeight.weightInKg,
-                                                    settings.weightUnit.localizedString()
+                                                    stringResource(settings.weightUnit.localizedString())
                                                 )
                                             }
                                         Text(bodyWeightAnnotation)
@@ -235,6 +248,15 @@ fun PlotBodyWeights(
                 )
             }
 
+            if (targetWeight != null) {
+                LinePlot(
+                    data = dates.map { Point(it, targetWeight!!) },
+                    lineStyle = LineStyle(
+                        brush = SolidColor(Color(0xFFED7D31)),
+                        strokeWidth = 2.dp
+                    ),
+                )
+            }
         }
     }
 }
