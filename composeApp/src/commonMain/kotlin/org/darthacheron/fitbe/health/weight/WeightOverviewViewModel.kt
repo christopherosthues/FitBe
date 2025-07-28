@@ -2,13 +2,14 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
+import io.github.koalaplot.core.bar.VerticalBarPlotStackedPointEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -44,22 +45,18 @@ class WeightOverviewViewModel(
     val maxWeight: StateFlow<Double> = _maxWeight
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val bodyWeights: StateFlow<Pair<List<LocalDate>, List<List<Double>>>> =
-        combine(_startDate, _endDate, settingsRepository.getSettingsFlow()) { start, end, settings ->
-            Triple(start, end, settings)
-        }.flatMapLatest { (start, end, settings) ->
-            bodyWeightRepository.getEntries(start, end, settings.selectedProfileId!!)
-                .map { entries -> Pair(entries, settings) }
-        }
-            .map { (entries, settings) ->
-                Pair(
-                    entries.map { it.date },
-                    toStackedBodyWeightData(entries, settings)
-                )
-            }
-            .stateIn(viewModelScope, SharingStarted.Lazily, Pair(listOf(), listOf()))
+    val bodyWeights: StateFlow<List<BodyWeight>> = combine(
+        _startDate,
+        _endDate,
+        settingsRepository.getSettingsFlow()
+    ) { start, end, settings ->
+        bodyWeightRepository.getEntries(start, end, settings.selectedProfileId!!)
+    }.flatMapLatest { it }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
 
-    fun toStackedBodyWeightData(bodyWeights: List<BodyWeight>, settings: Settings): List<List<Double>> {
+    fun toStackedBodyWeightData(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<List<Double>> {
         val totalWeights = mutableListOf<Double>()
         val boneMasses = mutableListOf<Double>()
         val muscleMasses = mutableListOf<Double>()
@@ -67,70 +64,116 @@ class WeightOverviewViewModel(
         val bodyWaters = mutableListOf<Double>()
         var maxWeight = 0.0
 
-        // TODO: unit conversion is screwed up
+        for (bodyWeight in bodyWeights) {
+            val totalWeight = bodyWeight.weightInKg
+            val convertedTotalWeight = weightUnitConverter.convert(
+                totalWeight, WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            maxWeight = max(maxWeight, convertedTotalWeight)
 
-        viewModelScope.launch {
-            for (bodyWeight in bodyWeights) {
-                val convertedTotalWeight = weightUnitConverter.convert(
-                    bodyWeight.weightInKg,
-                    WeightUnit.KG,
-                    settings.weightUnit
-                )!!.roundToDecimals(2)
-                maxWeight = max(maxWeight, convertedTotalWeight)
+            val boneMass = weightUnitConverter.convert(
+                (bodyWeight.boneMassInKg ?: 0.0), WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            val muscleMass = weightUnitConverter.convert(
+                (bodyWeight.muscleMassInKg ?: 0.0), WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            val bodyFat = weightUnitConverter.convert(
+                (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100),
+                WeightUnit.KG,
+                settings.weightUnit
+            )!!.roundToDecimals(2)
+            val bodyWater = weightUnitConverter.convert(
+                (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100),
+                WeightUnit.KG,
+                settings.weightUnit
+            )!!.roundToDecimals(
+                2
+            )
+            val restWeight = max(
+                convertedTotalWeight - boneMass - muscleMass - bodyFat - bodyWater, 0.0
+            ).roundToDecimals(2)
 
-                val boneMass = weightUnitConverter.convert(
-                    (bodyWeight.boneMassInKg ?: 0.0),
-                    WeightUnit.KG,
-                    settings.weightUnit
-                )!!.roundToDecimals(2)
-                val muscleMass = weightUnitConverter.convert(
-                    (bodyWeight.muscleMassInKg ?: 0.0),
-                    WeightUnit.KG,
-                    settings.weightUnit
-                )!!.roundToDecimals(2)
-                val bodyFat =
-                    weightUnitConverter.convert(
-                        (convertedTotalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100),
-                        WeightUnit.KG,
-                        settings.weightUnit
-                    )!!.roundToDecimals(2)
-                val bodyWater =
-                    weightUnitConverter.convert(
-                        (convertedTotalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100),
-                        WeightUnit.KG,
-                        settings.weightUnit
-                    )!!.roundToDecimals(
-                        2
-                    )
-                val restWeight = max(
-                    convertedTotalWeight - boneMass - muscleMass - bodyFat - bodyWater,
-                    0.0
-                ).roundToDecimals(2)
-
-                boneMasses.add(boneMass)
-                muscleMasses.add(muscleMass)
-                bodyFats.add(bodyFat)
-                bodyWaters.add(bodyWater)
-                totalWeights.add(restWeight)
-            }
+            boneMasses.add(boneMass)
+            muscleMasses.add(muscleMass)
+            bodyFats.add(bodyFat)
+            bodyWaters.add(bodyWater)
+            totalWeights.add(restWeight)
 
             _maxWeight.value = maxWeight.roundUpToNextTen().roundToDecimals(2)
         }
 
         return listOf(
-            boneMasses,
-            muscleMasses,
-            bodyFats,
-            bodyWaters,
-            totalWeights
+            boneMasses, muscleMasses, bodyFats, bodyWaters, totalWeights
         )
+    }
+
+    fun toVerticalStackedBodyWeightData(
+        bodyWeights: List<BodyWeight>, settings: Settings
+    ): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
+        var maxWeight = 0.0
+
+        return bodyWeights.map { bodyWeight ->
+            val totalWeight = bodyWeight.weightInKg
+            val convertedTotalWeight = weightUnitConverter.convert(
+                totalWeight, WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            maxWeight = max(maxWeight, convertedTotalWeight)
+
+            val boneMass = weightUnitConverter.convert(
+                (bodyWeight.boneMassInKg ?: 0.0), WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            val muscleMass = weightUnitConverter.convert(
+                (bodyWeight.muscleMassInKg ?: 0.0), WeightUnit.KG, settings.weightUnit
+            )!!.roundToDecimals(2)
+            val bodyFat = weightUnitConverter.convert(
+                (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100),
+                WeightUnit.KG,
+                settings.weightUnit
+            )!!.roundToDecimals(2)
+            val bodyWater = weightUnitConverter.convert(
+                (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100),
+                WeightUnit.KG,
+                settings.weightUnit
+            )!!.roundToDecimals(
+                2
+            )
+            val restWeight = max(
+                convertedTotalWeight - boneMass - muscleMass - bodyFat - bodyWater, 0.0
+            ).roundToDecimals(2)
+            DefaultVerticalBarPlotStackedPointEntry(
+                bodyWeight.date, 0.0, listOf(
+                    boneMass,
+                    boneMass + muscleMass,
+                    boneMass + muscleMass + bodyFat,
+                    boneMass + muscleMass + bodyFat + bodyWater,
+                    convertedTotalWeight
+                )
+            )
+        }
+    }
+
+    fun toVerticalStackedAreaBodyWeightData(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<List<Double>> {
+        return toStackedBodyWeightData(bodyWeights, settings)
+    }
+
+    fun dates(bodyWeights: List<BodyWeight>): List<LocalDate> {
+        return bodyWeights.map { it.date }
     }
 
     fun setViewType(type: SleepViewType) {
         _viewType.value = type
     }
-    fun setStartDate(date: Instant) { _startDate.value = date }
-    fun setEndDate(date: Instant) { _endDate.value = date }
+
+    fun setStartDate(date: Instant) {
+        _startDate.value = date
+    }
+
+    fun setEndDate(date: Instant) {
+        _endDate.value = date
+    }
 
     fun addBodyWeight(
         date: LocalDate,

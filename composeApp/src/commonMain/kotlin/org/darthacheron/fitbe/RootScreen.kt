@@ -26,6 +26,7 @@ import fitbe.composeapp.generated.resources.ic_back
 import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_settings
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
+import fitbe.composeapp.generated.resources.top_bar_title_body_weights
 import fitbe.composeapp.generated.resources.top_bar_title_exercises
 import fitbe.composeapp.generated.resources.top_bar_title_health
 import fitbe.composeapp.generated.resources.top_bar_title_home
@@ -140,6 +141,7 @@ private fun topBarTitle(currentDestination: String?): String {
         Screen.Profile.toString() -> stringResource(Res.string.top_bar_title_profile)
         Screen.Sleeps.toString() -> stringResource(Res.string.top_bar_title_sleeps)
         Screen.Beverages.toString() -> stringResource(Res.string.top_bar_title_beverages)
+        Screen.BodyWeights.toString() -> stringResource(Res.string.top_bar_title_body_weights)
         Screen.Settings.toString() -> stringResource(Res.string.top_bar_title_settings)
         else -> ""
     }

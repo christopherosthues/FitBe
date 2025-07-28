@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.health.weight
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,6 +11,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.koalaplot.core.ChartLayout
+import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.StackedVerticalBarPlot
 import io.github.koalaplot.core.line.AreaBaseline
 import io.github.koalaplot.core.line.StackedAreaPlot
 import io.github.koalaplot.core.line.StackedAreaPlotEntry
@@ -21,7 +24,7 @@ import io.github.koalaplot.core.util.toString
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
 import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.XYGraph
-import kotlinx.datetime.LocalDate
+import org.darthacheron.fitbe.settings.Settings
 
 class StackedAreaPlotDoubleDataAdapter<X>(private val xData: List<X>, private val yData: List<List<Double>>) :
     AbstractList<StackedAreaPlotEntry<X, Double>>() {
@@ -65,15 +68,19 @@ private val colorPalette = listOf(
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-fun PlotBodyWeights(bodyWeights: Pair<List<LocalDate>, List<List<Double>>>, maxWeight: Double, thumbnail: Boolean) {
+fun PlotBodyWeights(
+    bodyWeightOverviewViewModel: WeightOverviewViewModel,
+    bodyWeights: List<BodyWeight>,
+    settings: Settings,
+    maxWeight: Double,
+    thumbnail: Boolean
+) {
     ChartLayout(
 //        modifier = paddingMod.padding(end = 16.dp),
 //        title = { ChartTitle(title) },
 //        legendLocation = LegendLocation.BOTTOM
     ) {
-        val dates = bodyWeights.first
-        val weights: List<List<Double>> = bodyWeights.second
-        val bodyWeightsStackedData = StackedAreaPlotDoubleDataAdapter(dates, weights)
+        val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
@@ -123,16 +130,37 @@ fun PlotBodyWeights(bodyWeights: Pair<List<LocalDate>, List<List<Double>>>, maxW
 //                }
 //            }
         ) {
-            StackedAreaPlot(
-                bodyWeightsStackedData,
-                colorPalette.map {
-                    StackedAreaStyle(
-                        LineStyle(brush = SolidColor(Color.White), strokeWidth = 8.dp),
-                        AreaStyle(brush = SolidColor(it))
-                    )
-                },
-                AreaBaseline.ConstantLine(0.0)
-            )
+            if (dates.size > 1) {
+                StackedAreaPlot(
+                    StackedAreaPlotDoubleDataAdapter(dates, bodyWeightOverviewViewModel.toVerticalStackedAreaBodyWeightData(bodyWeights, settings)),
+                    colorPalette.map {
+                        StackedAreaStyle(
+                            LineStyle(brush = SolidColor(Color.White), strokeWidth = 8.dp),
+                            AreaStyle(brush = SolidColor(it))
+                        )
+                    },
+                    AreaBaseline.ConstantLine(0.0)
+                )
+            } else if (dates.size == 1) {
+                StackedVerticalBarPlot(
+                    bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights, settings),
+                    barWidth = 0.8f,
+                    bar = { xIndex, barIndex ->
+                        DefaultVerticalBar(
+                            brush = SolidColor(colorPalette[barIndex]),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (!thumbnail) {
+//                                HoverSurface {
+//                                    val borough = PopulationData.Categories.entries[barIndex]
+//                                    val pop = PopulationData.data[borough]!![xIndex]
+//                                    Text("$borough: $pop")
+//                                }
+                            }
+                        }
+                    }
+                )
+            }
 
 //            annotations(thumbnail)
         }

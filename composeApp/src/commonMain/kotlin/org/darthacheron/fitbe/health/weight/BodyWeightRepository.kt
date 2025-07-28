@@ -18,6 +18,7 @@ class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
         endDate: Instant,
         profileId: Uuid
     ): Flow<List<BodyWeight>> {
+        // TODO: start == end does not return exact date
         val dateSpan = toDateSpan(startDate, endDate)
         return bodyWeightDao.getBodyWeightsBetweenDates(
             dateSpan.first.toString(),
