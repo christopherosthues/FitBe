@@ -125,5 +125,15 @@
     <string name="body_weight_add_body_weight_body_water">Körperwasser (%)</string>
     <string name="body_weight_save">Speichern</string>
     <string name="body_weight_cancel">Abbrechen</string>
+    <string name="body_weight_chart_annotation_bone_mass_value">Knochenmasse: %1$d %1$s</string>
+    <string name="body_weight_chart_annotation_muscle_mass_value">Muskelmasse: %1$d %1$s</string>
+    <string name="body_weight_chart_annotation_body_fat_value">Körperfett: %1$d %</string>
+    <string name="body_weight_chart_annotation_body_water_value">Körperwasser: %1$d %</string>
+    <string name="body_weight_chart_annotation_total_weight_value">Gesamtgewicht: %1$d %1$s</string>
+    <string name="body_weight_chart_annotation_bone_mass">Knochenmasse</string>
+    <string name="body_weight_chart_annotation_muscle_mass">Muskelmasse</string>
+    <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
+    <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
+    <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
     <string name="chart_grouping">Zeitintervall</string>
 </resources>

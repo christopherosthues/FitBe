@@ -162,6 +162,9 @@ private fun checkIfSelected(
     currentBottomBarItem: String
 ): Boolean {
     return if (currentDestination?.contains(currentBottomBarItem) == true) true
-    else if ((currentDestination?.contains(Screen.Beverages.toString()) == true || currentDestination?.contains(Screen.Sleeps.toString()) == true) && currentBottomBarItem == Screen.Health.toString()) true
+    else if ((currentDestination?.contains(Screen.Beverages.toString()) == true || currentDestination?.contains(
+            Screen.Sleeps.toString()
+        ) == true || currentDestination?.contains(Screen.BodyWeights.toString()) == true) && currentBottomBarItem == Screen.Health.toString()
+    ) true
     else false
 }

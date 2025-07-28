@@ -1,15 +1,31 @@
 package org.darthacheron.fitbe.health.weight
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_body_fat
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_body_fat_value
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_body_water
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_body_water_value
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_bone_mass
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_bone_mass_value
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_mass
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_mass_value
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight
+import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight_value
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.StackedVerticalBarPlot
@@ -18,15 +34,25 @@ import io.github.koalaplot.core.line.StackedAreaPlot
 import io.github.koalaplot.core.line.StackedAreaPlotEntry
 import io.github.koalaplot.core.line.StackedAreaStyle
 import io.github.koalaplot.core.style.AreaStyle
+import io.github.koalaplot.core.style.KoalaPlotTheme
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.toString
+import io.github.koalaplot.core.xygraph.AnchorPoint
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
 import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
+import io.github.koalaplot.core.xygraph.Point
+import io.github.koalaplot.core.xygraph.XYAnnotation
 import io.github.koalaplot.core.xygraph.XYGraph
+import io.github.koalaplot.core.xygraph.XYGraphScope
+import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.settings.Settings
+import org.jetbrains.compose.resources.stringResource
 
-class StackedAreaPlotDoubleDataAdapter<X>(private val xData: List<X>, private val yData: List<List<Double>>) :
+class StackedAreaPlotDoubleDataAdapter<X>(
+    private val xData: List<X>,
+    private val yData: List<List<Double>>
+) :
     AbstractList<StackedAreaPlotEntry<X, Double>>() {
 
     init {
@@ -131,8 +157,10 @@ fun PlotBodyWeights(
 //            }
         ) {
             if (dates.size > 1) {
+                val yData =
+                    bodyWeightOverviewViewModel.toVerticalStackedAreaBodyWeightData(bodyWeights)
                 StackedAreaPlot(
-                    StackedAreaPlotDoubleDataAdapter(dates, bodyWeightOverviewViewModel.toVerticalStackedAreaBodyWeightData(bodyWeights, settings)),
+                    StackedAreaPlotDoubleDataAdapter(dates, yData),
                     colorPalette.map {
                         StackedAreaStyle(
                             LineStyle(brush = SolidColor(Color.White), strokeWidth = 8.dp),
@@ -141,9 +169,10 @@ fun PlotBodyWeights(
                     },
                     AreaBaseline.ConstantLine(0.0)
                 )
+                annotations(dates, yData, thumbnail)
             } else if (dates.size == 1) {
                 StackedVerticalBarPlot(
-                    bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights, settings),
+                    bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights),
                     barWidth = 0.8f,
                     bar = { xIndex, barIndex ->
                         DefaultVerticalBar(
@@ -151,18 +180,120 @@ fun PlotBodyWeights(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             if (!thumbnail) {
-//                                HoverSurface {
-//                                    val borough = PopulationData.Categories.entries[barIndex]
-//                                    val pop = PopulationData.data[borough]!![xIndex]
-//                                    Text("$borough: $pop")
-//                                }
+                                Surface(
+                                    shadowElevation = 2.dp,
+                                    shape = MaterialTheme.shapes.medium,
+                                    color = Color.LightGray,
+                                    modifier = Modifier.padding(8.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(8.dp)
+                                    ) {
+                                        val bodyWeight = bodyWeights[xIndex]
+                                        val bodyWeightAnnotation =
+                                            when (barIndex) {
+                                                0 -> stringResource(
+                                                    Res.string.body_weight_chart_annotation_bone_mass_value,
+                                                    bodyWeight.boneMassInKg!!,
+                                                    settings.weightUnit.localizedString()
+                                                )
+
+                                                1 -> stringResource(
+                                                    Res.string.body_weight_chart_annotation_muscle_mass_value,
+                                                    bodyWeight.muscleMassInKg!!,
+                                                    settings.weightUnit.localizedString()
+                                                )
+
+                                                2 -> stringResource(
+                                                    Res.string.body_weight_chart_annotation_body_fat_value,
+                                                    bodyWeight.bodyFatPercentage!!
+                                                )
+
+                                                3 -> stringResource(
+                                                    Res.string.body_weight_chart_annotation_body_water_value,
+                                                    bodyWeight.bodyWaterInPercentage!!
+                                                )
+
+                                                else -> stringResource(
+                                                    Res.string.body_weight_chart_annotation_total_weight_value,
+                                                    bodyWeight.weightInKg,
+                                                    settings.weightUnit.localizedString()
+                                                )
+                                            }
+                                        Text(bodyWeightAnnotation)
+                                    }
+                                }
                             }
                         }
                     }
                 )
             }
 
-//            annotations(thumbnail)
+        }
+    }
+}
+
+@Suppress("MagicNumber")
+@Composable
+private fun XYGraphScope<LocalDate, Double>.annotations(
+    dates: List<LocalDate>,
+    bodyWeightData: List<List<Double>>,
+    thumbnail: Boolean
+) {
+    if (!thumbnail) {
+        val max = bodyWeightData.map { it.max() }
+        val maxIndices = bodyWeightData.mapIndexed { index, entry ->
+            entry.indexOfFirst { it == max[index] }
+        }
+
+        bodyWeightData.forEachIndexed { index, data ->
+            val dateIndex = maxIndices[index] // index into the date the max occurred
+
+            var sum = 0.0
+            for (i in 0..<index) {
+                sum += bodyWeightData[i][dateIndex]
+            }
+
+            val anchorPoint = when (dateIndex) {
+                0 -> AnchorPoint.LeftMiddle
+                dates.lastIndex -> AnchorPoint.RightMiddle
+                else -> AnchorPoint.Center
+            }
+
+            XYAnnotation(
+                Point(dates[dateIndex], (sum + data[dateIndex] / 2.0)),
+                anchorPoint
+            ) {
+                Text(
+                    when (index) {
+                        0 -> stringResource(
+                            Res.string.body_weight_chart_annotation_bone_mass,
+                        )
+
+                        1 -> stringResource(
+                            Res.string.body_weight_chart_annotation_muscle_mass,
+                        )
+
+                        2 -> stringResource(
+                            Res.string.body_weight_chart_annotation_body_fat,
+                        )
+
+                        3 -> stringResource(
+                            Res.string.body_weight_chart_annotation_body_water,
+                        )
+
+                        else -> stringResource(
+                            Res.string.body_weight_chart_annotation_total_weight,
+                        )
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.DarkGray,
+                    modifier = Modifier.padding(horizontal = KoalaPlotTheme.sizes.gap)
+                        .background(Color.LightGray, RoundedCornerShape(4.dp))
+                        .padding(horizontal = KoalaPlotTheme.sizes.gap)
+                )
+            }
         }
     }
 }

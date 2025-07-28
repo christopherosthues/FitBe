@@ -110,7 +110,7 @@ fun WeightOverviewView(
         }
         Box(modifier = Modifier.fillMaxSize()) {
             if (!bodyWeights.isEmpty()) {
-                PlotBodyWeights(bodyWeightOverviewViewModel, bodyWeights,settings,  maxBodyWeight, false)
+                PlotBodyWeights(bodyWeightOverviewViewModel, bodyWeights, settings, maxBodyWeight, false)
             }
             IconButton(
                 onClick = {},
