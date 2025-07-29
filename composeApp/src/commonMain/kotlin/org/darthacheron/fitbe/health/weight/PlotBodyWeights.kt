@@ -53,7 +53,9 @@ import io.github.koalaplot.core.xygraph.XYAnnotation
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.XYGraphScope
 import kotlinx.datetime.LocalDate
+import org.darthacheron.fitbe.health.sleep.SleepViewType
 import org.darthacheron.fitbe.settings.Settings
+import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
 
 class StackedAreaPlotDoubleDataAdapter<X>(
@@ -111,6 +113,7 @@ fun PlotBodyWeights(
     ChartLayout {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
+        val viewType by bodyWeightOverviewViewModel.viewType.collectAsState()
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
@@ -121,7 +124,12 @@ fun PlotBodyWeights(
             xAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        it.toString(),
+                        when (viewType) {
+                            SleepViewType.DAY -> it.toString()
+                            SleepViewType.WEEK -> "W${it.isoWeekAndYear().second}/${it.year}"
+                            SleepViewType.MONTH -> "${it.month}/${it.year}"
+                            SleepViewType.YEAR -> it.year.toString()
+                        },
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
