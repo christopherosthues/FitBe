@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.profile
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -14,7 +15,10 @@ class ProfileRepository(private val profileDao: ProfileDao) {
             .map { profileEntities -> profileEntities.map { it.toProfile() } }
 
     suspend fun getProfileById(id: Uuid): Profile? =
-        profileDao.getProfileById(id)?.toProfile()
+        profileDao.getProfileFlowById(id).first()?.toProfile()
+
+    suspend fun getProfileFlowById(id: Uuid): Flow<Profile?> =
+        profileDao.getProfileFlowById(id).map { it?.toProfile() }
 
     suspend fun upsertProfile(profile: Profile) {
         profileDao.upsertProfile(ProfileEntity.fromProfile(profile))

@@ -12,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -99,14 +98,6 @@ private val colorPalette = listOf(
     Color(0xFF0F5E9C),
     Color(0xFF8068A0)
 )
-//@Suppress("MagicNumber")
-//private val colorPalette = listOf(
-//    Color(0xFF00498F),
-//    Color(0xFF37A78F),
-//    Color(0xFFC05050),
-//    Color(0xFFED7D31),
-//    Color(0xFF8068A0)
-//)
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
@@ -117,11 +108,7 @@ fun PlotBodyWeights(
     maxWeight: Double,
     thumbnail: Boolean
 ) {
-    ChartLayout(
-//        modifier = paddingMod.padding(end = 16.dp),
-//        title = { ChartTitle(title) },
-//        legendLocation = LegendLocation.BOTTOM
-    ) {
+    ChartLayout {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
         XYGraph(
@@ -143,13 +130,7 @@ fun PlotBodyWeights(
                     )
                 }
             },
-            xAxisTitle = {
-//                if (!thumbnail) {
-//                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-//                        AxisTitle("Year")
-//                    }
-//                }
-            },
+            xAxisTitle = { },
             yAxisLabels = {
                 if (!thumbnail) {
                     Text(
@@ -275,7 +256,7 @@ private fun XYGraphScope<LocalDate, Double>.Annotations(
         }
 
         bodyWeightData.forEachIndexed { index, data ->
-            val dateIndex = maxIndices[index] // index into the date the max occurred
+            val dateIndex = maxIndices[index]
 
             var sum = 0.0
             for (i in 0..<index) {

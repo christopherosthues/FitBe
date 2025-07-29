@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -21,7 +20,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.health.sleep.SleepViewType
 import org.darthacheron.fitbe.profile.ProfileRepository
-import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
@@ -52,10 +50,12 @@ class WeightOverviewViewModel(
 
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
-            flow {
-                val profileId = settings.selectedProfileId
-                val profile = profileId?.let { profileRepository.getProfileById(it) }
-                emit(profile?.targetWeight)
+            val profileId = settings.selectedProfileId
+            if (profileId != null) {
+                profileRepository.getProfileFlowById(profileId)
+                    .map { profile -> profile?.targetWeight }
+            } else {
+                flowOf(null)
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)

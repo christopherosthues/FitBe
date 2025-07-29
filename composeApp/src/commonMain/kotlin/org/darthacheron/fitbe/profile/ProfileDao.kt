@@ -12,7 +12,7 @@ interface ProfileDao {
     fun getAllProfiles(): Flow<List<ProfileEntity>>
 
     @Query("SELECT * FROM profiles WHERE id = :id")
-    suspend fun getProfileById(id: Uuid): ProfileEntity?
+    fun getProfileFlowById(id: Uuid): Flow<ProfileEntity?>
 
     @Upsert
     suspend fun upsertProfile(profile: ProfileEntity)

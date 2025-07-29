@@ -42,8 +42,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
 
-// StackedAreaChart
-
 @OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
