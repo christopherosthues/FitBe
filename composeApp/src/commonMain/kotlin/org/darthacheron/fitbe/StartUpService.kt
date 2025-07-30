@@ -4,16 +4,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.database.FitBeDatabase
+import org.darthacheron.fitbe.database.seedDatabase
 import org.darthacheron.fitbe.profile.Profile
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.koin.core.logger.Logger
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 class StartUpService(
     private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val database: FitBeDatabase
 ) {
     fun initialize() {
         CoroutineScope(Dispatchers.Default).launch {
@@ -26,6 +28,7 @@ class StartUpService(
                     profileRepository.upsertProfile(defaultProfile)
                     settingsRepository.saveSettings(settings.copy(selectedProfileId = defaultProfile.id))
                 }
+//                seedDatabase(database)
             } catch (exception: Exception) {
                 // TODO proper error handling
             }

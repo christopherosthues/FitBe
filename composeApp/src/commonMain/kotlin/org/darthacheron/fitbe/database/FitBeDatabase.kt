@@ -23,6 +23,7 @@ import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
+import org.darthacheron.fitbe.health.weight.BodyWeight
 import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
@@ -57,6 +58,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
     val sleepDao = db.sleepDao
     val beverageDao = db.beverageDao
     val profileDao = db.profileDao
+    val bodyWeightDao = db.bodyWeightDao
 
     val profile = profileDao.getAllProfiles().first().first()
 
@@ -87,5 +89,38 @@ suspend fun seedDatabase(db: FitBeDatabase) {
             )
             beverageDao.upsertDrink(beverage)
         }
+
+        val weightInKg = Random.nextDouble(55.0, 100.0)
+
+        val muscleMassInKg = Random.nextDouble(20.0, weightInKg * 0.6)
+        val boneMassInKg = Random.nextDouble(2.0, 4.0)
+
+        val bodyFatPercentage = Random.nextDouble(10.0, 30.0)
+        val bodyFatInKg = (bodyFatPercentage / 100.0) * weightInKg
+
+        val bodyWaterPercentage = Random.nextDouble(45.0, 65.0)
+        val bodyWaterInKg = (bodyWaterPercentage / 100.0) * weightInKg
+
+        val totalComponents = muscleMassInKg + boneMassInKg + bodyFatInKg + bodyWaterInKg
+
+        // Adjust values if over weight
+        val adjustedWeightInKg = if (totalComponents > weightInKg) {
+            totalComponents + Random.nextDouble(0.5, 2.0)
+        } else {
+            weightInKg
+        }
+        val bodyWeight = BodyWeightEntity(
+            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
+                i - 1,
+                DateTimeUnit.DAY
+            ),
+            muscleMassInKg = muscleMassInKg,
+            boneMassInKg = boneMassInKg,
+            bodyFatPercentage = bodyFatPercentage,
+            bodyWaterInPercentage = bodyWaterPercentage,
+            weightInKg = adjustedWeightInKg,
+            profileId = profile.id
+        )
+        bodyWeightDao.upsertBodyWeight(bodyWeight)
     }
 }

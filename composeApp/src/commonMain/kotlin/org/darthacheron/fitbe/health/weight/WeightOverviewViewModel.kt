@@ -15,8 +15,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.sleep.SleepViewType
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
@@ -27,6 +34,8 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.minusOne
+import org.darthacheron.fitbe.utils.plusOne
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import kotlin.math.max
@@ -42,14 +51,18 @@ class WeightOverviewViewModel(
     private val weightUnitConverter: WeightUnitConverter,
 ) : ViewModel() {
     private val _viewType = MutableStateFlow(SleepViewType.DAY)
-    private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
-    private val _endDate = MutableStateFlow(Clock.System.now())
+//    private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
+//    private val _endDate = MutableStateFlow(Clock.System.now())
+
+    private val _dateRange = MutableStateFlow(Pair(Clock.System.now().minus(6.days), Clock.System.now()))
 
     private val _maxWeight = MutableStateFlow(600.0) // TODO extract default max weight
 
     val viewType: StateFlow<SleepViewType> = _viewType
-    val startDate: StateFlow<Instant> = _startDate
-    val endDate: StateFlow<Instant> = _endDate
+//    val startDate: StateFlow<Instant> = _startDate
+//    val endDate: StateFlow<Instant> = _endDate
+
+    val dateRange: StateFlow<Pair<Instant, Instant>> = _dateRange
 
     val maxWeight: StateFlow<Double> = _maxWeight
 
@@ -67,14 +80,13 @@ class WeightOverviewViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val bodyWeights: StateFlow<List<BodyWeight>> = combine(
-        _startDate,
-        _endDate,
+        _dateRange,
         viewType,
         settingsRepository.getSettingsFlow()
-    ) { start, end, viewType, settings ->
+    ) { range, viewType, settings ->
         Pair(settings, viewType) to bodyWeightRepository.getEntries(
-            start,
-            end,
+            range.first,
+            range.second,
             settings.selectedProfileId!!
         )
     }.flatMapLatest { (settingsViewType, bodyWeightFlow) ->
@@ -222,6 +234,16 @@ class WeightOverviewViewModel(
             }
     }
 
+    fun movePast() {
+        val range = dateRange.value.minusOne(viewType.value)
+        setRange(range)
+    }
+
+    fun moveFuture() {
+        val range = dateRange.value.plusOne(viewType.value)
+        setRange(range)
+    }
+
     fun toVerticalStackedBodyWeightData(
         bodyWeights: List<BodyWeight>
     ): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
@@ -301,12 +323,12 @@ class WeightOverviewViewModel(
         _viewType.value = type
     }
 
-    fun setStartDate(date: Instant) {
-        _startDate.value = date
+    fun setRange(startDate: Instant, endDate: Instant) {
+        _dateRange.value = Pair(startDate, endDate)
     }
 
-    fun setEndDate(date: Instant) {
-        _endDate.value = date
+    fun setRange(range: Pair<Instant, Instant>) {
+        _dateRange.value = range
     }
 
     fun addBodyWeight(

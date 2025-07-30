@@ -53,8 +53,7 @@ fun WeightOverviewView(
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     var selectedViewTypeIndex by remember { mutableStateOf(0) }
-    val startDate by bodyWeightOverviewViewModel.startDate.collectAsState()
-    val endDate by bodyWeightOverviewViewModel.endDate.collectAsState()
+    val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
     var showDateRangeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
     val viewTypes = SleepViewType.entries
@@ -71,11 +70,11 @@ fun WeightOverviewView(
                     Column {
                         Text(
                             text =
-                                startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                                dateRange.first.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                         )
                         Text(
                             text =
-                                endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                                dateRange.second.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                         )
                     }
                     Icon(
@@ -111,7 +110,7 @@ fun WeightOverviewView(
                 PlotBodyWeights(bodyWeightOverviewViewModel, bodyWeights, settings, maxBodyWeight, false)
             }
             IconButton(
-                onClick = {},
+                onClick = { bodyWeightOverviewViewModel.movePast() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Icon(
@@ -120,7 +119,7 @@ fun WeightOverviewView(
                 )
             }
             IconButton(
-                onClick = {},
+                onClick = { bodyWeightOverviewViewModel.moveFuture() },
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 Icon(
@@ -143,13 +142,9 @@ fun WeightOverviewView(
     if (showDateRangeDialog) {
         DateRangePickerModal(
             onDateRangeSelected = {
-                if (it.first != null) {
-                    bodyWeightOverviewViewModel.setStartDate(
-                        Instant.fromEpochMilliseconds(it.first!!)
-                    )
-                }
-                if (it.second != null) {
-                    bodyWeightOverviewViewModel.setEndDate(
+                if (it.first != null && it.second != null) {
+                    bodyWeightOverviewViewModel.setRange(
+                        Instant.fromEpochMilliseconds(it.first!!),
                         Instant.fromEpochMilliseconds(it.second!!)
                     )
                 }

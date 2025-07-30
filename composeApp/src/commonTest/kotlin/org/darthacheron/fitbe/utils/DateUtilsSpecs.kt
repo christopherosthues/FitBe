@@ -1,6 +1,9 @@
 package org.darthacheron.fitbe.utils
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import org.darthacheron.fitbe.health.sleep.SleepViewType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -150,5 +153,137 @@ class DateUtilsSpecs {
     fun `test first day of the year already first day`() {
         val date = LocalDate(2023, 1, 1)
         assertEquals(LocalDate(2023, 1, 1), date.firstDayOfYear())
+    }
+
+
+
+    private val baseStart = LocalDate(2024, 2, 15).atStartOfDayIn(TimeZone.UTC)
+    private val baseEnd = LocalDate(2024, 2, 16).atStartOfDayIn(TimeZone.UTC)
+    private val pair = baseStart to baseEnd
+
+    @Test
+    fun testPlusOneDay() {
+        val result = pair.plusOne(SleepViewType.DAY)
+        val expectedStart = LocalDate(2024, 2, 16).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 17).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneDay() {
+        val result = pair.minusOne(SleepViewType.DAY)
+        val expectedStart = LocalDate(2024, 2, 14).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 15).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneWeek() {
+        val result = pair.plusOne(SleepViewType.WEEK)
+        val expectedStart = LocalDate(2024, 2, 22).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 23).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneWeek() {
+        val result = pair.minusOne(SleepViewType.WEEK)
+        val expectedStart = LocalDate(2024, 2, 8).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 9).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneCalendarMonth() {
+        val result = Pair(LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2025, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneCalendarMonthFebruaryLeapYear() {
+        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of March
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneMonth() {
+        val result = pair.plusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2024, 3, 15).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneCalendarMonth() {
+        val result = Pair(LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2024, 11, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 11, 30).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneCalendarMonthFebruaryLeapYear() {
+        val result = Pair(LocalDate(2024, 3, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneMonth() {
+        val result = pair.minusOne(SleepViewType.MONTH)
+        val expectedStart = LocalDate(2024, 1, 15).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneCalendarYear() {
+        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(SleepViewType.YEAR)
+        val expectedStart = LocalDate(2023, 1, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2023, 12, 31).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneYear() {
+        val result = pair.plusOne(SleepViewType.YEAR)
+        val expectedStart = LocalDate(2025, 2, 15).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2025, 2, 16).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testPlusOneCalendarYear() {
+        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(SleepViewType.YEAR)
+        val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2025, 12, 31).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
+    }
+
+    @Test
+    fun testMinusOneYear() {
+        val result = pair.minusOne(SleepViewType.YEAR)
+        val expectedStart = LocalDate(2023, 2, 15).atStartOfDayIn(TimeZone.UTC)
+        val expectedEnd = LocalDate(2023, 2, 16).atStartOfDayIn(TimeZone.UTC)
+        assertEquals(expectedStart, result.first)
+        assertEquals(expectedEnd, result.second)
     }
 }
