@@ -40,6 +40,7 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.enums.EnumEntries
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -52,59 +53,14 @@ fun WeightOverviewView(
     val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
-    var selectedViewTypeIndex by remember { mutableStateOf(0) }
     val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
-    var showDateRangeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
-    val viewTypes = SleepViewType.entries
 
     Column {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            TextButton(
-                onClick = { showDateRangeDialog = true },
-            ) {
-                Row {
-                    Column {
-                        Text(
-                            text =
-                                dateRange.first.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                        )
-                        Text(
-                            text =
-                                dateRange.second.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                        )
-                    }
-                    Icon(
-                        painterResource(Res.drawable.ic_date_range),
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-                }
-            }
-            DropdownSelection(
-                initialState = false,
-                selectedIndex = selectedViewTypeIndex,
-                items = SleepViewType.entries,
-                title = stringResource(Res.string.chart_grouping),
-                itemContent = { item, onClick ->
-                    DropdownMenuItem(
-                        text = { Text(item.localizedString()) },
-                        onClick = onClick
-                    )
-                },
-                itemToString = {
-                    it.localizedString()
-                },
-                onItemSelected = {
-                    selectedViewTypeIndex = it
-                    bodyWeightOverviewViewModel.setViewType(viewTypes[it])
-                }
-            )
-        }
+        DateRangeControl(
+            dateRange,
+            bodyWeightOverviewViewModel,
+        )
         Box(modifier = Modifier.fillMaxSize()) {
             if (!bodyWeights.isEmpty()) {
                 PlotBodyWeights(bodyWeightOverviewViewModel, bodyWeights, settings, maxBodyWeight, false)
@@ -139,21 +95,6 @@ fun WeightOverviewView(
         }
     }
 
-    if (showDateRangeDialog) {
-        DateRangePickerModal(
-            onDateRangeSelected = {
-                if (it.first != null && it.second != null) {
-                    bodyWeightOverviewViewModel.setRange(
-                        Instant.fromEpochMilliseconds(it.first!!),
-                        Instant.fromEpochMilliseconds(it.second!!)
-                    )
-                }
-                showDateRangeDialog = false
-            },
-            onDismiss = { showDateRangeDialog = false }
-        )
-    }
-
     if (showAddDialog) {
         AddBodyWeightDialog(
             settings = settings,
@@ -174,6 +115,77 @@ fun WeightOverviewView(
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun DateRangeControl(
+    dateRange: Pair<Instant, Instant>,
+    bodyWeightOverviewViewModel: WeightOverviewViewModel,
+) {
+    var selectedViewTypeIndex by remember { mutableStateOf(0) }
+    val viewTypes = SleepViewType.entries
+    var showDateRangeDialog by remember { mutableStateOf(false) }
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    ) {
+        TextButton(
+            onClick = { showDateRangeDialog = true },
+        ) {
+            Row {
+                Column {
+                    Text(
+                        text =
+                            dateRange.first.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                    )
+                    Text(
+                        text =
+                            dateRange.second.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                    )
+                }
+                Icon(
+                    painterResource(Res.drawable.ic_date_range),
+                    contentDescription = null,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
+        }
+        DropdownSelection(
+            initialState = false,
+            selectedIndex = selectedViewTypeIndex,
+            items = SleepViewType.entries,
+            title = stringResource(Res.string.chart_grouping),
+            itemContent = { item, onClick ->
+                DropdownMenuItem(
+                    text = { Text(item.localizedString()) },
+                    onClick = onClick
+                )
+            },
+            itemToString = {
+                it.localizedString()
+            },
+            onItemSelected = {
+                selectedViewTypeIndex = it
+                bodyWeightOverviewViewModel.setViewType(viewTypes[it])
+            }
+        )
+    }
+
+    if (showDateRangeDialog) {
+        DateRangePickerModal(
+            onDateRangeSelected = {
+                if (it.first != null && it.second != null) {
+                    bodyWeightOverviewViewModel.setRange(
+                        Instant.fromEpochMilliseconds(it.first!!),
+                        Instant.fromEpochMilliseconds(it.second!!)
+                    )
+                }
+                showDateRangeDialog = false
+            },
+            onDismiss = { showDateRangeDialog = false }
         )
     }
 }

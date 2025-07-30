@@ -15,15 +15,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.sleep.SleepViewType
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
@@ -119,7 +112,7 @@ class WeightOverviewViewModel(
     private fun mapWeek(
         bodyWeights: List<BodyWeight>,
         settings: Settings
-    ): List<BodyWeight> = bodyWeights.groupBy { bodyWeight -> bodyWeight.date.isoWeekAndYear() }
+    ): List<BodyWeight> = bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.isoWeekAndYear() }
         .map { bodyWeightDateMap ->
             var totalWeight = 0.0
             var boneMass = 0.0
@@ -146,7 +139,7 @@ class WeightOverviewViewModel(
 
             BodyWeight(
                 id = Uuid.random(),
-                date = bodyWeightDateMap.value.first().date.firstDayOfIsoWeek(),
+                dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfIsoWeek(),
                 profileId = bodyWeightDateMap.value.first().profileId,
                 weightInKg = totalWeight / bodyWeightDateMap.value.size,
                 muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
@@ -157,7 +150,7 @@ class WeightOverviewViewModel(
         }
 
     private fun mapMonth(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        return bodyWeights.groupBy { bodyWeight -> bodyWeight.date.year to bodyWeight.date.month }
+        return bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year to bodyWeight.dateUtc.month }
             .map { bodyWeightDateMap ->
                 var totalWeight = 0.0
                 var boneMass = 0.0
@@ -184,7 +177,7 @@ class WeightOverviewViewModel(
 
                 BodyWeight(
                     id = Uuid.random(),
-                    date = bodyWeightDateMap.value.first().date.firstDayOfMonth(),
+                    dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfMonth(),
                     profileId = bodyWeightDateMap.value.first().profileId,
                     weightInKg = totalWeight / bodyWeightDateMap.value.size,
                     muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
@@ -196,7 +189,7 @@ class WeightOverviewViewModel(
     }
 
     private fun mapYear(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        return bodyWeights.groupBy { bodyWeight -> bodyWeight.date.year }
+        return bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year }
             .map { bodyWeightDateMap ->
                 var totalWeight = 0.0
                 var boneMass = 0.0
@@ -223,7 +216,7 @@ class WeightOverviewViewModel(
 
                 BodyWeight(
                     id = Uuid.random(),
-                    date = bodyWeightDateMap.value.first().date.firstDayOfYear(),
+                    dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfYear(),
                     profileId = bodyWeightDateMap.value.first().profileId,
                     weightInKg = totalWeight / bodyWeightDateMap.value.size,
                     muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
@@ -249,7 +242,7 @@ class WeightOverviewViewModel(
     ): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
         var maxWeight = 0.0
 
-        return bodyWeights.map { bodyWeight ->
+        val bodyWeightEntries = bodyWeights.map { bodyWeight ->
             val totalWeight = bodyWeight.weightInKg
             maxWeight = max(maxWeight, totalWeight)
 
@@ -264,7 +257,7 @@ class WeightOverviewViewModel(
                     2
                 )
             DefaultVerticalBarPlotStackedPointEntry(
-                bodyWeight.date, 0.0, listOf(
+                bodyWeight.dateUtc, 0.0, listOf(
                     boneMass,
                     boneMass + muscleMass,
                     boneMass + muscleMass + bodyFat,
@@ -273,6 +266,10 @@ class WeightOverviewViewModel(
                 )
             )
         }
+
+        _maxWeight.value = maxWeight.roundUpToNextTen().roundToDecimals(2)
+
+        return bodyWeightEntries
     }
 
     fun toVerticalStackedAreaBodyWeightData(
@@ -316,7 +313,7 @@ class WeightOverviewViewModel(
     }
 
     fun dates(bodyWeights: List<BodyWeight>): List<LocalDate> {
-        return bodyWeights.map { it.date }
+        return bodyWeights.map { it.dateUtc }
     }
 
     fun setViewType(type: SleepViewType) {

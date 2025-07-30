@@ -28,7 +28,9 @@ import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
+import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -90,35 +92,36 @@ suspend fun seedDatabase(db: FitBeDatabase) {
             beverageDao.upsertDrink(beverage)
         }
 
-        val weightInKg = Random.nextDouble(55.0, 100.0)
+        // Step 1: Generate initial weight
+        var weightInKg = Random.nextDouble(55.0, 130.0).roundToDecimals(2)
 
-        val muscleMassInKg = Random.nextDouble(20.0, weightInKg * 0.6)
-        val boneMassInKg = Random.nextDouble(2.0, 4.0)
+        // Step 2: Randomize component masses in kg
+        val muscleMassInKg = Random.nextDouble(20.0, weightInKg * 0.6).roundToDecimals(2)
+        val boneMassInKg = Random.nextDouble(2.0, 4.0).roundToDecimals(2)
+        val bodyFatInKg = Random.nextDouble(10.0, weightInKg * 0.3).roundToDecimals(2)
+        val bodyWaterInKg = Random.nextDouble(25.0, weightInKg * 0.65).roundToDecimals(2)
 
-        val bodyFatPercentage = Random.nextDouble(10.0, 30.0)
-        val bodyFatInKg = (bodyFatPercentage / 100.0) * weightInKg
-
-        val bodyWaterPercentage = Random.nextDouble(45.0, 65.0)
-        val bodyWaterInKg = (bodyWaterPercentage / 100.0) * weightInKg
-
+        // Step 3: Compute total of components
         val totalComponents = muscleMassInKg + boneMassInKg + bodyFatInKg + bodyWaterInKg
 
-        // Adjust values if over weight
-        val adjustedWeightInKg = if (totalComponents > weightInKg) {
-            totalComponents + Random.nextDouble(0.5, 2.0)
-        } else {
-            weightInKg
+        // Step 4: Adjust weight if needed
+        if (totalComponents > weightInKg) {
+            weightInKg = (totalComponents + Random.nextDouble(0.5, 2.0)).roundToDecimals(2)
         }
+
+        // Step 5: Calculate percentages based on final weight
+        val bodyFatPercentage = (bodyFatInKg / weightInKg) * 100
+        val bodyWaterPercentage = (bodyWaterInKg / weightInKg) * 100
         val bodyWeight = BodyWeightEntity(
             dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
                 i - 1,
                 DateTimeUnit.DAY
-            ),
+            ).atStartOfDayIn(TimeZone.UTC).plus(12.hours),
             muscleMassInKg = muscleMassInKg,
             boneMassInKg = boneMassInKg,
-            bodyFatPercentage = bodyFatPercentage,
-            bodyWaterInPercentage = bodyWaterPercentage,
-            weightInKg = adjustedWeightInKg,
+            bodyFatPercentage = bodyFatPercentage.roundToDecimals(2),
+            bodyWaterInPercentage = bodyWaterPercentage.roundToDecimals(2),
+            weightInKg = weightInKg,
             profileId = profile.id
         )
         bodyWeightDao.upsertBodyWeight(bodyWeight)

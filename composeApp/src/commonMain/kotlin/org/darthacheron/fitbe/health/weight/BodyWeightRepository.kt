@@ -6,8 +6,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.toDateSpan
+import kotlin.time.Duration.Companion.hours
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -39,7 +41,7 @@ class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
     ) {
         bodyWeightDao.upsertBodyWeight(BodyWeightEntity(
             profileId = profileId,
-            dateUtc = date,
+            dateUtc = date.atStartOfDayIn(TimeZone.UTC).plus(12.hours),
             weightInKg = weightInKg,
             bodyFatPercentage = bodyFatPercentage,
             muscleMassInKg = muscleMassInKg,
