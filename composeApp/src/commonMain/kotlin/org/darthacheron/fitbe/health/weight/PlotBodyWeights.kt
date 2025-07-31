@@ -113,7 +113,7 @@ fun PlotBodyWeights(
     ChartLayout {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
-        val viewType by bodyWeightOverviewViewModel.dateUnit.collectAsState()
+        val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
@@ -124,7 +124,7 @@ fun PlotBodyWeights(
             xAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        when (viewType) {
+                        when (dateRange.dateUnit) {
                             DateUnit.DAY -> it.toString()
                             DateUnit.WEEK -> "W${it.isoWeekAndYear().second}/${it.year}"
                             DateUnit.MONTH -> "${it.month}/${it.year}"

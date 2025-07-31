@@ -26,6 +26,9 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.chart_grouping
 import org.darthacheron.fitbe.utils.PastOrPresentSelectableDates
 import kotlinx.datetime.Clock
+import org.darthacheron.fitbe.components.date.MonthRangePicker
+import org.darthacheron.fitbe.components.date.WeekRangePicker
+import org.darthacheron.fitbe.components.date.YearRangePicker
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
@@ -91,18 +94,37 @@ fun DateRangePickerModal(
                 }
             )
         }
-        DateRangePicker(
-            state = dateRangePickerState,
-            title = {
-                Text(
-                    text = "Select date range"
-                )
-            },
-            showModeToggle = false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(500.dp)
-                .padding(16.dp)
-        )
+//        when (dateUnit) {
+//            DateUnit.DAY -> {
+//                DateRangePicker(
+//                    state = dateRangePickerState,
+//                    title = {
+//                        Text(
+//                            text = "Select date range"
+//                        )
+//                    },
+//                    showModeToggle = false,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(500.dp)
+//                        .padding(16.dp)
+//                )
+//            }
+//            DateUnit.WEEK -> {
+//                WeekRangePicker (
+//                    onRangeSelected = { start, end ->  },
+//                    )
+//            }
+//            DateUnit.MONTH -> {
+//                MonthRangePicker(
+//                    onRangeSelected = { start, end ->  },
+//                    )
+//            }
+//            DateUnit.YEAR -> {
+                YearRangePicker (
+                    onRangeSelected = { start, end ->  },
+                    )
+//            }
+//        }
     }
 }

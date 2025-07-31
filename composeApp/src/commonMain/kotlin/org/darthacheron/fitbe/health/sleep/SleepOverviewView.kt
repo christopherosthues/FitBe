@@ -64,6 +64,7 @@ import org.darthacheron.fitbe.components.DateRangePickerModal
 import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.TimePickerDialog
+import org.darthacheron.fitbe.components.date.DateRange
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
@@ -153,15 +154,16 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
 
     if (showDateRangeDialog) {
         DateRangePickerModal(
-            onDateRangeSelected = {
-                if (it.first != null) {
+            dateUnit = DateUnit.DAY, // TODO: adjust to new DateRange
+            onDateRangeSelected = { dateRange, dateUnit ->
+                if (dateRange.first != null) {
                     viewModel.setStartDate(
-                        Instant.fromEpochMilliseconds(it.first!!)
+                        Instant.fromEpochMilliseconds(dateRange.first!!)
                     )
                 }
-                if (it.second != null) {
+                if (dateRange.second != null) {
                     viewModel.setEndDate(
-                        Instant.fromEpochMilliseconds(it.second!!)
+                        Instant.fromEpochMilliseconds(dateRange.second!!)
                     )
                 }
                 showDateRangeDialog = false

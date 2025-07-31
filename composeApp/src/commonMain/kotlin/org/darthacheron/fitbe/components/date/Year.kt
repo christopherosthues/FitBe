@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.components.date
 
-value class Year(val value: Int) : Comparable<Year> {
+data class Year(val value: Int) : Comparable<Year> {
     init {
         require(value in 1..9999) { "Year must be between 1 and 9999" }
     }
