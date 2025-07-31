@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.chart_grouping
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
@@ -33,14 +31,11 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DateRangePickerModal
-import org.darthacheron.fitbe.components.DropdownSelection
-import org.darthacheron.fitbe.health.sleep.SleepViewType
+import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import kotlin.enums.EnumEntries
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -121,11 +116,10 @@ fun WeightOverviewView(
 
 @Composable
 private fun DateRangeControl(
-    dateRange: Pair<Instant, Instant>,
+    dateRange: DateRange,
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
 ) {
-    var selectedViewTypeIndex by remember { mutableStateOf(0) }
-    val viewTypes = SleepViewType.entries
+
     var showDateRangeDialog by remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -138,11 +132,11 @@ private fun DateRangeControl(
                 Column {
                     Text(
                         text =
-                            dateRange.first.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                            dateRange.startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                     )
                     Text(
                         text =
-                            dateRange.second.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                            dateRange.endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                     )
                 }
                 Icon(
@@ -153,34 +147,17 @@ private fun DateRangeControl(
                 )
             }
         }
-        DropdownSelection(
-            initialState = false,
-            selectedIndex = selectedViewTypeIndex,
-            items = SleepViewType.entries,
-            title = stringResource(Res.string.chart_grouping),
-            itemContent = { item, onClick ->
-                DropdownMenuItem(
-                    text = { Text(item.localizedString()) },
-                    onClick = onClick
-                )
-            },
-            itemToString = {
-                it.localizedString()
-            },
-            onItemSelected = {
-                selectedViewTypeIndex = it
-                bodyWeightOverviewViewModel.setViewType(viewTypes[it])
-            }
-        )
+
     }
 
     if (showDateRangeDialog) {
         DateRangePickerModal(
-            onDateRangeSelected = {
-                if (it.first != null && it.second != null) {
+            onDateRangeSelected = { dateRange, selectedDateUnit ->
+                if (dateRange.first != null && dateRange.second != null) {
                     bodyWeightOverviewViewModel.setRange(
-                        Instant.fromEpochMilliseconds(it.first!!),
-                        Instant.fromEpochMilliseconds(it.second!!)
+                        Instant.fromEpochMilliseconds(dateRange.first!!),
+                        Instant.fromEpochMilliseconds(dateRange.second!!),
+                        selectedDateUnit
                     )
                 }
                 showDateRangeDialog = false

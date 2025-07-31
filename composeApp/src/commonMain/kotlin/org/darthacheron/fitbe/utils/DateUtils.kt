@@ -17,7 +17,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
-import org.darthacheron.fitbe.health.sleep.SleepViewType
+import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateRange
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {
@@ -113,76 +114,76 @@ fun LocalDate.lastDayOfYear(): LocalDate {
     return LocalDate(this.year, 12, 31)
 }
 
-fun Instant.plusOne(viewType: SleepViewType): Instant {
+fun Instant.plusOne(viewType: DateUnit): Instant {
     val localDateTime = this.toLocalDateTime(TimeZone.UTC)
     val newLocalDateTime = when(viewType) {
-        SleepViewType.DAY -> localDateTime.date.plus(DatePeriod(days = 1))
-        SleepViewType.WEEK -> localDateTime.date.plus(DatePeriod(days = 7))
-        SleepViewType.MONTH -> localDateTime.date.plus(DatePeriod(months = 1))
-        SleepViewType.YEAR -> localDateTime.date.plus(DatePeriod(years = 1))
+        DateUnit.DAY -> localDateTime.date.plus(DatePeriod(days = 1))
+        DateUnit.WEEK -> localDateTime.date.plus(DatePeriod(days = 7))
+        DateUnit.MONTH -> localDateTime.date.plus(DatePeriod(months = 1))
+        DateUnit.YEAR -> localDateTime.date.plus(DatePeriod(years = 1))
     }
     return newLocalDateTime.atStartOfDayIn(TimeZone.UTC)
 }
 
-fun Instant.minusOne(viewType: SleepViewType): Instant {
+fun Instant.minusOne(viewType: DateUnit): Instant {
     val localDateTime = this.toLocalDateTime(TimeZone.UTC)
     val newLocalDateTime = when(viewType) {
-        SleepViewType.DAY -> localDateTime.date.minus(DatePeriod(days = 1))
-        SleepViewType.WEEK -> localDateTime.date.minus(DatePeriod(days = 7))
-        SleepViewType.MONTH -> localDateTime.date.minus(DatePeriod(months = 1))
-        SleepViewType.YEAR -> localDateTime.date.minus(DatePeriod(years = 1))
+        DateUnit.DAY -> localDateTime.date.minus(DatePeriod(days = 1))
+        DateUnit.WEEK -> localDateTime.date.minus(DatePeriod(days = 7))
+        DateUnit.MONTH -> localDateTime.date.minus(DatePeriod(months = 1))
+        DateUnit.YEAR -> localDateTime.date.minus(DatePeriod(years = 1))
     }
     return newLocalDateTime.atStartOfDayIn(TimeZone.UTC)
 }
 
-fun Pair<Instant, Instant>.plusOne(viewType: SleepViewType): Pair<Instant, Instant> {
-    val startDate = this.first.toLocalDateTime(TimeZone.UTC)
-    val endDate = this.second.toLocalDateTime(TimeZone.UTC)
+fun DateRange.plusOne(): DateRange {
+    val startDate = this.startDate.toLocalDateTime(TimeZone.UTC)
+    val endDate = this.endDate.toLocalDateTime(TimeZone.UTC)
     var newStartDate: Instant
     var newEndDate: Instant
-    when (viewType) {
-        SleepViewType.DAY -> {
+    when (this.dateUnit) {
+        DateUnit.DAY -> {
             newStartDate = startDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
         }
-        SleepViewType.WEEK -> {
+        DateUnit.WEEK -> {
             newStartDate = startDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.UTC)
         }
-        SleepViewType.MONTH -> {
+        DateUnit.MONTH -> {
             newStartDate = startDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = newStartDate.lastDayOfMonth()
         }
-        SleepViewType.YEAR -> {
+        DateUnit.YEAR -> {
             newStartDate = startDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)
         }
     }
-    return Pair(newStartDate, newEndDate)
+    return DateRange(newStartDate, newEndDate, this.dateUnit)
 }
 
-fun Pair<Instant, Instant>.minusOne(viewType: SleepViewType): Pair<Instant, Instant> {
-    val startDate = this.first.toLocalDateTime(TimeZone.UTC)
-    val endDate = this.second.toLocalDateTime(TimeZone.UTC)
+fun DateRange.minusOne(): DateRange {
+    val startDate = this.startDate.toLocalDateTime(TimeZone.UTC)
+    val endDate = this.endDate.toLocalDateTime(TimeZone.UTC)
     var newStartDate: Instant
     var newEndDate: Instant
-    when (viewType) {
-        SleepViewType.DAY -> {
+    when (this.dateUnit) {
+        DateUnit.DAY -> {
             newStartDate = startDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
         }
-        SleepViewType.WEEK -> {
+        DateUnit.WEEK -> {
             newStartDate = startDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.UTC)
         }
-        SleepViewType.MONTH -> {
+        DateUnit.MONTH -> {
             newStartDate = startDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = newStartDate.lastDayOfMonth()
         }
-        SleepViewType.YEAR -> {
+        DateUnit.YEAR -> {
             newStartDate = startDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)
             newEndDate = endDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)
         }
     }
-    return Pair(newStartDate, newEndDate)
+    return DateRange(newStartDate, newEndDate, this.dateUnit)
 }

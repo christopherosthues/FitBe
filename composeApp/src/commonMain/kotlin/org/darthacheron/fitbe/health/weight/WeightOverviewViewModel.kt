@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.health.sleep.SleepViewType
+import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -43,19 +44,17 @@ class WeightOverviewViewModel(
     private val profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
 ) : ViewModel() {
-    private val _viewType = MutableStateFlow(SleepViewType.DAY)
-//    private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
-//    private val _endDate = MutableStateFlow(Clock.System.now())
-
-    private val _dateRange = MutableStateFlow(Pair(Clock.System.now().minus(6.days), Clock.System.now()))
+    private val _dateRange = MutableStateFlow(
+        DateRange(
+            Clock.System.now().minus(6.days),
+            Clock.System.now(),
+            DateUnit.DAY
+        )
+    )
 
     private val _maxWeight = MutableStateFlow(600.0) // TODO extract default max weight
 
-    val viewType: StateFlow<SleepViewType> = _viewType
-//    val startDate: StateFlow<Instant> = _startDate
-//    val endDate: StateFlow<Instant> = _endDate
-
-    val dateRange: StateFlow<Pair<Instant, Instant>> = _dateRange
+    val dateRange: StateFlow<DateRange> = _dateRange
 
     val maxWeight: StateFlow<Double> = _maxWeight
 
@@ -74,21 +73,20 @@ class WeightOverviewViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val bodyWeights: StateFlow<List<BodyWeight>> = combine(
         _dateRange,
-        viewType,
         settingsRepository.getSettingsFlow()
-    ) { range, viewType, settings ->
-        Pair(settings, viewType) to bodyWeightRepository.getEntries(
-            range.first,
-            range.second,
+    ) { range, settings ->
+        Pair(settings, range.dateUnit) to bodyWeightRepository.getEntries(
+            range.startDate,
+            range.endDate,
             settings.selectedProfileId!!
         )
-    }.flatMapLatest { (settingsViewType, bodyWeightFlow) ->
+    }.flatMapLatest { (settingsDateUnit, bodyWeightFlow) ->
         bodyWeightFlow.map { bodyWeights ->
-            when (settingsViewType.second) {
-                SleepViewType.DAY -> mapDay(bodyWeights, settingsViewType.first)
-                SleepViewType.WEEK -> mapWeek(bodyWeights, settingsViewType.first)
-                SleepViewType.MONTH -> mapMonth(bodyWeights, settingsViewType.first)
-                SleepViewType.YEAR -> mapYear(bodyWeights, settingsViewType.first)
+            when (settingsDateUnit.second) {
+                DateUnit.DAY -> mapDay(bodyWeights, settingsDateUnit.first)
+                DateUnit.WEEK -> mapWeek(bodyWeights, settingsDateUnit.first)
+                DateUnit.MONTH -> mapMonth(bodyWeights, settingsDateUnit.first)
+                DateUnit.YEAR -> mapYear(bodyWeights, settingsDateUnit.first)
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
@@ -228,12 +226,12 @@ class WeightOverviewViewModel(
     }
 
     fun movePast() {
-        val range = dateRange.value.minusOne(viewType.value)
+        val range = dateRange.value.minusOne()
         setRange(range)
     }
 
     fun moveFuture() {
-        val range = dateRange.value.plusOne(viewType.value)
+        val range = dateRange.value.plusOne()
         setRange(range)
     }
 
@@ -316,15 +314,11 @@ class WeightOverviewViewModel(
         return bodyWeights.map { it.dateUtc }
     }
 
-    fun setViewType(type: SleepViewType) {
-        _viewType.value = type
+    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
+        _dateRange.value = DateRange(startDate, endDate, dateUnit)
     }
 
-    fun setRange(startDate: Instant, endDate: Instant) {
-        _dateRange.value = Pair(startDate, endDate)
-    }
-
-    fun setRange(range: Pair<Instant, Instant>) {
+    fun setRange(range: DateRange) {
         _dateRange.value = range
     }
 

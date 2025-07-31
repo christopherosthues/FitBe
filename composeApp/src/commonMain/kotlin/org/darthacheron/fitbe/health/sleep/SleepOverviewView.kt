@@ -1,10 +1,8 @@
 package org.darthacheron.fitbe.health.sleep
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
@@ -21,11 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,8 +34,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
@@ -68,6 +61,7 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DatePickerModal
 import org.darthacheron.fitbe.components.DateRangePickerModal
+import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.TimePickerDialog
 import org.jetbrains.compose.resources.painterResource
@@ -87,7 +81,7 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
     val endDate by viewModel.endDate.collectAsState()
     var showDateRangeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
-    val viewTypes = SleepViewType.entries
+    val viewTypes = DateUnit.entries
 
     Column {
         Row(
@@ -115,7 +109,7 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
             DropdownSelection(
                 initialState = false,
                 selectedIndex = selectedViewTypeIndex,
-                items = SleepViewType.entries,
+                items = DateUnit.entries,
                 title = "Choose an option",
                 itemContent = { item, onClick ->
                     DropdownMenuItem(
