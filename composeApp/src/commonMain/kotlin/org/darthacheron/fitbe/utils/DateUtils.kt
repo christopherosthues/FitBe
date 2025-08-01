@@ -22,7 +22,6 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.Year
 import org.darthacheron.fitbe.components.date.YearMonth
 import org.darthacheron.fitbe.components.date.YearWeek
-import kotlin.time.Duration.Companion.days
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {

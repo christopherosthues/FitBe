@@ -26,29 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
-    init {
-        require(month in 1..12) { "Month must be between 1 and 12" }
-        require(year in 1..9999) { "Year must be between 1 and 9999" }
-    }
-
-    fun monthsUntil(other: YearMonth): Int {
-        return (other.year - year) * 12 + (other.month - month)
-    }
-
-    override fun compareTo(other: YearMonth): Int {
-        return when {
-            year != other.year -> year.compareTo(other.year)
-            else -> month.compareTo(other.month)
-        }
-    }
-
-    override fun toString(): String {
-        val monthStr = month.toString().padStart(2, '0')
-        return "$year-$monthStr"
-    }
-}
-
 @Composable
 fun MonthRangePicker(
     startYear: Int = 2000,

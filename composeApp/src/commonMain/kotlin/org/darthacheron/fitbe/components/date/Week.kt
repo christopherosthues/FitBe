@@ -30,27 +30,6 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import org.darthacheron.fitbe.utils.isoWeekAndYear
-import kotlin.time.Duration.Companion.days
-
-data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
-    init {
-        require(week in 1..53) { "Week must be between 1 and 53" }
-        require(year in 1..9999) { "Year must be between 1 and 9999" }
-    }
-
-    fun weeksUntil(other: YearWeek): Int {
-        return (other.year - year) * 53 + (other.week - week) // Conservative upper bound
-    }
-
-    override fun compareTo(other: YearWeek): Int {
-        return when {
-            year != other.year -> year.compareTo(other.year)
-            else -> week.compareTo(other.week)
-        }
-    }
-
-    override fun toString(): String = "W${week.toString().padStart(2, '0')} $year"
-}
 
 @Composable
 fun WeekRangePicker(
@@ -126,16 +105,6 @@ fun WeekRangePicker(
             }
         }
     }
-}
-
-fun getWeeksInYear(year: Int): List<Int> {
-    // Start from Dec 31, and move backward until we find a date in the target ISO year
-    var date = LocalDate(year, 12, 31)
-    while (date.isoWeekAndYear().first != year) {
-        date = date.minus(DatePeriod(days = 1))
-    }
-    val lastIsoWeek = date.isoWeekAndYear().second
-    return (1..lastIsoWeek).toList()
 }
 
 @Composable

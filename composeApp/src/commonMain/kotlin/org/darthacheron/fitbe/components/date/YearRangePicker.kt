@@ -26,18 +26,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-
-data class Year(val value: Int) : Comparable<Year> {
-    init {
-        require(value in 1..9999) { "Year must be between 1 and 9999" }
-    }
-
-    fun until(other: Year): Int = other.value - this.value
-
-    override fun compareTo(other: Year): Int = value.compareTo(other.value)
-    override fun toString(): String = value.toString()
-}
 
 @Composable
 fun YearRangePicker(
@@ -133,6 +124,12 @@ fun YearButton(
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(year.toString(), color = contentColor)
+
+        Text(
+            text = year.toString(),
+            // The semantics are set at the Day level.
+            modifier = Modifier.clearAndSetSemantics {},
+            textAlign = TextAlign.Center,
+            color = contentColor)
     }
 }
