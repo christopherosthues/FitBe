@@ -30,7 +30,8 @@ fun <T>DropdownSelection(
     title: String,
     itemContent: @Composable (T, () -> Unit) -> Unit,
     itemToString: @Composable (T) -> String,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(initialState) }
     val selectedOption = items[selectedIndex]
@@ -38,7 +39,8 @@ fun <T>DropdownSelection(
     val isExpanded = expanded && isEnabled
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { expanded = !expanded },
+        modifier = modifier
     ) {
         OutlinedTextField(
             value = itemToString(selectedOption),

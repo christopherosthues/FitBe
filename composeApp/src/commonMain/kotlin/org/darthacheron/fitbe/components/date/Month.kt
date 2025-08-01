@@ -52,7 +52,7 @@ data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
 @Composable
 fun MonthRangePicker(
     startYear: Int = 2000,
-    endYear: Int = 2030,
+    endYear: Int = 2999,
     onRangeSelected: (start: YearMonth, end: YearMonth) -> Unit
 ) {
     var selectedStart by remember { mutableStateOf<YearMonth?>(null) }
@@ -83,7 +83,7 @@ fun MonthRangePicker(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    (1..6).forEach { month ->
+                    (1..4).forEach { month ->
                         val ym = YearMonth(year, month)
                         MonthButton(
                             yearMonth = ym,
@@ -104,7 +104,28 @@ fun MonthRangePicker(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    (7..12).forEach { month ->
+                    (5..8).forEach { month ->
+                        val ym = YearMonth(year, month)
+                        MonthButton(
+                            yearMonth = ym,
+                            isSelected = ym == selectedStart || ym == selectedEnd,
+                            isInRange = orderedStart != null && orderedEnd != null && ym in orderedStart..orderedEnd,
+                            onClick = {
+                                if (selectedStart == null || (selectedStart != null && selectedEnd != null)) {
+                                    selectedStart = ym
+                                    selectedEnd = null
+                                } else {
+                                    selectedEnd = ym
+                                }
+                            }
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    (9..12).forEach { month ->
                         val ym = YearMonth(year, month)
                         MonthButton(
                             yearMonth = ym,

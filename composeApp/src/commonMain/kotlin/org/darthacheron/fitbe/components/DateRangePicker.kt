@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DisplayMode
@@ -29,6 +28,7 @@ import kotlinx.datetime.Clock
 import org.darthacheron.fitbe.components.date.MonthRangePicker
 import org.darthacheron.fitbe.components.date.WeekRangePicker
 import org.darthacheron.fitbe.components.date.YearRangePicker
+import org.darthacheron.fitbe.utils.toEpochMilli
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
@@ -40,13 +40,13 @@ fun DateRangePickerModal(
     onDismiss: () -> Unit
 ) {
     val dateUnits = DateUnit.entries
-    var selectedViewTypeIndex by remember { mutableStateOf(dateUnits.indexOf(dateUnit)) }
+    var selectedDateUnitIndex by remember { mutableStateOf(dateUnits.indexOf(dateUnit)) }
+    var selectedDateUnit by remember { mutableStateOf(dateUnits[selectedDateUnitIndex]) }
     val dateRangePickerState = rememberDateRangePickerState(
         initialSelectedStartDateMillis = Clock.System.now().toEpochMilliseconds(),
         initialSelectedEndDateMillis = Clock.System.now().toEpochMilliseconds(),
         initialDisplayMode = DisplayMode.Picker,
-        selectableDates = PastOrPresentSelectableDates,
-        yearRange = DatePickerDefaults.YearRange
+        selectableDates = PastOrPresentSelectableDates
     )
 
     DatePickerDialog(
@@ -60,7 +60,7 @@ fun DateRangePickerModal(
                             dateRangePickerState.selectedStartDateMillis,
                             dateRangePickerState.selectedEndDateMillis
                         ),
-                        dateUnits[selectedViewTypeIndex]
+                        selectedDateUnit
                     )
                     onDismiss()
                 }
@@ -74,11 +74,11 @@ fun DateRangePickerModal(
             }
         }
     ) {
-        Column {
+        Column(modifier = Modifier.padding(top = 16.dp)) {
             DropdownSelection(
                 initialState = false,
-                selectedIndex = selectedViewTypeIndex,
-                items = DateUnit.entries,
+                selectedIndex = selectedDateUnitIndex,
+                items = dateUnits,
                 title = stringResource(Res.string.chart_grouping),
                 itemContent = { item, onClick ->
                     DropdownMenuItem(
@@ -90,41 +90,61 @@ fun DateRangePickerModal(
                     it.localizedString()
                 },
                 onItemSelected = {
-                    selectedViewTypeIndex = it
-                }
+                    selectedDateUnitIndex = it
+                    selectedDateUnit = dateUnits[selectedDateUnitIndex]
+                },
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
-        }
-//        when (dateUnit) {
-//            DateUnit.DAY -> {
-//                DateRangePicker(
-//                    state = dateRangePickerState,
-//                    title = {
-//                        Text(
-//                            text = "Select date range"
-//                        )
-//                    },
-//                    showModeToggle = false,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(500.dp)
-//                        .padding(16.dp)
-//                )
-//            }
-//            DateUnit.WEEK -> {
-//                WeekRangePicker (
-//                    onRangeSelected = { start, end ->  },
-//                    )
-//            }
-//            DateUnit.MONTH -> {
-//                MonthRangePicker(
-//                    onRangeSelected = { start, end ->  },
-//                    )
-//            }
-//            DateUnit.YEAR -> {
-                YearRangePicker (
-                    onRangeSelected = { start, end ->  },
+            when (selectedDateUnit) {
+                DateUnit.DAY -> {
+                    DateRangePicker(
+                        state = dateRangePickerState,
+                        title = null,
+                        showModeToggle = false,
+                        headline = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(500.dp)
+                            .padding(16.dp)
                     )
-//            }
-//        }
+                }
+
+                DateUnit.WEEK -> {
+                    WeekRangePicker(
+                        onRangeSelected = { start, end ->
+                            onDateRangeSelected(
+                                Pair(start.toEpochMilli(), end.toEpochMilli()),
+                                selectedDateUnit
+                            )
+                            onDismiss()
+                        }
+                    )
+                }
+
+                DateUnit.MONTH -> {
+                    MonthRangePicker(
+                        onRangeSelected = { start, end ->
+                            onDateRangeSelected(
+                                Pair(start.toEpochMilli(), end.toEpochMilli()),
+                                selectedDateUnit
+                            )
+                            onDismiss()
+                        }
+                    )
+                }
+
+                DateUnit.YEAR -> {
+                    YearRangePicker(
+                        onRangeSelected = { start, end ->
+                            onDateRangeSelected(
+                                Pair(start.toEpochMilli(), end.toEpochMilli()),
+                                selectedDateUnit
+                            )
+                            onDismiss()
+                        }
+                    )
+                }
+            }
+        }
     }
 }

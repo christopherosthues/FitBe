@@ -54,8 +54,8 @@ data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
 
 @Composable
 fun WeekRangePicker(
-    startYear: Int = 2020,
-    endYear: Int = 2030,
+    startYear: Int = 2000,
+    endYear: Int = 2999,
     onRangeSelected: (start: YearWeek, end: YearWeek) -> Unit
 ) {
     var selectedStart by remember { mutableStateOf<YearWeek?>(null) }

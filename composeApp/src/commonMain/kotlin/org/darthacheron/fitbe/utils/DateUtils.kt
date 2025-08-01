@@ -19,6 +19,10 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
+import org.darthacheron.fitbe.components.date.Year
+import org.darthacheron.fitbe.components.date.YearMonth
+import org.darthacheron.fitbe.components.date.YearWeek
+import kotlin.time.Duration.Companion.days
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {
@@ -186,4 +190,26 @@ fun DateRange.minusOne(): DateRange {
         }
     }
     return DateRange(newStartDate, newEndDate, this.dateUnit)
+}
+
+fun Year.toEpochMilli(): Long {
+    return LocalDate(this.value, 1, 1).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}
+
+fun YearMonth.toEpochMilli(): Long {
+    return LocalDate(this.year, this.month, 1).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}
+
+fun YearWeek.toEpochMilli(): Long {
+    // Step 1: Find the 4th of January — it's always in ISO week 1
+    val jan4 = LocalDate(this.year, 1, 4)
+    val jan4WeekStart = jan4.minus(DatePeriod(days = jan4.dayOfWeek.isoDayNumber - 1))
+
+    // Step 2: Add weeks to get to the target week
+    val weekStartDate = jan4WeekStart.plus((this.week - 1) * 7, DateTimeUnit.DAY)
+
+    // Step 3: Convert to epoch milliseconds
+    return weekStartDate
+        .atStartOfDayIn(TimeZone.currentSystemDefault())
+        .toEpochMilliseconds()
 }
