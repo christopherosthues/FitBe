@@ -141,7 +141,7 @@ private fun WeekRangePickerContent(
                 val weeksInYear = getWeeksInYear(year)
                 val chunkedWeeks = weeksInYear.chunked(4)
 
-                item {
+                this@LazyColumn.item {
                     Text(
                         text = "$year",
                         style = MaterialTheme.typography.titleMedium,
@@ -149,7 +149,7 @@ private fun WeekRangePickerContent(
                     )
                 }
 
-                items(chunkedWeeks) { weekRow ->
+                this@LazyColumn.items(chunkedWeeks) { weekRow ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -297,7 +297,7 @@ private fun WeekEntryContainer(
 }
 
 object WeekRangePickerDefaults {
-    val YearRange: IntRange = IntRange(2000, 2099)
+    val YearRange: IntRange = IntRange(2000, 2999)
 
     @Composable
     fun colors(

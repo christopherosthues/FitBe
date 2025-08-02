@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.darthacheron.fitbe.components.date.MonthRangePickerDefaults.MonthNames
 
 @Composable
 fun MonthRangePicker(
@@ -134,7 +135,7 @@ private fun MonthRangePickerContent(
     Column(modifier = Modifier.padding(16.dp)) {
         LazyColumn(state = listState) {
             items(yearRange.toList()) { year ->
-                item {
+                this@LazyColumn.item {
                     Text(
                         text = "$year",
                         style = MaterialTheme.typography.titleMedium,
@@ -142,7 +143,7 @@ private fun MonthRangePickerContent(
                     )
                 }
 
-                item {
+                this@LazyColumn.item {
                     val months = (1..12).map { month -> YearMonth(year, month) }
                     val chunkedMonths = months.chunked(4)
 
@@ -287,7 +288,7 @@ private fun MonthEntryContainer(
 }
 
 object MonthRangePickerDefaults {
-    val YearRange: IntRange = IntRange(2000, 2099)
+    val YearRange: IntRange = IntRange(2000, 2999)
     val MonthNames = listOf(
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"

@@ -1,7 +1,5 @@
 package org.darthacheron.fitbe.utils
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -9,7 +7,6 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.Instant
@@ -19,7 +16,7 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.components.date.Year
+import org.darthacheron.fitbe.components.date.year.Year
 import org.darthacheron.fitbe.components.date.YearMonth
 import org.darthacheron.fitbe.components.date.YearWeek
 
@@ -34,22 +31,6 @@ fun toDateSpan(end: Instant, dateTimeUnit: DateTimeUnit.DateBased, dateInPast: I
     return Pair(end.toLocalDateTime(TimeZone.UTC).date.minus(dateInPast, dateTimeUnit).atStartOfDayIn(
         TimeZone.UTC), end.toLocalDateTime(
         TimeZone.UTC).date.atTime(23, 59, 59, 0).toInstant(TimeZone.UTC))
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
-object PastOrPresentSelectableDates : SelectableDates {
-    private val timeZone = TimeZone.currentSystemDefault()
-    private val today = Clock.System.now().toLocalDateTime(timeZone).date
-
-    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val date = Instant.fromEpochMilliseconds(utcTimeMillis)
-            .toLocalDateTime(timeZone).date
-        return date <= today
-    }
-
-    override fun isSelectableYear(year: Int): Boolean {
-        return year <= today.year
-    }
 }
 
 fun LocalDate.isoWeekAndYear(): Pair<Int, Int> {
