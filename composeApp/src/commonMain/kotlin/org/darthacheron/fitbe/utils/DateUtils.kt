@@ -17,7 +17,7 @@ import kotlinx.datetime.plus
 import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.year.Year
-import org.darthacheron.fitbe.components.date.YearMonth
+import org.darthacheron.fitbe.components.date.month.YearMonth
 import org.darthacheron.fitbe.components.date.YearWeek
 
 @OptIn(ExperimentalTime::class)

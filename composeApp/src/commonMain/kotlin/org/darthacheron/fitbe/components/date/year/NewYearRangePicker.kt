@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,18 +18,12 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.dayContentDescription
-import androidx.compose.material3.internal.MillisecondsIn24Hours
-import androidx.compose.material3.internal.Strings
-import androidx.compose.material3.internal.getString
-import androidx.compose.material3.tokens.MotionTokens
-import androidx.compose.material3.tokens.ShapeKeyTokens
-import androidx.compose.material3.value
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -41,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -54,10 +50,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.year_range_picker_current_year_content_description
+import fitbe.composeapp.generated.resources.year_range_picker_end_headline_content_description
+import fitbe.composeapp.generated.resources.year_range_picker_start_headline_content_description
+import fitbe.composeapp.generated.resources.year_range_picker_year_in_range_content_description
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 
 data class Year(val value: Int) : Comparable<Year> {
     init {
@@ -65,6 +71,15 @@ data class Year(val value: Int) : Comparable<Year> {
     }
 
     fun until(other: Year): Int = other.value - this.value
+
+    fun startDateMillis(): Long {
+        return LocalDate(value, 1, 1).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+    }
+
+    fun endDateMillis(): Long {
+        return LocalDateTime(value, 12, 31, 23, 59, 59).toInstant(TimeZone.UTC)
+            .toEpochMilliseconds()
+    }
 
     override fun compareTo(other: Year): Int = value.compareTo(other.value)
     override fun toString(): String = value.toString()
@@ -74,7 +89,7 @@ class YearRangePickerStateImpl(
     initialSelectedStartYear: Year?,
     initialSelectedEndYear: Year?,
     override val yearRange: IntRange,
-    override val selectableYears: SelectableYears
+    override val selectableYears: SelectableYears,
 ) : YearRangePickerState {
     override var selectedStartYear: Year? by mutableStateOf(initialSelectedStartYear)
     override var selectedEndYear: Year? by mutableStateOf(initialSelectedEndYear)
@@ -82,7 +97,6 @@ class YearRangePickerStateImpl(
     override fun setSelection(startYear: Year?, endYear: Year?) {
         if (startYear != null && endYear != null) {
             require(startYear <= endYear) { "Start year must be before or equal to end year" }
-            require((endYear.value - startYear.value) <= 6) { "Range must be 6 years or less" }
             require(selectableYears.isYearSelectable(startYear)) { "Start year is not selectable" }
             require(selectableYears.isYearSelectable(endYear)) { "End year is not selectable" }
         }
@@ -103,6 +117,7 @@ interface YearRangePickerState {
     fun setSelection(startYear: Year?, endYear: Year?)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YearRangePicker(
     state: YearRangePickerState,
@@ -119,7 +134,7 @@ fun YearRangePicker(
             modifier = Modifier.padding(YearRangePickerHeadlinePadding)
         )
     },
-    colors: YearRangePickerColors = YearRangePickerDefaults.colors()
+    colors: YearRangePickerColors = YearRangePickerDefaults.colors(),
 ) {
     YearEntryContainer(
         modifier = modifier,
@@ -164,6 +179,7 @@ fun rememberYearRangePickerState(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun YearRangePickerContent(
     selectedStartYear: Year?,
@@ -171,10 +187,10 @@ private fun YearRangePickerContent(
     onYearRangeSelectionChange: (startYear: Year?, endYear: Year?) -> Unit,
     yearRange: IntRange,
     colors: YearRangePickerColors,
-    selectableYears: SelectableYears
+    selectableYears: SelectableYears,
 ) {
     val allYears = yearRange.map { Year(it) }
-    val chunkedYears = allYears.chunked(4)
+    val chunkedYears = allYears.chunked(ChunkedYears)
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -182,169 +198,133 @@ private fun YearRangePickerContent(
     val currentYear = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.year
     val currentYearIndex = allYears.indexOfFirst { it.value == currentYear }
 
-    // Auto-scroll to the current year when the composable is first launched
-    LaunchedEffect(Unit) {
-        if (currentYearIndex != -1) {
-            coroutineScope.launch {
-                listState.scrollToItem(currentYearIndex / 4) // Divide by 4 because the years are chunked into rows of 4
-            }
-        }
-    }
-
-    val isComplete = selectedStartYear != null && selectedEndYear != null
     val orderedStart = if (selectedStartYear != null && selectedEndYear != null)
         minOf(selectedStartYear, selectedEndYear) else null
     val orderedEnd = if (selectedStartYear != null && selectedEndYear != null)
         maxOf(selectedStartYear, selectedEndYear) else null
-    val rangeLength = if (orderedStart != null && orderedEnd != null)
-        orderedStart.until(orderedEnd) else 0
-    val isValid = isComplete && rangeLength <= 6
 
-    Column(modifier = Modifier.padding(16.dp)) {
-//        LazyVerticalGrid()
-        LazyColumn(state = listState) {
-            items(chunkedYears) { rowYears ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    rowYears.fastForEach { year ->
-                        val isInRange = orderedStart != null && orderedEnd != null && year in orderedStart..orderedEnd
-                        val isYearSelectable = selectableYears.isYearSelectable(year)
-                        val startYearSelected = year == selectedStartYear
-                        val endYearSelected = year == selectedEndYear
-                        val isSelected = year == selectedStartYear || year == selectedEndYear
-                        val isCurrentYear = currentYear == year.value
+    ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            LazyColumn(state = listState) {
+                items(chunkedYears) { rowYears ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        rowYears.fastForEach { year ->
+                            val isInRange =
+                                orderedStart != null && orderedEnd != null && year in orderedStart..orderedEnd
+                            val isYearSelectable = selectableYears.isYearSelectable(year)
+                            val startYearSelected = year == selectedStartYear
+                            val endYearSelected = year == selectedEndYear
+                            val isSelected = year == selectedStartYear || year == selectedEndYear
+                            val isCurrentYear = currentYear == year.value
+                            val dateInMillis = year.startDateMillis()
+                            val yearContentDescription =
+                                yearContentDescription(
+                                    isCurrentYear = isCurrentYear,
+                                    isStartYear = startYearSelected,
+                                    isEndYear = endYearSelected,
+                                    isInRange = isInRange
+                                )
+                            val formattedDateDescription = formatYear(currentYear)
 
-
-                        val dateInMillis =
-                            month.startUtcTimeMillis + (dayNumber * MillisecondsIn24Hours)
-                        val inRange =
-                            if (rangeSelectionInfo != null) {
-                                remember(rangeSelectionInfo, dateInMillis) {
-                                    mutableStateOf(
-                                        dateInMillis >=
-                                                (startDateMillis ?: Long.Companion.MAX_VALUE) &&
-                                                dateInMillis <= (endDateMillis ?: Long.MIN_VALUE)
-                                    )
-                                }
-                                    .value
-                            } else {
-                                false
-                            }
-                        val dayContentDescription =
-                            dayContentDescription(
-                                rangeSelectionEnabled = rangeSelectionInfo != null,
-                                isToday = isToday,
-                                isStartDate = startDateSelected,
-                                isEndDate = endDateSelected,
-                                isInRange = inRange
-                            )
-                        val formattedDateDescription =
-                            dateFormatter.formatDate(
-                                dateInMillis,
-                                defaultLocale,
-                                forContentDescription = true
-                            ) ?: ""
-
-                        YearButton(
-//                            year = year,
-//                            isInRange = isInRange,
-//                            isSelected = isSelected,
-//                            onClick = {
-//                                if (selectedStartYear == null || (selectedStartYear != null && selectedEndYear != null)) {
-//                                    onYearRangeSelectionChange(year, null)
-//                                } else {
-//                                    onYearRangeSelectionChange(selectedStartYear, year)
-//                                }
-//                            },
-//                            colors = colors,
-//                            isYearSelectable = isYearSelectable
-
-                            modifier = Modifier,
-                            selected = startYearSelected || endYearSelected,
-                            onClick = {
-                                if (selectedStartYear == null || (selectedStartYear != null && selectedEndYear != null)) {
-                                    onYearRangeSelectionChange(year, null)
-                                } else {
-                                    onYearRangeSelectionChange(selectedStartYear, year)
-                                }
-                            },
-                            // Only animate on the first selected day. This is important to
-                            // disable when drawing a range marker behind the days on an
-                            // end-date selection.
-                            animateChecked = startYearSelected,
-                            enabled =
-                                remember(dateInMillis, selectableYears) {
-                                    // Disabled a day in case its year is not selectable, or the
-                                    // date itself is specifically not allowed by the state's
-                                    // SelectableDates.
-                                    with(selectableYears) {
-                                        isSelectableYear(month.year) &&
-                                                isSelectableDate(dateInMillis)
+                            YearButton(
+                                year = year,
+                                modifier = Modifier,
+                                selected = isSelected,
+                                onClick = {
+                                    if (selectedStartYear == null || (selectedStartYear != null && selectedEndYear != null)) {
+                                        onYearRangeSelectionChange(year, null)
+                                    } else {
+                                        onYearRangeSelectionChange(selectedStartYear, year)
                                     }
                                 },
-                            today = isCurrentYear,
-                            inRange = inRange,
-                            description =
-                                if (dayContentDescription != null) {
-                                    "$dayContentDescription, $formattedDateDescription"
-                                } else {
-                                    formattedDateDescription
-                                },
-                            colors = colors
-                        )
+                                // Only animate on the first selected day. This is important to
+                                // disable when drawing a range marker behind the days on an
+                                // end-date selection.
+                                animateChecked = startYearSelected,
+                                enabled =
+                                    remember(dateInMillis, selectableYears) {
+                                        // Disabled a day in case its year is not selectable, or the
+                                        // date itself is specifically not allowed by the state's
+                                        // SelectableDates.
+                                        with(selectableYears) {
+                                            isYearSelectable(year)
+                                        }
+                                    },
+                                isCurrentYear = isCurrentYear,
+                                inRange = isInRange,
+                                description =
+                                    if (yearContentDescription != null) {
+                                        "$yearContentDescription, $formattedDateDescription"
+                                    } else {
+                                        formattedDateDescription
+                                    },
+                                colors = colors
+                            )
+                        }
                     }
                 }
             }
+
+            Spacer(Modifier.height(16.dp))
+
+//        if (!isValid && isComplete) {
+//            Text(
+//                "Range must be 6 years or less.",
+//                color = Color.Red,
+//                style = MaterialTheme.typography.bodySmall,
+//                modifier = Modifier.semantics {
+//                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+//                }
+//            )
+//        }
+//
+//        Button(
+//            onClick = { orderedStart?.let { start -> orderedEnd?.let { end -> onYearRangeSelectionChange(start, end) } } },
+//            enabled = isValid,
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Text("Confirm Range")
+//        }
         }
+    }
 
-        Spacer(Modifier.height(16.dp))
-
-        if (!isValid && isComplete) {
-            Text(
-                "Range must be 6 years or less.",
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.semantics {
-                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
-                }
-            )
-        }
-
-        Button(
-            onClick = { orderedStart?.let { start -> orderedEnd?.let { end -> onYearRangeSelectionChange(start, end) } } },
-            enabled = isValid,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Confirm Range")
+    // Auto-scroll to the current year when the composable is first launched
+    LaunchedEffect(Unit) {
+        if (currentYearIndex != -1) {
+            coroutineScope.launch {
+                listState.scrollToItem(currentYearIndex / ChunkedYears) // Divide by 4 because the years are chunked into rows of 4
+            }
         }
     }
 }
 
+fun formatYear(year: Int): String {
+    return year.toString()
+}
+
 @Composable
-private fun dayContentDescription(
-    rangeSelectionEnabled: Boolean,
-    isToday: Boolean,
-    isStartDate: Boolean,
-    isEndDate: Boolean,
+private fun yearContentDescription(
+    isCurrentYear: Boolean,
+    isStartYear: Boolean,
+    isEndYear: Boolean,
     isInRange: Boolean
 ): String? {
     val descriptionBuilder = StringBuilder()
-    if (rangeSelectionEnabled) {
-        when {
-            isStartDate ->
-                descriptionBuilder.append(getString(string = Strings.DateRangePickerStartHeadline))
-            isEndDate ->
-                descriptionBuilder.append(getString(string = Strings.DateRangePickerEndHeadline))
-            isInRange ->
-                descriptionBuilder.append(getString(string = Strings.DateRangePickerDayInRange))
-        }
+    when {
+        isStartYear ->
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_start_headline_content_description))
+        isEndYear ->
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_end_headline_content_description))
+        isInRange ->
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_year_in_range_content_description))
     }
-    if (isToday) {
+    if (isCurrentYear) {
         if (descriptionBuilder.isNotEmpty()) descriptionBuilder.append(", ")
-        descriptionBuilder.append(getString(string = Strings.DatePickerTodayDescription))
+        descriptionBuilder.append(stringResource(Res.string.year_range_picker_current_year_content_description))
     }
     return if (descriptionBuilder.isEmpty()) null else descriptionBuilder.toString()
 }
@@ -356,59 +336,28 @@ private fun YearButton(
     onClick: () -> Unit,
     animateChecked: Boolean,
     enabled: Boolean,
-    today: Boolean,
+    isCurrentYear: Boolean,
     inRange: Boolean,
     description: String,
     colors: YearRangePickerColors,
     year: Year,
-//    isInRange: Boolean,
-//    isSelected: Boolean,
-//    onClick: () -> Unit,
-//    colors: YearRangePickerColors,
-//    isYearSelectable: Boolean
 ) {
-//    val backgroundColor = when {
-//        isSelected -> colors.selectedYearContainerColor
-//        isInRange -> colors.yearInRangeContainerColor
-//        else -> colors.yearContainerColor
-//    }
-//
-//    val contentColor = when {
-//        isSelected -> colors.selectedYearContentColor
-//        isInRange -> colors.yearInRangeContentColor
-//        else -> if (isYearSelectable) colors.yearContentColor else colors.yearContentColor.copy(alpha = 0.5f)
-//    }
-//
-//    Box(
-//        modifier = Modifier
-//            .padding(4.dp)
-//            .size(72.dp)
-//            .clip(RoundedCornerShape(8.dp))
-//            .background(backgroundColor)
-//            .clickable(enabled = isYearSelectable) { if (isYearSelectable) onClick() }
-//            .semantics {
-//                contentDescription = if (isSelected) {
-//                    "Selected year ${year.value}"
-//                } else if (isInRange) {
-//                    "Year ${year.value} in range"
-//                } else {
-//                    "Year ${year.value}"
-//                }
-//            },
-//        contentAlignment = Alignment.Center
-//    ) {
-//        Text(
-//            text = year.toString(),
-//            textAlign = TextAlign.Center,
-//            color = contentColor,
-//            style = MaterialTheme.typography.bodyMedium
-//        )
-//    }
+    val backgroundModifier = if (inRange && !selected) {
+        Modifier
+            .background(
+                color = colors.yearInRangeContainerColor,
+                shape = RectangleShape
+            )
+    } else {
+        Modifier
+    }
+
     Surface(
         selected = selected,
         onClick = onClick,
         modifier =
             modifier
+                .then(backgroundModifier)
                 // Apply and merge semantics here. This will ensure that when scrolling the list the
                 // entire Day surface is treated as one unit and holds the date semantics even when
                 // it's
@@ -416,9 +365,10 @@ private fun YearButton(
                 .semantics(mergeDescendants = true) {
                     text = AnnotatedString(description)
                     role = Role.Button
-                },
+                }
+                .requiredSize(RecommendedSizeForAccessibility),
         enabled = enabled,
-        shape = DatePickerModalTokens.DateContainerShape.value,
+        shape = CircleShape,
         color =
             colors
                 .yearContainerColor(selected = selected, enabled = enabled, animate = animateChecked)
@@ -426,16 +376,16 @@ private fun YearButton(
         contentColor =
             colors
                 .yearContentColor(
-                    isToday = today,
+                    isCurrentYear = isCurrentYear,
                     selected = selected,
                     inRange = inRange,
                     enabled = enabled,
                 )
                 .value,
         border =
-            if (today && !selected) {
+            if (isCurrentYear && !selected) {
                 BorderStroke(
-                    DatePickerModalTokens.DateTodayContainerOutlineWidth,
+                    YearRangePickerModalTokens.DateTodayContainerOutlineWidth,
                     colors.currentYearBorderColor
                 )
             } else {
@@ -445,27 +395,24 @@ private fun YearButton(
         Box(
             modifier =
                 Modifier.requiredSize(
-                    DatePickerModalTokens.DateStateLayerWidth,
-                    DatePickerModalTokens.DateStateLayerHeight
+                    YearRangePickerModalTokens.YearStateLayerWidth,
+                    YearRangePickerModalTokens.YearStateLayerHeight
                 ),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = year.toString(),
                 textAlign = TextAlign.Center,
                 // The semantics are set at the Day level.
                 modifier = Modifier.clearAndSetSemantics {},
-//                color = contentColor,
-//                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
 }
 
-internal object DatePickerModalTokens {
-    val DateContainerShape = ShapeKeyTokens.CornerFull
-    val DateStateLayerHeight = 40.0.dp
-    val DateStateLayerWidth = 40.0.dp
+internal object YearRangePickerModalTokens {
+    val YearStateLayerHeight = 40.0.dp
+    val YearStateLayerWidth = 40.0.dp
     val DateTodayContainerOutlineWidth = 1.0.dp
 }
 
@@ -482,6 +429,7 @@ private fun YearEntryContainer(
 ) {
     Column(
         modifier = modifier
+            .defaultMinSize(minHeight = headerMinHeight)
             .background(colors.containerColor)
     ) {
         if (title != null) {
@@ -491,12 +439,14 @@ private fun YearEntryContainer(
         }
 
         if (headline != null) {
-            Box(
-                modifier = Modifier
-                    .padding(YearRangePickerHeadlinePadding)
-                    .fillMaxWidth()
-            ) {
-                headline()
+            ProvideTextStyle(value = headlineTextStyle) {
+                Box(
+                    modifier = Modifier
+                        .padding(YearRangePickerHeadlinePadding)
+                        .fillMaxWidth()
+                ) {
+                    headline()
+                }
             }
         }
 
@@ -514,13 +464,13 @@ object YearRangePickerDefaults {
         headlineContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         yearContentColor: Color = MaterialTheme.colorScheme.onSurface,
         yearInRangeContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
-        selectedYearContentColor: Color = MaterialTheme.colorScheme.primary,
+        selectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary,
+        disabledSelectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DisabledAlpha),
         yearContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant, // TODO
         yearInRangeContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+        disabledYearContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledAlpha),
         selectedYearContainerColor: Color = MaterialTheme.colorScheme.primary,
         currentYearContentColor: Color = MaterialTheme.colorScheme.primary,
-        disabledSelectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DisabledAlpha),
-        disabledYearContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledAlpha),
         currentYearBorderColor: Color = MaterialTheme.colorScheme.primary,
         disabledSelectedYearContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DisabledAlpha),
     ): YearRangePickerColors = YearRangePickerColors(
@@ -572,7 +522,7 @@ object YearRangePickerDefaults {
         )
     }
 
-    /** A default [SelectableDates] that allows all dates to be selected. */
+    /** A default [SelectableYears] that allows all dates to be selected. */
     val AllDates: SelectableYears = object : SelectableYears {}
 }
 
@@ -594,7 +544,7 @@ class YearRangePickerColors(
 ) {
     @Composable
     internal fun yearContentColor(
-        isToday: Boolean,
+        isCurrentYear: Boolean,
         selected: Boolean,
         inRange: Boolean,
         enabled: Boolean
@@ -605,7 +555,7 @@ class YearRangePickerColors(
                 selected && !enabled -> disabledSelectedYearContentColor
                 inRange && enabled -> yearInSelectionRangeContentColor
                 inRange && !enabled -> disabledYearContentColor
-                isToday -> currentYearContentColor
+                isCurrentYear -> currentYearContentColor
                 enabled -> yearContentColor
                 else -> disabledYearContentColor
             }
@@ -644,3 +594,4 @@ internal val RecommendedSizeForAccessibility = 48.dp
 
 const val DurationShort2 = 100.0
 internal const val DisabledAlpha = 0.38f
+private const val ChunkedYears = 5

@@ -136,4 +136,12 @@
     <string name="body_weight_chart_annotation_body_water">Body water</string>
     <string name="body_weight_chart_annotation_total_weight">Total weight</string>
     <string name="chart_grouping">Time interval</string>
+    <string name="year_range_picker_start_headline_content_description">Start year</string>
+    <string name="year_range_picker_end_headline_content_description">End year</string>
+    <string name="year_range_picker_year_in_range_content_description">Year in selected range</string>
+    <string name="year_range_picker_current_year_content_description">Current year</string>
+    <string name="month_range_picker_start_headline_content_description">Start month</string>
+    <string name="month_range_picker_end_headline_content_description">End month</string>
+    <string name="month_range_picker_month_in_range_content_description">Month in selected range</string>
+    <string name="month_range_picker_current_month_content_description">Current month</string>
 </resources>

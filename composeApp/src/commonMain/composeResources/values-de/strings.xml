@@ -136,4 +136,12 @@
     <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
     <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
     <string name="chart_grouping">Zeitintervall</string>
+    <string name="year_range_picker_start_headline_content_description">Startjahr</string>
+    <string name="year_range_picker_end_headline_content_description">Endjahr</string>
+    <string name="year_range_picker_year_in_range_content_description">Jahr im ausgewählten Bereich</string>
+    <string name="year_range_picker_current_year_content_description">Aktuelles Jahr</string>
+    <string name="month_range_picker_start_headline_content_description">Startmonat</string>
+    <string name="month_range_picker_end_headline_content_description">Endmonat</string>
+    <string name="month_range_picker_month_in_range_content_description">Monat im ausgewählten Bereich</string>
+    <string name="month_range_picker_current_month_content_description">Aktueller Monat</string>
 </resources>
