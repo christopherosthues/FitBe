@@ -88,16 +88,16 @@ fun DateRangePickerModal(
                             endDateMillis = dateRangePickerState.selectedEndDateMillis
                         }
                         DateUnit.WEEK -> {
-                            startDateMillis = dateRangePickerState.selectedStartDateMillis
+                            startDateMillis = dateRangePickerState.selectedStartDateMillis // TODO
                             endDateMillis = dateRangePickerState.selectedEndDateMillis
                         }
                         DateUnit.MONTH -> {
-                            startDateMillis = dateRangePickerState.selectedStartDateMillis
-                            endDateMillis = dateRangePickerState.selectedEndDateMillis
+                            startDateMillis = monthRangePickerState.selectedStartMonth?.startDateMillis()
+                            endDateMillis = monthRangePickerState.selectedEndMonth?.endDateMillis()
                         }
                         DateUnit.YEAR -> {
-                            startDateMillis = dateRangePickerState.selectedStartDateMillis
-                            endDateMillis = dateRangePickerState.selectedEndDateMillis
+                            startDateMillis = yearRangePickerState.selectedStartYear?.startDateMillis()
+                            endDateMillis = yearRangePickerState.selectedEndYear?.endDateMillis()
                         }
                     }
                     onDateRangeSelected(

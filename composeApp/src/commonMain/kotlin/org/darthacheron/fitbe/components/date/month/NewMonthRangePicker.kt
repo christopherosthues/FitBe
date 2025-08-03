@@ -100,17 +100,17 @@ class MonthRangePickerStateImpl(
     override val yearRange: IntRange,
     override val selectableMonths: SelectableMonths,
 ) : MonthRangePickerState {
-    override var selectedStartYearMonth: YearMonth? by mutableStateOf(initialSelectedStartYearMonth)
-    override var selectedEndYearMonth: YearMonth? by mutableStateOf(initialSelectedEndYearMonth)
+    override var selectedStartMonth: YearMonth? by mutableStateOf(initialSelectedStartYearMonth)
+    override var selectedEndMonth: YearMonth? by mutableStateOf(initialSelectedEndYearMonth)
 
-    override fun setSelection(startYearMonth: YearMonth?, endYearMonth: YearMonth?) {
-        if (startYearMonth != null && endYearMonth != null) {
-            require(startYearMonth <= endYearMonth) { "Start year month must be before or equal to end year month" }
-            require(selectableMonths.isMonthSelectable(startYearMonth)) { "Start month is not selectable" }
-            require(selectableMonths.isMonthSelectable(endYearMonth)) { "End month is not selectable" }
+    override fun setSelection(startMonth: YearMonth?, endMonth: YearMonth?) {
+        if (startMonth != null && endMonth != null) {
+            require(startMonth <= endMonth) { "Start year month must be before or equal to end year month" }
+            require(selectableMonths.isMonthSelectable(startMonth)) { "Start month is not selectable" }
+            require(selectableMonths.isMonthSelectable(endMonth)) { "End month is not selectable" }
         }
-        selectedStartYearMonth = startYearMonth
-        selectedEndYearMonth = endYearMonth
+        selectedStartMonth = startMonth
+        selectedEndMonth = endMonth
     }
 }
 
@@ -119,11 +119,11 @@ interface SelectableMonths {
 }
 
 interface MonthRangePickerState {
-    val selectedStartYearMonth: YearMonth?
-    val selectedEndYearMonth: YearMonth?
+    val selectedStartMonth: YearMonth?
+    val selectedEndMonth: YearMonth?
     val yearRange: IntRange
     val selectableMonths: SelectableMonths
-    fun setSelection(startYearMonth: YearMonth?, endYearMonth: YearMonth?)
+    fun setSelection(startMonth: YearMonth?, endMonth: YearMonth?)
 }
 
 @Composable
@@ -137,8 +137,8 @@ fun MonthRangePicker(
     },
     headline: (@Composable () -> Unit)? = {
         MonthRangePickerDefaults.MonthRangePickerHeadline(
-            selectedStartYearMonth = state.selectedStartYearMonth,
-            selectedEndYearMonth = state.selectedEndYearMonth,
+            selectedStartYearMonth = state.selectedStartMonth,
+            selectedEndYearMonth = state.selectedEndMonth,
             modifier = Modifier.padding(MonthRangePickerHeadlinePadding)
         )
     },
@@ -153,8 +153,8 @@ fun MonthRangePicker(
         colors = colors,
     ) {
         MonthRangePickerContent(
-            selectedStartYearMonth = state.selectedStartYearMonth,
-            selectedEndYearMonth = state.selectedEndYearMonth,
+            selectedStartYearMonth = state.selectedStartMonth,
+            selectedEndYearMonth = state.selectedEndMonth,
             onMonthRangeSelectionChange = { startYearMonth, endYearMonth ->
                 try {
                     state.setSelection(startYearMonth, endYearMonth)
