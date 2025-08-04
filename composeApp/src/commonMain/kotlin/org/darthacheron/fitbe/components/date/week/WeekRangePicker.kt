@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.components.date
+package org.darthacheron.fitbe.components.date.week
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,14 +28,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
+import org.darthacheron.fitbe.components.date.YearWeek
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 
 @Composable
@@ -185,7 +189,7 @@ private fun WeekRangePickerContent(
                         color = Color.Red,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.semantics {
-                            liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                            liveRegion = LiveRegionMode.Polite
                         }
                     )
                 }
@@ -267,8 +271,8 @@ private fun WeekEntryContainer(
     modifier: Modifier,
     title: (@Composable () -> Unit)?,
     headline: (@Composable () -> Unit)?,
-    headlineTextStyle: androidx.compose.ui.text.TextStyle,
-    headerMinHeight: androidx.compose.ui.unit.Dp,
+    headlineTextStyle: TextStyle,
+    headerMinHeight: Dp,
     colors: WeekRangePickerColors,
     content: @Composable () -> Unit
 ) {
@@ -349,7 +353,7 @@ object WeekRangePickerDefaults {
             text = headlineText,
             style = MaterialTheme.typography.bodyLarge,
             modifier = modifier.semantics {
-                liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
+                liveRegion = LiveRegionMode.Polite
             }
         )
     }

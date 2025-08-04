@@ -27,14 +27,14 @@ import org.darthacheron.fitbe.utils.PastOrPresentSelectableDates
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.WeekRangePicker
+import org.darthacheron.fitbe.components.date.week.WeekRangePicker
 import org.darthacheron.fitbe.components.date.year.Year
 import org.darthacheron.fitbe.components.date.year.YearRangePicker
 import org.darthacheron.fitbe.components.date.YearWeek
 import org.darthacheron.fitbe.components.date.month.MonthRangePicker
 import org.darthacheron.fitbe.components.date.month.YearMonth
 import org.darthacheron.fitbe.components.date.month.rememberMonthRangePickerState
-import org.darthacheron.fitbe.components.date.rememberWeekRangePickerState
+import org.darthacheron.fitbe.components.date.week.rememberWeekRangePickerState
 import org.darthacheron.fitbe.components.date.year.rememberYearRangePickerState
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource

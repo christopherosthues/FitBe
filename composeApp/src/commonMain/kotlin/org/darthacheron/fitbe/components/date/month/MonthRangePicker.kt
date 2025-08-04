@@ -81,7 +81,8 @@ data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
             2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
             else -> throw IllegalArgumentException("Invalid month: $month")
         }
-        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59).toInstant(TimeZone.UTC)
+            .toEpochMilliseconds()
     }
 
     override fun compareTo(other: YearMonth): Int {
@@ -197,12 +198,13 @@ private fun MonthRangePickerContent(
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val sortedYears = yearRange.toList().sorted()
 
     // Calculate the index of the current month
     val currentYearMonth = Clock.System.now().toLocalDateTime(TimeZone.UTC).let {
         YearMonth(it.year, it.monthNumber)
     }
-    val currentYearMonthIndex = (currentYearMonth.year - yearRange.start) * 12 + (currentYearMonth.month - 1)
+    val currentYearMonthIndex = sortedYears.indexOf(currentYearMonth.year)
 
     val orderedStart = if (selectedStartYearMonth != null && selectedEndYearMonth != null)
         minOf(selectedStartYearMonth, selectedEndYearMonth) else null
@@ -212,16 +214,14 @@ private fun MonthRangePickerContent(
     ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
         Column(modifier = Modifier.padding(16.dp)) {
             LazyColumn(state = listState) {
-                items(yearRange.toList()) { year ->
-                    this@LazyColumn.item {
+                items(sortedYears) { year ->
+                    Column {
                         Text(
                             text = "$year",
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
-                    }
 
-                    this@LazyColumn.item {
                         val months = (1..12).map { month -> YearMonth(year, month) }
                         val chunkedMonths = months.chunked(ChunkedMonths)
 
@@ -234,10 +234,10 @@ private fun MonthRangePickerContent(
                                 rowMonths.forEach { yearMonth ->
                                     val isInRange =
                                         orderedStart != null && orderedEnd != null && yearMonth in orderedStart..orderedEnd
-                                    val isMonthSelectable = selectableMonths.isMonthSelectable(yearMonth)
                                     val startYearMonthSelected = yearMonth == selectedStartYearMonth
                                     val endYearMonthSelected = yearMonth == selectedEndYearMonth
-                                    val isSelected = yearMonth == selectedStartYearMonth || yearMonth == selectedEndYearMonth
+                                    val isSelected =
+                                        yearMonth == selectedStartYearMonth || yearMonth == selectedEndYearMonth
                                     val isCurrentYearMonth = currentYearMonth == yearMonth
                                     val dateInMillis = yearMonth.startDateMillis()
                                     val monthContentDescription =
@@ -257,7 +257,10 @@ private fun MonthRangePickerContent(
                                             if (selectedStartYearMonth == null || (selectedStartYearMonth != null && selectedEndYearMonth != null)) {
                                                 onMonthRangeSelectionChange(yearMonth, null)
                                             } else {
-                                                onMonthRangeSelectionChange(selectedStartYearMonth, yearMonth)
+                                                onMonthRangeSelectionChange(
+                                                    selectedStartYearMonth,
+                                                    yearMonth
+                                                )
                                             }
                                         },
                                         // Only animate on the first selected day. This is important to
@@ -288,32 +291,6 @@ private fun MonthRangePickerContent(
                         }
                     }
                 }
-
-//                item {
-//                    Spacer(Modifier.height(16.dp))
-//                    if (!isValid && isComplete) {
-//                        Text(
-//                            "Range must be 6 months or less.",
-//                            color = Color.Red,
-//                            style = MaterialTheme.typography.bodySmall,
-//                            modifier = Modifier.semantics {
-//                                liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
-//                            }
-//                        )
-//                    }
-//
-//                    Button(
-//                        onClick = {
-//                            if (orderedStart != null && orderedEnd != null) {
-//                                onMonthRangeSelectionChange(orderedStart, orderedEnd)
-//                            }
-//                        },
-//                        enabled = isValid,
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        Text("Confirm Range")
-//                    }
-//                }
             }
         }
     }
@@ -343,8 +320,10 @@ private fun monthContentDescription(
     when {
         isStartYearMonth ->
             descriptionBuilder.append(stringResource(Res.string.month_range_picker_start_headline_content_description))
+
         isEndYearMonth ->
             descriptionBuilder.append(stringResource(Res.string.month_range_picker_end_headline_content_description))
+
         isInRange ->
             descriptionBuilder.append(stringResource(Res.string.month_range_picker_month_in_range_content_description))
     }
@@ -393,7 +372,11 @@ private fun MonthButton(
         shape = CircleShape,
         color =
             colors
-                .monthContainerColor(selected = selected, enabled = enabled, animate = animateChecked)
+                .monthContainerColor(
+                    selected = selected,
+                    enabled = enabled,
+                    animate = animateChecked
+                )
                 .value,
         contentColor =
             colors
@@ -613,7 +596,8 @@ class MonthRangePickerColors(
 }
 
 private val MonthRangePickerTitlePadding = PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp)
-private val MonthRangePickerHeadlinePadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
+private val MonthRangePickerHeadlinePadding =
+    PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
 internal val RecommendedSizeForAccessibility = 48.dp
 
 const val DurationShort2 = 100.0
