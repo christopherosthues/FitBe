@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
@@ -48,8 +51,8 @@ fun DateRangePickerModal(
     onDismiss: () -> Unit
 ) {
     val dateUnits = DateUnit.entries
-    var selectedDateUnitIndex by remember { mutableStateOf(dateUnits.indexOf(dateUnit)) }
-    var selectedDateUnit by remember { mutableStateOf(dateUnits[selectedDateUnitIndex]) }
+//    var selectedDateUnitIndex by remember { mutableStateOf(dateUnits.indexOf(dateUnit)) }
+    var selectedDateUnit by remember { mutableStateOf(dateUnit) }
     val now = Clock.System.now()
     val dateRangePickerState = rememberDateRangePickerState(
         initialSelectedStartDateMillis = now.toEpochMilliseconds(),
@@ -117,26 +120,21 @@ fun DateRangePickerModal(
         }
     ) {
         Column(modifier = Modifier.padding(top = 16.dp)) {
-            DropdownSelection(
-                initialState = false,
-                selectedIndex = selectedDateUnitIndex,
-                items = dateUnits,
-                title = stringResource(Res.string.chart_grouping),
-                itemContent = { item, onClick ->
-                    DropdownMenuItem(
-                        text = { Text(item.localizedString()) },
-                        onClick = onClick
+            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                dateUnits.forEach {
+                    FilterChip(
+                        selected = selectedDateUnit == it,
+                        onClick = {
+                            selectedDateUnit = it
+                        },
+                        label = {
+                            Text(it.localizedString())
+                        },
+                        modifier = Modifier.padding(horizontal = 8.dp)
                     )
-                },
-                itemToString = {
-                    it.localizedString()
-                },
-                onItemSelected = {
-                    selectedDateUnitIndex = it
-                    selectedDateUnit = dateUnits[selectedDateUnitIndex]
-                },
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+                }
+            }
+
             when (selectedDateUnit) {
                 DateUnit.DAY -> {
                     DateRangePicker(
