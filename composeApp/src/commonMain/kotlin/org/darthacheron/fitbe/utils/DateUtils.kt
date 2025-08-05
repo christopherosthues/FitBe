@@ -23,14 +23,7 @@ import org.darthacheron.fitbe.components.date.week.YearWeek
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {
     return Pair(start.toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC), end.toLocalDateTime(
-        TimeZone.UTC).date.atTime(23, 59, 59, 0).toInstant(TimeZone.UTC))
-}
-
-@OptIn(ExperimentalTime::class)
-fun toDateSpan(end: Instant, dateTimeUnit: DateTimeUnit.DateBased, dateInPast: Int): Pair<Instant, Instant> {
-    return Pair(end.toLocalDateTime(TimeZone.UTC).date.minus(dateInPast, dateTimeUnit).atStartOfDayIn(
-        TimeZone.UTC), end.toLocalDateTime(
-        TimeZone.UTC).date.atTime(23, 59, 59, 0).toInstant(TimeZone.UTC))
+        TimeZone.UTC).date.atTime(23, 59, 59, 999).toInstant(TimeZone.UTC))
 }
 
 fun LocalDate.isoWeekAndYear(): Pair<Int, Int> {
@@ -136,7 +129,7 @@ fun DateRange.plusOne(): DateRange {
         }
         DateUnit.MONTH -> {
             newStartDate = startDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC)
-            newEndDate = newStartDate.lastDayOfMonth()
+            newEndDate = endDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC).lastDayOfMonth()
         }
         DateUnit.YEAR -> {
             newStartDate = startDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)
@@ -162,7 +155,7 @@ fun DateRange.minusOne(): DateRange {
         }
         DateUnit.MONTH -> {
             newStartDate = startDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC)
-            newEndDate = newStartDate.lastDayOfMonth()
+            newEndDate = endDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.UTC).lastDayOfMonth()
         }
         DateUnit.YEAR -> {
             newStartDate = startDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.UTC)

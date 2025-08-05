@@ -132,11 +132,11 @@ private fun DateRangeControl(
                 Column {
                     Text(
                         text =
-                            dateRange.startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                            dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
                     )
                     Text(
                         text =
-                            dateRange.endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                            dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
                     )
                 }
                 Icon(

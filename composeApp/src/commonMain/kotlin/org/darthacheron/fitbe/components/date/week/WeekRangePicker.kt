@@ -78,12 +78,12 @@ data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
     }
 
     fun startDateMillis(): Long {
-        val date = LocalDate.fromYearWeek(year, week, 1)
+        val date = LocalDate.fromYearWeek(year, week, DayOfWeek.MONDAY)
         return date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
     }
 
     fun endDateMillis(): Long {
-        val date = LocalDate.fromYearWeek(year, week, 1)
+        val date = LocalDate.fromYearWeek(year, week, DayOfWeek.MONDAY)
         val endDate = date.plus(DatePeriod(days = 6))
         val endDateTime = endDate.atTime(23, 59, 59, 999)
         return endDateTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
@@ -99,15 +99,14 @@ data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
     override fun toString(): String = "$year-W$week"
 }
 
-fun LocalDate.Companion.fromYearWeek(year: Int, week: Int, dayOfWeek: Int): LocalDate {
+fun LocalDate.Companion.fromYearWeek(year: Int, week: Int, dayOfWeek: DayOfWeek): LocalDate {
     val firstDayOfYear = LocalDate(year, 1, 1)
     val firstThursday = if (firstDayOfYear.dayOfWeek <= DayOfWeek.THURSDAY) {
         firstDayOfYear.plus(DatePeriod(days = DayOfWeek.THURSDAY.isoDayNumber - firstDayOfYear.dayOfWeek.isoDayNumber))
     } else {
         firstDayOfYear.plus(DatePeriod(days = 7 - (firstDayOfYear.dayOfWeek.isoDayNumber - DayOfWeek.THURSDAY.isoDayNumber)))
     }
-    val firstWeek = if (firstDayOfYear.dayOfWeek <= DayOfWeek.THURSDAY) 1 else 0
-    val daysOffset = (week - firstWeek) * 7 + (dayOfWeek - 1)
+    val daysOffset = (week - 1) * 7 + (dayOfWeek.isoDayNumber - 1) - DayOfWeek.THURSDAY.isoDayNumber + 1
     return firstThursday.plus(DatePeriod(days = daysOffset))
 }
 

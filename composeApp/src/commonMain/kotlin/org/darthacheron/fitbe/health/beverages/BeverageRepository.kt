@@ -1,15 +1,12 @@
 package org.darthacheron.fitbe.health.beverages
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -53,7 +50,6 @@ fun BeverageEntity.toDomain(): Beverage {
         id = id,
         profileId = profileId,
         dateUtc = dateUtc,
-//        dateLocal = LocalDate.parse(dateUtc).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
         amount = amount,
         beverage = beverage,
         unit = unit
@@ -67,7 +63,6 @@ fun BeverageEntity?.toDomainOrNull(): Beverage? {
             id = id,
             profileId = profileId,
             dateUtc = dateUtc,
-//            dateLocal = LocalDate.parse(dateUtc).atStartOfDayIn(TimeZone.currentSystemDefault()).toString(),
             amount = it.amount,
             beverage = beverage,
             unit = unit
