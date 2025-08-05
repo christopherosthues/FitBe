@@ -51,42 +51,46 @@ fun WeightOverviewView(
     val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
 
-    Column {
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (!bodyWeights.isEmpty()) {
+            PlotBodyWeights(
+                bodyWeightOverviewViewModel,
+                bodyWeights,
+                settings,
+                maxBodyWeight,
+                false
+            )
+        }
         DateRangeControl(
             dateRange,
-            bodyWeightOverviewViewModel,
+            bodyWeightOverviewViewModel
         )
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (!bodyWeights.isEmpty()) {
-                PlotBodyWeights(bodyWeightOverviewViewModel, bodyWeights, settings, maxBodyWeight, false)
-            }
-            IconButton(
-                onClick = { bodyWeightOverviewViewModel.movePast() },
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_back),
-                    contentDescription = null
-                )
-            }
-            IconButton(
-                onClick = { bodyWeightOverviewViewModel.moveFuture() },
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_forward),
-                    contentDescription = null
-                )
-            }
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = Color(0xFF2196F3),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
-            ) {
-                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
-            }
+        IconButton(
+            onClick = { bodyWeightOverviewViewModel.movePast() },
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_arrow_back),
+                contentDescription = null
+            )
+        }
+        IconButton(
+            onClick = { bodyWeightOverviewViewModel.moveFuture() },
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_arrow_forward),
+                contentDescription = null
+            )
+        }
+        FloatingActionButton(
+            onClick = { showAddDialog = true },
+            containerColor = Color(0xFF2196F3),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+        ) {
+            Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
         }
     }
 
@@ -121,29 +125,28 @@ private fun DateRangeControl(
 ) {
 
     var showDateRangeDialog by remember { mutableStateOf(false) }
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.padding(horizontal = 16.dp)
+    Box(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        contentAlignment = Alignment.TopEnd
     ) {
         TextButton(
+            modifier = Modifier.align(Alignment.TopEnd),
             onClick = { showDateRangeDialog = true },
         ) {
-            Row {
-                Column {
-                    Text(
-                        text =
-                            dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
-                    )
-                    Text(
-                        text =
-                            dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
-                    )
-                }
+            // TODO: Button position
+            Column {
                 Icon(
                     painterResource(Res.drawable.ic_date_range),
                     contentDescription = null,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                        .align(Alignment.CenterVertically)
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 8.dp)
+                )
+                Text(
+                    text =
+                        dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
+                )
+                Text(
+                    text =
+                        dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
                 )
             }
         }

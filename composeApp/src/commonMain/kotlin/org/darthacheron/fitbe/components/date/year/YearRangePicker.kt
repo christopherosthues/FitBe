@@ -269,25 +269,6 @@ private fun YearRangePickerContent(
             }
 
             Spacer(Modifier.height(16.dp))
-
-//        if (!isValid && isComplete) {
-//            Text(
-//                "Range must be 6 years or less.",
-//                color = Color.Red,
-//                style = MaterialTheme.typography.bodySmall,
-//                modifier = Modifier.semantics {
-//                    liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite
-//                }
-//            )
-//        }
-//
-//        Button(
-//            onClick = { orderedStart?.let { start -> orderedEnd?.let { end -> onYearRangeSelectionChange(start, end) } } },
-//            enabled = isValid,
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            Text("Confirm Range")
-//        }
         }
     }
 
@@ -295,7 +276,7 @@ private fun YearRangePickerContent(
     LaunchedEffect(Unit) {
         if (currentYearIndex != -1) {
             coroutineScope.launch {
-                listState.scrollToItem(currentYearIndex / ChunkedYears) // Divide by 4 because the years are chunked into rows of 4
+                listState.scrollToItem(currentYearIndex / ChunkedYears)
             }
         }
     }
