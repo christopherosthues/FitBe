@@ -30,10 +30,10 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.week.WeekRangePicker
 import org.darthacheron.fitbe.components.date.year.Year
 import org.darthacheron.fitbe.components.date.year.YearRangePicker
-import org.darthacheron.fitbe.components.date.YearWeek
 import org.darthacheron.fitbe.components.date.month.MonthRangePicker
 import org.darthacheron.fitbe.components.date.month.YearMonth
 import org.darthacheron.fitbe.components.date.month.rememberMonthRangePickerState
+import org.darthacheron.fitbe.components.date.week.YearWeek
 import org.darthacheron.fitbe.components.date.week.rememberWeekRangePickerState
 import org.darthacheron.fitbe.components.date.year.rememberYearRangePickerState
 import org.darthacheron.fitbe.utils.isoWeekAndYear
@@ -88,8 +88,8 @@ fun DateRangePickerModal(
                             endDateMillis = dateRangePickerState.selectedEndDateMillis
                         }
                         DateUnit.WEEK -> {
-                            startDateMillis = dateRangePickerState.selectedStartDateMillis // TODO
-                            endDateMillis = dateRangePickerState.selectedEndDateMillis
+                            startDateMillis = weekRangePickerState.selectedStartWeek?.startDateMillis() // TODO
+                            endDateMillis = weekRangePickerState.selectedEndWeek?.endDateMillis()
                         }
                         DateUnit.MONTH -> {
                             startDateMillis = monthRangePickerState.selectedStartMonth?.startDateMillis()
@@ -153,7 +153,9 @@ fun DateRangePickerModal(
 
                 DateUnit.WEEK -> {
                     WeekRangePicker(
-                        state = weekRangePickerState
+                        state = weekRangePickerState,
+                        headline = null,
+                        title = null,
 //                        onRangeSelected = { start, end ->
 //                            onDateRangeSelected(
 //                                Pair(start.toEpochMilli(), end.toEpochMilli()),

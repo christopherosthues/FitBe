@@ -77,7 +77,7 @@ data class Year(val value: Int) : Comparable<Year> {
     }
 
     fun endDateMillis(): Long {
-        return LocalDateTime(value, 12, 31, 23, 59, 59).toInstant(TimeZone.UTC)
+        return LocalDateTime(value, 12, 31, 23, 59, 59, 999).toInstant(TimeZone.UTC)
             .toEpochMilliseconds()
     }
 

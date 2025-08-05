@@ -144,4 +144,8 @@
     <string name="month_range_picker_end_headline_content_description">Endmonat</string>
     <string name="month_range_picker_month_in_range_content_description">Monat im ausgewählten Bereich</string>
     <string name="month_range_picker_current_month_content_description">Aktueller Monat</string>
+    <string name="week_range_picker_start_headline_content_description">Startwoche</string>
+    <string name="week_range_picker_end_headline_content_description">Endwoche</string>
+    <string name="week_range_picker_week_in_range_content_description">Woche im ausgewählten Bereich</string>
+    <string name="week_range_picker_current_week_content_description">Aktueller Woche</string>
 </resources>

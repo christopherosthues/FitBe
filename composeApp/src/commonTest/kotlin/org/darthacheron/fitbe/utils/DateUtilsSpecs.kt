@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateRange
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -156,134 +157,164 @@ class DateUtilsSpecs {
     }
 
 
-
     private val baseStart = LocalDate(2024, 2, 15).atStartOfDayIn(TimeZone.UTC)
     private val baseEnd = LocalDate(2024, 2, 16).atStartOfDayIn(TimeZone.UTC)
-    private val pair = baseStart to baseEnd
 
     @Test
     fun testPlusOneDay() {
-        val result = pair.plusOne(DateUnit.DAY)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY)
+        val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 2, 16).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 17).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneDay() {
-        val result = pair.minusOne(DateUnit.DAY)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY)
+        val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 2, 14).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 15).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneWeek() {
-        val result = pair.plusOne(DateUnit.WEEK)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK)
+        val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 2, 22).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 23).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneWeek() {
-        val result = pair.minusOne(DateUnit.WEEK)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK)
+        val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 2, 8).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 9).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneCalendarMonth() {
-        val result = Pair(LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(DateUnit.MONTH)
+        val result = DateRange(
+            LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.MONTH
+        ).plusOne()
         val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneCalendarMonthFebruaryLeapYear() {
-        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(DateUnit.MONTH)
+        val result = DateRange(
+            LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.MONTH
+        ).plusOne()
         val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of March
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneMonth() {
-        val result = pair.plusOne(DateUnit.MONTH)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH)
+        val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 3, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneCalendarMonth() {
-        val result = Pair(LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(DateUnit.MONTH)
+        val result = DateRange(
+            LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.MONTH
+        ).minusOne()
         val expectedStart = LocalDate(2024, 11, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 11, 30).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneCalendarMonthFebruaryLeapYear() {
-        val result = Pair(LocalDate(2024, 3, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(DateUnit.MONTH)
+        val result = DateRange(
+            LocalDate(2024, 3, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.MONTH
+        ).minusOne()
         val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneMonth() {
-        val result = pair.minusOne(DateUnit.MONTH)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH)
+        val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 1, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneCalendarYear() {
-        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).minusOne(DateUnit.YEAR)
+        val result = DateRange(
+            LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.YEAR
+        ).minusOne()
         val expectedStart = LocalDate(2023, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2023, 12, 31).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneYear() {
-        val result = pair.plusOne(DateUnit.YEAR)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR)
+        val result = pair.plusOne()
         val expectedStart = LocalDate(2025, 2, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 2, 16).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testPlusOneCalendarYear() {
-        val result = Pair(LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC), LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC)).plusOne(DateUnit.YEAR)
+        val result = DateRange(
+            LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
+            LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
+            DateUnit.YEAR
+        ).plusOne()
         val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 12, 31).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 
     @Test
     fun testMinusOneYear() {
-        val result = pair.minusOne(DateUnit.YEAR)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR)
+        val result = pair.minusOne()
         val expectedStart = LocalDate(2023, 2, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2023, 2, 16).atStartOfDayIn(TimeZone.UTC)
-        assertEquals(expectedStart, result.first)
-        assertEquals(expectedEnd, result.second)
+        assertEquals(expectedStart, result.startDate)
+        assertEquals(expectedEnd, result.endDate)
     }
 }

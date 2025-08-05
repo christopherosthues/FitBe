@@ -18,7 +18,7 @@ import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.year.Year
 import org.darthacheron.fitbe.components.date.month.YearMonth
-import org.darthacheron.fitbe.components.date.YearWeek
+import org.darthacheron.fitbe.components.date.week.YearWeek
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {

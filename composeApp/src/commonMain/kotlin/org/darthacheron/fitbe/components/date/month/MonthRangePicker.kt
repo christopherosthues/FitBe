@@ -81,7 +81,7 @@ data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
             2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
             else -> throw IllegalArgumentException("Invalid month: $month")
         }
-        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59).toInstant(TimeZone.UTC)
+        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59, 999).toInstant(TimeZone.UTC)
             .toEpochMilliseconds()
     }
 
@@ -237,7 +237,7 @@ private fun MonthRangePickerContent(
                                     val startYearMonthSelected = yearMonth == selectedStartYearMonth
                                     val endYearMonthSelected = yearMonth == selectedEndYearMonth
                                     val isSelected =
-                                        yearMonth == selectedStartYearMonth || yearMonth == selectedEndYearMonth
+                                        yearMonth == selectedStartYearMonth || endYearMonthSelected
                                     val isCurrentYearMonth = currentYearMonth == yearMonth
                                     val dateInMillis = yearMonth.startDateMillis()
                                     val monthContentDescription =
@@ -345,7 +345,7 @@ private fun MonthButton(
     isCurrentYearMonth: Boolean,
     inRange: Boolean,
     description: String,
-    colors: org.darthacheron.fitbe.components.date.month.MonthRangePickerColors,
+    colors: MonthRangePickerColors,
 ) {
     val backgroundModifier = if (inRange && !selected) {
         Modifier
