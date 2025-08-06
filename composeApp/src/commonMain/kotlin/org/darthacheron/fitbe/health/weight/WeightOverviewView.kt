@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +53,7 @@ fun WeightOverviewView(
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (!bodyWeights.isEmpty()) {
@@ -61,10 +65,6 @@ fun WeightOverviewView(
                 false
             )
         }
-        DateRangeControl(
-            dateRange,
-            bodyWeightOverviewViewModel
-        )
         IconButton(
             onClick = { bodyWeightOverviewViewModel.movePast() },
             modifier = Modifier.align(Alignment.CenterStart)
@@ -83,14 +83,24 @@ fun WeightOverviewView(
                 contentDescription = null
             )
         }
-        FloatingActionButton(
-            onClick = { showAddDialog = true },
-            containerColor = Color(0xFF2196F3),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
         ) {
-            Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+            DateRangeControl(
+                dateRange,
+                bodyWeightOverviewViewModel
+            )
+
+            FloatingActionButton(
+                onClick = { showAddDialog = true },
+                containerColor = Color(0xFF2196F3),
+                modifier = Modifier
+                    .padding(16.dp),
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+            }
         }
     }
 
@@ -125,21 +135,12 @@ private fun DateRangeControl(
 ) {
 
     var showDateRangeDialog by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-        contentAlignment = Alignment.TopEnd
+    TextButton(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        onClick = { showDateRangeDialog = true },
     ) {
-        TextButton(
-            modifier = Modifier.align(Alignment.TopEnd),
-            onClick = { showDateRangeDialog = true },
-        ) {
-            // TODO: Button position
+        Row {
             Column {
-                Icon(
-                    painterResource(Res.drawable.ic_date_range),
-                    contentDescription = null,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 8.dp)
-                )
                 Text(
                     text =
                         dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
@@ -149,8 +150,12 @@ private fun DateRangeControl(
                         dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
                 )
             }
+            Icon(
+                painterResource(Res.drawable.ic_date_range),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 8.dp)
+            )
         }
-
     }
 
     if (showDateRangeDialog) {

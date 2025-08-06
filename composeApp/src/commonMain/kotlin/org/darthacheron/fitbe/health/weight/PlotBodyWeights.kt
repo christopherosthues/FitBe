@@ -51,6 +51,7 @@ import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYAnnotation
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.XYGraphScope
+import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.settings.Settings
@@ -75,7 +76,7 @@ fun PlotBodyWeights(
     maxWeight: Double,
     thumbnail: Boolean
 ) {
-    ChartLayout {
+    ChartLayout(modifier = Modifier.padding(bottom = 32.dp)) {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
         val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
@@ -103,6 +104,7 @@ fun PlotBodyWeights(
                     )
                 }
             },
+            xAxisStyle = rememberAxisStyle(labelRotation = 45),
             xAxisTitle = { },
             yAxisLabels = {
                 if (!thumbnail) {
@@ -112,7 +114,7 @@ fun PlotBodyWeights(
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
+                        maxLines = 1,
                     )
                 }
             },
