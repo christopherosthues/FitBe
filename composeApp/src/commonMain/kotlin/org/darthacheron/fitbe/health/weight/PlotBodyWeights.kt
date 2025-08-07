@@ -57,6 +57,7 @@ import org.darthacheron.fitbe.components.DateUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 @Suppress("MagicNumber")
 private val colorPalette = listOf(
@@ -76,10 +77,31 @@ fun PlotBodyWeights(
     maxWeight: Double,
     thumbnail: Boolean
 ) {
-    ChartLayout(modifier = Modifier.padding(bottom = 32.dp)) {
+    ChartLayout(modifier = Modifier.padding(bottom = 64.dp)) {
         val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
         val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
         val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
+
+        val maxConfigurableLabels = 7
+        val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
+            emptySet()
+        } else if (dates.size <= maxConfigurableLabels) {
+            dates.toSet()
+        } else { // dates.size > maxConfigurableLabels (which is 7)
+            val selectedDates = mutableSetOf<LocalDate>()
+            // maxConfigurableLabels is 7, so maxConfigurableLabels - 1 is 6 (not zero).
+            // dates.size > 7, so dates.size - 1 is at least 7.
+            for (i in 0 until maxConfigurableLabels) { // Loop i from 0 to 6
+                // Calculate the ideal proportional position from 0.0 to 1.0
+                val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
+                // Map this ratio to an index in the 'dates' list
+                val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
+                // Add the date at the calculated index, ensuring it's within bounds
+                selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
+            }
+            selectedDates
+        }
+
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
@@ -87,14 +109,14 @@ fun PlotBodyWeights(
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
             verticalMinorGridLineStyle = null,
-            xAxisLabels = {
-                if (!thumbnail) {
+            xAxisLabels = { labelDate ->
+                if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
                         when (dateRange.dateUnit) {
-                            DateUnit.DAY -> it.toString()
-                            DateUnit.WEEK -> "W${it.isoWeekAndYear().second}/${it.year}"
-                            DateUnit.MONTH -> "${it.month}/${it.year}"
-                            DateUnit.YEAR -> it.year.toString()
+                            DateUnit.DAY -> labelDate.toString()
+                            DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
+                            DateUnit.MONTH -> "${labelDate.month}/${labelDate.year}"
+                            DateUnit.YEAR -> labelDate.year.toString()
                         },
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,

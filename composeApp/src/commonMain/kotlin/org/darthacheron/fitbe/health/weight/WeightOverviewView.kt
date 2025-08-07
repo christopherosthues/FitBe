@@ -136,7 +136,7 @@ private fun DateRangeControl(
 
     var showDateRangeDialog by remember { mutableStateOf(false) }
     TextButton(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(16.dp),
         onClick = { showDateRangeDialog = true },
     ) {
         Row {
