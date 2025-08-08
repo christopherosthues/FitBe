@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.components
+package org.darthacheron.fitbe.components.date
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -19,10 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.timer_dialog_cancel
+import fitbe.composeapp.generated.resources.timer_dialog_ok
+import fitbe.composeapp.generated.resources.timer_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AdvancedTimePickerDialog(
-    title: String = "Select Time",
+    title: String = stringResource(Res.string.timer_dialog_title),
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     toggle: @Composable () -> Unit = {},
@@ -63,8 +68,8 @@ fun AdvancedTimePickerDialog(
                 ) {
                     toggle()
                     Spacer(modifier = Modifier.weight(1f))
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
-                    TextButton(onClick = onConfirm) { Text("OK") }
+                    TextButton(onClick = onDismiss) { Text(text = stringResource(Res.string.timer_dialog_cancel)) }
+                    TextButton(onClick = onConfirm) { Text(text = stringResource(Res.string.timer_dialog_ok)) }
                 }
             }
         }

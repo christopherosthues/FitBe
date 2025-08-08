@@ -17,7 +17,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.time.Duration.Companion.days

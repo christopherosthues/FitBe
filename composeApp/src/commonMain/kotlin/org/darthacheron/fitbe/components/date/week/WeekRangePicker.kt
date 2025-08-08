@@ -553,7 +553,7 @@ object WeekRangePickerDefaults {
         )
     }
 
-    /** A default [SelectableMonths] that allows all dates to be selected. */
+    /** A default [SelectableWeeks] that allows all dates to be selected. */
     val AllDates: SelectableWeeks = object : SelectableWeeks {}
 }
 

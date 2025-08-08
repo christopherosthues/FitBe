@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.components
+package org.darthacheron.fitbe.components.date
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePicker

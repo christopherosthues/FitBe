@@ -14,7 +14,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
-import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.year.Year
 import org.darthacheron.fitbe.components.date.month.YearMonth

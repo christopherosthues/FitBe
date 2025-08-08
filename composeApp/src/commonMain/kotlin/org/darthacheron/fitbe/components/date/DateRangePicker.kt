@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.components
+package org.darthacheron.fitbe.components.date
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DisplayMode
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
@@ -25,20 +24,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.chart_grouping
-import org.darthacheron.fitbe.utils.PastOrPresentSelectableDates
+import fitbe.composeapp.generated.resources.date_range_picker_cancel
+import fitbe.composeapp.generated.resources.date_range_picker_ok
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.week.WeekRangePicker
-import org.darthacheron.fitbe.components.date.year.Year
-import org.darthacheron.fitbe.components.date.year.YearRangePicker
 import org.darthacheron.fitbe.components.date.month.MonthRangePicker
 import org.darthacheron.fitbe.components.date.month.YearMonth
 import org.darthacheron.fitbe.components.date.month.rememberMonthRangePickerState
+import org.darthacheron.fitbe.components.date.week.WeekRangePicker
 import org.darthacheron.fitbe.components.date.week.YearWeek
 import org.darthacheron.fitbe.components.date.week.rememberWeekRangePickerState
+import org.darthacheron.fitbe.components.date.year.Year
+import org.darthacheron.fitbe.components.date.year.YearRangePicker
 import org.darthacheron.fitbe.components.date.year.rememberYearRangePickerState
+import org.darthacheron.fitbe.components.date.PastOrPresentSelectableDates
+import org.darthacheron.fitbe.components.date.month.PastOrPresentSelectableMonths
+import org.darthacheron.fitbe.components.date.week.PastOrPresentSelectableWeeks
+import org.darthacheron.fitbe.components.date.year.PastOrPresentSelectableYears
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
@@ -51,7 +54,6 @@ fun DateRangePickerModal(
     onDismiss: () -> Unit
 ) {
     val dateUnits = DateUnit.entries
-//    var selectedDateUnitIndex by remember { mutableStateOf(dateUnits.indexOf(dateUnit)) }
     var selectedDateUnit by remember { mutableStateOf(dateUnit) }
     val now = Clock.System.now()
     val dateRangePickerState = rememberDateRangePickerState(
@@ -64,16 +66,19 @@ fun DateRangePickerModal(
     val weekRangePickerState = rememberWeekRangePickerState(
         initialSelectedStartYearWeek = YearWeek(initialWeek.first, initialWeek.second),
         initialSelectedEndYearWeek = YearWeek(initialWeek.first, initialWeek.second),
+        selectableWeeks = PastOrPresentSelectableWeeks
     )
     val initialMonth = now.toLocalDateTime(TimeZone.UTC).date.monthNumber
     val initialYear = now.toLocalDateTime(TimeZone.UTC).date.year
     val monthRangePickerState = rememberMonthRangePickerState(
         initialSelectedStartYearMonth = YearMonth(initialYear, initialMonth),
         initialSelectedEndYearMonth = YearMonth(initialYear, initialMonth),
+        selectableMonths = PastOrPresentSelectableMonths
     )
     val yearRangePickerState = rememberYearRangePickerState(
         initialSelectedStartYear = Year(initialYear),
         initialSelectedEndYear = Year(initialYear),
+        selectableYears = PastOrPresentSelectableYears
     )
 
     DatePickerDialog(
@@ -82,7 +87,6 @@ fun DateRangePickerModal(
         confirmButton = {
             TextButton(
                 onClick = {
-                    // TODO
                     var startDateMillis: Long?
                     var endDateMillis: Long?
                     when (selectedDateUnit) {
@@ -91,7 +95,7 @@ fun DateRangePickerModal(
                             endDateMillis = dateRangePickerState.selectedEndDateMillis
                         }
                         DateUnit.WEEK -> {
-                            startDateMillis = weekRangePickerState.selectedStartWeek?.startDateMillis() // TODO
+                            startDateMillis = weekRangePickerState.selectedStartWeek?.startDateMillis()
                             endDateMillis = weekRangePickerState.selectedEndWeek?.endDateMillis()
                         }
                         DateUnit.MONTH -> {
@@ -110,12 +114,12 @@ fun DateRangePickerModal(
                     onDismiss()
                 }
             ) {
-                Text("OK")
+                Text(text = stringResource(Res.string.date_range_picker_ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(text = stringResource(Res.string.date_range_picker_cancel))
             }
         }
     ) {
@@ -154,13 +158,6 @@ fun DateRangePickerModal(
                         state = weekRangePickerState,
                         headline = null,
                         title = null,
-//                        onRangeSelected = { start, end ->
-//                            onDateRangeSelected(
-//                                Pair(start.toEpochMilli(), end.toEpochMilli()),
-//                                selectedDateUnit
-//                            )
-//                            onDismiss()
-//                        }
                     )
                 }
 
@@ -169,13 +166,6 @@ fun DateRangePickerModal(
                         state = monthRangePickerState,
                         headline = null,
                         title = null,
-//                        onRangeSelected = { start, end ->
-//                            onDateRangeSelected(
-//                                Pair(start.toEpochMilli(), end.toEpochMilli()),
-//                                selectedDateUnit
-//                            )
-//                            onDismiss()
-//                        }
                     )
                 }
 
@@ -184,13 +174,6 @@ fun DateRangePickerModal(
                         state = yearRangePickerState,
                         headline = null,
                         title = null,
-//                        onRangeSelected = { start, end ->
-//                            onDateRangeSelected(
-//                                Pair(start.toEpochMilli(), end.toEpochMilli()),
-//                                selectedDateUnit
-//                            )
-//                            onDismiss()
-//                        }
                     )
                 }
             }

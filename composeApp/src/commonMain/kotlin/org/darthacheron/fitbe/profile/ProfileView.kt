@@ -1,8 +1,6 @@
 package org.darthacheron.fitbe.profile
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,17 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -28,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,8 +39,6 @@ import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
-import fitbe.composeapp.generated.resources.ic_profile
-import fitbe.composeapp.generated.resources.ic_profile_selected
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_add
@@ -81,9 +70,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.DatePickerModal
+import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
-import org.darthacheron.fitbe.components.TimeInputDialog
+import org.darthacheron.fitbe.components.date.TimeInputDialog
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.BodyHeightValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator

@@ -42,7 +42,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.DatePickerModal
+import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.painterResource

@@ -3,7 +3,7 @@ package org.darthacheron.fitbe.utils
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
 import kotlin.test.Test
 import kotlin.test.assertEquals

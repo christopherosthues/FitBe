@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.components.DateUnit
+import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings

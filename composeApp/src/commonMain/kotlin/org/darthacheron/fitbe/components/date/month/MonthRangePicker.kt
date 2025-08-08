@@ -47,9 +47,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.month_range_picker_april
+import fitbe.composeapp.generated.resources.month_range_picker_august
 import fitbe.composeapp.generated.resources.month_range_picker_current_month_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_december
 import fitbe.composeapp.generated.resources.month_range_picker_end_headline_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_february
+import fitbe.composeapp.generated.resources.month_range_picker_january
+import fitbe.composeapp.generated.resources.month_range_picker_july
+import fitbe.composeapp.generated.resources.month_range_picker_june
+import fitbe.composeapp.generated.resources.month_range_picker_march
+import fitbe.composeapp.generated.resources.month_range_picker_may
 import fitbe.composeapp.generated.resources.month_range_picker_month_in_range_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_november
+import fitbe.composeapp.generated.resources.month_range_picker_october
+import fitbe.composeapp.generated.resources.month_range_picker_september
 import fitbe.composeapp.generated.resources.month_range_picker_start_headline_content_description
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -305,8 +317,9 @@ private fun MonthRangePickerContent(
     }
 }
 
+@Composable
 fun formatYearMonth(yearMonth: YearMonth): String {
-    return "${MonthNames[yearMonth.month - 1]} ${yearMonth.year}"
+    return "${stringResource(MonthNames[yearMonth.month - 1])} ${yearMonth.year}"
 }
 
 @Composable
@@ -406,7 +419,7 @@ private fun MonthButton(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = MonthNames[yearMonth.month - 1],
+                text = stringResource(MonthNames[yearMonth.month - 1]),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.clearAndSetSemantics {}
             )
@@ -460,8 +473,18 @@ private fun MonthEntryContainer(
 object MonthRangePickerDefaults {
     val YearRange: IntRange = IntRange(2000, 2999)
     val MonthNames = listOf(
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        Res.string.month_range_picker_january,
+        Res.string.month_range_picker_february,
+        Res.string.month_range_picker_march,
+        Res.string.month_range_picker_april,
+        Res.string.month_range_picker_may,
+        Res.string.month_range_picker_june,
+        Res.string.month_range_picker_july,
+        Res.string.month_range_picker_august,
+        Res.string.month_range_picker_september,
+        Res.string.month_range_picker_october,
+        Res.string.month_range_picker_november,
+        Res.string.month_range_picker_december,
     )
 
     @Composable
