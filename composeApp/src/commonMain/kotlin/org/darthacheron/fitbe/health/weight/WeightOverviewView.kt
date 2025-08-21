@@ -52,7 +52,6 @@ fun WeightOverviewView(
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (!bodyWeights.isEmpty()) {
