@@ -54,7 +54,7 @@ fun BeverageView(beverageViewModel: BeverageViewModel) {
     ) {
         stickyHeader {
             Column(
-                modifier = Modifier.padding(top = 100.dp, start = 16.dp, end = 16.dp, bottom = 16.dp).fillMaxSize(),
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp).fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

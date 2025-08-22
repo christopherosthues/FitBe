@@ -28,12 +28,12 @@ class BeverageViewModel(
             val profileId = settings.selectedProfileId
             if (profileId != null) {
                 profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetSteps ?: ProfileDefaults.STEPS }
+                    .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
             } else {
-                flowOf(ProfileDefaults.STEPS)
+                flowOf(ProfileDefaults.BEVERAGE)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
     @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
     val todayIntake: Flow<List<Beverage>> = settingsRepository.getSettingsFlow().flatMapLatest {
@@ -42,7 +42,7 @@ class BeverageViewModel(
 
     val todayProgress: StateFlow<Double> = combine(todayIntake, targetSteps) {
         todayIntake, targetSteps ->
-        todayIntake.sumOf { it.unit.toMilliliter(it.amount) } * 100 / targetSteps.toDouble()
+        todayIntake.sumOf { it.unit.toMilliliter(it.amount) } / targetSteps.toDouble()
     }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     @OptIn(ExperimentalUuidApi::class)
