@@ -51,16 +51,21 @@ fun WeightOverviewView(
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
     val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
+
+    val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
+    val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (!bodyWeights.isEmpty()) {
             PlotBodyWeights(
-                bodyWeightOverviewViewModel,
                 bodyWeights,
+                dateRange,
+                dates,
                 settings,
                 maxBodyWeight,
-                false
+                false,
+                targetWeight,
             )
         }
         IconButton(

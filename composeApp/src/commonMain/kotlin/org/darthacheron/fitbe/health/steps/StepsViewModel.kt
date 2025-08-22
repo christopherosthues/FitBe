@@ -33,9 +33,9 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class StepsViewModel(
-    val stepsRepository: StepsRepository,
-    val settingsRepository: SettingsRepository,
-    val profileRepository: ProfileRepository
+    private val stepsRepository: StepsRepository,
+    private val settingsRepository: SettingsRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
     private val _dateRange = MutableStateFlow(
         DateRange(

@@ -44,7 +44,9 @@ import fitbe.composeapp.generated.resources.month_october
 import fitbe.composeapp.generated.resources.month_september
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
 import io.github.koalaplot.core.bar.StackedVerticalBarPlot
+import io.github.koalaplot.core.bar.VerticalBarPlotStackedPointEntry
 import io.github.koalaplot.core.line.AreaBaseline
 import io.github.koalaplot.core.line.LinePlot
 import io.github.koalaplot.core.line.StackedAreaPlot
@@ -66,11 +68,14 @@ import io.github.koalaplot.core.xygraph.XYGraphScope
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 @Suppress("MagicNumber")
@@ -85,17 +90,15 @@ private val colorPalette = listOf(
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun PlotBodyWeights(
-    bodyWeightOverviewViewModel: WeightOverviewViewModel,
     bodyWeights: List<BodyWeight>,
+    dateRange: DateRange,
+    dates: List<LocalDate>,
     settings: Settings,
     maxWeight: Double,
-    thumbnail: Boolean
+    thumbnail: Boolean = false,
+    targetWeight: Double? = null,
 ) {
     ChartLayout(modifier = Modifier.padding(bottom = 64.dp)) {
-        val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
-        val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
-        val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
-
         val maxConfigurableLabels = 7
         val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
             emptySet()
@@ -172,7 +175,7 @@ fun PlotBodyWeights(
         ) {
             if (dates.size > 1) {
                 val yData =
-                    bodyWeightOverviewViewModel.toVerticalStackedAreaBodyWeightData(bodyWeights)
+                    toVerticalStackedAreaBodyWeightData(bodyWeights)
                 StackedAreaPlot(
                     data = StackedAreaPlotDoubleDataAdapter(dates, yData),
                     styles = colorPalette.map {
@@ -186,7 +189,7 @@ fun PlotBodyWeights(
                 Annotations(dates, yData, thumbnail)
             } else if (dates.size == 1) {
                 StackedVerticalBarPlot(
-                    data = bodyWeightOverviewViewModel.toVerticalStackedBodyWeightData(bodyWeights),
+                    data = toVerticalStackedBodyWeightData(bodyWeights),
                     barWidth = 0.8f,
                     bar = { xIndex, barIndex ->
                         DefaultVerticalBar(
@@ -338,4 +341,70 @@ private fun XYGraphScope<LocalDate, Double>.Annotations(
             }
         }
     }
+}
+
+private fun toVerticalStackedBodyWeightData(
+    bodyWeights: List<BodyWeight>
+): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
+    val bodyWeightEntries = bodyWeights.map { bodyWeight ->
+        val totalWeight = bodyWeight.weightInKg
+
+        val boneMass = bodyWeight.boneMassInKg ?: 0.0
+        val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
+        val bodyFat =
+            (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(
+                2
+            )
+        val bodyWater =
+            (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(
+                2
+            )
+        DefaultVerticalBarPlotStackedPointEntry(
+            bodyWeight.dateUtc, 0.0, listOf(
+                boneMass,
+                boneMass + muscleMass,
+                boneMass + muscleMass + bodyFat,
+                boneMass + muscleMass + bodyFat + bodyWater,
+                totalWeight
+            )
+        )
+    }
+
+    return bodyWeightEntries
+}
+
+private fun toVerticalStackedAreaBodyWeightData(
+    bodyWeights: List<BodyWeight>
+): List<List<Double>> {
+    val totalWeights = mutableListOf<Double>()
+    val boneMasses = mutableListOf<Double>()
+    val muscleMasses = mutableListOf<Double>()
+    val bodyFats = mutableListOf<Double>()
+    val bodyWaters = mutableListOf<Double>()
+    for (bodyWeight in bodyWeights) {
+        val totalWeight = bodyWeight.weightInKg
+
+        val boneMass = bodyWeight.boneMassInKg ?: 0.0
+        val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
+        val bodyFat =
+            (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(
+                2
+            )
+        val bodyWater =
+            (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(
+                2
+            )
+        val restWeight = max(
+            totalWeight - boneMass - muscleMass - bodyFat - bodyWater, 0.0
+        ).roundToDecimals(2)
+
+        boneMasses.add(boneMass)
+        muscleMasses.add(muscleMass)
+        bodyFats.add(bodyFat)
+        bodyWaters.add(bodyWater)
+        totalWeights.add(restWeight)
+    }
+    return listOf(
+        boneMasses, muscleMasses, bodyFats, bodyWaters, totalWeights
+    )
 }

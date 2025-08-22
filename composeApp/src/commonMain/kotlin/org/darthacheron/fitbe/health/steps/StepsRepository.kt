@@ -12,7 +12,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class StepsRepository(val stepsDao: StepsDao) {
+class StepsRepository(private val stepsDao: StepsDao) {
     fun getSteps(startDate: Instant,
                  endDate: Instant,
                  profileId: Uuid): Flow<List<Steps>> {

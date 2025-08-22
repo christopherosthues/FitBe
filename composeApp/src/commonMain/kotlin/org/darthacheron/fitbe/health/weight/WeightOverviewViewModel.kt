@@ -56,8 +56,6 @@ class WeightOverviewViewModel(
 
     val dateRange: StateFlow<DateRange> = _dateRange
 
-    val maxWeight: StateFlow<Double> = _maxWeight
-
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -90,6 +88,12 @@ class WeightOverviewViewModel(
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
+
+    val maxWeight: StateFlow<Double> = bodyWeights.map { bodyWeights ->
+                bodyWeights.maxOfOrNull { it.weightInKg }
+                    ?.roundUpToNextTen()
+                    ?.roundToDecimals(2) ?: 600.0
+            }.stateIn(viewModelScope, SharingStarted.Lazily, 600.0)
 
     private fun mapDay(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
         return bodyWeights.map {
@@ -187,7 +191,7 @@ class WeightOverviewViewModel(
     }
 
     private fun mapYear(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        return bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year }
+        val mappedWeights = bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year }
             .map { bodyWeightDateMap ->
                 var totalWeight = 0.0
                 var boneMass = 0.0
@@ -223,6 +227,8 @@ class WeightOverviewViewModel(
                     bodyWaterInPercentage = bodyWater / bodyWeightDateMap.value.size,
                 )
             }
+
+        return mappedWeights
     }
 
     fun movePast() {
@@ -233,81 +239,6 @@ class WeightOverviewViewModel(
     fun moveFuture() {
         val range = dateRange.value.plusOne()
         setRange(range)
-    }
-
-    fun toVerticalStackedBodyWeightData(
-        bodyWeights: List<BodyWeight>
-    ): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
-        var maxWeight = 0.0
-
-        val bodyWeightEntries = bodyWeights.map { bodyWeight ->
-            val totalWeight = bodyWeight.weightInKg
-            maxWeight = max(maxWeight, totalWeight)
-
-            val boneMass = bodyWeight.boneMassInKg ?: 0.0
-            val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
-            val bodyFat =
-                (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(
-                    2
-                )
-            val bodyWater =
-                (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(
-                    2
-                )
-            DefaultVerticalBarPlotStackedPointEntry(
-                bodyWeight.dateUtc, 0.0, listOf(
-                    boneMass,
-                    boneMass + muscleMass,
-                    boneMass + muscleMass + bodyFat,
-                    boneMass + muscleMass + bodyFat + bodyWater,
-                    totalWeight
-                )
-            )
-        }
-
-        _maxWeight.value = maxWeight.roundUpToNextTen().roundToDecimals(2)
-
-        return bodyWeightEntries
-    }
-
-    fun toVerticalStackedAreaBodyWeightData(
-        bodyWeights: List<BodyWeight>
-    ): List<List<Double>> {
-        val totalWeights = mutableListOf<Double>()
-        val boneMasses = mutableListOf<Double>()
-        val muscleMasses = mutableListOf<Double>()
-        val bodyFats = mutableListOf<Double>()
-        val bodyWaters = mutableListOf<Double>()
-        var maxWeight = 0.0
-        for (bodyWeight in bodyWeights) {
-            val totalWeight = bodyWeight.weightInKg
-            maxWeight = max(maxWeight, totalWeight)
-
-            val boneMass = bodyWeight.boneMassInKg ?: 0.0
-            val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
-            val bodyFat =
-                (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(
-                    2
-                )
-            val bodyWater =
-                (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(
-                    2
-                )
-            val restWeight = max(
-                totalWeight - boneMass - muscleMass - bodyFat - bodyWater, 0.0
-            ).roundToDecimals(2)
-
-            boneMasses.add(boneMass)
-            muscleMasses.add(muscleMass)
-            bodyFats.add(bodyFat)
-            bodyWaters.add(bodyWater)
-            totalWeights.add(restWeight)
-
-            _maxWeight.value = maxWeight.roundUpToNextTen().roundToDecimals(2)
-        }
-        return listOf(
-            boneMasses, muscleMasses, bodyFats, bodyWaters, totalWeights
-        )
     }
 
     fun dates(bodyWeights: List<BodyWeight>): List<LocalDate> {
