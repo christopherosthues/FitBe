@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.weight
+package org.darthacheron.fitbe.utils
 
 import io.github.koalaplot.core.line.StackedAreaPlotEntry
 

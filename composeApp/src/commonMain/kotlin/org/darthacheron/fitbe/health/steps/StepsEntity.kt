@@ -21,7 +21,7 @@ data class StepsEntity(
         return Steps(
             id = id,
             profileId = profileId,
-            steps = steps,
+            steps = steps.toUInt(),
             dateUtc = dateUtc,
         )
     }
@@ -33,7 +33,7 @@ fun toEntity(steps: Steps): StepsEntity {
     return StepsEntity(
         id = steps.id,
         profileId = steps.profileId,
-        steps = steps.steps,
+        steps = steps.steps.toInt(),
         dateUtc = steps.dateUtc,
     )
 }

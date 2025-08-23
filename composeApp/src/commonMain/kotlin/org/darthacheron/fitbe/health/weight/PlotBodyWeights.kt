@@ -71,6 +71,7 @@ import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.Settings
+import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource

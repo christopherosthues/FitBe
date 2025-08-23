@@ -106,7 +106,7 @@ class StepsViewModel(
                     id = Uuid.random(),
                     dateUtc = representativeDateSelector(group),
                     profileId = group.first().profileId,
-                    steps = avgSteps.roundToInt(),
+                    steps = avgSteps.roundToInt().toUInt(),
                 )
             }
     }

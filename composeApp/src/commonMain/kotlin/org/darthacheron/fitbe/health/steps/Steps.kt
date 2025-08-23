@@ -8,6 +8,6 @@ import kotlin.uuid.Uuid
 data class Steps(
     val id: Uuid,
     val profileId: Uuid,
-    val steps: Int,
+    val steps: UInt,
     val dateUtc: LocalDate
 )
