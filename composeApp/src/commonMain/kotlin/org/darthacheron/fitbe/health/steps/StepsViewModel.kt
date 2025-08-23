@@ -20,13 +20,17 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.weight.BodyWeight
 import org.darthacheron.fitbe.profile.ProfileRepository
+import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
+import org.darthacheron.fitbe.utils.roundToDecimals
+import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -84,55 +88,53 @@ class StepsViewModel(
         return steps
     }
 
-    private fun mapWeek(
-        stepList: List<Steps>,
-    ): List<Steps> = stepList.groupBy { step -> step.dateUtc.isoWeekAndYear() }
-        .map { stepsDateMap ->
-            var steps = 0
-            stepsDateMap.value.forEach {
-                steps += it.steps
-            }
+    private fun <K> aggregateStepsByPeriod(
+        steps: List<Steps>,
+        groupKeySelector: (Steps) -> K,
+        representativeDateSelector: (List<Steps>) -> LocalDate
+    ): List<Steps> {
+        if (steps.isEmpty()) return emptyList()
 
-            Steps(
-                id = Uuid.random(),
-                dateUtc = stepsDateMap.value.first().dateUtc.firstDayOfIsoWeek(),
-                profileId = stepsDateMap.value.first().profileId,
-                steps = steps / stepsDateMap.value.size,
-            )
-        }
+        return steps.groupBy(groupKeySelector)
+            .mapNotNull { (_, group) ->
+                if (group.isEmpty()) return@mapNotNull null
 
-    private fun mapMonth(stepsList: List<Steps>): List<Steps> {
-        return stepsList.groupBy { step -> step.dateUtc.year to step.dateUtc.month }
-            .map { stepsDateMap ->
-                var steps = 0
-                stepsDateMap.value.forEach {
-                    steps += it.steps
-                }
+                val groupSize = group.size
+                val avgSteps = group.sumOf { it.steps }.toDouble() / groupSize
 
                 Steps(
                     id = Uuid.random(),
-                    dateUtc = stepsDateMap.value.first().dateUtc.firstDayOfMonth(),
-                    profileId = stepsDateMap.value.first().profileId,
-                    steps = steps / stepsDateMap.value.size,
+                    dateUtc = representativeDateSelector(group),
+                    profileId = group.first().profileId,
+                    steps = avgSteps.roundToInt(),
                 )
             }
     }
 
-    private fun mapYear(stepsList: List<Steps>): List<Steps> {
-        return stepsList.groupBy { step -> step.dateUtc.year }
-            .map { stepsDateMap ->
-                var steps = 0
-                stepsDateMap.value.forEach {
-                    steps += it.steps
-                }
+    private fun mapWeek(
+        stepList: List<Steps>,
+    ): List<Steps> {
+        return aggregateStepsByPeriod(
+            steps = stepList,
+            groupKeySelector = { it.dateUtc.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
+        )
+    }
 
-                Steps(
-                    id = Uuid.random(),
-                    dateUtc = stepsDateMap.value.first().dateUtc.firstDayOfYear(),
-                    profileId = stepsDateMap.value.first().profileId,
-                    steps = steps / stepsDateMap.value.size,
-                )
-            }
+    private fun mapMonth(stepsList: List<Steps>): List<Steps> {
+        return aggregateStepsByPeriod(
+            steps = stepsList,
+            groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
+        )
+    }
+
+    private fun mapYear(stepsList: List<Steps>): List<Steps> {
+        return aggregateStepsByPeriod(
+            steps = stepsList,
+            groupKeySelector = { it.dateUtc.year },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
+        )
     }
 
     fun movePast() {
