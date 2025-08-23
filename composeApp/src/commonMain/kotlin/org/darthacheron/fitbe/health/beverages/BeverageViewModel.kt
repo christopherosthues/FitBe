@@ -17,7 +17,7 @@ import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class BeverageViewModel(
     private val repository: BeverageRepository,
     private val settingsRepository: SettingsRepository,

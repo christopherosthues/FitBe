@@ -59,6 +59,7 @@ fun WeightOverviewView(
     Box(modifier = Modifier.fillMaxSize()) {
         if (!bodyWeights.isEmpty()) {
             PlotBodyWeights(
+                Modifier.padding(bottom = 64.dp),
                 bodyWeights,
                 dateRange,
                 dates,

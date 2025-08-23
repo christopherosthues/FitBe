@@ -23,6 +23,8 @@ import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
+import org.darthacheron.fitbe.health.steps.StepsDao
+import org.darthacheron.fitbe.health.steps.StepsEntity
 import org.darthacheron.fitbe.health.weight.BodyWeight
 import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
@@ -35,7 +37,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 @Database(
-    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class],
+    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class, StepsEntity::class],
     version = 1
 )
 @TypeConverters(
@@ -49,6 +51,7 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val sleepDao: SleepDao
     abstract val bodyWeightDao: BodyWeightDao
     abstract val profileDao: ProfileDao
+    abstract val stepsDao: StepsDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

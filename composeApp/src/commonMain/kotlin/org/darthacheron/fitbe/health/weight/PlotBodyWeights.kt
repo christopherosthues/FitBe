@@ -90,6 +90,7 @@ private val colorPalette = listOf(
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun PlotBodyWeights(
+    modifier: Modifier = Modifier,
     bodyWeights: List<BodyWeight>,
     dateRange: DateRange,
     dates: List<LocalDate>,
@@ -98,7 +99,7 @@ fun PlotBodyWeights(
     thumbnail: Boolean = false,
     targetWeight: Double? = null,
 ) {
-    ChartLayout(modifier = Modifier.padding(bottom = 64.dp)) {
+    ChartLayout(modifier = modifier) {
         val maxConfigurableLabels = 7
         val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
             emptySet()

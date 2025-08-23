@@ -273,7 +273,7 @@ private fun WeekRangePickerContent(
                                         modifier = Modifier,
                                         selected = isSelected,
                                         onClick = {
-                                            if (selectedStartYearWeek == null || (selectedStartYearWeek != null && selectedEndYearWeek != null)) {
+                                            if (selectedStartYearWeek == null || selectedEndYearWeek != null) {
                                                 onWeekRangeSelectionChange(yw, null)
                                             } else {
                                                 onWeekRangeSelectionChange(

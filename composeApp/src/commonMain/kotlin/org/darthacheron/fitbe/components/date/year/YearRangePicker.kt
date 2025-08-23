@@ -234,7 +234,7 @@ private fun YearRangePickerContent(
                                 modifier = Modifier,
                                 selected = isSelected,
                                 onClick = {
-                                    if (selectedStartYear == null || (selectedStartYear != null && selectedEndYear != null)) {
+                                    if (selectedStartYear == null || selectedEndYear != null) {
                                         onYearRangeSelectionChange(year, null)
                                     } else {
                                         onYearRangeSelectionChange(selectedStartYear, year)

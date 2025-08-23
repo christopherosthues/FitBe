@@ -11,4 +11,5 @@ object ProfileDefaults {
     val SLEEP_DURATION = LocalTime(8, 0)
     const val STEPS = 10000u
     const val BODY_HEIGHT_IN_CM = 170.0
+    const val MAX_BODY_WEIGHT = 600.0
 }

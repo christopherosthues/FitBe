@@ -50,7 +50,8 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
             }
             composable<Screen.Health> {
                 val viewModel = koinViewModel<HealthOverviewViewModel>()
-                HealthOverviewView(viewModel, navHostController)
+                val settingsRepository = getKoin().get<SettingsRepository>()
+                HealthOverviewView(viewModel, settingsRepository, navHostController)
             }
             composable<Screen.Profile> {
                 val viewModel = koinViewModel<ProfileViewModel>()

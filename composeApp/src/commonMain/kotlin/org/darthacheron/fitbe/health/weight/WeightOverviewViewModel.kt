@@ -19,6 +19,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.date.DateRange
+import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -37,7 +38,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class WeightOverviewViewModel(
     private val bodyWeightRepository: BodyWeightRepository,
     private val settingsRepository: SettingsRepository,
@@ -51,8 +52,6 @@ class WeightOverviewViewModel(
             DateUnit.DAY
         )
     )
-
-    private val _maxWeight = MutableStateFlow(600.0) // TODO extract default max weight
 
     val dateRange: StateFlow<DateRange> = _dateRange
 
@@ -92,143 +91,104 @@ class WeightOverviewViewModel(
     val maxWeight: StateFlow<Double> = bodyWeights.map { bodyWeights ->
                 bodyWeights.maxOfOrNull { it.weightInKg }
                     ?.roundUpToNextTen()
-                    ?.roundToDecimals(2) ?: 600.0
-            }.stateIn(viewModelScope, SharingStarted.Lazily, 600.0)
+                    ?.roundToDecimals(2) ?: ProfileDefaults.MAX_BODY_WEIGHT
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
     private fun mapDay(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
         return bodyWeights.map {
             it.copy(
                 weightInKg = weightUnitConverter.convert(
                     it.weightInKg, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2),
-                muscleMassInKg = weightUnitConverter.convert(
-                    it.muscleMassInKg, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2),
-                boneMassInKg = weightUnitConverter.convert(
-                    it.boneMassInKg, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
+                )?.roundToDecimals(2) ?: it.weightInKg, // Fallback if conversion is null
+                muscleMassInKg = it.muscleMassInKg?.let { mm ->
+                    weightUnitConverter.convert(mm, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: mm
+                },
+                boneMassInKg = it.boneMassInKg?.let { bm ->
+                    weightUnitConverter.convert(bm, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: bm
+                }
             )
         }
     }
 
-    private fun mapWeek(
+    private fun <K> aggregateBodyWeightsByPeriod(
         bodyWeights: List<BodyWeight>,
-        settings: Settings
-    ): List<BodyWeight> = bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.isoWeekAndYear() }
-        .map { bodyWeightDateMap ->
-            var totalWeight = 0.0
-            var boneMass = 0.0
-            var muscleMass = 0.0
-            var bodyFat = 0.0
-            var bodyWater = 0.0
-            bodyWeightDateMap.value.forEach {
-                totalWeight += it.weightInKg
-                boneMass += it.boneMassInKg ?: 0.0
-                muscleMass += it.muscleMassInKg ?: 0.0
-                bodyFat += it.bodyFatPercentage ?: 0.0
-                bodyWater += it.bodyWaterInPercentage ?: 0.0
-            }
+        settings: Settings,
+        groupKeySelector: (BodyWeight) -> K,
+        representativeDateSelector: (List<BodyWeight>) -> LocalDate
+    ): List<BodyWeight> {
+        if (bodyWeights.isEmpty()) return emptyList()
 
-            totalWeight = weightUnitConverter.convert(
-                totalWeight, WeightUnit.KG, settings.weightUnit
-            )!!.roundToDecimals(2)
-            muscleMass = weightUnitConverter.convert(
-                muscleMass, WeightUnit.KG, settings.weightUnit
-            )!!.roundToDecimals(2)
-            boneMass = weightUnitConverter.convert(
-                boneMass, WeightUnit.KG, settings.weightUnit
-            )!!.roundToDecimals(2)
+        return bodyWeights.groupBy(groupKeySelector)
+            .mapNotNull { (_, group) ->
+                if (group.isEmpty()) return@mapNotNull null
 
-            BodyWeight(
-                id = Uuid.random(),
-                dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfIsoWeek(),
-                profileId = bodyWeightDateMap.value.first().profileId,
-                weightInKg = totalWeight / bodyWeightDateMap.value.size,
-                muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
-                boneMassInKg = boneMass / bodyWeightDateMap.value.size,
-                bodyFatPercentage = bodyFat / bodyWeightDateMap.value.size,
-                bodyWaterInPercentage = bodyWater / bodyWeightDateMap.value.size,
-            )
-        }
+                val groupSize = group.size
+                val avgWeightInKg = group.sumOf { it.weightInKg } / groupSize
 
-    private fun mapMonth(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        return bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year to bodyWeight.dateUtc.month }
-            .map { bodyWeightDateMap ->
-                var totalWeight = 0.0
-                var boneMass = 0.0
-                var muscleMass = 0.0
-                var bodyFat = 0.0
-                var bodyWater = 0.0
-                bodyWeightDateMap.value.forEach {
-                    totalWeight += it.weightInKg
-                    boneMass += it.boneMassInKg ?: 0.0
-                    muscleMass += it.muscleMassInKg ?: 0.0
-                    bodyFat += it.bodyFatPercentage ?: 0.0
-                    bodyWater += it.bodyWaterInPercentage ?: 0.0
+                val (totalMuscleMass, muscleMassCount) = group.fold(0.0 to 0) { acc, bw ->
+                    bw.muscleMassInKg?.let { (acc.first + it) to (acc.second + 1) } ?: acc
                 }
+                val avgMuscleMassInKg = if (muscleMassCount > 0) totalMuscleMass / muscleMassCount else null
 
-                totalWeight = weightUnitConverter.convert(
-                    totalWeight, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
-                muscleMass = weightUnitConverter.convert(
-                    muscleMass, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
-                boneMass = weightUnitConverter.convert(
-                    boneMass, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
+                val (totalBoneMass, boneMassCount) = group.fold(0.0 to 0) { acc, bw ->
+                    bw.boneMassInKg?.let { (acc.first + it) to (acc.second + 1) } ?: acc
+                }
+                val avgBoneMassInKg = if (boneMassCount > 0) totalBoneMass / boneMassCount else null
+
+                val (totalBodyFat, bodyFatCount) = group.fold(0.0 to 0) { acc, bw ->
+                    bw.bodyFatPercentage?.let { (acc.first + it) to (acc.second + 1) } ?: acc
+                }
+                val avgBodyFatPercentage = if (bodyFatCount > 0) totalBodyFat / bodyFatCount else null
+
+                val (totalBodyWater, bodyWaterCount) = group.fold(0.0 to 0) { acc, bw ->
+                    bw.bodyWaterInPercentage?.let { (acc.first + it) to (acc.second + 1) } ?: acc
+                }
+                val avgBodyWaterInPercentage = if (bodyWaterCount > 0) totalBodyWater / bodyWaterCount else null
 
                 BodyWeight(
                     id = Uuid.random(),
-                    dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfMonth(),
-                    profileId = bodyWeightDateMap.value.first().profileId,
-                    weightInKg = totalWeight / bodyWeightDateMap.value.size,
-                    muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
-                    boneMassInKg = boneMass / bodyWeightDateMap.value.size,
-                    bodyFatPercentage = bodyFat / bodyWeightDateMap.value.size,
-                    bodyWaterInPercentage = bodyWater / bodyWeightDateMap.value.size,
+                    profileId = group.first().profileId,
+                    dateUtc = representativeDateSelector(group),
+                    weightInKg = weightUnitConverter.convert(
+                        avgWeightInKg, WeightUnit.KG, settings.weightUnit
+                    )?.roundToDecimals(2) ?: avgWeightInKg,
+                    muscleMassInKg = avgMuscleMassInKg?.let {
+                        weightUnitConverter.convert(it, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: it
+                    },
+                    boneMassInKg = avgBoneMassInKg?.let {
+                        weightUnitConverter.convert(it, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: it
+                    },
+                    bodyFatPercentage = avgBodyFatPercentage?.roundToDecimals(2),
+                    bodyWaterInPercentage = avgBodyWaterInPercentage?.roundToDecimals(2)
                 )
             }
+    }
+
+    private fun mapWeek(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
+        return aggregateBodyWeightsByPeriod(
+            bodyWeights = bodyWeights,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
+        )
+    }
+
+    private fun mapMonth(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
+        return aggregateBodyWeightsByPeriod(
+            bodyWeights = bodyWeights,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
+        )
     }
 
     private fun mapYear(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        val mappedWeights = bodyWeights.groupBy { bodyWeight -> bodyWeight.dateUtc.year }
-            .map { bodyWeightDateMap ->
-                var totalWeight = 0.0
-                var boneMass = 0.0
-                var muscleMass = 0.0
-                var bodyFat = 0.0
-                var bodyWater = 0.0
-                bodyWeightDateMap.value.forEach {
-                    totalWeight += it.weightInKg
-                    boneMass += it.boneMassInKg ?: 0.0
-                    muscleMass += it.muscleMassInKg ?: 0.0
-                    bodyFat += it.bodyFatPercentage ?: 0.0
-                    bodyWater += it.bodyWaterInPercentage ?: 0.0
-                }
-
-                totalWeight = weightUnitConverter.convert(
-                    totalWeight, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
-                muscleMass = weightUnitConverter.convert(
-                    muscleMass, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
-                boneMass = weightUnitConverter.convert(
-                    boneMass, WeightUnit.KG, settings.weightUnit
-                )!!.roundToDecimals(2)
-
-                BodyWeight(
-                    id = Uuid.random(),
-                    dateUtc = bodyWeightDateMap.value.first().dateUtc.firstDayOfYear(),
-                    profileId = bodyWeightDateMap.value.first().profileId,
-                    weightInKg = totalWeight / bodyWeightDateMap.value.size,
-                    muscleMassInKg = muscleMass / bodyWeightDateMap.value.size,
-                    boneMassInKg = boneMass / bodyWeightDateMap.value.size,
-                    bodyFatPercentage = bodyFat / bodyWeightDateMap.value.size,
-                    bodyWaterInPercentage = bodyWater / bodyWeightDateMap.value.size,
-                )
-            }
-
-        return mappedWeights
+        return aggregateBodyWeightsByPeriod(
+            bodyWeights = bodyWeights,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.year },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
+        )
     }
 
     fun movePast() {

@@ -266,7 +266,7 @@ private fun MonthRangePickerContent(
                                         modifier = Modifier,
                                         selected = isSelected,
                                         onClick = {
-                                            if (selectedStartYearMonth == null || (selectedStartYearMonth != null && selectedEndYearMonth != null)) {
+                                            if (selectedStartYearMonth == null || selectedEndYearMonth != null) {
                                                 onMonthRangeSelectionChange(yearMonth, null)
                                             } else {
                                                 onMonthRangeSelectionChange(

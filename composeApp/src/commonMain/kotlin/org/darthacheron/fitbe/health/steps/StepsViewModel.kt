@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class StepsViewModel(
     private val stepsRepository: StepsRepository,
     private val settingsRepository: SettingsRepository,

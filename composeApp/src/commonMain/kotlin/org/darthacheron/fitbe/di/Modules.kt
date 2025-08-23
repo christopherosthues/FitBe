@@ -11,6 +11,8 @@ import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
+import org.darthacheron.fitbe.health.steps.StepsRepository
+import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightRepository
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -31,6 +33,7 @@ val sharedModule = module {
     singleOf(::SleepRepository)
     singleOf(::ProfileRepository)
     singleOf(::BodyWeightRepository)
+    singleOf(::StepsRepository)
 
     singleOf(::BodyMeasurementUnitConverter)
     singleOf(::DistanceUnitConverter)
@@ -45,6 +48,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().sleepDao }
     single { get<FitBeDatabase>().bodyWeightDao }
     single { get<FitBeDatabase>().profileDao }
+    single { get<FitBeDatabase>().stepsDao }
 
     singleOf(::StartUpService)
 
@@ -57,4 +61,5 @@ val sharedModule = module {
     viewModelOf(::ExercisesViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::WeightOverviewViewModel)
+    viewModelOf(::StepsViewModel)
 }
