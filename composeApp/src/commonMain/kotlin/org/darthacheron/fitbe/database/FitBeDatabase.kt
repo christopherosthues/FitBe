@@ -9,6 +9,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.daysUntil
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
@@ -23,6 +24,7 @@ import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.sleep.SleepDao
 import org.darthacheron.fitbe.health.sleep.SleepEntity
+import org.darthacheron.fitbe.health.steps.Steps
 import org.darthacheron.fitbe.health.steps.StepsDao
 import org.darthacheron.fitbe.health.steps.StepsEntity
 import org.darthacheron.fitbe.health.weight.BodyWeight
@@ -64,6 +66,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
     val beverageDao = db.beverageDao
     val profileDao = db.profileDao
     val bodyWeightDao = db.bodyWeightDao
+    val stepsDao = db.stepsDao
 
     val profile = profileDao.getAllProfiles().first().first()
 
@@ -94,6 +97,16 @@ suspend fun seedDatabase(db: FitBeDatabase) {
             )
             beverageDao.upsertDrink(beverage)
         }
+
+        val steps = StepsEntity(
+            steps = Random.nextInt(0, 20_000),
+            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
+                i - 1,
+                DateTimeUnit.DAY
+            ),
+            profileId = profile.id
+        )
+        stepsDao.upsertSteps(steps)
 
         // Step 1: Generate initial weight
         var weightInKg = Random.nextDouble(55.0, 130.0).roundToDecimals(2)

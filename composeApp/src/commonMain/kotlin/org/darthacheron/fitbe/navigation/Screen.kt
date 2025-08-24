@@ -26,6 +26,9 @@ sealed class Screen {
     data object Sleeps : Screen()
 
     @Serializable
+    data object Steps : Screen()
+
+    @Serializable
     data object Beverages : Screen()
 
     @Serializable

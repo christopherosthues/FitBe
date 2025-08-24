@@ -57,18 +57,17 @@ fun WeightOverviewView(
     var showAddDialog by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (!bodyWeights.isEmpty()) {
-            PlotBodyWeights(
-                Modifier.padding(bottom = 64.dp),
-                bodyWeights,
-                dateRange,
-                dates,
-                settings,
-                maxBodyWeight,
-                false,
-                targetWeight,
-            )
-        }
+        PlotBodyWeights(
+            Modifier.padding(bottom = 64.dp),
+            bodyWeights,
+            dateRange,
+            dates,
+            settings,
+            maxBodyWeight,
+            false,
+            targetWeight,
+        )
+
         IconButton(
             onClick = { bodyWeightOverviewViewModel.movePast() },
             modifier = Modifier.align(Alignment.CenterStart)

@@ -19,6 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import org.darthacheron.fitbe.health.steps.PlotSteps
+import org.darthacheron.fitbe.health.steps.StepsView
+import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.PlotBodyWeights
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -53,6 +56,16 @@ fun HealthOverviewView(
                     ) {
                         Text(text = "Sleeps")
                     }
+                }
+                item {
+                    Thumbnail(
+                        onClick = { navHostController.navigate(Screen.Steps) },
+                        content = {
+                            StepsOverView(
+                                healthOverviewViewModel.stepsViewModel
+                            )
+                        }
+                    )
                 }
                 item {
                     Thumbnail(
@@ -95,6 +108,24 @@ fun BodyWeightOverView(
         dates = dates,
         settings = settings,
         maxWeight = maxBodyWeight,
+        thumbnail = true,
+    )
+}
+
+@Composable
+fun StepsOverView(
+    stepsViewModel: StepsViewModel,
+) {
+    val steps by stepsViewModel.steps.collectAsState()
+    val maxBodyWeight by stepsViewModel.maxSteps.collectAsState()
+    val dateRange by stepsViewModel.dateRange.collectAsState()
+    val dates = stepsViewModel.dates(steps)
+
+    PlotSteps(
+        stepsData = steps,
+        dateRange = dateRange,
+        dates = dates,
+        maxSteps = maxBodyWeight,
         thumbnail = true,
     )
 }

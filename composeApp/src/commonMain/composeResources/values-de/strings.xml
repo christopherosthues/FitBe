@@ -61,6 +61,7 @@
     <string name="top_bar_title_health">Gesundheit</string>
     <string name="top_bar_title_profile">Profil</string>
     <string name="top_bar_title_sleeps">Schlaf</string>
+    <string name="top_bar_title_steps">Schritte</string>
     <string name="top_bar_title_beverages">Trinken</string>
     <string name="top_bar_title_body_weights">Körpergewicht</string>
     <string name="top_bar_title_settings">Einstellungen</string>
@@ -177,6 +178,12 @@
     <string name="month_october">Oktober</string>
     <string name="month_november">November</string>
     <string name="month_december">Dezember</string>
-    <string name="steps_chart_thumbnail_title">Schritte"></string>
-    <string name="steps_chart_y_axis_title">Schritte"></string>
+    <string name="steps_chart_thumbnail_title">Schritte</string>
+    <string name="steps_chart_y_axis_title">Schritte</string>
+    <string name="steps_add_steps_title">Schritte eintragen</string>
+    <string name="steps_add_steps_date">Datum</string>
+    <string name="steps_add_steps_count">Schrittanzahl</string>
+    <string name="steps_save">Speichern</string>
+    <string name="steps_cancel">Abbrechen</string>
+    <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 100.000 ein.</string>
 </resources>

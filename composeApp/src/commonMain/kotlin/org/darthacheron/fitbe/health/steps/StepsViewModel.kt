@@ -18,18 +18,16 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.health.weight.BodyWeight
+import org.darthacheron.fitbe.profile.ProfileDao
+import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
-import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
-import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
@@ -83,6 +81,12 @@ class StepsViewModel(
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
+
+    val maxSteps: StateFlow<UInt> = steps
+        .map { stepsList ->
+            if (stepsList.isEmpty()) ProfileDefaults.STEPS else stepsList.maxOf { it.steps }
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
     private fun mapDay(steps: List<Steps>): List<Steps> {
         return steps
@@ -147,8 +151,8 @@ class StepsViewModel(
         setRange(range)
     }
 
-    fun dates(bodyWeights: List<BodyWeight>): List<LocalDate> {
-        return bodyWeights.map { it.dateUtc }
+    fun dates(steps: List<Steps>): List<LocalDate> {
+        return steps.map { it.dateUtc }
     }
 
     fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {

@@ -124,7 +124,7 @@ fun PlotSteps(
             yAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        it.toString(0), // Show step counts as whole numbers
+                        it.toString(), // Show step counts as whole numbers
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
@@ -149,8 +149,8 @@ fun PlotSteps(
             if (dates.size > 1) {
                 AreaPlot(
                     data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
-                    areaBaseline = AreaBaseline.ConstantLine(maxSteps.toInt()),
-                    areaStyle = AreaStyle(brush = SolidColor(Color.Yellow)),
+                    areaBaseline = AreaBaseline.ConstantLine(0),
+                    areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
                     lineStyle = LineStyle(
                         brush = SolidColor(MaterialTheme.colorScheme.primary),
                         strokeWidth = 2.dp
@@ -163,7 +163,7 @@ fun PlotSteps(
                     barWidth = 0.8f,
                     bar = { index ->
                         DefaultVerticalBar(
-                            brush = SolidColor(Color.Yellow),
+                            brush = SolidColor(Color(0xFFCC6666)),
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             if (!thumbnail) {
@@ -194,12 +194,10 @@ fun PlotSteps(
 
             if (targetSteps != null && targetSteps > 0u) {
                 LinePlot(
-                    data = dates.map { Point(it, targetSteps.toInt()) }, // Target line spans all dates in range
+                    data = dates.map { Point(it, targetSteps.toInt()) },
                     lineStyle = LineStyle(
-                        brush = SolidColor(Color(0xFFED7D31)), // Example target line color
+                        brush = SolidColor(Color(0xFFED7D31)),
                         strokeWidth = 2.dp,
-                        // Consider adding a dash pattern for the target line
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                     ),
                 )
             }

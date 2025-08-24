@@ -61,6 +61,7 @@
     <string name="top_bar_title_health">Health</string>
     <string name="top_bar_title_profile">Profile</string>
     <string name="top_bar_title_sleeps">Sleeps</string>
+    <string name="top_bar_title_steps">Steps</string>
     <string name="top_bar_title_beverages">Beverages</string>
     <string name="top_bar_title_body_weights">Body weight</string>
     <string name="top_bar_title_settings">Settings</string>
@@ -177,6 +178,12 @@
     <string name="month_october">October</string>
     <string name="month_november">November</string>
     <string name="month_december">December</string>
-    <string name="steps_chart_thumbnail_title">Steps"></string>
-    <string name="steps_chart_y_axis_title">Steps"></string>
+    <string name="steps_chart_thumbnail_title">Steps</string>
+    <string name="steps_chart_y_axis_title">Steps</string>
+    <string name="steps_add_steps_title">Record steps</string>
+    <string name="steps_add_steps_date">Date</string>
+    <string name="steps_add_steps_count">Steps count</string>
+    <string name="steps_save">Save</string>
+    <string name="steps_cancel">Cancel</string>
+    <string name="steps_error_count">Enter a value between 0 and 100,000.</string>
 </resources>
