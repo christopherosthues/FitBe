@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,7 +49,7 @@ fun WeightOverviewView(
     val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
-    val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
+    val dateRange by bodyWeightOverviewViewModel.dateRangeFlow.collectAsState()
 
     val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
     val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()

@@ -1,11 +1,7 @@
 package org.darthacheron.fitbe.health.weight
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
-import io.github.koalaplot.core.bar.VerticalBarPlotStackedPointEntry
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -14,11 +10,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.components.date.DateRange
+import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
@@ -29,32 +23,18 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
-import org.darthacheron.fitbe.utils.minusOne
-import org.darthacheron.fitbe.utils.plusOne
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
-import kotlin.math.max
-import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class WeightOverviewViewModel(
     private val bodyWeightRepository: BodyWeightRepository,
-    private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository,
+    settingsRepository: SettingsRepository,
+    profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
-) : ViewModel() {
-    private val _dateRange = MutableStateFlow(
-        DateRange(
-            Clock.System.now().minus(6.days),
-            Clock.System.now(),
-            DateUnit.DAY
-        )
-    )
-
-    val dateRange: StateFlow<DateRange> = _dateRange
-
+) : OverviewViewModel<BodyWeight>(settingsRepository, profileRepository) {
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -69,7 +49,7 @@ class WeightOverviewViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val bodyWeights: StateFlow<List<BodyWeight>> = combine(
-        _dateRange,
+        dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
         Pair(settings, range.dateUnit) to bodyWeightRepository.getEntries(
@@ -191,26 +171,8 @@ class WeightOverviewViewModel(
         )
     }
 
-    fun movePast() {
-        val range = dateRange.value.minusOne()
-        setRange(range)
-    }
-
-    fun moveFuture() {
-        val range = dateRange.value.plusOne()
-        setRange(range)
-    }
-
-    fun dates(bodyWeights: List<BodyWeight>): List<LocalDate> {
-        return bodyWeights.map { it.dateUtc }
-    }
-
-    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
-        _dateRange.value = DateRange(startDate, endDate, dateUnit)
-    }
-
-    fun setRange(range: DateRange) {
-        _dateRange.value = range
+   override fun dates(list: List<BodyWeight>): List<LocalDate> {
+        return list.map { it.dateUtc }
     }
 
     fun addBodyWeight(

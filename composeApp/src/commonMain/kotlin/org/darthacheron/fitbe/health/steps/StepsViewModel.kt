@@ -18,6 +18,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -36,19 +37,9 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class StepsViewModel(
     private val stepsRepository: StepsRepository,
-    private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository
-) : ViewModel() {
-    private val _dateRange = MutableStateFlow(
-        DateRange(
-            Clock.System.now().minus(6.days),
-            Clock.System.now(),
-            DateUnit.DAY
-        )
-    )
-
-    val dateRange: StateFlow<DateRange> = _dateRange
-
+    settingsRepository: SettingsRepository,
+    profileRepository: ProfileRepository
+) : OverviewViewModel<Steps>(settingsRepository, profileRepository) {
     val targetSteps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -63,7 +54,7 @@ class StepsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val steps: StateFlow<List<Steps>> = combine(
-        _dateRange,
+        dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
         Pair(settings, range.dateUnit) to stepsRepository.getSteps(
@@ -141,26 +132,8 @@ class StepsViewModel(
         )
     }
 
-    fun movePast() {
-        val range = dateRange.value.minusOne()
-        setRange(range)
-    }
-
-    fun moveFuture() {
-        val range = dateRange.value.plusOne()
-        setRange(range)
-    }
-
-    fun dates(steps: List<Steps>): List<LocalDate> {
-        return steps.map { it.dateUtc }
-    }
-
-    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
-        _dateRange.value = DateRange(startDate, endDate, dateUnit)
-    }
-
-    fun setRange(range: DateRange) {
-        _dateRange.value = range
+    override fun dates(list: List<Steps>): List<LocalDate> {
+        return list.map { it.dateUtc }
     }
 
     fun addSteps(date: LocalDate, steps: UInt) {

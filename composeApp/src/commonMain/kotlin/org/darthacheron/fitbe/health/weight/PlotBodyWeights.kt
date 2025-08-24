@@ -100,7 +100,7 @@ fun PlotBodyWeights(
     targetWeight: Double? = null,
 ) {
     ChartLayout(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = 16.dp),
         title = {
             if (thumbnail) {
                 Text(text = stringResource(Res.string.body_weight_chart_thumbnail_title))

@@ -98,7 +98,7 @@ private fun Thumbnail(onClick: () -> Unit, content: @Composable () -> Unit) {
 private fun BeveragesOverview(beverageOverviewViewModel: BeverageOverviewViewModel) {
     val beveragesOverview by beverageOverviewViewModel.beverages.collectAsState()
     val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
-    val dateRange by beverageOverviewViewModel.dateRange.collectAsState()
+    val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
     val dates = beverageOverviewViewModel.dates(beveragesOverview)
 
     PlotBeverages(
@@ -116,7 +116,7 @@ private fun StepsOverview(
 ) {
     val steps by stepsViewModel.steps.collectAsState()
     val maxBodyWeight by stepsViewModel.maxSteps.collectAsState()
-    val dateRange by stepsViewModel.dateRange.collectAsState()
+    val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
     val dates = stepsViewModel.dates(steps)
 
     PlotSteps(
@@ -135,7 +135,7 @@ private fun BodyWeightOverView(
 ) {
     val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
-    val dateRange by bodyWeightOverviewViewModel.dateRange.collectAsState()
+    val dateRange by bodyWeightOverviewViewModel.dateRangeFlow.collectAsState()
     val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
 
     PlotBodyWeights(

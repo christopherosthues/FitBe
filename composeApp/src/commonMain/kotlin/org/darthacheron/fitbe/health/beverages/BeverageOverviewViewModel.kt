@@ -17,6 +17,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -35,19 +36,9 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 class BeverageOverviewViewModel(
     private val beverageRepository: BeverageRepository,
-    private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository
-) : ViewModel() {
-    private val _dateRange = MutableStateFlow(
-        DateRange(
-            Clock.System.now().minus(6.days),
-            Clock.System.now(),
-            DateUnit.DAY
-        )
-    )
-
-    val dateRange: StateFlow<DateRange> = _dateRange
-
+    settingsRepository: SettingsRepository,
+    profileRepository: ProfileRepository
+) : OverviewViewModel<BeverageOverview>(settingsRepository, profileRepository) {
     val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -62,7 +53,7 @@ class BeverageOverviewViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val beverages: StateFlow<List<BeverageOverview>> = combine(
-        _dateRange,
+        dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
         Pair(settings, range.dateUnit) to beverageRepository.getBeveragesOverview(
@@ -138,25 +129,7 @@ class BeverageOverviewViewModel(
         )
     }
 
-    fun movePast() {
-        val range = dateRange.value.minusOne()
-        setRange(range)
-    }
-
-    fun moveFuture() {
-        val range = dateRange.value.plusOne()
-        setRange(range)
-    }
-
-    fun dates(beverages: List<BeverageOverview>): List<LocalDate> {
-        return beverages.map { it.dateUtc }
-    }
-
-    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
-        _dateRange.value = DateRange(startDate, endDate, dateUnit)
-    }
-
-    fun setRange(range: DateRange) {
-        _dateRange.value = range
+    override fun dates(list: List<BeverageOverview>): List<LocalDate> {
+        return list.map { it.dateUtc }
     }
 }

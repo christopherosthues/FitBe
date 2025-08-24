@@ -41,7 +41,7 @@ fun StepsView(
     stepsViewModel: StepsViewModel
 ) {
     val steps by stepsViewModel.steps.collectAsState()
-    val dateRange by stepsViewModel.dateRange.collectAsState()
+    val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
     val targetSteps by stepsViewModel.targetSteps.collectAsState()
     val maxSteps by stepsViewModel.maxSteps.collectAsState()
 

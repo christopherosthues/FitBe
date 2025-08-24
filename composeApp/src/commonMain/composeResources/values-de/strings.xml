@@ -63,7 +63,7 @@
     <string name="top_bar_title_sleeps">Schlaf</string>
     <string name="top_bar_title_steps">Schritte</string>
     <string name="top_bar_title_beverages">Trinken</string>
-    <string name="top_bar_title_beverage">Trinkenübersicht</string>
+    <string name="top_bar_title_beverages_overview">Trinkenübersicht</string>
     <string name="top_bar_title_body_weights">Körpergewicht</string>
     <string name="top_bar_title_settings">Einstellungen</string>
     <string name="settings_weight_unit">Gewichtseinheit</string>

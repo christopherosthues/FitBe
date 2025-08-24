@@ -38,7 +38,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun BeverageOverviewView(beverageOverviewViewModel: BeverageOverviewViewModel) {
     val beverages by beverageOverviewViewModel.beverages.collectAsState()
-    val dateRange by beverageOverviewViewModel.dateRange.collectAsState()
+    val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
     val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
     val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
 

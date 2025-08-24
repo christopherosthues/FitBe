@@ -69,7 +69,7 @@ fun PlotBeverages(
     thumbnail: Boolean = false,
     targetBeverages: UInt? = null,
 ) {
-    ChartLayout(modifier = modifier,
+    ChartLayout(modifier = modifier.padding(horizontal = 16.dp),
         title = {
             if (thumbnail) {
                 Text(text = stringResource(Res.string.beverages_chart_thumbnail_title))
