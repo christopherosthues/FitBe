@@ -10,8 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +28,7 @@ import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_mass_value
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight_value
+import fitbe.composeapp.generated.resources.body_weight_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.month_april
 import fitbe.composeapp.generated.resources.month_august
 import fitbe.composeapp.generated.resources.month_december
@@ -100,7 +99,13 @@ fun PlotBodyWeights(
     thumbnail: Boolean = false,
     targetWeight: Double? = null,
 ) {
-    ChartLayout(modifier = modifier) {
+    ChartLayout(
+        modifier = modifier,
+        title = {
+            if (thumbnail) {
+                Text(text = stringResource(Res.string.body_weight_chart_thumbnail_title))
+            }
+        }) {
         val maxConfigurableLabels = 7
         val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
             emptySet()

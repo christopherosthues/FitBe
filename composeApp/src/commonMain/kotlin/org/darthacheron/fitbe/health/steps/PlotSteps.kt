@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,17 +26,15 @@ import fitbe.composeapp.generated.resources.month_may
 import fitbe.composeapp.generated.resources.month_november
 import fitbe.composeapp.generated.resources.month_october
 import fitbe.composeapp.generated.resources.month_september
-// Assuming you will create this string resource
-import fitbe.composeapp.generated.resources.steps_plot_y_axis_title
+import fitbe.composeapp.generated.resources.steps_chart_thumbnail_title
+import fitbe.composeapp.generated.resources.steps_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.line.LinePlot
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.VerticalRotation
 import io.github.koalaplot.core.util.rotateVertically
-import io.github.koalaplot.core.util.toString
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
-import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.IntLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
@@ -44,11 +43,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalKoalaPlotApi::class)
@@ -58,12 +55,16 @@ fun PlotSteps(
     stepsData: List<Steps>,
     dateRange: DateRange,
     dates: List<LocalDate>,
-    settings: Settings,
     maxSteps: UInt,
     thumbnail: Boolean = false,
     targetSteps: UInt? = null,
 ) {
-    ChartLayout(modifier = modifier) {
+    ChartLayout(modifier = modifier,
+        title = {
+            if (thumbnail) {
+                Text(text = stringResource(Res.string.steps_chart_thumbnail_title))
+            }
+        }) {
         val maxConfigurableLabels = 7
         val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
             emptySet()
@@ -124,7 +125,7 @@ fun PlotSteps(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            stringResource(Res.string.steps_plot_y_axis_title), // Use new string resource
+                            stringResource(Res.string.steps_chart_y_axis_title),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -135,7 +136,7 @@ fun PlotSteps(
         ) {
             if (stepsData.isNotEmpty()) {
                 LinePlot(
-                    data = stepsData.map { Point(it.dateUtc, it.steps.toDouble()) },
+                    data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
                     lineStyle = LineStyle(
                         brush = SolidColor(MaterialTheme.colorScheme.primary),
                         strokeWidth = 2.dp
@@ -143,14 +144,14 @@ fun PlotSteps(
                 )
             }
 
-            if (targetSteps != null && targetSteps > 0) {
+            if (targetSteps != null && targetSteps > 0u) {
                 LinePlot(
-                    data = dates.map { Point(it, targetSteps.toDouble()) }, // Target line spans all dates in range
+                    data = dates.map { Point(it, targetSteps.toInt()) }, // Target line spans all dates in range
                     lineStyle = LineStyle(
                         brush = SolidColor(Color(0xFFED7D31)), // Example target line color
                         strokeWidth = 2.dp,
                         // Consider adding a dash pattern for the target line
-                        // pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                     ),
                 )
             }

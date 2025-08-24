@@ -125,6 +125,7 @@
     <string name="body_weight_add_body_weight_body_water">Body water (%)</string>
     <string name="body_weight_save">Save</string>
     <string name="body_weight_cancel">Cancel</string>
+    <string name="body_weight_chart_thumbnail_title">Body weight</string>
     <string name="body_weight_chart_annotation_bone_mass_value">Bone mass: %1$d %2$s</string>
     <string name="body_weight_chart_annotation_muscle_mass_value">muscle mass: %1$d %2$s</string>
     <string name="body_weight_chart_annotation_body_fat_value">Body fat: %1$d %</string>
@@ -176,4 +177,6 @@
     <string name="month_october">October</string>
     <string name="month_november">November</string>
     <string name="month_december">December</string>
+    <string name="steps_chart_thumbnail_title">Steps"></string>
+    <string name="steps_chart_y_axis_title">Steps"></string>
 </resources>
