@@ -136,7 +136,7 @@ fun PlotBodyWeights(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        when (dateRange.dateUnit) {
+                        text = when (dateRange.dateUnit) {
                             DateUnit.DAY -> labelDate.toString()
                             DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
                             DateUnit.MONTH -> {
@@ -158,7 +158,7 @@ fun PlotBodyWeights(
             yAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        it.toString(0),
+                        text = it.toString(0),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
@@ -171,7 +171,7 @@ fun PlotBodyWeights(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            stringResource(settings.weightUnit.localizedString()),
+                            text = stringResource(settings.weightUnit.localizedString()),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -244,7 +244,7 @@ fun PlotBodyWeights(
                                                     stringResource(settings.weightUnit.localizedString())
                                                 )
                                             }
-                                        Text(bodyWeightAnnotation)
+                                        Text(text = bodyWeightAnnotation)
                                     }
                                 }
                             }
@@ -317,7 +317,7 @@ private fun XYGraphScope<LocalDate, Double>.Annotations(
                 anchorPoint
             ) {
                 Text(
-                    when (index) {
+                    text = when (index) {
                         0 -> stringResource(
                             Res.string.body_weight_chart_annotation_bone_mass,
                         )

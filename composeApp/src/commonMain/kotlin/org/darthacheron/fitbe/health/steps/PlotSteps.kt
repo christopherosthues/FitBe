@@ -10,9 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,7 +35,6 @@ import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
 import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.VerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotEntry
-import io.github.koalaplot.core.bar.VerticalBarPosition
 import io.github.koalaplot.core.line.AreaBaseline
 import io.github.koalaplot.core.line.AreaPlot
 import io.github.koalaplot.core.line.LinePlot
@@ -102,7 +99,7 @@ fun PlotSteps(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        when (dateRange.dateUnit) {
+                        text = when (dateRange.dateUnit) {
                             DateUnit.DAY -> labelDate.toString()
                             DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
                             DateUnit.MONTH -> {
@@ -124,7 +121,7 @@ fun PlotSteps(
             yAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        it.toString(), // Show step counts as whole numbers
+                        text = it.toString(),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
@@ -137,7 +134,7 @@ fun PlotSteps(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            stringResource(Res.string.steps_chart_y_axis_title),
+                            text = stringResource(Res.string.steps_chart_y_axis_title),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -174,7 +171,7 @@ fun PlotSteps(
                                     modifier = modifier.padding(8.dp)
                                 ) {
                                     Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(stepsChartData[index].y.yMax.toString())
+                                        Text(text = stepsChartData[index].y.yMax.toString())
                                     }
                                 }
                             }

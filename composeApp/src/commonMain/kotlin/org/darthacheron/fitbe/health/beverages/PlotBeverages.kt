@@ -100,7 +100,7 @@ fun PlotBeverages(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        when (dateRange.dateUnit) {
+                        text = when (dateRange.dateUnit) {
                             DateUnit.DAY -> labelDate.toString()
                             DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
                             DateUnit.MONTH -> {
@@ -122,7 +122,7 @@ fun PlotBeverages(
             yAxisLabels = {
                 if (!thumbnail) {
                     Text(
-                        it.toString(), // Show step counts as whole numbers
+                        text = it.toString(),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
@@ -135,7 +135,7 @@ fun PlotBeverages(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            stringResource(Res.string.beverages_chart_y_axis_title),
+                            text = stringResource(Res.string.beverages_chart_y_axis_title),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
