@@ -95,7 +95,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                 unit = FluidUnit.Milliliter,
                 profileId = profile.id
             )
-            beverageDao.upsertDrink(beverage)
+            beverageDao.upsertBeverage(beverage)
         }
 
         val steps = StepsEntity(

@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health
 
 
 import androidx.lifecycle.ViewModel
+import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -14,5 +15,6 @@ class HealthOverviewViewModel(
     private val profileRepository: ProfileRepository,
     val bodyWeightOverviewViewModel: WeightOverviewViewModel,
     val stepsViewModel: StepsViewModel,
+    val beverageOverviewViewModel: BeverageOverviewViewModel
 ) : ViewModel() {
 }

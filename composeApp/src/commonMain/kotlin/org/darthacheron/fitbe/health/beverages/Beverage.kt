@@ -30,17 +30,17 @@ data class Beverage(
     val id: Uuid,
     val profileId: Uuid,
     val dateUtc: Instant,
-    val amount: Int,
+    val amount: UInt,
     val beverage: String,
     val unit: FluidUnit
 ) {
     @Composable
     fun localizedString(): String {
         return when (unit) {
-            Cup -> pluralStringResource(Res.plurals.beverage_in_cup, quantity = amount, amount, beverage)
-            SmallGlass -> pluralStringResource(Res.plurals.beverage_in_small_glass, quantity = amount, amount, beverage)
-            NormalGlass -> pluralStringResource(Res.plurals.beverage_in_normal_glass, quantity = amount, amount, beverage)
-            LargeGlass -> pluralStringResource(Res.plurals.beverage_in_large_glass, quantity = amount, amount, beverage)
+            Cup -> pluralStringResource(Res.plurals.beverage_in_cup, quantity = amount.toInt(), amount, beverage)
+            SmallGlass -> pluralStringResource(Res.plurals.beverage_in_small_glass, quantity = amount.toInt(), amount, beverage)
+            NormalGlass -> pluralStringResource(Res.plurals.beverage_in_normal_glass, quantity = amount.toInt(), amount, beverage)
+            LargeGlass -> pluralStringResource(Res.plurals.beverage_in_large_glass, quantity = amount.toInt(), amount, beverage)
             Milliliter -> stringResource(Res.string.beverage_in_milliliter, amount, beverage)
             Centiliter -> stringResource(Res.string.beverage_in_centiliter, amount, beverage)
             Deciliter -> stringResource(Res.string.beverage_in_deciliter, amount, beverage)

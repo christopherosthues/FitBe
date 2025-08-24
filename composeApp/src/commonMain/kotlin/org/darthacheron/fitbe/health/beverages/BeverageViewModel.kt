@@ -23,7 +23,7 @@ class BeverageViewModel(
     private val settingsRepository: SettingsRepository,
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
-    val targetSteps: StateFlow<UInt> = settingsRepository.getSettingsFlow()
+    val targetBeverage: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
             if (profileId != null) {
@@ -40,9 +40,9 @@ class BeverageViewModel(
         repository.getTodayBeverages(it.selectedProfileId!!)
     }
 
-    val todayProgress: StateFlow<Double> = combine(todayIntake, targetSteps) {
-        todayIntake, targetSteps ->
-        todayIntake.sumOf { it.unit.toMilliliter(it.amount) } / targetSteps.toDouble()
+    val todayProgress: StateFlow<Double> = combine(todayIntake, targetBeverage) {
+        todayIntake, targetBeverage ->
+        todayIntake.sumOf { it.unit.toMilliliter(it.amount) }.toDouble() / targetBeverage.toDouble()
     }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     @OptIn(ExperimentalUuidApi::class)
@@ -50,7 +50,7 @@ class BeverageViewModel(
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             repository.addBeverage(
-                amount = amount.toInt(),
+                amount = amount,
                 beverage = beverage,
                 unit = unit,
                 profileId = settings.selectedProfileId!!

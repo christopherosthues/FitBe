@@ -63,6 +63,7 @@
     <string name="top_bar_title_sleeps">Sleeps</string>
     <string name="top_bar_title_steps">Steps</string>
     <string name="top_bar_title_beverages">Beverages</string>
+    <string name="top_bar_title_beverages_overview">Beverages Overview</string>
     <string name="top_bar_title_body_weights">Body weight</string>
     <string name="top_bar_title_settings">Settings</string>
     <string name="settings_weight_unit">Weight Unit</string>
@@ -186,4 +187,6 @@
     <string name="steps_save">Save</string>
     <string name="steps_cancel">Cancel</string>
     <string name="steps_error_count">Enter a value between 0 and 100,000.</string>
+    <string name="beverages_chart_thumbnail_title">Beverages</string>
+    <string name="beverages_chart_y_axis_title">ml</string>
 </resources>

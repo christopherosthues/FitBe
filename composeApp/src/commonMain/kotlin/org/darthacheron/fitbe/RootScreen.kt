@@ -26,6 +26,7 @@ import fitbe.composeapp.generated.resources.ic_back
 import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_settings
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
+import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
 import fitbe.composeapp.generated.resources.top_bar_title_exercises
 import fitbe.composeapp.generated.resources.top_bar_title_health
@@ -143,6 +144,7 @@ private fun topBarTitle(currentDestination: String?): String {
         Screen.Sleeps.toString() -> stringResource(Res.string.top_bar_title_sleeps)
         Screen.Steps.toString() -> stringResource(Res.string.top_bar_title_steps)
         Screen.Beverages.toString() -> stringResource(Res.string.top_bar_title_beverages)
+        Screen.BeveragesOverview.toString() -> stringResource(Res.string.top_bar_title_beverages_overview)
         Screen.BodyWeights.toString() -> stringResource(Res.string.top_bar_title_body_weights)
         Screen.Settings.toString() -> stringResource(Res.string.top_bar_title_settings)
         else -> ""
@@ -165,6 +167,7 @@ private fun checkIfSelected(
 ): Boolean {
     return if (currentDestination?.contains(currentBottomBarItem) == true) true
     else if ((currentDestination?.contains(Screen.Beverages.toString()) == true ||
+                currentDestination?.contains(Screen.BeveragesOverview.toString()) == true ||
                 currentDestination?.contains(Screen.Sleeps.toString()) == true ||
                 currentDestination?.contains(Screen.Steps.toString()) == true ||
                 currentDestination?.contains(Screen.BodyWeights.toString()) == true) &&

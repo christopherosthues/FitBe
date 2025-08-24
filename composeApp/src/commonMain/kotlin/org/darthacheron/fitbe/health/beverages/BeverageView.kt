@@ -135,14 +135,14 @@ fun AddBeverageDialog(
                     itemContent = { item, onClick ->
                         DropdownMenuItem(
                             text = {
-                                Text(item.localizedString(amountText.toIntOrNull() ?: 0))
+                                Text(item.localizedString(amountText.toUIntOrNull() ?: 0u))
                             },
                             leadingIcon = { Icon(painterResource(item.iconResource()), contentDescription = null) },
                             onClick = onClick
                         )
                     },
                     itemToString = {
-                        it.localizedString(amountText.toIntOrNull() ?: 0)
+                        it.localizedString(amountText.toUIntOrNull() ?: 0u)
                     },
                     onItemSelected = {
                         selectedUnit = unitOptions[it]

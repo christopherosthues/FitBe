@@ -11,9 +11,9 @@ import kotlin.uuid.Uuid
 @Dao
 interface BeverageDao {
     @Upsert
-    suspend fun upsertDrink(intake: BeverageEntity)
+    suspend fun upsertBeverage(intake: BeverageEntity)
 
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
     @Query("SELECT * FROM beverages WHERE profileId = :profileId AND dateUtc BETWEEN :start AND :end ORDER BY dateUtc ASC")
-    fun getTodayDrinks(start: String, end: String, profileId: Uuid): Flow<List<BeverageEntity>>
+    fun getBeverages(start: String, end: String, profileId: Uuid): Flow<List<BeverageEntity>>
 }

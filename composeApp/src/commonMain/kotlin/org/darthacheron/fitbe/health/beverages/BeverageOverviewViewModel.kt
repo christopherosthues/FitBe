@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.steps
+package org.darthacheron.fitbe.health.beverages
 
 
 import androidx.lifecycle.ViewModel
@@ -12,13 +12,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -28,14 +26,15 @@ import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
+import kotlin.collections.component1
+import kotlin.collections.component2
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-class StepsViewModel(
-    private val stepsRepository: StepsRepository,
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
+class BeverageOverviewViewModel(
+    private val beverageRepository: BeverageRepository,
     private val settingsRepository: SettingsRepository,
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
@@ -49,93 +48,91 @@ class StepsViewModel(
 
     val dateRange: StateFlow<DateRange> = _dateRange
 
-    val targetSteps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
+    val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
             if (profileId != null) {
                 profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetSteps }
+                    .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
             } else {
-                flowOf(ProfileDefaults.STEPS)
+                flowOf(ProfileDefaults.BEVERAGE)
             }
         }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val steps: StateFlow<List<Steps>> = combine(
+    val beverages: StateFlow<List<BeverageOverview>> = combine(
         _dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
-        Pair(settings, range.dateUnit) to stepsRepository.getSteps(
+        Pair(settings, range.dateUnit) to beverageRepository.getBeveragesOverview(
             range.startDate,
             range.endDate,
             settings.selectedProfileId!!
         )
     }.flatMapLatest { (settingsDateUnit, stepsFlow) ->
-        stepsFlow.map { steps ->
+        stepsFlow.map { beverages ->
             when (settingsDateUnit.second) {
-                DateUnit.DAY -> mapDay(steps)
-                DateUnit.WEEK -> mapWeek(steps)
-                DateUnit.MONTH -> mapMonth(steps)
-                DateUnit.YEAR -> mapYear(steps)
+                DateUnit.DAY -> mapDay(beverages)
+                DateUnit.WEEK -> mapWeek(beverages)
+                DateUnit.MONTH -> mapMonth(beverages)
+                DateUnit.YEAR -> mapYear(beverages)
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
 
-    val maxSteps: StateFlow<UInt> = steps
-        .map { stepsList ->
-            if (stepsList.isEmpty()) ProfileDefaults.STEPS else stepsList.maxOf { it.steps }
+    val maxBeverages: StateFlow<UInt> = beverages
+        .map { beverages ->
+            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOf { it.amount }
         }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    private fun mapDay(steps: List<Steps>): List<Steps> {
-        return steps
+    private fun mapDay(beverages: List<BeverageOverview>): List<BeverageOverview> {
+        return beverages
     }
 
     private fun <K> aggregateStepsByPeriod(
-        steps: List<Steps>,
-        groupKeySelector: (Steps) -> K,
-        representativeDateSelector: (List<Steps>) -> LocalDate
-    ): List<Steps> {
-        if (steps.isEmpty()) return emptyList()
+        beverages: List<BeverageOverview>,
+        groupKeySelector: (BeverageOverview) -> K,
+        representativeDateSelector: (List<BeverageOverview>) -> LocalDate
+    ): List<BeverageOverview> {
+        if (beverages.isEmpty()) return emptyList()
 
-        return steps.groupBy(groupKeySelector)
+        return beverages.groupBy(groupKeySelector)
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
                 val groupSize = group.size
-                val avgSteps = group.sumOf { it.steps }.toDouble() / groupSize
+                val avgSteps = group.sumOf { it.amount }.toDouble() / groupSize
 
-                Steps(
-                    id = Uuid.random(),
+                BeverageOverview(
                     dateUtc = representativeDateSelector(group),
-                    profileId = group.first().profileId,
-                    steps = avgSteps.roundToInt().toUInt(),
+                    amount = avgSteps.roundToInt().toUInt(),
                 )
             }
     }
 
     private fun mapWeek(
-        stepList: List<Steps>,
-    ): List<Steps> {
+        beverages: List<BeverageOverview>,
+    ): List<BeverageOverview> {
         return aggregateStepsByPeriod(
-            steps = stepList,
+            beverages = beverages,
             groupKeySelector = { it.dateUtc.isoWeekAndYear() },
             representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
         )
     }
 
-    private fun mapMonth(stepsList: List<Steps>): List<Steps> {
+    private fun mapMonth(beverages: List<BeverageOverview>): List<BeverageOverview> {
         return aggregateStepsByPeriod(
-            steps = stepsList,
+            beverages = beverages,
             groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
             representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
         )
     }
 
-    private fun mapYear(stepsList: List<Steps>): List<Steps> {
+    private fun mapYear(beverages: List<BeverageOverview>): List<BeverageOverview> {
         return aggregateStepsByPeriod(
-            steps = stepsList,
+            beverages = beverages,
             groupKeySelector = { it.dateUtc.year },
             representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
         )
@@ -151,8 +148,8 @@ class StepsViewModel(
         setRange(range)
     }
 
-    fun dates(steps: List<Steps>): List<LocalDate> {
-        return steps.map { it.dateUtc }
+    fun dates(beverages: List<BeverageOverview>): List<LocalDate> {
+        return beverages.map { it.dateUtc }
     }
 
     fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
@@ -162,17 +159,4 @@ class StepsViewModel(
     fun setRange(range: DateRange) {
         _dateRange.value = range
     }
-
-    fun addSteps(date: LocalDate, steps: UInt) {
-        viewModelScope.launch {
-            val settings = settingsRepository.getSettings()
-            stepsRepository.addSteps(
-                profileId = settings.selectedProfileId!!,
-                date = date,
-                steps = steps,
-            )
-        }
-    }
-
-    // TODO: update steps
 }

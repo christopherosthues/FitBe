@@ -28,27 +28,27 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-enum class FluidUnit(private val conversionFactorToMilliliter: Int) {
-    Cup(236),
-    SmallGlass(150),
-    NormalGlass(250),
-    LargeGlass(300),
-    Milliliter(1),
-    Centiliter(10),
-    Deciliter(100),
-    Liter(1000);
+enum class FluidUnit(private val conversionFactorToMilliliter: UInt) {
+    Cup(236u),
+    SmallGlass(150u),
+    NormalGlass(250u),
+    LargeGlass(300u),
+    Milliliter(1u),
+    Centiliter(10u),
+    Deciliter(100u),
+    Liter(1000u);
 
-    fun toMilliliter(amount: Int): Int {
+    fun toMilliliter(amount: UInt): UInt {
         return conversionFactorToMilliliter * amount
     }
 
     @Composable
-    fun localizedString(amount: Int): String {
+    fun localizedString(amount: UInt): String {
         return when (this) {
-            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = amount, amount)
-            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = amount, amount)
-            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = amount, amount)
-            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = amount, amount)
+            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = amount.toInt(), amount)
+            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = amount.toInt(), amount)
+            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = amount.toInt(), amount)
+            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = amount.toInt(), amount)
             Milliliter -> stringResource(Res.string.fluid_unit_milliliter, amount)
             Centiliter -> stringResource(Res.string.fluid_unit_centiliter, amount)
             Deciliter -> stringResource(Res.string.fluid_unit_deciliter, amount)
