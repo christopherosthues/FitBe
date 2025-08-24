@@ -16,6 +16,7 @@ import org.darthacheron.fitbe.health.steps.StepsRepository
 import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightRepository
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
+import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsViewModel
@@ -53,6 +54,7 @@ val sharedModule = module {
 
     singleOf(::StartUpService)
 
+    viewModelOf(::HomeViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::NutritionOverviewViewModel)

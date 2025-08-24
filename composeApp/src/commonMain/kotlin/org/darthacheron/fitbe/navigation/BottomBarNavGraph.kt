@@ -24,6 +24,7 @@ import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.WeightOverviewView
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.home.HomeView
+import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -46,7 +47,8 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
             startDestination = Screen.Home
         ) {
             composable<Screen.Home>{
-                HomeView(navHostController)
+                val viewModel = koinViewModel<HomeViewModel>()
+                HomeView(viewModel, navHostController)
             }
             composable<Screen.Exercises> {
                 val viewModel = koinViewModel<ExercisesViewModel>()
