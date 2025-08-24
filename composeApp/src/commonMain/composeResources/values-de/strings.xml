@@ -189,4 +189,5 @@
     <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 100.000 ein.</string>
     <string name="beverages_chart_thumbnail_title">Trinken</string>
     <string name="beverages_chart_y_axis_title">ml</string>
+    <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
 </resources>

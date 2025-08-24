@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_chart_annotation_beverage_value
 import fitbe.composeapp.generated.resources.beverages_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.beverages_chart_y_axis_title
 import fitbe.composeapp.generated.resources.month_april
@@ -171,7 +172,7 @@ fun PlotBeverages(
                                     modifier = modifier.padding(8.dp)
                                 ) {
                                     Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(beveragesChartData[index].y.yMax.toString())
+                                        Text(text = stringResource(Res.string.beverages_chart_annotation_beverage_value, beveragesChartData[index].y.yMax))
                                     }
                                 }
                             }
