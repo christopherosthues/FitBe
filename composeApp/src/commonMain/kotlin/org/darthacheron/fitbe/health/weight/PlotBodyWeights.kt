@@ -253,9 +253,9 @@ fun PlotBodyWeights(
                 )
             }
 
-            if (targetWeight != null) {
+            if (targetWeight != null && targetWeight > 0.0) {
                 LinePlot(
-                    data = dates.map { Point(it, targetWeight!!) },
+                    data = dates.map { Point(it, targetWeight) },
                     lineStyle = LineStyle(
                         brush = SolidColor(Color(0xFFED7D31)),
                         strokeWidth = 2.dp

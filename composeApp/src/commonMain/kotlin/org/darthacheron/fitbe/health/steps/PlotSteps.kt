@@ -2,12 +2,15 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
@@ -29,7 +32,16 @@ import fitbe.composeapp.generated.resources.month_september
 import fitbe.composeapp.generated.resources.steps_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.steps_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
+import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
+import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
+import io.github.koalaplot.core.bar.VerticalBarPlot
+import io.github.koalaplot.core.bar.VerticalBarPlotEntry
+import io.github.koalaplot.core.bar.VerticalBarPosition
+import io.github.koalaplot.core.line.AreaBaseline
+import io.github.koalaplot.core.line.AreaPlot
 import io.github.koalaplot.core.line.LinePlot
+import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.VerticalRotation
@@ -134,6 +146,42 @@ fun PlotSteps(
                 }
             },
         ) {
+            if (dates.size > 1) {
+                AreaPlot(
+                    data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
+                    areaBaseline = AreaBaseline.ConstantLine(maxSteps.toInt()),
+                    areaStyle = AreaStyle(brush = SolidColor(Color.Yellow)),
+                    lineStyle = LineStyle(
+                        brush = SolidColor(MaterialTheme.colorScheme.primary),
+                        strokeWidth = 2.dp
+                    ),
+                )
+            } else if (dates.size == 1) {
+                val stepsChartData = toVerticalBarData(stepsData)
+                VerticalBarPlot(
+                    data = stepsChartData,
+                    barWidth = 0.8f,
+                    bar = { index ->
+                        DefaultVerticalBar(
+                            brush = SolidColor(Color.Yellow),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            if (!thumbnail) {
+                                Surface(
+                                    shadowElevation = 2.dp,
+                                    shape = MaterialTheme.shapes.medium,
+                                    color = Color.LightGray,
+                                    modifier = modifier.padding(8.dp)
+                                ) {
+                                    Box(modifier = Modifier.padding(8.dp)) {
+                                        Text(stepsChartData[index].y.yMax.toString())
+                                    }
+                                }
+                            }
+                        }
+                    },
+                )
+            }
             if (stepsData.isNotEmpty()) {
                 LinePlot(
                     data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
@@ -174,5 +222,11 @@ private fun monthResourceString(labelDate: LocalDate): StringResource {
         Month.NOVEMBER -> Res.string.month_november
         Month.DECEMBER -> Res.string.month_december
         else -> Res.string.month_january
+    }
+}
+
+private fun toVerticalBarData(steps: List<Steps>): List<VerticalBarPlotEntry<LocalDate, Int>> {
+    return steps.map {
+        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.steps.toInt()))
     }
 }
