@@ -19,6 +19,9 @@ import org.darthacheron.fitbe.database.converters.LocalDateConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
+import org.darthacheron.fitbe.exercises.ExerciseEntity
+import org.darthacheron.fitbe.exercises.ExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.exercises.TrainingEquipmentEntity
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -39,7 +42,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 @Database(
-    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class, StepsEntity::class],
+    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class, StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class, ExerciseEquipmentCrossRef::class],
     version = 1
 )
 @TypeConverters(
