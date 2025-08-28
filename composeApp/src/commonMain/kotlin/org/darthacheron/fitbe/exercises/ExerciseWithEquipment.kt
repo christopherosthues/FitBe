@@ -11,8 +11,8 @@ data class ExerciseWithEquipment(
         entityColumn = "id",   // From TrainingEquipmentEntity (the entity in the List)
         associateBy = Junction(
             value = ExerciseEquipmentCrossRef::class,
-            parentColumn = "exercise_id", // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
-            entityColumn = "equipment_id" // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
+            parentColumn = "exerciseId", // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
+            entityColumn = "equipmentId" // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
         )
     )
     val equipmentList: List<TrainingEquipmentEntity>

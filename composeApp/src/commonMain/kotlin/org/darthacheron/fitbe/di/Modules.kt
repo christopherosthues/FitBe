@@ -51,6 +51,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().bodyWeightDao }
     single { get<FitBeDatabase>().profileDao }
     single { get<FitBeDatabase>().stepsDao }
+    single { get<FitBeDatabase>().exerciseDao }
 
     singleOf(::StartUpService)
 

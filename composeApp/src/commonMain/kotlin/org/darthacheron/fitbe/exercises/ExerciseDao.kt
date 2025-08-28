@@ -23,7 +23,7 @@ interface ExerciseDao { // Example, you might have separate DAOs
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addExerciseEquipmentCrossRef(crossRef: ExerciseEquipmentCrossRef)
 
-    @Query("DELETE FROM exercise_equipment_cross_ref WHERE exercise_id = :exerciseId AND equipment_id = :equipmentId")
+    @Query("DELETE FROM exercise_equipment_cross_ref WHERE exerciseId = :exerciseId AND equipmentId = :equipmentId")
     suspend fun removeExerciseEquipmentCrossRef(exerciseId: Uuid, equipmentId: Uuid)
 
 

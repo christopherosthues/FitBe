@@ -18,9 +18,12 @@ import org.darthacheron.fitbe.database.converters.InstantConverter
 import org.darthacheron.fitbe.database.converters.LocalDateConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.LocalTimeConverter
+import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
+import org.darthacheron.fitbe.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.ExerciseEntity
 import org.darthacheron.fitbe.exercises.ExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.exercises.TrainingEquipmentEntity
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
@@ -42,13 +45,17 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 @Database(
-    entities = [BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class, StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class, ExerciseEquipmentCrossRef::class],
+    entities = [
+        BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
+        StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
+        ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class
+               ],
     version = 1
 )
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
     LocalDateTimeConverter::class, GenderConverter::class, LocalTimeConverter::class,
-    LocalDateConverter::class
+    LocalDateConverter::class, MuscleGroupListConverter::class
 )
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {
@@ -57,6 +64,7 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val bodyWeightDao: BodyWeightDao
     abstract val profileDao: ProfileDao
     abstract val stepsDao: StepsDao
+    abstract val exerciseDao: ExerciseDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

@@ -10,27 +10,27 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Entity(
     tableName = "exercise_equipment_cross_ref",
-    primaryKeys = ["exercise_id", "equipment_id"], // Composite primary key
+    primaryKeys = ["exerciseId", "equipmentId"], // Composite primary key
     foreignKeys = [
         ForeignKey(
             entity = ExerciseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["exercise_id"],
+            childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = TrainingEquipmentEntity::class,
             parentColumns = ["id"],
-            childColumns = ["equipment_id"],
+            childColumns = ["equipmentId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index(value = ["exercise_id"]),
-        Index(value = ["equipment_id"])
+        Index(value = ["exerciseId"]),
+        Index(value = ["equipmentId"])
     ]
 )
 data class ExerciseEquipmentCrossRef(
-    @ColumnInfo(name = "exercise_id") val exerciseId: Uuid,
-    @ColumnInfo(name = "equipment_id") val equipmentId: Uuid
+    val exerciseId: Uuid,
+    val equipmentId: Uuid
 )
