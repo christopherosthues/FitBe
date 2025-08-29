@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import org.darthacheron.fitbe.exercises.ExercisesView
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
+import org.darthacheron.fitbe.exercises.TrainingEquipmentView
+import org.darthacheron.fitbe.exercises.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
@@ -53,6 +55,10 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
             composable<Screen.Exercises> {
                 val viewModel = koinViewModel<ExercisesViewModel>()
                 ExercisesView(viewModel)
+            }
+            composable<Screen.TrainingEquipment>{
+                val viewModel = koinViewModel<TrainingEquipmentViewModel>()
+                TrainingEquipmentView(viewModel)
             }
             composable<Screen.Health> {
                 val viewModel = koinViewModel<HealthOverviewViewModel>()

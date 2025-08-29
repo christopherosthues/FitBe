@@ -17,6 +17,9 @@ sealed class Screen {
     data object Exercises : Screen()
 
     @Serializable
+    data object TrainingEquipment : Screen()
+
+    @Serializable
     data object Health : Screen()
 
     @Serializable

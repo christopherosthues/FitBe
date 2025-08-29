@@ -18,17 +18,31 @@ data class ExerciseWithEquipmentEntity(
     )
     val equipmentList: List<TrainingEquipmentEntity>
 ) {
+    @OptIn(ExperimentalUuidApi::class)
     fun toExerciseWithEquipment(): ExerciseWithEquipment {
         return ExerciseWithEquipment(
-            exercise = exercise.toExercise(),
+            id = exercise.id,
+            name = exercise.name,
+            guide = exercise.guide,
+            targetMuscleGroups = exercise.targetMuscleGroups,
+            default = exercise.default,
+            dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 fun toEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity {
     return ExerciseWithEquipmentEntity(
-        exercise = toEntity(exerciseWithEquipment.exercise),
+        exercise = ExerciseEntity(
+            id = exerciseWithEquipment.id,
+            name = exerciseWithEquipment.name,
+            guide = exerciseWithEquipment.guide,
+            targetMuscleGroups = exerciseWithEquipment.targetMuscleGroups,
+            default = exerciseWithEquipment.default,
+            dateUtc = exerciseWithEquipment.dateUtc
+        ),
         equipmentList = exerciseWithEquipment.equipmentList.map { toEntity(it) }
     )
 }

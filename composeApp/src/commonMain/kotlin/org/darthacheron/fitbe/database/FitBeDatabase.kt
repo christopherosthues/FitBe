@@ -20,6 +20,7 @@ import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
+import org.darthacheron.fitbe.exercises.DefaultTrainingEquipmentEntity
 import org.darthacheron.fitbe.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.ExerciseEntity
 import org.darthacheron.fitbe.exercises.ExerciseEquipmentCrossRef
@@ -48,7 +49,8 @@ import kotlin.uuid.ExperimentalUuidApi
     entities = [
         BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
-        ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class
+        ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
+        DefaultTrainingEquipmentEntity::class // Added DefaultTrainingEquipmentEntity
                ],
     version = 1
 )

@@ -1,10 +1,12 @@
 package org.darthacheron.fitbe.exercises
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -16,8 +18,26 @@ interface ExerciseDao { // Example, you might have separate DAOs
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertExercise(exercise: ExerciseEntity): Long
 
+    @Upsert
+    suspend fun upsertEquipment(equipment: TrainingEquipmentEntity): Long
+
+    @Delete
+    suspend fun deleteEquipment(equipment: TrainingEquipmentEntity)
+
+    // --- Methods for DefaultTrainingEquipmentEntity ---
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertEquipment(equipment: TrainingEquipmentEntity): Long
+    suspend fun insertDefaultEquipment(defaultEquipment: DefaultTrainingEquipmentEntity): Long
+
+    @Query("SELECT * FROM default_training_equipment WHERE id = :equipmentId")
+    suspend fun getDefaultEquipmentById(equipmentId: Uuid): DefaultTrainingEquipmentEntity?
+
+    @Transaction
+    suspend fun resetEquipmentToDefault(equipmentId: Uuid) {
+        val defaultEquipment = getDefaultEquipmentById(equipmentId)
+        if (defaultEquipment != null) {
+            upsertEquipment(defaultEquipment.toTrainingEquipmentEntity())
+        }
+    }
 
     // --- Methods for the Join Table ---
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -38,6 +58,9 @@ interface ExerciseDao { // Example, you might have separate DAOs
     @Transaction
     @Query("SELECT * FROM training_equipment WHERE id = :equipmentId")
     fun getEquipmentWithExercises(equipmentId: Uuid): Flow<EquipmentWithExercisesEntity?>
+
+    @Query("SELECT * FROM training_equipment WHERE id = :equipmentId")
+    fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipmentEntity?>
 
     @Transaction
     @Query("SELECT * FROM training_equipment")

@@ -35,6 +35,7 @@ import fitbe.composeapp.generated.resources.top_bar_title_profile
 import fitbe.composeapp.generated.resources.top_bar_title_settings
 import fitbe.composeapp.generated.resources.top_bar_title_sleeps
 import fitbe.composeapp.generated.resources.top_bar_title_steps
+import fitbe.composeapp.generated.resources.top_bar_title_training_equipment
 import org.darthacheron.fitbe.navigation.BottomBarNavGraph
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.navigation.bottomBarDestinations
@@ -139,6 +140,7 @@ private fun topBarTitle(currentDestination: String?): String {
     return when (currentDestination) {
         Screen.Home.toString() -> stringResource(Res.string.top_bar_title_home)
         Screen.Exercises.toString() -> stringResource(Res.string.top_bar_title_exercises)
+        Screen.TrainingEquipment.toString() -> stringResource(Res.string.top_bar_title_training_equipment)
         Screen.Health.toString() -> stringResource(Res.string.top_bar_title_health)
         Screen.Profile.toString() -> stringResource(Res.string.top_bar_title_profile)
         Screen.Sleeps.toString() -> stringResource(Res.string.top_bar_title_sleeps)
@@ -170,6 +172,7 @@ private fun checkIfSelected(
                 currentDestination?.contains(Screen.BeveragesOverview.toString()) == true ||
                 currentDestination?.contains(Screen.Sleeps.toString()) == true ||
                 currentDestination?.contains(Screen.Steps.toString()) == true ||
+                currentDestination?.contains(Screen.TrainingEquipment.toString()) == true ||
                 currentDestination?.contains(Screen.BodyWeights.toString()) == true) &&
         currentBottomBarItem == Screen.Health.toString()
     ) true

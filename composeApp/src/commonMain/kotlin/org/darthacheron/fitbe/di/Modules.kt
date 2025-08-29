@@ -5,6 +5,7 @@ import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
+import org.darthacheron.fitbe.exercises.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
@@ -67,4 +68,5 @@ val sharedModule = module {
     viewModelOf(::ProfileViewModel)
     viewModelOf(::WeightOverviewViewModel)
     viewModelOf(::StepsViewModel)
+    viewModelOf(::TrainingEquipmentViewModel)
 }

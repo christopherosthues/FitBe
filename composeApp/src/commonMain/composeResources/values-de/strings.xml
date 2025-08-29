@@ -58,6 +58,7 @@
     <string name="bottom_bar_profile">Profil</string>
     <string name="top_bar_title_home">Start</string>
     <string name="top_bar_title_exercises">\u00dcbungen</string>
+    <string name="top_bar_title_training_equipment">Trainingsgeräte</string>
     <string name="top_bar_title_health">Gesundheit</string>
     <string name="top_bar_title_profile">Profil</string>
     <string name="top_bar_title_sleeps">Schlaf</string>
@@ -190,4 +191,17 @@
     <string name="beverages_chart_thumbnail_title">Trinken</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
+    <string name="muscle_group_chest">Brust</string>
+    <string name="muscle_group_back">Rücken</string>
+    <string name="muscle_group_shoulders">Schultern</string>
+    <string name="muscle_group_biceps">Bizeps</string>
+    <string name="muscle_group_triceps">Trizeps</string>
+    <string name="muscle_group_forearms">Unterarme</string>
+    <string name="muscle_group_quads">Quadrizeps</string>
+    <string name="muscle_group_hamstrings">Beinbeuger</string>
+    <string name="muscle_group_calves">Waden</string>
+    <string name="muscle_group_abs">Bauchmuskeln</string>
+    <string name="muscle_group_cardio">Cardio</string>
+    <string name="muscle_group_full_body">Ganzkörper</string>
+    <string name="muscle_group_other">Sonstiges</string>
 </resources>
