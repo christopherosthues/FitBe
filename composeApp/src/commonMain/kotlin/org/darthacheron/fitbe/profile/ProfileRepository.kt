@@ -21,11 +21,11 @@ class ProfileRepository(private val profileDao: ProfileDao) {
         profileDao.getProfileFlowById(id).map { it?.toProfile() }
 
     suspend fun upsertProfile(profile: Profile) {
-        profileDao.upsertProfile(ProfileEntity.fromProfile(profile))
+        profileDao.upsertProfile(toEntity(profile))
     }
 
     suspend fun deleteProfile(profile: Profile) {
-        profileDao.deleteProfile(ProfileEntity.fromProfile(profile))
+        profileDao.deleteProfile(toEntity(profile))
     }
 }
 

@@ -33,20 +33,21 @@ data class ProfileEntity(
         bodyHeight = bodyHeightInCm,
         dateOfBirth = dateOfBirth
     )
+}
 
-    companion object {
-        fun fromProfile(profile: Profile): ProfileEntity = ProfileEntity(
-            id = profile.id,
-            name = profile.name,
-            gender = profile.gender,
-            targetKcal = profile.targetKcal?.toInt(),
-            targetBeverageInMilliliter = profile.targetBeverageInMilliliter?.toInt(),
-            targetWeight = profile.targetWeight,
-            targetSleepDuration = profile.targetSleepDuration,
-            targetSteps = profile.targetSteps?.toInt(),
-            bodyHeightInCm = profile.bodyHeight,
-            dateOfBirth = profile.dateOfBirth,
-        )
-    }
+@OptIn(ExperimentalUuidApi::class)
+fun toEntity(profile: Profile): ProfileEntity {
+    return ProfileEntity(
+        id = profile.id,
+        name = profile.name,
+        gender = profile.gender,
+        targetKcal = profile.targetKcal?.toInt(),
+        targetBeverageInMilliliter = profile.targetBeverageInMilliliter?.toInt(),
+        targetWeight = profile.targetWeight,
+        targetSleepDuration = profile.targetSleepDuration,
+        targetSteps = profile.targetSteps?.toInt(),
+        bodyHeightInCm = profile.bodyHeight,
+        dateOfBirth = profile.dateOfBirth,
+    )
 }
 

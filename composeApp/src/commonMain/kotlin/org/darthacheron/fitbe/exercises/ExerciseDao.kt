@@ -27,21 +27,19 @@ interface ExerciseDao { // Example, you might have separate DAOs
     suspend fun removeExerciseEquipmentCrossRef(exerciseId: Uuid, equipmentId: Uuid)
 
 
-    // --- Querying Many-to-Many Relationships ---
-
     @Transaction // Important for relations
     @Query("SELECT * FROM exercises WHERE id = :exerciseId")
-    fun getExerciseWithEquipment(exerciseId: Uuid): Flow<ExerciseWithEquipment?>
+    fun getExerciseWithEquipment(exerciseId: Uuid): Flow<ExerciseWithEquipmentEntity?>
 
     @Transaction
     @Query("SELECT * FROM exercises")
-    fun getAllExercisesWithEquipment(): Flow<List<ExerciseWithEquipment>>
+    fun getAllExercisesWithEquipment(): Flow<List<ExerciseWithEquipmentEntity>>
 
     @Transaction
     @Query("SELECT * FROM training_equipment WHERE id = :equipmentId")
-    fun getEquipmentWithExercises(equipmentId: Uuid): Flow<EquipmentWithExercises?>
+    fun getEquipmentWithExercises(equipmentId: Uuid): Flow<EquipmentWithExercisesEntity?>
 
     @Transaction
     @Query("SELECT * FROM training_equipment")
-    fun getAllEquipmentWithExercises(): Flow<List<EquipmentWithExercises>>
+    fun getAllEquipmentWithExercises(): Flow<List<EquipmentWithExercisesEntity>>
 }

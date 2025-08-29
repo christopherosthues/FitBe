@@ -3,7 +3,7 @@ package org.darthacheron.fitbe.profile
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.darthacheron.fitbe.exercises.ProfileFavoriteExerciseCrossRef
-import org.darthacheron.fitbe.exercises.ProfileWithFavorites
+import org.darthacheron.fitbe.exercises.ProfileWithFavoritesEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -32,7 +32,7 @@ interface ProfileDao {
 
     @Transaction // Important for relations
     @Query("SELECT * FROM profiles WHERE id = :profileId")
-    fun getProfileWithFavorites(profileId: Long): Flow<ProfileWithFavorites?>
+    fun getProfileWithFavorites(profileId: Long): Flow<ProfileWithFavoritesEntity?>
 
 }
 

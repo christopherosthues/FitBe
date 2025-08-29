@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.exercises
 
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -8,6 +9,7 @@ data class Exercise(
     val id: Uuid,
     val name: String,
     val guide: String,
-    val equipments: List<TrainingEquipment>,
-    val default: Boolean = false
+    val targetMuscleGroups: List<MuscleGroup> = emptyList(),
+    val default: Boolean = false,
+    val dateUtc: LocalDate
 )

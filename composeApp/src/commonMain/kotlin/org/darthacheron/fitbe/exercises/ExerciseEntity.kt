@@ -5,6 +5,10 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters // Added
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -17,5 +21,29 @@ data class ExerciseEntity(
     @ColumnInfo(name = "name") val name: String,
     val guide: String,
     val targetMuscleGroups: List<MuscleGroup> = emptyList(), // Added
-    val default: Boolean = false
-)
+    val default: Boolean = false,
+    val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+) {
+    fun toExercise(): Exercise {
+        return Exercise(
+            id = id,
+            name = name,
+            guide = guide,
+            targetMuscleGroups = targetMuscleGroups,
+            default = default,
+            dateUtc = dateUtc
+        )
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun toEntity(exercise: Exercise): ExerciseEntity {
+    return ExerciseEntity(
+        id = exercise.id,
+        name = exercise.name,
+        guide = exercise.guide,
+        targetMuscleGroups = exercise.targetMuscleGroups,
+        default = exercise.default,
+        dateUtc = exercise.dateUtc
+    )
+}
