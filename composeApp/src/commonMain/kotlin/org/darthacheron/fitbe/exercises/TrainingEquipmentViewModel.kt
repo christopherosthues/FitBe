@@ -5,18 +5,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class TrainingEquipmentViewModel(private val exerciseDao: ExerciseDao) : ViewModel() {
+class TrainingEquipmentViewModel(private val equipmentRepository: EquipmentRepository) : ViewModel() {
 
-    val allEquipment: StateFlow<List<TrainingEquipment>> =
-        exerciseDao.getAllEquipmentWithExercises() // Assuming this returns Flow<List<EquipmentWithExercisesEntity>>
-            .map { list -> list.map { it.equipment.toTrainingEquipment() } } // Transform to List<TrainingEquipmentEntity>
+    val allEquipment: StateFlow<List<EquipmentWithExercises>> =
+        equipmentRepository.getAllEquipmentWithExercises() // Assuming this returns Flow<List<EquipmentWithExercisesEntity>>
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000), // Keep active for 5s after last subscriber
@@ -24,24 +23,25 @@ class TrainingEquipmentViewModel(private val exerciseDao: ExerciseDao) : ViewMod
             )
 
     fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipment?> {
-        return exerciseDao.getEquipmentById(equipmentId).map { it?.toTrainingEquipment() }
+        return equipmentRepository.getEquipmentById(equipmentId)
     }
 
-    fun addOrUpdateEquipment(name: String, id: Uuid? = null, isDefault: Boolean = false) {
+    fun addOrUpdateEquipment(name: String, id: Uuid? = null, isDefault: Boolean = false, dateUtc: LocalDate) {
         viewModelScope.launch {
-            val equipment = TrainingEquipmentEntity(
+            val equipment = TrainingEquipment(
                 id = id ?: Uuid.Companion.random(),
                 name = name,
-                default = isDefault
+                default = isDefault,
+                dateUtc = dateUtc
             )
-            exerciseDao.upsertEquipment(equipment)
+            equipmentRepository.upsertEquipment(equipment)
         }
     }
 
     fun deleteEquipment(equipment: TrainingEquipment) {
         viewModelScope.launch {
             if (!equipment.default) {
-                exerciseDao.deleteEquipment(toEntity(equipment))
+                equipmentRepository.deleteEquipment(equipment)
             } else {
                 // Handle cannot delete default equipment (e.g., show a message)
                 println("Cannot delete default equipment. ID: ${equipment.id}")
@@ -51,20 +51,7 @@ class TrainingEquipmentViewModel(private val exerciseDao: ExerciseDao) : ViewMod
 
     fun resetToDefault(equipmentId: Uuid) {
         viewModelScope.launch {
-            exerciseDao.resetEquipmentToDefault(equipmentId)
-        }
-    }
-
-    // Method to initially populate default equipment and their original values
-    // This should be called once, perhaps during database creation/migration
-    fun addInitialDefaultEquipment(defaultEquipments: List<Pair<String, Uuid>>) {
-        viewModelScope.launch {
-            defaultEquipments.forEach { (name, id) ->
-                val equipment = TrainingEquipmentEntity(id = id, name = name, default = true)
-                val defaultOriginal = DefaultTrainingEquipmentEntity(id = id, name = name)
-                exerciseDao.upsertEquipment(equipment) // Add to main table
-                exerciseDao.insertDefaultEquipment(defaultOriginal) // Add to defaults table
-            }
+            equipmentRepository.resetEquipmentToDefault(equipmentId)
         }
     }
 }
