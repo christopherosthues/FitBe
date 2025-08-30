@@ -1,6 +1,8 @@
 package org.darthacheron.fitbe.exercises
 
+import androidx.compose.runtime.Composable
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -10,4 +12,15 @@ data class TrainingEquipment(
     val name: String,
     val default: Boolean = false,
     val dateUtc: LocalDate,
-)
+) {
+    @Composable
+    fun getLocalizedName(): String {
+        return if (this.default) {
+            DefaultEquipmentResProvider.equipmentNameMap[this.name]?.let {
+                stringResource(it)
+            } ?: this.name
+        } else {
+            this.name
+        }
+    }
+}

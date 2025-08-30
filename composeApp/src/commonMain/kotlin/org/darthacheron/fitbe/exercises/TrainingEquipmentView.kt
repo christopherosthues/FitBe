@@ -24,7 +24,7 @@ fun TrainingEquipmentView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp) // Removed paddingValues, kept the original 16.dp padding
+            .padding(16.dp)
     ) {
         if (allEquipment.isEmpty()) {
             Text("No equipment found. Add some!")
@@ -40,16 +40,10 @@ fun TrainingEquipmentView(
 }
 
 @Composable
-fun TrainingEquipmentRow(equipment: TrainingEquipmentEntity) {
+fun TrainingEquipmentRow(equipment: TrainingEquipment) {
     // TODO: Expand this row to include edit/delete/reset buttons
     Text(
-        text = equipment.name + if (equipment.default) " (Default)" else "",
+        text = equipment.getLocalizedName() + if (equipment.default) " (Default)" else "",
         modifier = Modifier.padding(vertical = 8.dp)
     )
 }
-
-// TODO: You might need a way to get the ViewModel instance,
-// for example, using Koin:
-// import org.koin.compose.viewmodel.koinViewModel
-// viewModel: TrainingEquipmentViewModel = koinViewModel()
-// or by passing it as a parameter from your navigation graph.

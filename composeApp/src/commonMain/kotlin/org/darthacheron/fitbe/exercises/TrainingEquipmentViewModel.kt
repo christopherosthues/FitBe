@@ -14,17 +14,17 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class TrainingEquipmentViewModel(private val exerciseDao: ExerciseDao) : ViewModel() {
 
-    val allEquipment: StateFlow<List<TrainingEquipmentEntity>> =
+    val allEquipment: StateFlow<List<TrainingEquipment>> =
         exerciseDao.getAllEquipmentWithExercises() // Assuming this returns Flow<List<EquipmentWithExercisesEntity>>
-            .map { list -> list.map { it.equipment } } // Transform to List<TrainingEquipmentEntity>
+            .map { list -> list.map { it.equipment.toTrainingEquipment() } } // Transform to List<TrainingEquipmentEntity>
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000), // Keep active for 5s after last subscriber
                 initialValue = emptyList()
             )
 
-    fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipmentEntity?> {
-        return exerciseDao.getEquipmentById(equipmentId)
+    fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipment?> {
+        return exerciseDao.getEquipmentById(equipmentId).map { it?.toTrainingEquipment() }
     }
 
     fun addOrUpdateEquipment(name: String, id: Uuid? = null, isDefault: Boolean = false) {
@@ -38,10 +38,10 @@ class TrainingEquipmentViewModel(private val exerciseDao: ExerciseDao) : ViewMod
         }
     }
 
-    fun deleteEquipment(equipment: TrainingEquipmentEntity) {
+    fun deleteEquipment(equipment: TrainingEquipment) {
         viewModelScope.launch {
             if (!equipment.default) {
-                exerciseDao.deleteEquipment(equipment)
+                exerciseDao.deleteEquipment(toEntity(equipment))
             } else {
                 // Handle cannot delete default equipment (e.g., show a message)
                 println("Cannot delete default equipment. ID: ${equipment.id}")

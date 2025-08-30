@@ -50,7 +50,7 @@ import kotlin.uuid.ExperimentalUuidApi
         BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
-        DefaultTrainingEquipmentEntity::class // Added DefaultTrainingEquipmentEntity
+        DefaultTrainingEquipmentEntity::class
                ],
     version = 1
 )

@@ -29,6 +29,7 @@ import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
 import fitbe.composeapp.generated.resources.top_bar_title_exercises
+import fitbe.composeapp.generated.resources.top_bar_title_exercises_dashboard
 import fitbe.composeapp.generated.resources.top_bar_title_health
 import fitbe.composeapp.generated.resources.top_bar_title_home
 import fitbe.composeapp.generated.resources.top_bar_title_profile
