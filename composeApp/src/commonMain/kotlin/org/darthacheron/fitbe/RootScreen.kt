@@ -139,6 +139,7 @@ fun RootScreen(navigateToSettings: () -> Unit) {
 private fun topBarTitle(currentDestination: String?): String {
     return when (currentDestination) {
         Screen.Home.toString() -> stringResource(Res.string.top_bar_title_home)
+        Screen.ExercisesDashboard.toString() -> stringResource(Res.string.top_bar_title_exercises_dashboard)
         Screen.Exercises.toString() -> stringResource(Res.string.top_bar_title_exercises)
         Screen.TrainingEquipment.toString() -> stringResource(Res.string.top_bar_title_training_equipment)
         Screen.Health.toString() -> stringResource(Res.string.top_bar_title_health)
@@ -172,9 +173,10 @@ private fun checkIfSelected(
                 currentDestination?.contains(Screen.BeveragesOverview.toString()) == true ||
                 currentDestination?.contains(Screen.Sleeps.toString()) == true ||
                 currentDestination?.contains(Screen.Steps.toString()) == true ||
-                currentDestination?.contains(Screen.TrainingEquipment.toString()) == true ||
                 currentDestination?.contains(Screen.BodyWeights.toString()) == true) &&
-        currentBottomBarItem == Screen.Health.toString()
+        currentBottomBarItem == Screen.Health.toString() ||
+        (currentDestination?.contains(Screen.TrainingEquipment.toString()) == true) &&
+        currentBottomBarItem == Screen.ExercisesDashboard.toString()
     ) true
     else false
 }

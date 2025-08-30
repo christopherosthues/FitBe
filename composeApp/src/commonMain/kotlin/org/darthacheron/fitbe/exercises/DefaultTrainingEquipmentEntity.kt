@@ -26,3 +26,12 @@ data class DefaultTrainingEquipmentEntity(
         )
     }
 }
+
+@OptIn(ExperimentalUuidApi::class)
+fun fromTrainingEquipmentEntity(entity: TrainingEquipmentEntity): DefaultTrainingEquipmentEntity {
+    return DefaultTrainingEquipmentEntity(
+        id = entity.id,
+        name = entity.name,
+        dateUtc = entity.dateUtc
+    )
+}

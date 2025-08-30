@@ -23,8 +23,8 @@ sealed class BottomBarDestination(
         label = Res.string.bottom_bar_home,
         icon = Res.drawable.ic_home
     )
-    data object Exercises: BottomBarDestination(
-        screen = Screen.Exercises,
+    data object ExercisesDashboard: BottomBarDestination(
+        screen = Screen.ExercisesDashboard,
         label = Res.string.bottom_bar_exercises,
         icon = Res.drawable.ic_exercise
     )
@@ -42,7 +42,7 @@ sealed class BottomBarDestination(
 
 val bottomBarDestinations = listOf(
     BottomBarDestination.Home,
-    BottomBarDestination.Exercises,
+    BottomBarDestination.ExercisesDashboard,
     BottomBarDestination.Health,
     BottomBarDestination.Profile,
 )

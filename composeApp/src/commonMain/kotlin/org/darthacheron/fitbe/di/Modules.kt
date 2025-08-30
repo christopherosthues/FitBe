@@ -4,6 +4,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
+import org.darthacheron.fitbe.database.PrepopulateCallback
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
@@ -44,6 +45,7 @@ val sharedModule = module {
 
     single {
         get<DatabaseFactory>().create()
+            .addCallback(PrepopulateCallback(get()))
             .setDriver(BundledSQLiteDriver())
             .build()
     }

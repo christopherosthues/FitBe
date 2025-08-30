@@ -57,6 +57,7 @@
     <string name="bottom_bar_health">Health</string>
     <string name="bottom_bar_profile">Profile</string>
     <string name="top_bar_title_home">Home</string>
+    <string name="top_bar_title_exercises_dashboard">Exercises</string>
     <string name="top_bar_title_exercises">Exercises</string>
     <string name="top_bar_title_training_equipment">Training equipment</string>
     <string name="top_bar_title_health">Health</string>
@@ -204,4 +205,6 @@
     <string name="muscle_group_cardio">Cardio</string>
     <string name="muscle_group_full_body">Full Body</string>
     <string name="muscle_group_other">Other</string>
+    <string name="card_title_exercises_overview">Exercises Overview</string>
+    <string name="card_title_training_equipment">Manage Equipment</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import org.darthacheron.fitbe.exercises.ExercisesDashboardView
 import org.darthacheron.fitbe.exercises.ExercisesView
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.TrainingEquipmentView
@@ -52,13 +53,8 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
                 val viewModel = koinViewModel<HomeViewModel>()
                 HomeView(viewModel, navHostController)
             }
-            composable<Screen.Exercises> {
-                val viewModel = koinViewModel<ExercisesViewModel>()
-                ExercisesView(viewModel)
-            }
-            composable<Screen.TrainingEquipment>{
-                val viewModel = koinViewModel<TrainingEquipmentViewModel>()
-                TrainingEquipmentView(viewModel)
+            composable<Screen.ExercisesDashboard> {
+                ExercisesDashboardView(navHostController)
             }
             composable<Screen.Health> {
                 val viewModel = koinViewModel<HealthOverviewViewModel>()
@@ -70,6 +66,14 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
                 val settingsRepository = getKoin().get<SettingsRepository>()
                 ProfileView(viewModel, settingsRepository)
             }
+        }
+        composable<Screen.Exercises> {
+            val viewModel = koinViewModel<ExercisesViewModel>()
+            ExercisesView(viewModel)
+        }
+        composable<Screen.TrainingEquipment>{
+            val viewModel = koinViewModel<TrainingEquipmentViewModel>()
+            TrainingEquipmentView(viewModel)
         }
         composable<Screen.Sleeps> {
             val viewModel = koinViewModel<SleepViewModel>()
