@@ -6,9 +6,9 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class EquipmentWithExercises(
-    val id: Uuid,
-    val name: String,
-    val default: Boolean = false,
-    val dateUtc: LocalDate,
+    override val id: Uuid,
+    override val name: String,
+    override val default: Boolean = false,
+    override val dateUtc: LocalDate,
     val exercises: List<Exercise>
-)
+) : TrainingEquipment(id, name, default, dateUtc)

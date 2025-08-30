@@ -40,7 +40,7 @@ fun TrainingEquipmentView(
 }
 
 @Composable
-fun TrainingEquipmentRow(equipment: TrainingEquipment) {
+fun TrainingEquipmentRow(equipment: EquipmentWithExercises) {
     // TODO: Expand this row to include edit/delete/reset buttons
     Text(
         text = equipment.getLocalizedName() + if (equipment.default) " (Default)" else "",
