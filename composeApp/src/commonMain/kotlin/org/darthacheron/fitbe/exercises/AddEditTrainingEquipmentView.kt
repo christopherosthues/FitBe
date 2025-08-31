@@ -1,7 +1,5 @@
 package org.darthacheron.fitbe.exercises
 
-import androidx.activity.result.launch
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,8 +25,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
@@ -39,9 +33,10 @@ import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_t
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_fab_save_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
-// Removed title string imports as TopAppBar is removed
-import org.darthacheron.fitbe.composables.ImagePicker // Expecting this to be a KMP compatible image picker
-import org.darthacheron.fitbe.composables.rememberImagePickerLauncher // Expecting this
+import fitbe.composeapp.generated.resources.ic_photo_camera
+import fitbe.composeapp.generated.resources.ic_photo_library
+import fitbe.composeapp.generated.resources.ic_save
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -54,6 +49,7 @@ fun AddEditTrainingEquipmentView(
     navHostController: NavHostController // Kept for navigateBackEvent, though TopAppBar back is gone
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
@@ -67,12 +63,13 @@ fun AddEditTrainingEquipmentView(
 
     // Common KMP image picker launcher
     // TODO: Use CameraK for taking pictures and FileKit for selecting files
-    val imagePickerLauncher = rememberImagePickerLauncher { imageUri ->
-        viewModel.onImageUriChange(imageUri)
-    }
+//    val imagePickerLauncher = rememberImagePickerLauncher { imageUri ->
+//        viewModel.onImageUriChange(imageUri)
+//    }
 
     Box(
         modifier = Modifier
+            .verticalScroll(scrollState)
             .fillMaxSize()
             .padding(16.dp) // Apply padding directly to the content Box
     ) {
@@ -91,11 +88,11 @@ fun AddEditTrainingEquipmentView(
                     label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    isError = uiState.nameError != null
+                    isError = uiState.error != null
                 )
-                if (uiState.nameError != null) {
+                if (uiState.error != null) {
                     Text(
-                        text = uiState.nameError!!, // Should be a string resource ideally
+                        text = uiState.error!!, // Should be a string resource ideally
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.fillMaxWidth()
@@ -122,18 +119,22 @@ fun AddEditTrainingEquipmentView(
                 }
 
                 Button(
-                    onClick = { imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY) },
+                    onClick = {
+//                        imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY)
+                              },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Filled.PhotoLibrary, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                    Icon(painter = painterResource(Res.drawable.ic_photo_library), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
                     Text(stringResource(Res.string.add_edit_training_equipment_button_select_image))
                 }
 
                 Button(
-                    onClick = { imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA) },
+                    onClick = {
+                        // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
+                        },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Filled.PhotoCamera, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                    Icon(painter = painterResource(Res.drawable.ic_photo_camera), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
                     Text(stringResource(Res.string.add_edit_training_equipment_button_take_photo))
                 }
 
@@ -145,16 +146,16 @@ fun AddEditTrainingEquipmentView(
                     enabled = !uiState.isLoading // Disable button while loading/saving
                 ) {
                     Icon(
-                        Icons.Filled.Check,
+                        painter = painterResource(Res.drawable.ic_save),
                         contentDescription = null, // Content description provided by text
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(stringResource(Res.string.add_edit_training_equipment_fab_save_content_description))
                 }
 
-                if (uiState.saveError != null) {
+                if (uiState.error != null) {
                     Text(
-                        text = uiState.saveError!!, // Should be a string resource
+                        text = uiState.error!!, // Should be a string resource
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = 8.dp)

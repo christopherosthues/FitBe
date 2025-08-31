@@ -256,4 +256,10 @@
     <string name="default_training_equipment_squat_rack">Squat Rack</string>
     <string name="default_training_equipment_spotter_arms">Sicherheitsablagen</string>
     <string name="training_equipment_add">Gerät hinzufügen</string>
+
+    <string name="add_edit_training_equipment_button_select_image">Bild auswählen</string>
+    <string name="add_edit_training_equipment_button_take_photo">Foto aufnehmen</string>
+    <string name="add_edit_training_equipment_fab_save_content_description">Trainingsgerät speichern</string>
+    <string name="add_edit_training_equipment_image_content_description">Trainingsgerät Bild</string>
+    <string name="add_edit_training_equipment_label_name">Name</string>
 </resources>

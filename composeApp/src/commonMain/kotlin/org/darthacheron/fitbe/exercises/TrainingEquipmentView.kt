@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.exercises
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,6 +61,8 @@ fun TrainingEquipmentView(
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(allEquipment.size, key = { it.toString() }) { equipmentIndex ->
@@ -83,6 +86,7 @@ fun TrainingEquipmentView(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
+            containerColor = Color(0xFF2196F3)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
