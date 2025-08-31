@@ -3,8 +3,8 @@ package org.darthacheron.fitbe.exercises
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,17 +30,25 @@ fun TrainingEquipmentView(
             Text("No equipment found. Add some!")
             // TODO: Add a button or UI to add equipment
         } else {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(allEquipment, key = { it.id.toString() }) { equipment ->
-                    TrainingEquipmentRow(equipment)
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 128.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(allEquipment.size, key = { it.toString() }) { equipmentIndex ->
+                    TrainingEquipmentCard(allEquipment[equipmentIndex])
                 }
             }
+//            LazyColumn(modifier = Modifier.fillMaxSize()) {
+//                items(allEquipment, key = { it.id.toString() }) { equipment ->
+//                    TrainingEquipmentRow(equipment)
+//                }
+//            }
         }
     }
 }
 
 @Composable
-fun TrainingEquipmentRow(equipment: EquipmentWithExercises) {
+fun TrainingEquipmentCard(equipment: EquipmentWithExercises) {
     // TODO: Expand this row to include edit/delete/reset buttons
     Text(
         text = equipment.getLocalizedName() + if (equipment.default) " (Default)" else "",

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,30 +44,34 @@ import org.jetbrains.compose.resources.stringResource
 fun ExercisesDashboardView(
     navHostController: NavHostController
 ) {
-    Column(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        DashboardCard(
-            title = stringResource(Res.string.card_title_exercises_overview),
-            // Replace with actual painterResource(Res.drawable.ic_exercises_overview_card)
-            // after adding the drawable
-            imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
-            onClick = { navHostController.navigate(Screen.Exercises) },
-            contentDescription = "Navigate to Exercises Overview" // Content description for the Card's click action
-        )
-
-        DashboardCard(
-            title = stringResource(Res.string.card_title_training_equipment),
-            // Replace with actual painterResource(Res.drawable.ic_manage_equipment_card)
-            // after adding the drawable
-            imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
-            onClick = { navHostController.navigate(Screen.TrainingEquipment) },
-            contentDescription = "Navigate to Manage Training Equipment" // Content description for the Card's click action
-        )
+        item {
+            DashboardCard(
+                title = stringResource(Res.string.card_title_exercises_overview),
+                // Replace with actual painterResource(Res.drawable.ic_exercises_overview_card)
+                // after adding the drawable
+                imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
+                onClick = { navHostController.navigate(Screen.Exercises) },
+                contentDescription = "Navigate to Exercises Overview"
+            )
+        }
+        item {
+            DashboardCard(
+                title = stringResource(Res.string.card_title_training_equipment),
+                // Replace with actual painterResource(Res.drawable.ic_manage_equipment_card)
+                // after adding the drawable
+                imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
+                onClick = { navHostController.navigate(Screen.TrainingEquipment) },
+                contentDescription = "Navigate to Manage Training Equipment"
+            )
+        }
     }
 }
 
@@ -74,12 +80,13 @@ private fun DashboardCard(
     title: String,
     imagePainter: Painter,
     onClick: () -> Unit,
-    contentDescription: String, // This describes the action of clicking the card
+    contentDescription: String,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .height(200.dp)
             .clickable(onClick = onClick)
             .semantics { this.contentDescription = contentDescription },
@@ -90,18 +97,19 @@ private fun DashboardCard(
                 painter = imagePainter,
                 contentDescription = null, // Decorative image, title provides context
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop // Crop to fill the bounds
+                contentScale = ContentScale.Crop
             )
-            Box( // This Box is aligned to BottomCenter and has overall padding for the text element
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(16.dp) // Outer padding for the whole text element from card edges
+                    .fillMaxWidth()
             ) {
-                Box( // This Box provides the semi-transparent background for the Text
+                Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp)) // Clip the background to have rounded corners
+                        .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp, topStart = 0.dp, topEnd = 0.dp))
                         .background(Color.Black.copy(alpha = 0.6f))
-                        .padding(horizontal = 12.dp, vertical = 8.dp) // Padding *inside* the background, around the text
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = title,
