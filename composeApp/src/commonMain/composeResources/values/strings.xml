@@ -60,6 +60,7 @@
     <string name="top_bar_title_exercises_dashboard">Exercises</string>
     <string name="top_bar_title_exercises">Exercises</string>
     <string name="top_bar_title_training_equipment">Training equipment</string>
+    <string name="top_bar_title_add_edit_training_equipment">Add/Edit Training Equipment</string>
     <string name="top_bar_title_health">Health</string>
     <string name="top_bar_title_profile">Profile</string>
     <string name="top_bar_title_sleeps">Sleeps</string>
@@ -254,4 +255,5 @@
     <string name="default_training_equipment_power_rack">Power Rack</string>
     <string name="default_training_equipment_squat_rack">Squat Rack</string>
     <string name="default_training_equipment_spotter_arms">Spotter Arms</string>
+    <string name="training_equipment_add">Add equipment</string>
 </resources>

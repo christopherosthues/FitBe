@@ -5,6 +5,7 @@ import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
+import org.darthacheron.fitbe.exercises.AddEditTrainingEquipmentViewModel
 import org.darthacheron.fitbe.exercises.EquipmentRepository
 import org.darthacheron.fitbe.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
@@ -74,4 +75,5 @@ val sharedModule = module {
     viewModelOf(::WeightOverviewViewModel)
     viewModelOf(::StepsViewModel)
     viewModelOf(::TrainingEquipmentViewModel)
+    viewModelOf(::AddEditTrainingEquipmentViewModel)
 }

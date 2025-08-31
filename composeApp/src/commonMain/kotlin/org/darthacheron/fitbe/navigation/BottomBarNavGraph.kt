@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import org.darthacheron.fitbe.exercises.ExercisesDashboardView
 import org.darthacheron.fitbe.exercises.ExercisesView
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
@@ -34,7 +35,13 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
+import org.darthacheron.fitbe.exercises.AddEditTrainingEquipmentView
+import org.darthacheron.fitbe.exercises.AddEditTrainingEquipmentViewModel
+import org.darthacheron.fitbe.exercises.TrainingEquipment
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: PaddingValues) {
@@ -74,6 +81,12 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
         composable<Screen.TrainingEquipment>{
             val viewModel = koinViewModel<TrainingEquipmentViewModel>()
             TrainingEquipmentView(viewModel, navHostController)
+        }
+        composable<Screen.AddEditTrainingEquipment> { backStackEntry ->
+            val addEditTrainingEquipmentRoute: Screen.AddEditTrainingEquipment = backStackEntry.toRoute()
+            val viewModel = koinViewModel<AddEditTrainingEquipmentViewModel>()
+            val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
+            AddEditTrainingEquipmentView(id, viewModel, navHostController)
         }
         composable<Screen.Sleeps> {
             val viewModel = koinViewModel<SleepViewModel>()

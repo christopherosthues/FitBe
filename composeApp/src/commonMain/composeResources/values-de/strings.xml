@@ -60,6 +60,7 @@
     <string name="top_bar_title_exercises_dashboard">\u00dcbungen</string>
     <string name="top_bar_title_exercises">\u00dcbungen</string>
     <string name="top_bar_title_training_equipment">Trainingsgeräte</string>
+    <string name="top_bar_title_add_edit_training_equipment">Trainingsgerät hinzufügen/bearbeiten</string>
     <string name="top_bar_title_health">Gesundheit</string>
     <string name="top_bar_title_profile">Profil</string>
     <string name="top_bar_title_sleeps">Schlaf</string>
@@ -254,4 +255,5 @@
     <string name="default_training_equipment_power_rack">Power Rack</string>
     <string name="default_training_equipment_squat_rack">Squat Rack</string>
     <string name="default_training_equipment_spotter_arms">Sicherheitsablagen</string>
+    <string name="training_equipment_add">Gerät hinzufügen</string>
 </resources>

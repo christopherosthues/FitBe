@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,17 +27,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.training_equipment_add
+import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_launcher
-import fitbe.composeapp.generated.resources.ic_training_equipment
 import org.darthacheron.fitbe.navigation.Screen
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -46,30 +49,45 @@ fun TrainingEquipmentView(
 ) {
     val allEquipment by viewModel.allEquipment.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (allEquipment.isEmpty()) {
-            Text("No equipment found. Add some!")
-            // TODO: Add a button or UI to add equipment
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(allEquipment.size, key = { it.toString() }) { equipmentIndex ->
-                    TrainingEquipmentCard(equipment = allEquipment[equipmentIndex],
-                        onClick = { navHostController.navigate(Screen.TrainingEquipment) },
-                        contentDescription = "Navigate to Manage Training Equipment")
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            if (allEquipment.isEmpty()) {
+                Text("No equipment found. Add some!")
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 200.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(allEquipment.size, key = { it.toString() }) { equipmentIndex ->
+                        val equipment = allEquipment[equipmentIndex]
+                        TrainingEquipmentCard(
+                            equipment = equipment,
+                            // TODO: Confirm navigation destination for equipment card click.
+                            // Assuming it should go to a detail screen or the edit screen.
+                            // For now, let's keep the previous navigation or navigate to edit:
+//                             onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment.createRoute(equipment.id.toString())) },
+                            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(equipment.id.toString())) }, // Or a specific detail route
+                            contentDescription = "View or Edit ${equipment.getLocalizedName()}"
+                        )
+                    }
                 }
             }
-//            LazyColumn(modifier = Modifier.fillMaxSize()) {
-//                items(allEquipment, key = { it.id.toString() }) { equipment ->
-//                    TrainingEquipmentRow(equipment)
-//                }
-//            }
+        }
+
+        FloatingActionButton(
+            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(null)) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_add),
+                contentDescription = stringResource(Res.string.training_equipment_add)
+            )
         }
     }
 }
@@ -81,7 +99,6 @@ fun TrainingEquipmentCard(
     contentDescription: String,
     modifier: Modifier = Modifier
 ) {
-    // TODO: Expand this row to include edit/delete/reset buttons
     val imageResource = equipment.getLocalizedImage()
     Card(
         modifier = modifier
