@@ -13,15 +13,27 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Entity(tableName = "default_training_equipment")
 data class DefaultTrainingEquipmentEntity(
-    @PrimaryKey(autoGenerate = false) val id: Uuid, // Should match the id of the corresponding TrainingEquipmentEntity
+    @PrimaryKey(autoGenerate = false) val id: Uuid,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "image_uri") val imageUri: String? = null,
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
 ) {
     fun toTrainingEquipmentEntity(): TrainingEquipmentEntity {
         return TrainingEquipmentEntity(
             id = id,
             name = name,
-            default = true, // Default equipment is always true here
+            imageUri = imageUri,
+            default = true,
+            dateUtc = dateUtc
+        )
+    }
+
+    fun toTrainingEquipment(): TrainingEquipment {
+        return TrainingEquipment(
+            id = id,
+            name = name,
+            imageUri = imageUri,
+            default = true,
             dateUtc = dateUtc
         )
     }
@@ -32,6 +44,7 @@ fun fromTrainingEquipmentEntity(entity: TrainingEquipmentEntity): DefaultTrainin
     return DefaultTrainingEquipmentEntity(
         id = entity.id,
         name = entity.name,
+        imageUri = entity.imageUri,
         dateUtc = entity.dateUtc
     )
 }

@@ -73,12 +73,13 @@ class PrepopulateCallback(
             "default_training_equipment_air_bike",
             "default_training_equipment_power_rack",
             "default_training_equipment_squat_rack",
-            "default_training_equipment_spotter_arms"
+            "default_training_equipment_spotter_arms",
         )
 
         equipmentList.forEach { equipmentKey ->
             val equipment = TrainingEquipmentEntity(
                 name = equipmentKey, // This is now the full resource key
+                imageUri = "ic_$equipmentKey",
                 default = true,
             )
             exerciseDao.upsertEquipment(equipment)

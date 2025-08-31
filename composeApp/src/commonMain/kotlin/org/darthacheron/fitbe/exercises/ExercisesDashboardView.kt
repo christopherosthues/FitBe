@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,7 +30,8 @@ import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.card_title_exercises_overview
 import fitbe.composeapp.generated.resources.card_title_training_equipment
-import fitbe.composeapp.generated.resources.ic_launcher
+import fitbe.composeapp.generated.resources.ic_exercises
+import fitbe.composeapp.generated.resources.ic_training_equipment
 import org.darthacheron.fitbe.navigation.Screen
 // Import your placeholder drawable resources here once they are added
 // For example:
@@ -45,7 +45,7 @@ fun ExercisesDashboardView(
     navHostController: NavHostController
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Adaptive(300.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -55,9 +55,7 @@ fun ExercisesDashboardView(
         item {
             DashboardCard(
                 title = stringResource(Res.string.card_title_exercises_overview),
-                // Replace with actual painterResource(Res.drawable.ic_exercises_overview_card)
-                // after adding the drawable
-                imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
+                imagePainter = painterResource(Res.drawable.ic_exercises),
                 onClick = { navHostController.navigate(Screen.Exercises) },
                 contentDescription = "Navigate to Exercises Overview"
             )
@@ -65,9 +63,7 @@ fun ExercisesDashboardView(
         item {
             DashboardCard(
                 title = stringResource(Res.string.card_title_training_equipment),
-                // Replace with actual painterResource(Res.drawable.ic_manage_equipment_card)
-                // after adding the drawable
-                imagePainter = painterResource(Res.drawable.ic_launcher), // Placeholder
+                imagePainter = painterResource(Res.drawable.ic_training_equipment),
                 onClick = { navHostController.navigate(Screen.TrainingEquipment) },
                 contentDescription = "Navigate to Manage Training Equipment"
             )

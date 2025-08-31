@@ -73,7 +73,7 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
         }
         composable<Screen.TrainingEquipment>{
             val viewModel = koinViewModel<TrainingEquipmentViewModel>()
-            TrainingEquipmentView(viewModel)
+            TrainingEquipmentView(viewModel, navHostController)
         }
         composable<Screen.Sleeps> {
             val viewModel = koinViewModel<SleepViewModel>()

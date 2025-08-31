@@ -16,6 +16,7 @@ import kotlin.uuid.Uuid
 data class TrainingEquipmentEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "image_uri") val imageUri: String? = null,
     val default: Boolean = false,
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
 ) {
@@ -23,6 +24,7 @@ data class TrainingEquipmentEntity(
         return TrainingEquipment(
             id = id,
             name = name,
+            imageUri = imageUri,
             default = default,
             dateUtc = dateUtc
         )
@@ -34,6 +36,7 @@ fun toEntity(equipment: TrainingEquipment): TrainingEquipmentEntity {
     return TrainingEquipmentEntity(
         id = equipment.id,
         name = equipment.name,
+        imageUri = equipment.imageUri,
         default = equipment.default,
         dateUtc = equipment.dateUtc
     )

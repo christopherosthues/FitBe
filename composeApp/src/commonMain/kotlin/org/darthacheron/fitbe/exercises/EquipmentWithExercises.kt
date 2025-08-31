@@ -9,6 +9,7 @@ data class EquipmentWithExercises(
     override val id: Uuid,
     override val name: String,
     override val default: Boolean = false,
+    override val imageUri: String? = null,
     override val dateUtc: LocalDate,
     val exercises: List<Exercise>
-) : TrainingEquipment(id, name, default, dateUtc)
+) : TrainingEquipment(id, name, imageUri, default, dateUtc)
