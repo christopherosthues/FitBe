@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -88,16 +89,9 @@ fun AddEditTrainingEquipmentView(
                     label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    isError = uiState.error != null
+                    isError = uiState.error != null,
+                    supportingText = { if (uiState.error != null) Text(uiState.error!!) }
                 )
-                if (uiState.error != null) {
-                    Text(
-                        text = uiState.error!!, // Should be a string resource ideally
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -106,6 +100,7 @@ fun AddEditTrainingEquipmentView(
                     // This is a placeholder. For real KMP image loading from URI:
                     // implementation("io.coil-kt:coil-compose:VERSION")
                     // then use an AsyncImage composable.
+
                     Text("Image URI: ${uiState.imageUri}") // Placeholder
                 } else {
                     Box(
@@ -118,24 +113,29 @@ fun AddEditTrainingEquipmentView(
                     }
                 }
 
-                Button(
-                    onClick = {
-//                        imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY)
-                              },
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(painter = painterResource(Res.drawable.ic_photo_library), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
-                    Text(stringResource(Res.string.add_edit_training_equipment_button_select_image))
-                }
+                    Button(
+                        onClick = {
+    //                        imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY)
+                                  },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(painter = painterResource(Res.drawable.ic_photo_library), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                        Text(stringResource(Res.string.add_edit_training_equipment_button_select_image))
+                    }
 
-                Button(
-                    onClick = {
-                        // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
-                        },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(painter = painterResource(Res.drawable.ic_photo_camera), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
-                    Text(stringResource(Res.string.add_edit_training_equipment_button_take_photo))
+                    Button(
+                        onClick = {
+                            // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
+                            },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(painter = painterResource(Res.drawable.ic_photo_camera), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+                        Text(stringResource(Res.string.add_edit_training_equipment_button_take_photo))
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f)) // Pushes save button to the bottom

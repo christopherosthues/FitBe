@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.exercises
 
 import androidx.compose.runtime.Composable
 import kotlinx.datetime.LocalDate
+import org.darthacheron.fitbe.database.equipmentList
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -14,27 +15,24 @@ open class TrainingEquipment(
     open val imageUri: String? = null,
     open val default: Boolean = false,
     open val dateUtc: LocalDate,
-) {
-    @Composable
-    fun getLocalizedName(): String {
-        return if (this.default) {
-            DefaultEquipmentResProvider.equipmentNameMap[this.name]?.let {
-                stringResource(it)
-            } ?: this.name
-        } else {
-            this.name
-        }
-    }
+)
 
-    @Composable
-    fun getLocalizedImage(): DrawableResource? {
-        return if (this.default) {
-            DefaultEquipmentResProvider.equipmentImageMap[this.name]
-        } else {
-            // For non-default equipment, imageUri should point to a user-defined image.
-            // This part needs to be handled by image loading logic outside this class.
-            // For now, returning null for non-default, or if you have a way to resolve imageUri to DrawableResource.
-            null
-        }
+@Composable
+internal fun getLocalizedName(name: String, default: Boolean): String {
+    return if (default && equipmentList.contains(name)) {
+        DefaultEquipmentResProvider.equipmentNameMap[name]?.let {
+            stringResource(it)
+        } ?: name
+    } else {
+        name
+    }
+}
+
+@Composable
+internal fun getLocalizedImage(imageUri: String?, default: Boolean): DrawableResource? {
+    return if (default && imageUri != null && imageUri.startsWith("ic_default_training_equipment_")) {
+        DefaultEquipmentResProvider.equipmentImageMap[imageUri]
+    } else {
+        null
     }
 }

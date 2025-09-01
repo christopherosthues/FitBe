@@ -69,12 +69,8 @@ fun TrainingEquipmentView(
                         val equipment = allEquipment[equipmentIndex]
                         TrainingEquipmentCard(
                             equipment = equipment,
-                            // TODO: Confirm navigation destination for equipment card click.
-                            // Assuming it should go to a detail screen or the edit screen.
-                            // For now, let's keep the previous navigation or navigate to edit:
-//                             onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment.createRoute(equipment.id.toString())) },
-                            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(equipment.id.toString())) }, // Or a specific detail route
-                            contentDescription = "View or Edit ${equipment.getLocalizedName()}"
+                            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(equipment.id.toString())) },
+                            contentDescription = "View or Edit ${getLocalizedName(equipment.name, equipment.default)}"
                         )
                     }
                 }
@@ -103,7 +99,6 @@ fun TrainingEquipmentCard(
     contentDescription: String,
     modifier: Modifier = Modifier
 ) {
-    val imageResource = equipment.getLocalizedImage()
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
@@ -114,12 +109,25 @@ fun TrainingEquipmentCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = if (imageResource != null) painterResource(imageResource) else painterResource(Res.drawable.ic_launcher),
-                contentDescription = null, // Decorative image, title provides context
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+            val imageResource = getLocalizedImage(equipment.imageUri, equipment.default)
+            if (imageResource == null && equipment.imageUri != null) {
+                // TODO: use coil
+//                Image(
+//                    painter = rememberAsyncImagePainter(imageResource),
+//                    contentDescription = null,
+//                    modifier = Modifier.fillMaxSize(),
+//                    contentScale = ContentScale.Crop
+//                )
+            }
+            else {
+                Image(
+                    painter = painterResource(imageResource ?: Res.drawable.ic_launcher),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -140,7 +148,7 @@ fun TrainingEquipmentCard(
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = equipment.getLocalizedName() + if (equipment.default) " (Default)" else "",
+                        text = getLocalizedName(equipment.name, equipment.default) + if (equipment.default) " (Default)" else "",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 8.dp)
