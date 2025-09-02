@@ -100,6 +100,7 @@ fun AddEditTrainingEquipmentView(
                     // This is a placeholder. For real KMP image loading from URI:
                     // implementation("io.coil-kt:coil-compose:VERSION")
                     // then use an AsyncImage composable.
+                    // TODO: Use Coil (https://github.com/coil-kt/coil) for image loading
 
                     Text("Image URI: ${uiState.imageUri}") // Placeholder
                 } else {
@@ -119,6 +120,7 @@ fun AddEditTrainingEquipmentView(
                 ) {
                     Button(
                         onClick = {
+                            // TODO: Use Calf (https://github.com/MohamedRejeb/Calf) or FileKit (https://github.com/vinceglb/FileKit) for file picker
     //                        imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY)
                                   },
                         modifier = Modifier.weight(1f)
@@ -129,6 +131,7 @@ fun AddEditTrainingEquipmentView(
 
                     Button(
                         onClick = {
+                            // TODO: Use CameraK (https://github.com/Kashif-E/CameraK) to access camera
                             // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
                             },
                         modifier = Modifier.weight(1f)
