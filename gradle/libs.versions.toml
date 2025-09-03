@@ -26,6 +26,7 @@ room = "2.7.2"
 koala-plot = "0.9.1"
 androidx-datastore = "1.1.7"
 filekit = "0.10.0"
+cameraK = "0.0.12"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -66,6 +67,8 @@ filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "file
 filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 filekit-coil = { module = "io.github.vinceglb:filekit-coil", version.ref = "filekit" }
+
+cameraK = { module = "io.github.kashif-mehmood-km:camerak", version.ref = "cameraK" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
