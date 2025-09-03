@@ -49,7 +49,6 @@ class AddEditTrainingEquipmentViewModel(
         viewModelScope.launch {
             try {
                 val equipmentId = Uuid.parse(equipmentIdString)
-                // Collect the first item from the Flow or null if the Flow is empty
                 val equipment = equipmentRepository.getEquipmentById(equipmentId).firstOrNull()
                 if (equipment != null) {
                     _uiState.update {
@@ -68,7 +67,6 @@ class AddEditTrainingEquipmentViewModel(
                     }
                 }
             } catch (e: Exception) {
-                // Handle potential UUID parsing errors or other exceptions
                 _uiState.update {
                     it.copy(isLoading = false, error = "Failed to load equipment: ${e.message}", isEditing = false)
                 }
@@ -96,20 +94,18 @@ class AddEditTrainingEquipmentViewModel(
         viewModelScope.launch {
             try {
                 val equipmentToSave = TrainingEquipment(
-                    id = currentState.equipmentId ?: Uuid.random(), // Generate new ID if null
+                    id = currentState.equipmentId ?: Uuid.random(),
                     name = currentState.name,
                     imageUri = currentState.imageUri,
                     default = currentState.default,
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                 )
 
-                // Assuming upsertEquipment exists or needs to be replaced with insert/update logic
                 equipmentRepository.upsertEquipment(equipmentToSave)
                 _navigateBackEvent.emit(Unit)
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to save equipment: ${e.message}") }
             } finally {
-                 // Ensure loading is set to false even if navigateBackEvent emission fails or an error occurs before it
                 _uiState.update { it.copy(isLoading = false) }
             }
         }

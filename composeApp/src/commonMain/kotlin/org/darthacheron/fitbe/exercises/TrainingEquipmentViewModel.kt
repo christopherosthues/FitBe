@@ -15,7 +15,7 @@ import kotlin.uuid.Uuid
 class TrainingEquipmentViewModel(private val equipmentRepository: EquipmentRepository) : ViewModel() {
 
     val allEquipment: StateFlow<List<EquipmentWithExercises>> =
-        equipmentRepository.getAllEquipmentWithExercises() // Assuming this returns Flow<List<EquipmentWithExercisesEntity>>
+        equipmentRepository.getAllEquipmentWithExercises()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000), // Keep active for 5s after last subscriber

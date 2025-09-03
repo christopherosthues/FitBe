@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.exercises
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,11 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,6 +29,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
@@ -35,14 +41,18 @@ import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_t
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_fab_save_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
+import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_camera
 import fitbe.composeapp.generated.resources.ic_photo_library
+import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_save
+import fitbe.composeapp.generated.resources.ic_verified
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -110,26 +120,66 @@ fun AddEditTrainingEquipmentView(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Image display (KMP compatible)
                 if (uiState.imageUri != null) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        AsyncImage(
-                            model = PlatformFile(uiState.imageUri.toString()),
-                            contentDescription = stringResource(Res.string.add_edit_training_equipment_image_content_description),
-                            modifier = Modifier.size(128.dp),
-                        )
+                        Box {
+                            ImageWithDefault(
+                                imageUri = uiState.imageUri,
+                                default = uiState.default,
+                                contentDescription = stringResource(Res.string.add_edit_training_equipment_image_content_description),
+                                modifier = Modifier.size(256.dp)
+                            )
+                            IconButton(
+                                onClick = { viewModel.onImageUriChange(null) },
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_remove),
+                                    contentDescription = "Remove image" // TODO: Use string resource
+                                )
+                            }
+                        }
                         Text("Image URI: ${uiState.imageUri}") // Placeholder
                     }
                 } else {
                     Box(
                         modifier = Modifier
-                            .size(128.dp)
+                            .size(256.dp)
                             .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(stringResource(Res.string.add_edit_training_equipment_image_content_description))
+                        Image(
+                            painter = painterResource(Res.drawable.ic_launcher),
+                            contentDescription = null,
+                            modifier = Modifier.size(256.dp),
+                            contentScale = ContentScale.Crop
+                        )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(Color.Black.copy(alpha = 0.6f))
+                                .fillMaxSize()
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.add_edit_training_equipment_image_content_description),
+                                modifier = Modifier.align(
+                                    Alignment.Center
+                                ).padding(16.dp)
+                            )
+                        }
+                        if (uiState.default) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_verified),
+                                contentDescription = "Default equipment",
+                                modifier = Modifier
+                                    .align(Alignment.TopStart)
+                                    .padding(8.dp)
+                                    .size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
 

@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.exercises
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,18 +28,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil3.compose.AsyncImage
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
-import fitbe.composeapp.generated.resources.training_equipment_add
 import fitbe.composeapp.generated.resources.ic_add
-import fitbe.composeapp.generated.resources.ic_launcher
-import io.github.vinceglb.filekit.PlatformFile
+import fitbe.composeapp.generated.resources.ic_verified
+import fitbe.composeapp.generated.resources.training_equipment_add
+import org.darthacheron.fitbe.components.ImageWithDefault
 import org.darthacheron.fitbe.navigation.Screen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -113,23 +109,12 @@ fun TrainingEquipmentCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            val imageResource = getLocalizedImage(equipment.imageUri, equipment.default)
-            if (imageResource == null && equipment.imageUri != null) {
-                AsyncImage(
-                    model = PlatformFile(equipment.imageUri),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            else {
-                Image(
-                    painter = painterResource(imageResource ?: Res.drawable.ic_launcher),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            ImageWithDefault(
+                imageUri = equipment.imageUri,
+                default = equipment.default,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
 
             Box(
                 modifier = Modifier
@@ -151,7 +136,7 @@ fun TrainingEquipmentCard(
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = getLocalizedName(equipment.name, equipment.default) + if (equipment.default) " (Default)" else "",
+                        text = getLocalizedName(equipment.name, equipment.default),
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.padding(vertical = 8.dp)
