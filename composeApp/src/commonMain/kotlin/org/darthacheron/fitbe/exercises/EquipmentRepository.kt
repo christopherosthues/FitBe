@@ -10,6 +10,9 @@ class EquipmentRepository(private val exerciseDao: ExerciseDao) {
     fun getAllEquipmentWithExercises(): Flow<List<EquipmentWithExercises>> =
         exerciseDao.getAllEquipmentWithExercises().map { it.map { e ->  e.toEquipmentWithExercises() } }
 
+    fun getAllEquipments(): Flow<List<TrainingEquipment>> =
+        exerciseDao.getAllEquipments().map { it.map { e ->  e.toTrainingEquipment() } }
+
     fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipment?> =
         exerciseDao.getEquipmentById(equipmentId).map { it?.toTrainingEquipment() }
 

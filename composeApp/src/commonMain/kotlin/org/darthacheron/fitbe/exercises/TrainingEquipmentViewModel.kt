@@ -14,8 +14,8 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class TrainingEquipmentViewModel(private val equipmentRepository: EquipmentRepository) : ViewModel() {
 
-    val allEquipment: StateFlow<List<EquipmentWithExercises>> =
-        equipmentRepository.getAllEquipmentWithExercises()
+    val allEquipment: StateFlow<List<TrainingEquipment>> =
+        equipmentRepository.getAllEquipments()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000), // Keep active for 5s after last subscriber

@@ -5,19 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +23,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil3.compose.AsyncImage
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_take_photo
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_fab_save_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
 import fitbe.composeapp.generated.resources.ic_launcher
@@ -47,7 +42,7 @@ import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_verified
-import io.github.vinceglb.filekit.PlatformFile
+import fitbe.composeapp.generated.resources.profile_save
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -67,7 +62,7 @@ fun AddEditTrainingEquipmentView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
-    val launcher = rememberFilePickerLauncher(
+    val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
         mode = FileKitMode.Single,
         onResult = {
@@ -76,6 +71,7 @@ fun AddEditTrainingEquipmentView(
             }
         }
     )
+
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
@@ -88,48 +84,34 @@ fun AddEditTrainingEquipmentView(
     }
 
     // Common KMP image picker launcher
-    // TODO: Use CameraK for taking pictures and FileKit for selecting files
+    // TODO: Use CameraK (https://github.com/Kashif-E/CameraK/tree/main) for taking pictures
 //    val imagePickerLauncher = rememberImagePickerLauncher { imageUri ->
 //        viewModel.onImageUriChange(imageUri)
 //    }
 
-    Box(
-        modifier = Modifier
-            .verticalScroll(scrollState)
-            .fillMaxSize()
-            .padding(16.dp) // Apply padding directly to the content Box
-    ) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = uiState.name,
-                    onValueChange = { viewModel.onNameChange(it) },
-                    label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    isError = uiState.error != null,
-                    supportingText = { if (uiState.error != null) Text(uiState.error!!) }
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (uiState.imageUri != null) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 64.dp)
+        ) {
+            if (uiState.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Box {
+                        if (uiState.imageUri != null) {
                             ImageWithDefault(
                                 imageUri = uiState.imageUri,
                                 default = uiState.default,
                                 contentDescription = stringResource(Res.string.add_edit_training_equipment_image_content_description),
-                                modifier = Modifier.size(256.dp)
+                                modifier = Modifier.size(256.dp).align(Alignment.Center)
                             )
                             IconButton(
                                 onClick = { viewModel.onImageUriChange(null) },
@@ -137,103 +119,111 @@ fun AddEditTrainingEquipmentView(
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_remove),
-                                    contentDescription = "Remove image" // TODO: Use string resource
+                                    contentDescription = "Remove image"
                                 )
                             }
+                        } else {
+                            ImagePlaceholder(uiState)
                         }
-                        Text("Image URI: ${uiState.imageUri}") // Placeholder
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(256.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_launcher),
-                            contentDescription = null,
-                            modifier = Modifier.size(256.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .background(Color.Black.copy(alpha = 0.6f))
-                                .fillMaxSize()
+                        IconButton(
+                            onClick = { galleryLauncher.launch() },
+                            modifier = Modifier.align(Alignment.BottomStart)
                         ) {
-                            Text(
-                                text = stringResource(Res.string.add_edit_training_equipment_image_content_description),
-                                modifier = Modifier.align(
-                                    Alignment.Center
-                                ).padding(16.dp)
-                            )
-                        }
-                        if (uiState.default) {
                             Icon(
-                                painter = painterResource(Res.drawable.ic_verified),
-                                contentDescription = "Default equipment",
-                                modifier = Modifier
-                                    .align(Alignment.TopStart)
-                                    .padding(8.dp)
-                                    .size(24.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                painter = painterResource(Res.drawable.ic_photo_library),
+                                contentDescription = stringResource(Res.string.add_edit_training_equipment_button_select_image)
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                // TODO: Use CameraK (https://github.com/Kashif-E/CameraK) to access camera
+                                // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
+                            },
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_photo_camera),
+                                contentDescription = stringResource(Res.string.add_edit_training_equipment_button_take_photo)
                             )
                         }
                     }
-                }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            // TODO: Use Calf (https://github.com/MohamedRejeb/Calf) or FileKit (https://github.com/vinceglb/FileKit) for file picker
-                            launcher.launch()
-                                  },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(painter = painterResource(Res.drawable.ic_photo_library), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
-                        Text(stringResource(Res.string.add_edit_training_equipment_button_select_image))
-                    }
-
-                    Button(
-                        onClick = {
-                            // TODO: Use CameraK (https://github.com/Kashif-E/CameraK) to access camera
-                            // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
-                            },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(painter = painterResource(Res.drawable.ic_photo_camera), contentDescription = null, modifier = Modifier.padding(end = 8.dp))
-                        Text(stringResource(Res.string.add_edit_training_equipment_button_take_photo))
-                    }
-                }
-
-                Spacer(modifier = Modifier.weight(1f)) // Pushes save button to the bottom
-
-                Button(
-                    onClick = { viewModel.saveEquipment() },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !uiState.isLoading // Disable button while loading/saving
-                ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = null, // Content description provided by text
-                        modifier = Modifier.padding(end = 8.dp)
+                    OutlinedTextField(
+                        value = getLocalizedName(uiState.name, uiState.default),
+                        onValueChange = { viewModel.onNameChange(it) },
+                        label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        isError = uiState.error != null,
+                        supportingText = { if (uiState.error != null) Text(uiState.error!!) }
                     )
-                    Text(stringResource(Res.string.add_edit_training_equipment_fab_save_content_description))
-                }
 
-                if (uiState.error != null) {
-                    Text(
-                        text = uiState.error!!, // Should be a string resource
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+                    if (uiState.error != null) {
+                        Text(
+                            text = uiState.error!!, // Should be a string resource
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = {
+                if (!uiState.isLoading && uiState.error == null) {
+                    viewModel.saveEquipment()
+                }
+            },
+            containerColor = if (!uiState.isLoading && uiState.error == null) Color(0xFF2196F3) else Color.Gray,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_save),
+                contentDescription = stringResource(Res.string.profile_save)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
+    Box(
+        modifier = Modifier
+            .size(256.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.ic_launcher),
+            contentDescription = null,
+            modifier = Modifier.size(256.dp),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .background(Color.Black.copy(alpha = 0.6f))
+                .fillMaxSize()
+        ) {
+            Text(
+                text = stringResource(Res.string.add_edit_training_equipment_image_content_description),
+                modifier = Modifier.align(
+                    Alignment.Center
+                ).padding(16.dp)
+            )
+        }
+        if (uiState.default) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_verified),
+                contentDescription = "Default equipment",
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+                    .size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

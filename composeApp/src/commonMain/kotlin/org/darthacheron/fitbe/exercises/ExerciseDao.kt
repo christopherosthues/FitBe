@@ -65,4 +65,7 @@ interface ExerciseDao { // Example, you might have separate DAOs
     @Transaction
     @Query("SELECT * FROM training_equipment")
     fun getAllEquipmentWithExercises(): Flow<List<EquipmentWithExercisesEntity>>
+
+    @Query("SELECT * FROM training_equipment")
+    fun getAllEquipments(): Flow<List<TrainingEquipmentEntity>>
 }

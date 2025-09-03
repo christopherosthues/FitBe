@@ -259,7 +259,6 @@
 
     <string name="add_edit_training_equipment_button_select_image">Select Image</string>
     <string name="add_edit_training_equipment_button_take_photo">Take Photo</string>
-    <string name="add_edit_training_equipment_fab_save_content_description">Save Training Equipment</string>
     <string name="add_edit_training_equipment_image_content_description">Training Equipment Image</string>
     <string name="add_edit_training_equipment_label_name">Name</string>
 </resources>
