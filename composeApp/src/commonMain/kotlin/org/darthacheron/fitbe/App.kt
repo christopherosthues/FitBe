@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import org.darthacheron.fitbe.components.AppTheme
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.darthacheron.fitbe.navigation.RootNavGraph
@@ -21,6 +24,13 @@ fun App() {
         val startUpService = remember { koin.get<StartUpService>() }
         LaunchedEffect(Unit) {
             startUpService.initialize()
+        }
+        setSingletonImageLoaderFactory { context ->
+            ImageLoader.Builder(context)
+                .components {
+                    addPlatformFileSupport()
+                }
+                .build()
         }
 
         // Apply theme at the root of the app

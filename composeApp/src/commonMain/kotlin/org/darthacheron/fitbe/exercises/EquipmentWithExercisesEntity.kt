@@ -25,6 +25,7 @@ data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, b
             name = equipment.name,
             default = equipment.default,
             dateUtc = equipment.dateUtc,
+            imageUri = equipment.imageUri,
             exercises = exercises.map { it.toExercise() }
         )
     }
@@ -36,6 +37,7 @@ fun toEntity(equipmentWithExercises: EquipmentWithExercises): EquipmentWithExerc
         equipment = TrainingEquipmentEntity(
             id = equipmentWithExercises.id,
             name = equipmentWithExercises.name,
+            imageUri = equipmentWithExercises.imageUri,
             default = equipmentWithExercises.default,
             dateUtc = equipmentWithExercises.dateUtc
         ),

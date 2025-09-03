@@ -20,6 +20,7 @@ import kotlin.uuid.Uuid
 data class AddEditTrainingEquipmentUiState(
     val name: String = "",
     val imageUri: String? = null,
+    val default: Boolean = false,
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val equipmentId: Uuid? = null,
@@ -39,7 +40,7 @@ class AddEditTrainingEquipmentViewModel(
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
             _uiState.update {
-                it.copy(isLoading = false, isEditing = false, equipmentId = null, name = "", imageUri = null)
+                it.copy(isLoading = false, isEditing = false, default = false, equipmentId = null, name = "", imageUri = null)
             }
             return
         }
@@ -55,6 +56,7 @@ class AddEditTrainingEquipmentViewModel(
                         it.copy(
                             name = equipment.name,
                             imageUri = equipment.imageUri,
+                            default = equipment.default,
                             isLoading = false,
                             isEditing = true,
                             equipmentId = equipment.id
@@ -97,7 +99,7 @@ class AddEditTrainingEquipmentViewModel(
                     id = currentState.equipmentId ?: Uuid.random(), // Generate new ID if null
                     name = currentState.name,
                     imageUri = currentState.imageUri,
-                    default = false, // Assuming user-added equipment is not default
+                    default = currentState.default,
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                 )
 

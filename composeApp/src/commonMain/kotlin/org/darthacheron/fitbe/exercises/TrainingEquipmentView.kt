@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -33,10 +34,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.training_equipment_add
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_launcher
+import io.github.vinceglb.filekit.PlatformFile
 import org.darthacheron.fitbe.navigation.Screen
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -111,13 +115,12 @@ fun TrainingEquipmentCard(
         Box(modifier = Modifier.fillMaxSize()) {
             val imageResource = getLocalizedImage(equipment.imageUri, equipment.default)
             if (imageResource == null && equipment.imageUri != null) {
-                // TODO: use coil
-//                Image(
-//                    painter = rememberAsyncImagePainter(imageResource),
-//                    contentDescription = null,
-//                    modifier = Modifier.fillMaxSize(),
-//                    contentScale = ContentScale.Crop
-//                )
+                AsyncImage(
+                    model = PlatformFile(equipment.imageUri),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
             }
             else {
                 Image(

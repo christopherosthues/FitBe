@@ -92,6 +92,11 @@ kotlin {
             implementation(libs.sqlite.bundled)
             implementation(libs.koala.plot)
 
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs)
+            implementation(libs.filekit.dialogs.compose)
+            implementation(libs.filekit.coil)
+
             api(libs.androidx.datastore)
             api(libs.androidx.datastore.preferences)
         }

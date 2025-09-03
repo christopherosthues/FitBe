@@ -26,11 +26,12 @@ class TrainingEquipmentViewModel(private val equipmentRepository: EquipmentRepos
         return equipmentRepository.getEquipmentById(equipmentId)
     }
 
-    fun addOrUpdateEquipment(name: String, id: Uuid? = null, isDefault: Boolean = false, dateUtc: LocalDate) {
+    fun addOrUpdateEquipment(name: String, id: Uuid? = null, imageUri: String? = null, isDefault: Boolean = false, dateUtc: LocalDate) {
         viewModelScope.launch {
             val equipment = TrainingEquipment(
                 id = id ?: Uuid.Companion.random(),
                 name = name,
+                imageUri = imageUri,
                 default = isDefault,
                 dateUtc = dateUtc
             )

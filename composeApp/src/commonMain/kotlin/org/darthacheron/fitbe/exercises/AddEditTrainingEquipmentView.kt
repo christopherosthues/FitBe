@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_take_photo
@@ -37,6 +38,11 @@ import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_na
 import fitbe.composeapp.generated.resources.ic_photo_camera
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_save
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.dialogs.FileKitMode
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -51,6 +57,15 @@ fun AddEditTrainingEquipmentView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val launcher = rememberFilePickerLauncher(
+        type = FileKitType.Image,
+        mode = FileKitMode.Single,
+        onResult = {
+            if (it != null) {
+                viewModel.onImageUriChange(it.absolutePath())
+            }
+        }
+    )
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
@@ -97,12 +112,16 @@ fun AddEditTrainingEquipmentView(
 
                 // Image display (KMP compatible)
                 if (uiState.imageUri != null) {
-                    // This is a placeholder. For real KMP image loading from URI:
-                    // implementation("io.coil-kt:coil-compose:VERSION")
-                    // then use an AsyncImage composable.
-                    // TODO: Use Coil (https://github.com/coil-kt/coil) for image loading
-
-                    Text("Image URI: ${uiState.imageUri}") // Placeholder
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AsyncImage(
+                            model = PlatformFile(uiState.imageUri.toString()),
+                            contentDescription = stringResource(Res.string.add_edit_training_equipment_image_content_description),
+                            modifier = Modifier.size(128.dp),
+                        )
+                        Text("Image URI: ${uiState.imageUri}") // Placeholder
+                    }
                 } else {
                     Box(
                         modifier = Modifier
@@ -121,7 +140,7 @@ fun AddEditTrainingEquipmentView(
                     Button(
                         onClick = {
                             // TODO: Use Calf (https://github.com/MohamedRejeb/Calf) or FileKit (https://github.com/vinceglb/FileKit) for file picker
-    //                        imagePickerLauncher.launch(ImagePicker.MediaType.GALLERY)
+                            launcher.launch()
                                   },
                         modifier = Modifier.weight(1f)
                     ) {
