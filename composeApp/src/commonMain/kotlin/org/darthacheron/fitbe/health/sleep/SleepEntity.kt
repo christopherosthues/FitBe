@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.sleep
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.Instant
@@ -19,7 +20,8 @@ import org.darthacheron.fitbe.profile.ProfileEntity
             childColumns = ["profileId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["profileId"])]
 )
 data class SleepEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),

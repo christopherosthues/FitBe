@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -23,7 +24,8 @@ import kotlin.uuid.Uuid
             childColumns = ["profileId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["profileId"])]
 )
 data class BodyWeightEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),

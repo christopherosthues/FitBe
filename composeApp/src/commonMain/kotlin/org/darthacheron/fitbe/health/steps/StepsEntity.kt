@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -21,7 +22,8 @@ import kotlin.uuid.Uuid
             childColumns = ["profileId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["profileId"])]
 )
 data class StepsEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),

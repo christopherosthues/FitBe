@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index // Added import
 import androidx.room.PrimaryKey
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -23,7 +24,8 @@ import org.darthacheron.fitbe.profile.ProfileEntity
             childColumns = ["profileId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = ["profileId"])]
 )
 data class BeverageEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
