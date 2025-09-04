@@ -5,12 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -33,9 +36,11 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
+import fitbe.composeapp.generated.resources.add_edit_training_equipment_reset_to_default
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
+import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_verified
 import fitbe.composeapp.generated.resources.profile_save
@@ -54,7 +59,7 @@ import kotlin.uuid.Uuid
 fun AddEditTrainingEquipmentView(
     equipmentId: Uuid?,
     viewModel: AddEditTrainingEquipmentViewModel,
-    navHostController: NavHostController // Kept for navigateBackEvent, though TopAppBar back is gone
+    navHostController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -74,7 +79,7 @@ fun AddEditTrainingEquipmentView(
 
     LaunchedEffect(Unit) {
         viewModel.navigateBackEvent.collect {
-            navHostController.popBackStack() // Still needed for programmatic back navigation
+            navHostController.popBackStack()
         }
     }
 
@@ -83,7 +88,7 @@ fun AddEditTrainingEquipmentView(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 64.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 64.dp) // Added padding for FAB
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -108,7 +113,7 @@ fun AddEditTrainingEquipmentView(
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_remove),
-                                    contentDescription = "Remove image"
+                                    contentDescription = "Remove image" // TODO: String resource
                                 )
                             }
                         } else {
@@ -147,6 +152,18 @@ fun AddEditTrainingEquipmentView(
             }
         }
 
+        if (uiState.isEditing && uiState.default) {
+            Button(
+                onClick = { viewModel.resetEquipmentToDefault() },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_reset_default),
+                    contentDescription = stringResource(Res.string.add_edit_training_equipment_reset_to_default)
+                )
+            }
+        }
+
         FloatingActionButton(
             onClick = {
                 if (!uiState.isLoading && uiState.error == null) {
@@ -174,7 +191,7 @@ private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
     ) {
         Image(
             painter = painterResource(Res.drawable.ic_launcher),
-            contentDescription = null,
+            contentDescription = null, // Decorative
             modifier = Modifier.size(256.dp),
             contentScale = ContentScale.Crop
         )

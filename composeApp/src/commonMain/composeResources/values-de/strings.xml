@@ -261,4 +261,5 @@
     <string name="add_edit_training_equipment_button_take_photo">Foto aufnehmen</string>
     <string name="add_edit_training_equipment_image_content_description">Trainingsgerät Bild</string>
     <string name="add_edit_training_equipment_label_name">Name</string>
+    <string name="add_edit_training_equipment_reset_to_default">Auf Standard zurücksetzen</string>
 </resources>

@@ -97,7 +97,7 @@ class AddEditTrainingEquipmentViewModel(
                     id = currentState.equipmentId ?: Uuid.random(),
                     name = currentState.name,
                     imageUri = currentState.imageUri,
-                    default = currentState.default,
+                    default = currentState.default, // User cannot change this directly, but it's part of the state
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                 )
 
@@ -107,6 +107,29 @@ class AddEditTrainingEquipmentViewModel(
                 _uiState.update { it.copy(isLoading = false, error = "Failed to save equipment: ${e.message}") }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    fun resetEquipmentToDefault() {
+        val currentState = _uiState.value
+        if (currentState.equipmentId == null || !currentState.default) {
+            // Should not happen if button is shown correctly
+            _uiState.update { it.copy(error = "Cannot reset non-default equipment or new equipment.") }
+            return
+        }
+
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            try {
+                equipmentRepository.resetEquipmentToDefault(currentState.equipmentId)
+                // Reload the equipment to reflect the reset state
+                loadEquipment(currentState.equipmentId.toString())
+                // Optionally, inform the user about success, though reloading should show it
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, error = "Failed to reset equipment: ${e.message}") }
+            } finally {
+                // isLoading will be set to false by loadEquipment or the catch block
             }
         }
     }
