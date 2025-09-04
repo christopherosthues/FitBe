@@ -23,8 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,11 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_take_photo
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
 import fitbe.composeapp.generated.resources.ic_launcher
-import fitbe.composeapp.generated.resources.ic_photo_camera
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_save
@@ -72,7 +68,6 @@ fun AddEditTrainingEquipmentView(
         }
     )
 
-
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
     }
@@ -82,12 +77,6 @@ fun AddEditTrainingEquipmentView(
             navHostController.popBackStack() // Still needed for programmatic back navigation
         }
     }
-
-    // Common KMP image picker launcher
-    // TODO: Use CameraK (https://github.com/Kashif-E/CameraK/tree/main) for taking pictures
-//    val imagePickerLauncher = rememberImagePickerLauncher { imageUri ->
-//        viewModel.onImageUriChange(imageUri)
-//    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Box(
@@ -132,18 +121,6 @@ fun AddEditTrainingEquipmentView(
                             Icon(
                                 painter = painterResource(Res.drawable.ic_photo_library),
                                 contentDescription = stringResource(Res.string.add_edit_training_equipment_button_select_image)
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                // TODO: Use CameraK (https://github.com/Kashif-E/CameraK) to access camera
-                                // imagePickerLauncher.launch(ImagePicker.MediaType.CAMERA)
-                            },
-                            modifier = Modifier.align(Alignment.BottomEnd)
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_photo_camera),
-                                contentDescription = stringResource(Res.string.add_edit_training_equipment_button_take_photo)
                             )
                         }
                     }
