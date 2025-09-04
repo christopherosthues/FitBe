@@ -107,9 +107,6 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
-        dependencies {
-            ksp(libs.androidx.room.compiler)
-        }
     }
 }
 
@@ -149,6 +146,12 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspDesktop", libs.androidx.room.compiler)
 }
 
 compose.desktop {
