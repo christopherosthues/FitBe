@@ -22,7 +22,7 @@ data class AddEditTrainingEquipmentUiState(
     val imageUri: String? = null,
     val default: Boolean = false,
     val isLoading: Boolean = false,
-    val isEditing: Boolean = false,
+    val isEditing: Boolean = false, // True if an existing equipment is loaded
     val equipmentId: Uuid? = null,
     val error: String? = null
 )
@@ -34,13 +34,17 @@ class TrainingEquipmentDetailViewModel(
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())
     val uiState: StateFlow<AddEditTrainingEquipmentUiState> = _uiState.asStateFlow()
 
-    private val _navigateBackEvent = MutableSharedFlow<Unit>()
+    private val _saveCompletedEvent = MutableSharedFlow<Unit>()
+    val saveCompletedEvent = _saveCompletedEvent.asSharedFlow()
+
+    private val _navigateBackEvent = MutableSharedFlow<Unit>() // Kept for delete
     val navigateBackEvent = _navigateBackEvent.asSharedFlow()
 
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
             _uiState.update {
-                it.copy(isLoading = false, isEditing = false, default = false, equipmentId = null, name = "", imageUri = null)
+                // This is for adding a new item, isEditing (in UI state) is false
+                it.copy(isLoading = false, isEditing = false, default = false, equipmentId = null, name = "", imageUri = null, error = null)
             }
             return
         }
@@ -57,8 +61,9 @@ class TrainingEquipmentDetailViewModel(
                             imageUri = equipment.imageUri,
                             default = equipment.default,
                             isLoading = false,
-                            isEditing = true,
-                            equipmentId = equipment.id
+                            isEditing = true, // Existing equipment loaded
+                            equipmentId = equipment.id,
+                            error = null
                         )
                     }
                 } else {
@@ -92,29 +97,38 @@ class TrainingEquipmentDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            try {
-                val equipmentToSave = TrainingEquipment(
-                    id = currentState.equipmentId ?: Uuid.random(),
-                    name = currentState.name,
-                    imageUri = currentState.imageUri,
-                    default = currentState.default, // User cannot change this directly, but it's part of the state
-                    dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
-                )
+            val equipmentToSave = TrainingEquipment(
+                id = currentState.equipmentId ?: Uuid.random(),
+                name = currentState.name,
+                imageUri = currentState.imageUri,
+                default = currentState.default,
+                dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+            )
 
+            try {
                 equipmentRepository.upsertEquipment(equipmentToSave)
-                _navigateBackEvent.emit(Unit)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isEditing = true, // Now it's an existing item
+                        equipmentId = equipmentToSave.id, // Ensure id is updated
+                        name = equipmentToSave.name, // Ensure state reflects saved data
+                        imageUri = equipmentToSave.imageUri,
+                        default = equipmentToSave.default,
+                        error = null
+                    )
+                }
+                _saveCompletedEvent.emit(Unit)
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to save equipment: ${e.message}") }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
             }
+            // isLoading is set to false either in success or catch block
         }
     }
 
     fun resetEquipmentToDefault() {
         val currentState = _uiState.value
         if (currentState.equipmentId == null || !currentState.default) {
-            // Should not happen if button is shown correctly
             _uiState.update { it.copy(error = "Cannot reset non-default equipment or new equipment.") }
             return
         }
@@ -123,14 +137,11 @@ class TrainingEquipmentDetailViewModel(
         viewModelScope.launch {
             try {
                 equipmentRepository.resetEquipmentToDefault(currentState.equipmentId)
-                // Reload the equipment to reflect the reset state
-                loadEquipment(currentState.equipmentId.toString())
-                // Optionally, inform the user about success, though reloading should show it
+                loadEquipment(currentState.equipmentId.toString()) // Reload to reflect changes
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to reset equipment: ${e.message}") }
-            } finally {
-                // isLoading will be set to false by loadEquipment or the catch block
             }
+            // isLoading will be set to false by loadEquipment or the catch block
         }
     }
 
@@ -144,29 +155,18 @@ class TrainingEquipmentDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                // We need the full TrainingEquipment object to pass to deleteEquipment in the repository
-                // Or, the repository's deleteEquipment could be changed to accept an ID.
-                // For now, let's assume we need the object. We can fetch it or construct it if we have all details.
-                // Since we have equipmentId, name, imageUri, default status from the state, we can reconstruct it.
-                // The dateUtc might not be perfectly accurate if it was loaded and not saved again,
-                // but for deletion by ID (which is what Room will do), it should be fine.
-                // A better approach might be to adjust repository.deleteEquipment to take an ID,
-                // or ensure we always have the full, most up-to-date object.
-                // Given the current repository signature, we reconstruct.
                 val equipmentToDelete = TrainingEquipment(
                     id = currentState.equipmentId,
                     name = currentState.name,
                     imageUri = currentState.imageUri,
                     default = currentState.default,
-                    dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date // Date may not matter for deletion by ID
+                    dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
                 )
                 equipmentRepository.deleteEquipment(equipmentToDelete)
-                _navigateBackEvent.emit(Unit)
+                _navigateBackEvent.emit(Unit) // Deletion still navigates back
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to delete equipment: ${e.message}") }
             } finally {
-                // If deletion fails, we want to ensure isLoading is false.
-                // If successful, navigation occurs, so this might not be strictly necessary, but good for safety.
                  _uiState.update { it.copy(isLoading = false) }
             }
         }
