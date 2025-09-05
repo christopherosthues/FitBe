@@ -32,11 +32,14 @@ interface ExerciseDao { // Example, you might have separate DAOs
     suspend fun insertDefaultEquipment(defaultEquipment: DefaultTrainingEquipmentEntity): Long
 
     @Query("SELECT * FROM default_training_equipment WHERE id = :equipmentId")
-    suspend fun getDefaultEquipmentById(equipmentId: Uuid): DefaultTrainingEquipmentEntity?
+    fun getDefaultEquipmentById(equipmentId: Uuid): Flow<DefaultTrainingEquipmentEntity?>
+
+    @Query("SELECT * FROM default_training_equipment WHERE id = :equipmentId")
+    suspend fun getDefaultEquipmentByIdForReset(equipmentId: Uuid): DefaultTrainingEquipmentEntity?
 
     @Transaction
     suspend fun resetEquipmentToDefault(equipmentId: Uuid) {
-        val defaultEquipment = getDefaultEquipmentById(equipmentId)
+        val defaultEquipment = getDefaultEquipmentByIdForReset(equipmentId)
         if (defaultEquipment != null) {
             upsertEquipment(defaultEquipment.toTrainingEquipmentEntity())
         }

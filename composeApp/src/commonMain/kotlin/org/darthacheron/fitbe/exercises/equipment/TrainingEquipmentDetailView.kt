@@ -176,7 +176,7 @@ fun TrainingEquipmentDetailView(
         }
 
         AnimatedVisibility(
-            visible = isInEditMode && uiState.equipmentId != null && uiState.default,
+            visible = isInEditMode && uiState.equipmentId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
             FloatingActionButton(
