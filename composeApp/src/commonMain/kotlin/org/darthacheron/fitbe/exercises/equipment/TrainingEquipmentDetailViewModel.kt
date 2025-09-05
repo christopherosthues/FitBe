@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.exercises.Exercise
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -22,13 +23,13 @@ data class AddEditTrainingEquipmentUiState(
     val imageUri: String? = null,
     val default: Boolean = false,
     val isLoading: Boolean = false,
-    val isEditing: Boolean = false, // True if an existing equipment is loaded from training_equipment table
+    val isEditing: Boolean = false,
     val equipmentId: Uuid? = null,
     val error: String? = null,
-    // Stores the original values from default_training_equipment table, fetched once on load if default=true
     val persistedDefaultName: String? = null,
     val persistedDefaultImageUri: String? = null,
-    val isModifiedFromPersistedDefault: Boolean = false
+    val isModifiedFromPersistedDefault: Boolean = false,
+    val exercises: List<Exercise> = emptyList(),
 )
 
 @OptIn(ExperimentalUuidApi::class)
@@ -49,7 +50,7 @@ class TrainingEquipmentDetailViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false, isEditing = false, default = false, equipmentId = null, name = "", imageUri = null, error = null,
-                    persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false
+                    persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false, exercises = emptyList(),
                 )
             }
             return
@@ -79,7 +80,8 @@ class TrainingEquipmentDetailViewModel(
                                     (currentEquipment.name != persistedDefaultEntity.name || currentEquipment.imageUri != persistedDefaultEntity.imageUri)
                                 } else {
                                     false // Should not happen if item is default, but defensive
-                                }
+                                },
+                                exercises = currentEquipment.exercises
                             )
                         }
                     } else {
@@ -95,20 +97,23 @@ class TrainingEquipmentDetailViewModel(
                                 error = null,
                                 persistedDefaultName = null,
                                 persistedDefaultImageUri = null,
-                                isModifiedFromPersistedDefault = false
+                                isModifiedFromPersistedDefault = false,
+                                exercises = currentEquipment.exercises
                             )
                         }
                     }
                 } else {
                     _uiState.update {
                         it.copy(isLoading = false, error = "Equipment not found", isEditing = false,
-                                persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false)
+                                persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false,
+                                exercises = emptyList())
                     }
                 }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(isLoading = false, error = "Failed to load equipment: ${e.message}", isEditing = false,
-                            persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false)
+                            persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false,
+                            exercises = emptyList())
                 }
             }
         }
