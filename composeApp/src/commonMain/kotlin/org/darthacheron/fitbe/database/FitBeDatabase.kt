@@ -20,11 +20,13 @@ import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.exercises.equipment.DefaultTrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.equipment.EquipmentDao
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.exercises.ExerciseEntity
 import org.darthacheron.fitbe.exercises.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.exercises.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.exercises.DefaultExerciseEntity
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -47,7 +49,7 @@ import kotlin.uuid.ExperimentalUuidApi
         BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
-        DefaultTrainingEquipmentEntity::class
+        DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class
                ],
     version = 1
 )
@@ -64,6 +66,7 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val profileDao: ProfileDao
     abstract val stepsDao: StepsDao
     abstract val exerciseDao: ExerciseDao
+    abstract val equipmentDao: EquipmentDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

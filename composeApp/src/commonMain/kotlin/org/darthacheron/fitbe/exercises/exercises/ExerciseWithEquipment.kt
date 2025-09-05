@@ -7,11 +7,11 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class ExerciseWithEquipment(
-    val id: Uuid,
-    val name: String,
-    val guide: String,
-    val targetMuscleGroups: List<MuscleGroup> = emptyList(),
-    val default: Boolean = false,
-    val dateUtc: LocalDate,
+    override val id: Uuid,
+    override val name: String,
+    override val guide: String,
+    override val targetMuscleGroups: List<MuscleGroup> = emptyList(),
+    override val default: Boolean = false,
+    override val dateUtc: LocalDate,
     val equipmentList: List<TrainingEquipment>
-)
+) : Exercise(id, name, guide, targetMuscleGroups, default, dateUtc)

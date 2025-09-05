@@ -10,6 +10,7 @@ import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentViewModel
+import org.darthacheron.fitbe.exercises.exercises.ExerciseRepository
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
@@ -42,6 +43,7 @@ val sharedModule = module {
     singleOf(::BodyWeightRepository)
     singleOf(::StepsRepository)
     singleOf(::EquipmentRepository)
+    singleOf(::ExerciseRepository)
 
     singleOf(::BodyMeasurementUnitConverter)
     singleOf(::DistanceUnitConverter)
@@ -59,6 +61,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().profileDao }
     single { get<FitBeDatabase>().stepsDao }
     single { get<FitBeDatabase>().exerciseDao }
+    single { get<FitBeDatabase>().equipmentDao }
 
     singleOf(::StartUpService)
 
