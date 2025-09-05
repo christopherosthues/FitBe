@@ -37,6 +37,8 @@ import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_s
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_reset_to_default
+import fitbe.composeapp.generated.resources.ic_delete
+// import fitbe.composeapp.generated.resources.ic_delete // Assuming you will add this
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
@@ -153,9 +155,10 @@ fun AddEditTrainingEquipmentView(
         }
 
         if (uiState.isEditing && uiState.default) {
-            Button(
+            FloatingActionButton(
                 onClick = { viewModel.resetEquipmentToDefault() },
-                modifier = Modifier.align(Alignment.TopEnd)
+                containerColor = Color.Red, // Consider a less aggressive color or theme color
+                modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_reset_default),
@@ -164,6 +167,7 @@ fun AddEditTrainingEquipmentView(
             }
         }
 
+        // Save FAB
         FloatingActionButton(
             onClick = {
                 if (!uiState.isLoading && uiState.error == null) {
@@ -177,6 +181,24 @@ fun AddEditTrainingEquipmentView(
                 painter = painterResource(Res.drawable.ic_save),
                 contentDescription = stringResource(Res.string.profile_save)
             )
+        }
+
+        // Delete FAB - New
+        if (uiState.isEditing && !uiState.default) {
+            FloatingActionButton(
+                onClick = {
+                    if (!uiState.isLoading) {
+                        viewModel.deleteEquipment()
+                    }
+                },
+                containerColor = Color.Red, // Consider a less aggressive color or theme color
+                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_delete),
+                    contentDescription = "Delete Equipment" // TODO: Replace with stringResource(Res.string.delete_equipment_content_description)
+                )
+            }
         }
     }
 }
@@ -211,7 +233,7 @@ private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
         if (uiState.default) {
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
-                contentDescription = "Default equipment",
+                contentDescription = "Default equipment", // TODO: String resource
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(8.dp)
