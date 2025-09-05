@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.exercises
 
 import kotlin.uuid.ExperimentalUuidApi
 import kotlinx.datetime.LocalDate

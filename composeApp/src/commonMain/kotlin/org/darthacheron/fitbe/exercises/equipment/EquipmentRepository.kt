@@ -2,7 +2,7 @@ package org.darthacheron.fitbe.exercises.equipment
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.darthacheron.fitbe.exercises.ExerciseDao
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import kotlin.collections.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

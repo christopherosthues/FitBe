@@ -20,10 +20,10 @@ import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.exercises.equipment.DefaultTrainingEquipmentEntity
-import org.darthacheron.fitbe.exercises.ExerciseDao
-import org.darthacheron.fitbe.exercises.ExerciseEntity
-import org.darthacheron.fitbe.exercises.ExerciseEquipmentCrossRef
-import org.darthacheron.fitbe.exercises.ProfileFavoriteExerciseCrossRef
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
+import org.darthacheron.fitbe.exercises.exercises.ExerciseEntity
+import org.darthacheron.fitbe.exercises.exercises.ExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.exercises.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity

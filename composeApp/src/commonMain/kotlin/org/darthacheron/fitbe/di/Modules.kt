@@ -7,8 +7,8 @@ import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailViewModel
 import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
-import org.darthacheron.fitbe.exercises.ExerciseDao
-import org.darthacheron.fitbe.exercises.ExercisesViewModel
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
+import org.darthacheron.fitbe.exercises.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel

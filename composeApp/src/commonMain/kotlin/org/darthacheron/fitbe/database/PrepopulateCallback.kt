@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.darthacheron.fitbe.exercises.ExerciseDao
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.exercises.equipment.fromTrainingEquipmentEntity
 import kotlin.uuid.ExperimentalUuidApi

@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
-import org.darthacheron.fitbe.exercises.MuscleGroup
+import org.darthacheron.fitbe.exercises.exercises.MuscleGroup
 
 class MuscleGroupListConverter {
     @TypeConverter

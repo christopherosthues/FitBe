@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.exercises
 
 import androidx.room.Embedded
 import androidx.room.Junction

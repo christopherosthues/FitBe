@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.exercises.Exercise
+import org.darthacheron.fitbe.exercises.exercises.Exercise
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

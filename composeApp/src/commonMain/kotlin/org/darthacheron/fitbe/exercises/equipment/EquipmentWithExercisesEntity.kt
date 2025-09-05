@@ -3,9 +3,9 @@ package org.darthacheron.fitbe.exercises.equipment
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import org.darthacheron.fitbe.exercises.ExerciseEntity
-import org.darthacheron.fitbe.exercises.ExerciseEquipmentCrossRef
-import org.darthacheron.fitbe.exercises.toEntity
+import org.darthacheron.fitbe.exercises.exercises.ExerciseEntity
+import org.darthacheron.fitbe.exercises.exercises.ExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.exercises.exercises.toEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, but the @Relation is different

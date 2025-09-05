@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import org.darthacheron.fitbe.exercises.ExercisesDashboardView
-import org.darthacheron.fitbe.exercises.ExercisesView
-import org.darthacheron.fitbe.exercises.ExercisesViewModel
+import org.darthacheron.fitbe.exercises.exercises.ExercisesView
+import org.darthacheron.fitbe.exercises.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentView
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
