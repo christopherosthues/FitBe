@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -406,7 +407,7 @@ fun ProfileView(
                             }
                         }
                     },
-                    containerColor = Color.Red,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
@@ -447,7 +448,7 @@ fun ProfileView(
                         stepsError = false
                         heightError = false
                     },
-                    containerColor = Color.Red,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                     modifier = Modifier.padding(end = 16.dp)
                 ) {
                     Icon(
@@ -487,7 +488,7 @@ fun ProfileView(
                             isAdding = false
                         }
                     },
-                    containerColor = if (isFormValid) Color(0xFF2196F3) else Color.Gray
+                    containerColor = if (isFormValid) MaterialTheme.colorScheme.primary else Color.Gray
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
@@ -519,7 +520,7 @@ fun ProfileView(
                         }
                         isEditing = true
                     },
-                    containerColor = Color(0xFF2196F3),
+                    containerColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 16.dp)
                 ) {
                     Icon(
@@ -547,7 +548,7 @@ fun ProfileView(
                         isEditing = true
                         isAdding = true
                     },
-                    containerColor = Color(0xFF2196F3)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_add),

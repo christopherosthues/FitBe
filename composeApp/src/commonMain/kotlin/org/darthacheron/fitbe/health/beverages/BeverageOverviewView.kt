@@ -34,7 +34,6 @@ import org.darthacheron.fitbe.health.steps.PlotSteps
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Preview
 @Composable
 fun BeverageOverviewView(beverageOverviewViewModel: BeverageOverviewViewModel) {
     val beverages by beverageOverviewViewModel.beverages.collectAsState()

@@ -80,7 +80,7 @@ fun TrainingEquipmentView(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),
-            containerColor = Color(0xFF2196F3)
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),

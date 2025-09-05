@@ -72,7 +72,6 @@ import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun SleepOverviewView(viewModel: SleepViewModel) {
     val sleeps by viewModel.sleeps.collectAsState()

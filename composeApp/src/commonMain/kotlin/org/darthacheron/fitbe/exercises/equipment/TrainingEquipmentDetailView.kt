@@ -1,10 +1,12 @@
 package org.darthacheron.fitbe.exercises.equipment
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -60,7 +62,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun TrainingEquipmentDetailView(
-    equipmentId: Uuid?, // Initial equipment ID from navigation, null if adding new
+    equipmentId: Uuid?,
     viewModel: TrainingEquipmentDetailViewModel,
     navHostController: NavHostController
 ) {
@@ -173,11 +175,14 @@ fun TrainingEquipmentDetailView(
             }
         }
 
-        if (uiState.equipmentId != null && uiState.default) {
+        AnimatedVisibility(
+            visible = isInEditMode && uiState.equipmentId != null && uiState.default,
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
             FloatingActionButton(
                 onClick = { viewModel.resetEquipmentToDefault() },
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer, 
-                modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_reset_default),
@@ -186,64 +191,153 @@ fun TrainingEquipmentDetailView(
             }
         }
 
-        FloatingActionButton(
-            onClick = {
-                if (isInEditMode) {
-                    if (!uiState.isLoading) {
-                        viewModel.saveEquipment()
-                    }
-                } else if (uiState.equipmentId != null) {
-                    isInEditMode = true
-                }
-            },
-            containerColor = if (isInEditMode) {
-                MaterialTheme.colorScheme.primary 
-            } else {
-                MaterialTheme.colorScheme.secondary
-            },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(if (isInEditMode) Res.drawable.ic_save else Res.drawable.ic_edit),
-                contentDescription = if (isInEditMode) stringResource(Res.string.profile_save) else /*Res.string.edit_equipment_content_description*/ "Edit Equipment"
-            )
-        }
-
-        if (isInEditMode && uiState.equipmentId != null) {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.loadEquipment(uiState.equipmentId.toString()) 
-                    isInEditMode = false
-                },
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_cancel), 
-                    contentDescription = "Cancel" // TODO: stringResource(Res.string.cancel_editing_content_description)
-                )
+            AnimatedVisibility(!isInEditMode && uiState.equipmentId != null && !uiState.default) {
+                FloatingActionButton(
+                    onClick = {
+                        if (!uiState.isLoading) {
+                            viewModel.deleteEquipment()
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_delete),
+                        contentDescription = "Delete Equipment" // TODO: stringResource(Res.string.delete_equipment_content_description)
+                    )
+                }
             }
         }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AnimatedVisibility(isInEditMode && uiState.equipmentId != null) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.loadEquipment(uiState.equipmentId.toString())
+                        isInEditMode = false
+                    },
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_cancel),
+                        contentDescription = "Cancel" // TODO: stringResource(Res.string.cancel_editing_content_description)
+                    )
+                }
+            }
+
+            AnimatedVisibility(isInEditMode) {
+                FloatingActionButton(
+                    onClick = {
+                        if (!uiState.isLoading) {
+                            viewModel.saveEquipment()
+                        }
+                    },
+                    containerColor = if (!uiState.isLoading) MaterialTheme.colorScheme.primary else Color.Gray,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_save),
+                        contentDescription = stringResource(Res.string.profile_save)
+                    )
+                }
+            }
+
+            AnimatedVisibility(!isInEditMode && uiState.equipmentId != null) {
+                FloatingActionButton(
+                    onClick = {
+                        isInEditMode = true
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_edit),
+                        contentDescription = /*Res.string.edit_equipment_content_description*/ "Edit Equipment"
+                    )
+                }
+            }
+        }
+
+//        if (uiState.equipmentId != null && uiState.default) {
+//            FloatingActionButton(
+//                onClick = { viewModel.resetEquipmentToDefault() },
+//                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+//                modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
+//            ) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_reset_default),
+//                    contentDescription = stringResource(Res.string.add_edit_training_equipment_reset_to_default)
+//                )
+//            }
+//        }
+
+//        FloatingActionButton(
+//            onClick = {
+//                if (isInEditMode) {
+//                    if (!uiState.isLoading) {
+//                        viewModel.saveEquipment()
+//                    }
+//                } else if (uiState.equipmentId != null) {
+//                    isInEditMode = true
+//                }
+//            },
+//            containerColor = if (isInEditMode) {
+//                MaterialTheme.colorScheme.primary
+//            } else {
+//                MaterialTheme.colorScheme.secondary
+//            },
+//            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+//        ) {
+//            Icon(
+//                painter = painterResource(if (isInEditMode) Res.drawable.ic_save else Res.drawable.ic_edit),
+//                contentDescription = if (isInEditMode) stringResource(Res.string.profile_save) else /*Res.string.edit_equipment_content_description*/ "Edit Equipment"
+//            )
+//        }
+
+//        if (isInEditMode && uiState.equipmentId != null) {
+//            FloatingActionButton(
+//                onClick = {
+//                    viewModel.loadEquipment(uiState.equipmentId.toString())
+//                    isInEditMode = false
+//                },
+//                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+//                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
+//            ) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_cancel),
+//                    contentDescription = "Cancel" // TODO: stringResource(Res.string.cancel_editing_content_description)
+//                )
+//            }
+//        }
 
         // Delete FAB: Visible when viewing a non-default, existing item.
         // Its action triggers viewModel.deleteEquipment(), and the LaunchedEffect collecting
         // viewModel.navigateBackEvent handles the navigation after successful deletion.
-        if (!isInEditMode && uiState.equipmentId != null && !uiState.default) {
-            FloatingActionButton(
-                onClick = {
-                    if (!uiState.isLoading) {
-                        viewModel.deleteEquipment()
-                    }
-                },
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_delete),
-                    contentDescription = "Delete Equipment" // TODO: stringResource(Res.string.delete_equipment_content_description)
-                )
-            }
-        }
+//        if (!isInEditMode && uiState.equipmentId != null && !uiState.default) {
+//            FloatingActionButton(
+//                onClick = {
+//                    if (!uiState.isLoading) {
+//                        viewModel.deleteEquipment()
+//                    }
+//                },
+//                containerColor = MaterialTheme.colorScheme.errorContainer,
+//                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
+//            ) {
+//                Icon(
+//                    painter = painterResource(Res.drawable.ic_delete),
+//                    contentDescription = "Delete Equipment" // TODO: stringResource(Res.string.delete_equipment_content_description)
+//                )
+//            }
+//        }
     }
 }
 

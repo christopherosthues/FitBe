@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,7 +41,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-@Preview
 @Composable
 fun WeightOverviewView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
@@ -97,7 +97,7 @@ fun WeightOverviewView(
 
             FloatingActionButton(
                 onClick = { showAddDialog = true },
-                containerColor = Color(0xFF2196F3),
+                containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(16.dp),
             ) {
