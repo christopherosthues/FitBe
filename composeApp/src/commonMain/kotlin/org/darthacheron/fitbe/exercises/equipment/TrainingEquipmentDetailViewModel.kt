@@ -25,7 +25,7 @@ data class AddEditTrainingEquipmentUiState(
     val isEditing: Boolean = false, // True if an existing equipment is loaded from training_equipment table
     val equipmentId: Uuid? = null,
     val error: String? = null,
-    // Fields for comparing with the persisted default_training_equipment entity
+    // Stores the original values from default_training_equipment table, fetched once on load if default=true
     val persistedDefaultName: String? = null,
     val persistedDefaultImageUri: String? = null,
     val isModifiedFromPersistedDefault: Boolean = false
@@ -44,26 +44,6 @@ class TrainingEquipmentDetailViewModel(
     private val _navigateBackEvent = MutableSharedFlow<Unit>()
     val navigateBackEvent = _navigateBackEvent.asSharedFlow()
 
-    private fun compareWithPersistedDefault(equipmentId: Uuid, currentName: String, currentImageUri: String?) {
-        viewModelScope.launch {
-            val persistedDefaultEquipment = equipmentRepository.getDefaultEquipmentById(equipmentId).firstOrNull()
-            if (persistedDefaultEquipment != null) {
-                _uiState.update {
-                    it.copy(
-                        persistedDefaultName = persistedDefaultEquipment.name,
-                        persistedDefaultImageUri = persistedDefaultEquipment.imageUri,
-                        isModifiedFromPersistedDefault = (currentName != persistedDefaultEquipment.name || currentImageUri != persistedDefaultEquipment.imageUri)
-                    )
-                }
-            } else {
-                 // Should not happen if equipment.default was true for this ID, but handle defensively
-                _uiState.update {
-                    it.copy(persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false)
-                }
-            }
-        }
-    }
-
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
             _uiState.update {
@@ -81,21 +61,43 @@ class TrainingEquipmentDetailViewModel(
                 val parsedEquipmentId = Uuid.parse(equipmentIdString)
                 val currentEquipment = equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId).firstOrNull()
                 if (currentEquipment != null) {
-                    _uiState.update {
-                        it.copy(
-                            name = currentEquipment.name,
-                            imageUri = currentEquipment.imageUri,
-                            default = currentEquipment.default,
-                            isLoading = false,
-                            isEditing = true,
-                            equipmentId = currentEquipment.id,
-                            error = null
-                        )
-                    }
                     if (currentEquipment.default) {
-                        compareWithPersistedDefault(currentEquipment.id, currentEquipment.name, currentEquipment.imageUri)
+                        // Fetch the true default values from default_training_equipment table
+                        val persistedDefaultEntity = equipmentRepository.getDefaultEquipmentById(currentEquipment.id).firstOrNull()
+                        _uiState.update {
+                            it.copy(
+                                name = currentEquipment.name,
+                                imageUri = currentEquipment.imageUri,
+                                default = true,
+                                isLoading = false,
+                                isEditing = true,
+                                equipmentId = currentEquipment.id,
+                                error = null,
+                                persistedDefaultName = persistedDefaultEntity?.name,
+                                persistedDefaultImageUri = persistedDefaultEntity?.imageUri,
+                                isModifiedFromPersistedDefault = if (persistedDefaultEntity != null) {
+                                    (currentEquipment.name != persistedDefaultEntity.name || currentEquipment.imageUri != persistedDefaultEntity.imageUri)
+                                } else {
+                                    false // Should not happen if item is default, but defensive
+                                }
+                            )
+                        }
                     } else {
-                        _uiState.update { it.copy(persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false) }
+                        // Not a default item
+                        _uiState.update {
+                            it.copy(
+                                name = currentEquipment.name,
+                                imageUri = currentEquipment.imageUri,
+                                default = false,
+                                isLoading = false,
+                                isEditing = true,
+                                equipmentId = currentEquipment.id,
+                                error = null,
+                                persistedDefaultName = null,
+                                persistedDefaultImageUri = null,
+                                isModifiedFromPersistedDefault = false
+                            )
+                        }
                     }
                 } else {
                     _uiState.update {
@@ -113,26 +115,24 @@ class TrainingEquipmentDetailViewModel(
     }
 
     fun onNameChange(name: String) {
-        val currentId = _uiState.value.equipmentId
-        val isDefaultItem = _uiState.value.default
-        val currentImageUri = _uiState.value.imageUri
-
-        _uiState.update { it.copy(name = name, error = null) }
-
-        if (isDefaultItem && currentId != null) {
-            compareWithPersistedDefault(currentId, name, currentImageUri)
+        _uiState.update { currentState ->
+            val modified = if (currentState.default && currentState.persistedDefaultName != null) {
+                (name != currentState.persistedDefaultName || currentState.imageUri != currentState.persistedDefaultImageUri)
+            } else {
+                false
+            }
+            currentState.copy(name = name, error = null, isModifiedFromPersistedDefault = modified)
         }
     }
 
     fun onImageUriChange(imageUri: String?) {
-        val currentId = _uiState.value.equipmentId
-        val isDefaultItem = _uiState.value.default
-        val currentName = _uiState.value.name
-
-        _uiState.update { it.copy(imageUri = imageUri, error = null) }
-
-        if (isDefaultItem && currentId != null) {
-            compareWithPersistedDefault(currentId, currentName, imageUri)
+        _uiState.update { currentState ->
+            val modified = if (currentState.default && currentState.persistedDefaultName != null) { // Check persistedDefaultName as a proxy for defaults being loaded
+                (currentState.name != currentState.persistedDefaultName || imageUri != currentState.persistedDefaultImageUri)
+            } else {
+                false
+            }
+            currentState.copy(imageUri = imageUri, error = null, isModifiedFromPersistedDefault = modified)
         }
     }
 
@@ -156,6 +156,8 @@ class TrainingEquipmentDetailViewModel(
 
             try {
                 equipmentRepository.upsertEquipment(equipmentToSave)
+                // After save, the current state is the new baseline for modification tracking if it's a default item.
+                // The current name/imageUri become the new persistedDefaultName/ImageUri for this session.
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -163,15 +165,8 @@ class TrainingEquipmentDetailViewModel(
                         equipmentId = equipmentToSave.id, 
                         name = equipmentToSave.name, 
                         imageUri = equipmentToSave.imageUri,
-                        default = equipmentToSave.default,
                         error = null
-                        // isModifiedFromPersistedDefault will be updated by compareWithPersistedDefault below
                     )
-                }
-                if (equipmentToSave.default) {
-                    compareWithPersistedDefault(equipmentToSave.id, equipmentToSave.name, equipmentToSave.imageUri)
-                } else {
-                     _uiState.update { it.copy(persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false) }
                 }
                 _saveCompletedEvent.emit(Unit)
             } catch (e: Exception) {
@@ -191,7 +186,8 @@ class TrainingEquipmentDetailViewModel(
         viewModelScope.launch {
             try {
                 equipmentRepository.resetEquipmentToDefault(currentState.equipmentId)
-                loadEquipment(currentState.equipmentId.toString()) // This will reload and re-compare
+                loadEquipment(currentState.equipmentId.toString())
+                _saveCompletedEvent.emit(Unit)
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to reset equipment: ${e.message}") }
             }

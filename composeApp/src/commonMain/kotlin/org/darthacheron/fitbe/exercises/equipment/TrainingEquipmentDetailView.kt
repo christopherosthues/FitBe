@@ -151,7 +151,7 @@ fun TrainingEquipmentDetailView(
                     }
 
                     OutlinedTextField(
-                        value = uiState.name,
+                        value = getLocalizedName(uiState.name, uiState.default),
                         onValueChange = { if (isInEditMode) viewModel.onNameChange(it) },
                         label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
                         modifier = Modifier.fillMaxWidth(),
