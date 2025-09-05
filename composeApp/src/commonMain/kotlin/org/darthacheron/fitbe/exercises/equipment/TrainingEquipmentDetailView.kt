@@ -1,19 +1,16 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -38,7 +35,6 @@ import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_co
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_reset_to_default
 import fitbe.composeapp.generated.resources.ic_delete
-// import fitbe.composeapp.generated.resources.ic_delete // Assuming you will add this
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
@@ -58,9 +54,9 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun AddEditTrainingEquipmentView(
+fun TrainingEquipmentDetailView(
     equipmentId: Uuid?,
-    viewModel: AddEditTrainingEquipmentViewModel,
+    viewModel: TrainingEquipmentDetailViewModel,
     navHostController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()

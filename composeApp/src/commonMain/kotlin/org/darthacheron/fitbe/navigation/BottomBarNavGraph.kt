@@ -13,8 +13,8 @@ import androidx.navigation.toRoute
 import org.darthacheron.fitbe.exercises.ExercisesDashboardView
 import org.darthacheron.fitbe.exercises.ExercisesView
 import org.darthacheron.fitbe.exercises.ExercisesViewModel
-import org.darthacheron.fitbe.exercises.TrainingEquipmentView
-import org.darthacheron.fitbe.exercises.TrainingEquipmentViewModel
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentView
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
@@ -35,9 +35,8 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
-import org.darthacheron.fitbe.exercises.AddEditTrainingEquipmentView
-import org.darthacheron.fitbe.exercises.AddEditTrainingEquipmentViewModel
-import org.darthacheron.fitbe.exercises.TrainingEquipment
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailView
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -84,9 +83,9 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
         }
         composable<Screen.AddEditTrainingEquipment> { backStackEntry ->
             val addEditTrainingEquipmentRoute: Screen.AddEditTrainingEquipment = backStackEntry.toRoute()
-            val viewModel = koinViewModel<AddEditTrainingEquipmentViewModel>()
+            val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>()
             val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
-            AddEditTrainingEquipmentView(id, viewModel, navHostController)
+            TrainingEquipmentDetailView(id, viewModel, navHostController)
         }
         composable<Screen.Sleeps> {
             val viewModel = koinViewModel<SleepViewModel>()

@@ -8,8 +8,8 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.exercises.ExerciseDao
-import org.darthacheron.fitbe.exercises.TrainingEquipmentEntity
-import org.darthacheron.fitbe.exercises.fromTrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.equipment.fromTrainingEquipmentEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 internal val equipmentList = listOf(

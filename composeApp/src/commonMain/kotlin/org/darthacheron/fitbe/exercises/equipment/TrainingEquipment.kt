@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.compose.runtime.Composable
 import kotlinx.datetime.LocalDate

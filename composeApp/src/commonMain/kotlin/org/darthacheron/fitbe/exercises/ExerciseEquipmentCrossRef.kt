@@ -1,9 +1,9 @@
 package org.darthacheron.fitbe.exercises
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

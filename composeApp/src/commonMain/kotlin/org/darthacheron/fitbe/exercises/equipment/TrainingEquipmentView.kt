@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

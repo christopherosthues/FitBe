@@ -1,7 +1,9 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.darthacheron.fitbe.exercises.ExerciseDao
+import kotlin.collections.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -15,6 +17,9 @@ class EquipmentRepository(private val exerciseDao: ExerciseDao) {
 
     fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipment?> =
         exerciseDao.getEquipmentById(equipmentId).map { it?.toTrainingEquipment() }
+
+    fun getEquipmentWithExercisesById(equipmentId: Uuid): Flow<EquipmentWithExercises?> =
+        exerciseDao.getEquipmentWithExercises(equipmentId).map { it?.toEquipmentWithExercises() }
 
     suspend fun upsertEquipment(equipment: TrainingEquipment) {
         exerciseDao.upsertEquipment(toEntity(equipment))

@@ -3,6 +3,8 @@ package org.darthacheron.fitbe.exercises
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.equipment.toEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 data class ExerciseWithEquipmentEntity(

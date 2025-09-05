@@ -16,7 +16,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_verified
 import io.github.vinceglb.filekit.PlatformFile
-import org.darthacheron.fitbe.exercises.getLocalizedImage
+import org.darthacheron.fitbe.exercises.equipment.getLocalizedImage
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

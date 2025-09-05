@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,7 +28,7 @@ data class AddEditTrainingEquipmentUiState(
 )
 
 @OptIn(ExperimentalUuidApi::class)
-class AddEditTrainingEquipmentViewModel(
+class TrainingEquipmentDetailViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())
@@ -49,7 +49,7 @@ class AddEditTrainingEquipmentViewModel(
         viewModelScope.launch {
             try {
                 val equipmentId = Uuid.parse(equipmentIdString)
-                val equipment = equipmentRepository.getEquipmentById(equipmentId).firstOrNull()
+                val equipment = equipmentRepository.getEquipmentWithExercisesById(equipmentId).firstOrNull()
                 if (equipment != null) {
                     _uiState.update {
                         it.copy(

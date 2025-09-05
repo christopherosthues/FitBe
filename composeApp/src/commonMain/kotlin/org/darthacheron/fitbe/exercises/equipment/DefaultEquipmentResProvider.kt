@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.exercises
+package org.darthacheron.fitbe.exercises.equipment
 
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.default_training_equipment_air_bike
