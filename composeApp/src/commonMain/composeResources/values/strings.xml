@@ -59,6 +59,7 @@
     <string name="top_bar_title_home">Home</string>
     <string name="top_bar_title_exercises_dashboard">Exercises</string>
     <string name="top_bar_title_exercises">Exercises</string>
+    <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
     <string name="top_bar_title_training_equipment">Training equipment</string>
     <string name="top_bar_title_add_edit_training_equipment">Add/Edit Training Equipment</string>
     <string name="top_bar_title_health">Health</string>
@@ -262,4 +263,6 @@
     <string name="add_edit_training_equipment_image_content_description">Training Equipment Image</string>
     <string name="add_edit_training_equipment_label_name">Name</string>
     <string name="add_edit_training_equipment_reset_to_default">Reset to Default</string>
+
+    <string name="settings_content_description_title">Open settings</string>
 </resources>

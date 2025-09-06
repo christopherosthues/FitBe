@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,8 +39,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun BeverageOverviewView(
     beverageOverviewViewModel: BeverageOverviewViewModel,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        beverageOverviewViewModel.updateTopBarConfig()
+    }
     val beverages by beverageOverviewViewModel.beverages.collectAsState()
     val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
     val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()

@@ -5,6 +5,7 @@ import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
+import org.darthacheron.fitbe.exercises.ExercisesDashboardViewModel
 import org.darthacheron.fitbe.exercises.equipment.EquipmentDao
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailViewModel
 import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
@@ -41,13 +42,13 @@ import org.koin.dsl.module
 expect val platformModule: Module
 
 val sharedModule = module {
-    singleOf(::BeverageRepository)
-    singleOf(::SleepRepository)
-    singleOf(::ProfileRepository)
-    singleOf(::BodyWeightRepository)
-    singleOf(::StepsRepository)
-    singleOf(::EquipmentRepository)
     singleOf(::ExerciseRepository)
+    singleOf(::EquipmentRepository)
+    singleOf(::StepsRepository)
+    singleOf(::SleepRepository)
+    singleOf(::BeverageRepository)
+    singleOf(::BodyWeightRepository)
+    singleOf(::ProfileRepository)
 
     singleOf(::BodyMeasurementUnitConverter)
     singleOf(::DistanceUnitConverter)
@@ -71,18 +72,18 @@ val sharedModule = module {
     single<TopBarManager> { ActualTopBarManager() }
 
     viewModelOf(::HomeViewModel)
-    viewModelOf(::SettingsViewModel)
-    viewModelOf(::ProfileViewModel)
-    viewModelOf(::NutritionOverviewViewModel)
-    viewModelOf(::BeverageViewModel)
-    viewModelOf(::BeverageOverviewViewModel)
-    viewModelOf(::SleepViewModel)
-    viewModelOf(::HealthOverviewViewModel)
-    viewModelOf(::ProfileViewModel)
-    viewModelOf(::WeightOverviewViewModel)
-    viewModelOf(::StepsViewModel)
+    viewModelOf(::ExercisesDashboardViewModel)
     viewModelOf(::ExercisesViewModel)
     viewModelOf(::ExerciseDetailViewModel)
     viewModelOf(::TrainingEquipmentViewModel)
     viewModelOf(::TrainingEquipmentDetailViewModel)
+    viewModelOf(::HealthOverviewViewModel)
+    viewModelOf(::StepsViewModel)
+    viewModelOf(::SleepViewModel)
+    viewModelOf(::BeverageOverviewViewModel)
+    viewModelOf(::BeverageViewModel)
+    viewModelOf(::WeightOverviewViewModel)
+    viewModelOf(::NutritionOverviewViewModel)
+    viewModelOf(::ProfileViewModel)
+    viewModelOf(::SettingsViewModel)
 }

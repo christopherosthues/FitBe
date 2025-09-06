@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,9 +41,10 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ExercisesView(
     viewModel: ExercisesViewModel,
-    navHostController: NavHostController,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.updateTopBarConfig()
+    }
     val allExercises by viewModel.allExercises.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -64,8 +66,7 @@ fun ExercisesView(
                         val exercise = allExercises[exerciseIndex]
                         ExerciseCard(
                             exercise = exercise,
-                            // Assuming you have a navigation route like Screen.AddEditExercise
-                            onClick = { navHostController.navigate(Screen.ExerciseDetail(exercise.id.toString())) },
+                            onClick = { viewModel.navigateToExerciseDetail(exercise.id.toString()) },
                             contentDescription = "View or Edit ${exercise.name}"
                         )
                     }
@@ -74,7 +75,7 @@ fun ExercisesView(
         }
 
         FloatingActionButton(
-            onClick = { navHostController.navigate(Screen.ExerciseDetail(null)) }, // For adding a new exercise
+            onClick = { viewModel.navigateToExerciseDetail(null) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

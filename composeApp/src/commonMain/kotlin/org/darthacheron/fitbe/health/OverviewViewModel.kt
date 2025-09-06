@@ -11,6 +11,8 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.FitBeViewModel
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
 import kotlin.time.Duration.Companion.days
@@ -18,7 +20,8 @@ import kotlin.time.Duration.Companion.days
 abstract class OverviewViewModel<E>(
     protected val settingsRepository: SettingsRepository,
     protected val profileRepository: ProfileRepository,
-) : ViewModel() {
+    topBarManager: TopBarManager
+) : FitBeViewModel(topBarManager) {
     protected val dateRange = MutableStateFlow(
         DateRange(
             Clock.System.now().minus(6.days),

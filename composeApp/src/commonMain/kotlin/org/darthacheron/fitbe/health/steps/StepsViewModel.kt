@@ -3,6 +3,8 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,16 +21,19 @@ import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
+import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
+import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
@@ -38,8 +43,18 @@ import kotlin.uuid.Uuid
 class StepsViewModel(
     private val stepsRepository: StepsRepository,
     settingsRepository: SettingsRepository,
-    profileRepository: ProfileRepository
-) : OverviewViewModel<Steps>(settingsRepository, profileRepository) {
+    profileRepository: ProfileRepository,
+    topBarManager: TopBarManager
+) : OverviewViewModel<Steps>(settingsRepository, profileRepository, topBarManager) {
+    override val title: StringResource
+        get() = Res.string.top_bar_title_steps
+
+    override val backNavigationIconVisible: Boolean?
+        get() = true
+
+    override val bottomBarSelected: Screen?
+        get() = Screen.Health
+
     val targetSteps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId

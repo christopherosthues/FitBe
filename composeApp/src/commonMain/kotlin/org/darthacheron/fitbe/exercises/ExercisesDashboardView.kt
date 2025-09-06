@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,9 +44,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ExercisesDashboardView(
-    navHostController: NavHostController,
-    topBarManager: TopBarManager
+    exercisesDashboardViewModel: ExercisesDashboardViewModel,
 ) {
+    LaunchedEffect(Unit) {
+        exercisesDashboardViewModel.updateTopBarConfig()
+    }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(300.dp),
         modifier = Modifier
@@ -58,7 +61,7 @@ fun ExercisesDashboardView(
             DashboardCard(
                 title = stringResource(Res.string.card_title_exercises_overview),
                 imagePainter = painterResource(Res.drawable.ic_exercises),
-                onClick = { navHostController.navigate(Screen.Exercises) },
+                onClick = { exercisesDashboardViewModel.navigateToExercises() },
                 contentDescription = "Navigate to Exercises Overview"
             )
         }
@@ -66,7 +69,7 @@ fun ExercisesDashboardView(
             DashboardCard(
                 title = stringResource(Res.string.card_title_training_equipment),
                 imagePainter = painterResource(Res.drawable.ic_training_equipment),
-                onClick = { navHostController.navigate(Screen.TrainingEquipment) },
+                onClick = { exercisesDashboardViewModel.navigateToEquipment() },
                 contentDescription = "Navigate to Manage Training Equipment"
             )
         }

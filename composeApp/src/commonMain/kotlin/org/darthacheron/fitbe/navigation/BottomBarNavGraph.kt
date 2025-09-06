@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import org.darthacheron.fitbe.exercises.ExercisesDashboardView
+import org.darthacheron.fitbe.exercises.ExercisesDashboardViewModel
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDetailView
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.exercises.exercises.ExercisesView
@@ -39,16 +40,16 @@ import org.darthacheron.fitbe.ui.TopBarManager // Added import
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-// @Preview // Preview might be complex with TopBarManager injection
 @Composable
 fun BottomBarNavGraph(
+    topNavHostController: NavHostController,
     navHostController: NavHostController, 
     paddingValues: PaddingValues,
-    topBarManager: TopBarManager // Added parameter
 ) {
     NavHost(
         navController = navHostController,
@@ -62,63 +63,80 @@ fun BottomBarNavGraph(
             startDestination = Screen.Home
         ) {
             composable<Screen.Home>{
-                val viewModel = koinViewModel<HomeViewModel>()
-                HomeView(viewModel, navHostController, topBarManager)
+                val viewModel = koinViewModel<HomeViewModel>(
+                    parameters = { parametersOf(topNavHostController, navHostController) }
+                )
+                HomeView(viewModel)
             }
             composable<Screen.ExercisesDashboard> {
-                ExercisesDashboardView(navHostController, topBarManager)
+                val viewModel = koinViewModel<ExercisesDashboardViewModel>(
+                    parameters = { parametersOf(topNavHostController, navHostController) }
+                )
+                ExercisesDashboardView(viewModel)
             }
             composable<Screen.Health> {
-                val viewModel = koinViewModel<HealthOverviewViewModel>()
+                val viewModel = koinViewModel<HealthOverviewViewModel>(
+                    parameters = { parametersOf(topNavHostController, navHostController) }
+                )
                 val settingsRepository = getKoin().get<SettingsRepository>()
-                HealthOverviewView(viewModel, settingsRepository, navHostController, topBarManager)
+                HealthOverviewView(viewModel, settingsRepository)
             }
             composable<Screen.Profile> {
-                val viewModel = koinViewModel<ProfileViewModel>()
+                val viewModel = koinViewModel<ProfileViewModel>(
+                    parameters = { parametersOf(topNavHostController, navHostController) }
+                )
                 val settingsRepository = getKoin().get<SettingsRepository>()
-                ProfileView(viewModel, settingsRepository, topBarManager)
+                ProfileView(viewModel, settingsRepository)
             }
         }
         composable<Screen.Exercises> {
-            val viewModel = koinViewModel<ExercisesViewModel>()
-            ExercisesView(viewModel, navHostController, topBarManager)
+            val viewModel = koinViewModel<ExercisesViewModel>(
+                parameters = { parametersOf(navHostController) }
+            )
+            ExercisesView(viewModel)
         }
         composable<Screen.ExerciseDetail> { backStackEntry ->
             val addEditExerciseRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
-            val viewModel = koinViewModel<ExerciseDetailViewModel>()
+            val viewModel = koinViewModel<ExerciseDetailViewModel>(
+                parameters = { parametersOf(navHostController) }
+            )
             val id = if (addEditExerciseRoute.id != null) Uuid.parse(addEditExerciseRoute.id) else null
-            ExerciseDetailView(id, viewModel, navHostController, topBarManager)
+            ExerciseDetailView(id, viewModel)
         }
         composable<Screen.TrainingEquipment>{
-            val viewModel = koinViewModel<TrainingEquipmentViewModel>()
-            TrainingEquipmentView(viewModel, navHostController, topBarManager)
+            val viewModel = koinViewModel<TrainingEquipmentViewModel>(
+                parameters = { parametersOf(navHostController) }
+            )
+            TrainingEquipmentView(viewModel)
         }
         composable<Screen.TrainingEquipmentDetail> { backStackEntry ->
             val addEditTrainingEquipmentRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
-            val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>()
+            val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>(
+                parameters = { parametersOf(navHostController) }
+            )
             val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
-            TrainingEquipmentDetailView(id, viewModel, navHostController, topBarManager)
+            TrainingEquipmentDetailView(id, viewModel)
         }
         composable<Screen.Sleeps> {
             val viewModel = koinViewModel<SleepViewModel>()
-            SleepOverviewView(viewModel, topBarManager)
+            SleepOverviewView(viewModel)
         }
         composable<Screen.Steps> {
             val viewModel = koinViewModel<StepsViewModel>()
-            StepsView(viewModel, topBarManager)
+            StepsView(viewModel)
         }
         composable<Screen.BeveragesOverview> {
             val viewModel = koinViewModel<BeverageOverviewViewModel>()
-            BeverageOverviewView(viewModel, topBarManager)
+            BeverageOverviewView(viewModel)
         }
         composable<Screen.Beverages> {
             val viewModel = koinViewModel<BeverageViewModel>()
-            BeverageView(viewModel, topBarManager)
+            BeverageView(viewModel)
         }
         composable<Screen.BodyWeights> {
             val viewModel = koinViewModel<WeightOverviewViewModel>()
             val settingsRepository = getKoin().get<SettingsRepository>()
-            WeightOverviewView(viewModel, settingsRepository, topBarManager)
+            WeightOverviewView(viewModel, settingsRepository)
         }
     }
 }

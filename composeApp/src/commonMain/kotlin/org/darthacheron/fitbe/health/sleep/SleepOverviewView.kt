@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,14 +60,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.date.TimePickerDialog
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -76,8 +75,10 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun SleepOverviewView(
     viewModel: SleepViewModel,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.updateTopBarConfig()
+    }
     val sleeps by viewModel.sleeps.collectAsState()
     var selectedViewTypeIndex by remember { mutableStateOf(0) }
     val startDate by viewModel.startDate.collectAsState()

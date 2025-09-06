@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,8 +47,10 @@ import kotlin.uuid.ExperimentalUuidApi
 fun WeightOverviewView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
     settingsRepository: SettingsRepository,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        bodyWeightOverviewViewModel.updateTopBarConfig()
+    }
     val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())

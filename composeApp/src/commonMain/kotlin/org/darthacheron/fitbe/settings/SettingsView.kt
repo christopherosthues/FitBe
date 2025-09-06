@@ -16,8 +16,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun SettingsView(
     navHostController: NavHostController,
-    viewModel: SettingsViewModel,
-    topBarManager: TopBarManager
+    viewModel: SettingsViewModel
 ) {
     val settings = viewModel.currentSettings
 

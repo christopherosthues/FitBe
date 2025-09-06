@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,9 +37,10 @@ import kotlin.uuid.ExperimentalUuidApi
 fun HealthOverviewView(
     healthOverviewViewModel: HealthOverviewViewModel,
     settingsRepository: SettingsRepository,
-    navHostController: NavHostController,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        healthOverviewViewModel.updateTopBarConfig()
+    }
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
 
     Column {
@@ -46,7 +48,7 @@ fun HealthOverviewView(
             LazyColumn {
                 item {
                     Thumbnail(
-                        onClick = { navHostController.navigate(Screen.BeveragesOverview) },
+                        onClick = { healthOverviewViewModel.navigateToBeverageOverview() },
                         content = {
                             BeveragesOverview(
                                 healthOverviewViewModel.beverageOverviewViewModel,
@@ -56,14 +58,14 @@ fun HealthOverviewView(
                 }
                 item {
                     TextButton(
-                        onClick = { navHostController.navigate(Screen.Sleeps) }
+                        onClick = { healthOverviewViewModel.navigateToSleepOverview() }
                     ) {
                         Text(text = "Sleeps")
                     }
                 }
                 item {
                     Thumbnail(
-                        onClick = { navHostController.navigate(Screen.Steps) },
+                        onClick = { healthOverviewViewModel.navigateToStepsOverview() },
                         content = {
                             StepsOverview(
                                 healthOverviewViewModel.stepsViewModel
@@ -73,7 +75,7 @@ fun HealthOverviewView(
                 }
                 item {
                     Thumbnail(
-                        onClick = { navHostController.navigate(Screen.BodyWeights) },
+                        onClick = { healthOverviewViewModel.navigateToBodyWeightOverview() },
                         content = {
                             BodyWeightOverView(
                                 healthOverviewViewModel.bodyWeightOverviewViewModel,

@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,21 +72,20 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.DropdownSelection
+import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimeInputDialog
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.BodyHeightValidator
-import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.KcalValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
+import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.toDoubleString
 import org.darthacheron.fitbe.utils.toUintString
 import org.jetbrains.compose.resources.painterResource
@@ -97,9 +97,11 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProfileView(
     profileViewModel: ProfileViewModel,
-    settingsRepository: SettingsRepository,
-    topBarManager: TopBarManager
+    settingsRepository: SettingsRepository
 ) {
+    LaunchedEffect(Unit) {
+        profileViewModel.updateTopBarConfig()
+    }
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())

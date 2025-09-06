@@ -1,21 +1,29 @@
-package org.darthacheron.fitbe.home
+package org.darthacheron.fitbe.exercises
 
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.top_bar_title_home
+import fitbe.composeapp.generated.resources.top_bar_title_exercises_dashboard
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.BottomNavigationBarViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 
-class HomeViewModel(
+class ExercisesDashboardViewModel(
     topNavHostController: NavHostController,
     navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : BottomNavigationBarViewModel(topNavHostController, navHostController, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_home
+        get() = Res.string.top_bar_title_exercises_dashboard
 
     override val bottomBarSelected: Screen?
-        get() = Screen.Home
+        get() = Screen.ExercisesDashboard
+
+    fun navigateToExercises() {
+        navHostController.navigate(Screen.Exercises)
+    }
+
+    fun navigateToEquipment() {
+        navHostController.navigate(Screen.TrainingEquipment)
+    }
 }

@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,10 +45,11 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun TrainingEquipmentView(
-    viewModel: TrainingEquipmentViewModel,
-    navHostController: NavHostController,
-    topBarManager: TopBarManager
+    viewModel: TrainingEquipmentViewModel
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.updateTopBarConfig()
+    }
     val allEquipment by viewModel.allEquipment.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -69,7 +71,7 @@ fun TrainingEquipmentView(
                         val equipment = allEquipment[equipmentIndex]
                         TrainingEquipmentCard(
                             equipment = equipment,
-                            onClick = { navHostController.navigate(Screen.TrainingEquipmentDetail(equipment.id.toString())) },
+                            onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id.toString()) },
                             contentDescription = "View or Edit ${getEquipmentName(equipment.name, equipment.default)}"
                         )
                     }
@@ -78,7 +80,7 @@ fun TrainingEquipmentView(
         }
 
         FloatingActionButton(
-            onClick = { navHostController.navigate(Screen.TrainingEquipmentDetail(null)) },
+            onClick = { viewModel.navigateToTrainingEquipmentDetail(null) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

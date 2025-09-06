@@ -2,6 +2,9 @@ package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_add_edit_training_equipment
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +17,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.exercises.exercises.Exercise
+import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.ui.FitBeViewModel
+import org.darthacheron.fitbe.ui.TopBarManager
+import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -34,16 +41,24 @@ data class AddEditTrainingEquipmentUiState(
 
 @OptIn(ExperimentalUuidApi::class)
 class TrainingEquipmentDetailViewModel(
-    private val equipmentRepository: EquipmentRepository
-) : ViewModel() {
+    private val equipmentRepository: EquipmentRepository,
+    private val navHostController: NavHostController,
+    topBarManager: TopBarManager
+) : FitBeViewModel(topBarManager) {
+    override val title: StringResource
+        get() = Res.string.top_bar_title_add_edit_training_equipment
+
+    override val bottomBarSelected: Screen?
+        get() = Screen.ExercisesDashboard
+
+    override val backNavigationIconVisible: Boolean?
+        get() = true
+
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())
     val uiState: StateFlow<AddEditTrainingEquipmentUiState> = _uiState.asStateFlow()
 
     private val _saveCompletedEvent = MutableSharedFlow<Unit>()
     val saveCompletedEvent = _saveCompletedEvent.asSharedFlow()
-
-    private val _navigateBackEvent = MutableSharedFlow<Unit>()
-    val navigateBackEvent = _navigateBackEvent.asSharedFlow()
 
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
@@ -217,7 +232,7 @@ class TrainingEquipmentDetailViewModel(
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
                 )
                 equipmentRepository.deleteEquipment(equipmentToDelete)
-                _navigateBackEvent.emit(Unit) 
+                navHostController.popBackStack()
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to delete equipment: ${e.message}") }
             } finally {

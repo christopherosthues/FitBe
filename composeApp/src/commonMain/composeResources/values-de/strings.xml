@@ -59,6 +59,7 @@
     <string name="top_bar_title_home">Start</string>
     <string name="top_bar_title_exercises_dashboard">\u00dcbungen</string>
     <string name="top_bar_title_exercises">\u00dcbungen</string>
+    <string name="top_bar_title_add_edit_exercise">\u00dcbung hinzuf\u00fcgen/bearbeiten</string>
     <string name="top_bar_title_training_equipment">Trainingsgeräte</string>
     <string name="top_bar_title_add_edit_training_equipment">Trainingsgerät hinzufügen/bearbeiten</string>
     <string name="top_bar_title_health">Gesundheit</string>
@@ -262,4 +263,6 @@
     <string name="add_edit_training_equipment_image_content_description">Trainingsgerät Bild</string>
     <string name="add_edit_training_equipment_label_name">Name</string>
     <string name="add_edit_training_equipment_reset_to_default">Auf Standard zurücksetzen</string>
+
+    <string name="settings_content_description_title">Einstellungen öffnen</string>
 </resources>

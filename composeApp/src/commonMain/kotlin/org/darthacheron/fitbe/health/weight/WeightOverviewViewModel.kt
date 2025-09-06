@@ -1,6 +1,8 @@
 package org.darthacheron.fitbe.health.weight
 
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_body_weights
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,18 +15,21 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
+import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
+import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -34,7 +39,17 @@ class WeightOverviewViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
-) : OverviewViewModel<BodyWeight>(settingsRepository, profileRepository) {
+    topBarManager: TopBarManager
+) : OverviewViewModel<BodyWeight>(settingsRepository, profileRepository, topBarManager) {
+    override val title: StringResource
+        get() = Res.string.top_bar_title_body_weights
+
+    override val backNavigationIconVisible: Boolean?
+        get() = true
+
+    override val bottomBarSelected: Screen?
+        get() = Screen.Health
+
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId

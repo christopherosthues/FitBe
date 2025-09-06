@@ -20,23 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_back
-import fitbe.composeapp.generated.resources.ic_settings
-import fitbe.composeapp.generated.resources.top_bar_title_beverages
-import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
-import fitbe.composeapp.generated.resources.top_bar_title_body_weights
-import fitbe.composeapp.generated.resources.top_bar_title_exercises
-import fitbe.composeapp.generated.resources.top_bar_title_exercises_dashboard
-import fitbe.composeapp.generated.resources.top_bar_title_health
-import fitbe.composeapp.generated.resources.top_bar_title_home
-import fitbe.composeapp.generated.resources.top_bar_title_profile
-import fitbe.composeapp.generated.resources.top_bar_title_settings
-import fitbe.composeapp.generated.resources.top_bar_title_sleeps
-import fitbe.composeapp.generated.resources.top_bar_title_steps
-import fitbe.composeapp.generated.resources.top_bar_title_training_equipment
 import org.darthacheron.fitbe.navigation.BottomBarNavGraph
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.navigation.bottomBarDestinations
@@ -46,11 +34,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
-// @Preview // Preview might be complex with TopBarManager injection, can be added later if needed with a mock
 @Composable
 fun RootScreen(
-    topBarManager: TopBarManager, // Injected
-    navigateToSettings: () -> Unit
+    topNavHostController: NavHostController,
+    topBarManager: TopBarManager,
 ) {
     val navHostController = rememberNavController()
     val backStackEntry by navHostController.currentBackStackEntryAsState()
@@ -60,26 +47,20 @@ fun RootScreen(
 
     val currentDestinationRoute = currentRoute?.substringAfterLast(".")?.substringBefore("/")
         ?.substringBefore("?")
-    // Determine if the current route is a main bottom bar destination
     val isMainBottomBarDestination = remember(currentRoute) {
-        bottomBarDestinations.any { currentDestinationRoute?.endsWith(it.screen.toString()) == true }
+        bottomBarDestinations.any { currentDestinationRoute?.equals(it.screen.toString()) == true }
     }
-
-    println("Main bottom: $isMainBottomBarDestination")
-    println("Current route: $currentRoute")
-    println("Routes: ${bottomBarDestinations.map { it.screen.toString() }}")
-
-    val defaultTitle = getDefaultTopBarTitle(currentDestinationRoute)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    val titleRes = topBarConfig.title ?: defaultTitle
-                    titleRes?.let { Text(text = stringResource(it)) }
+                    val titleResource = topBarConfig.title
+                    val title = if (titleResource != null) stringResource(titleResource) else currentDestinationRoute ?: ""
+                    Text(text = title)
                 },
                 navigationIcon = {
-                    val navIconVisible = topBarConfig.navigationIconVisible ?: !isMainBottomBarDestination
+                    val navIconVisible = topBarConfig.backNavigationIconVisible ?: !isMainBottomBarDestination
                     AnimatedVisibility(visible = navIconVisible) {
                         IconButton(onClick = { navHostController.navigateUp() }) {
                             Icon(
@@ -101,16 +82,6 @@ fun RootScreen(
                                 }
                             }
                         }
-                    } else if (isMainBottomBarDestination) {
-                        // Default settings icon for main bottom bar destinations if no other actions are specified
-                        AnimatedVisibility(visible = true) {
-                            IconButton(onClick = navigateToSettings) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_settings),
-                                    contentDescription = null //stringResource(Res.string.ic_settings) // Accessibility
-                                )
-                            }
-                        }
                     }
                 }
             )
@@ -118,10 +89,7 @@ fun RootScreen(
         bottomBar = {
             NavigationBar {
                 bottomBarDestinations.forEach {
-                    val isSelected = checkIfSelected(
-                        currentDestinationRoute = currentRoute,
-                        currentBottomBarItemRoute = it.screen.toString()
-                    )
+                    val isSelected = topBarConfig.bottomBarSelected == it.screen
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
@@ -154,61 +122,9 @@ fun RootScreen(
         }
     ) { paddingValues ->
         BottomBarNavGraph(
+            topNavHostController = topNavHostController,
             navHostController = navHostController,
             paddingValues = paddingValues,
-            topBarManager = topBarManager // Pass TopBarManager down
         )
     }
-}
-
-@Composable
-private fun getDefaultTopBarTitle(currentRoute: String?): org.jetbrains.compose.resources.StringResource? {
-    return when (currentRoute) {
-        Screen.Home.toString().substringAfterLast(".") -> Res.string.top_bar_title_home
-        Screen.ExercisesDashboard.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises_dashboard
-        Screen.Exercises.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises
-        Screen.ExerciseDetail::class.simpleName!! -> Res.string.top_bar_title_exercises // Simplified
-        Screen.TrainingEquipment.toString().substringAfterLast(".") -> Res.string.top_bar_title_training_equipment
-        Screen.TrainingEquipmentDetail::class.simpleName!! -> Res.string.top_bar_title_training_equipment // Simplified
-        Screen.Health.toString().substringAfterLast(".") -> Res.string.top_bar_title_health
-        Screen.Profile.toString().substringAfterLast(".") -> Res.string.top_bar_title_profile
-        Screen.Sleeps.toString().substringAfterLast(".") -> Res.string.top_bar_title_sleeps
-        Screen.Steps.toString().substringAfterLast(".") -> Res.string.top_bar_title_steps
-        Screen.Beverages.toString().substringAfterLast(".") -> Res.string.top_bar_title_beverages
-        Screen.BeveragesOverview.toString().substringAfterLast(".") -> Res.string.top_bar_title_beverages_overview
-        Screen.BodyWeights.toString().substringAfterLast(".") -> Res.string.top_bar_title_body_weights
-        Screen.Settings.toString().substringAfterLast(".") -> Res.string.top_bar_title_settings
-        else -> null // Let it be blank or handled by screen-specific config
-    }
-}
-
-private fun checkIfSelected(
-    currentDestinationRoute: String?,
-    currentBottomBarItemRoute: String // This is the route of the BottomBarDestination's screen
-): Boolean {
-    // TODO: last . and first before /
-    println("Current destination: $currentDestinationRoute")
-    if (currentDestinationRoute == null) return false
-
-    // Direct match
-    if (currentDestinationRoute.endsWith(currentBottomBarItemRoute)) return true
-
-    // Handle parent-child relationships for selection
-    val healthScreens = listOf(
-        Screen.Beverages.toString(), Screen.BeveragesOverview.toString(), Screen.Sleeps.toString(),
-        Screen.Steps.toString(), Screen.BodyWeights.toString()
-    )
-    val exercisesDashboardScreens = listOf(
-        Screen.TrainingEquipment.toString(), Screen.TrainingEquipmentDetail::class.simpleName!!,
-        Screen.Exercises.toString(), Screen.ExerciseDetail::class.simpleName!!
-    )
-
-    if (currentBottomBarItemRoute == Screen.Health.toString() && healthScreens.any { currentDestinationRoute.endsWith(it) }) {
-        return true
-    }
-    if (currentBottomBarItemRoute == Screen.ExercisesDashboard.toString() && exercisesDashboardScreens.any { currentDestinationRoute.endsWith(it) }) {
-        return true
-    }
-
-    return false
 }

@@ -1,7 +1,8 @@
 package org.darthacheron.fitbe.health.sleep
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_sleeps
 import io.github.koalaplot.core.xygraph.Point
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +19,12 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.FitBeViewModel
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.roundToDecimals
+import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -27,8 +32,18 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalTime::class)
 class SleepViewModel(
     private val repository: SleepRepository,
-    private val settingsRepository: SettingsRepository
-) : ViewModel() {
+    private val settingsRepository: SettingsRepository,
+    topBarManager: TopBarManager
+) : FitBeViewModel(topBarManager) {
+    override val title: StringResource
+        get() = Res.string.top_bar_title_sleeps
+
+    override val backNavigationIconVisible: Boolean?
+        get() = true
+
+    override val bottomBarSelected: Screen?
+        get() = Screen.Health
+
     private val _viewType = MutableStateFlow(DateUnit.WEEK)
     private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
     private val _endDate = MutableStateFlow(Clock.System.now())

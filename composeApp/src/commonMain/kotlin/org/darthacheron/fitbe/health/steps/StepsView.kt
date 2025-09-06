@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +41,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun StepsView(
     stepsViewModel: StepsViewModel,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        stepsViewModel.updateTopBarConfig()
+    }
     val steps by stepsViewModel.steps.collectAsState()
     val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
     val targetSteps by stepsViewModel.targetSteps.collectAsState()

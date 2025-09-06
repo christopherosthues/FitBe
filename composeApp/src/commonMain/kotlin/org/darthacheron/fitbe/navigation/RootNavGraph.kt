@@ -15,7 +15,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RootNavGraph(
     navHostController: NavHostController,
-    topBarManager: TopBarManager // Added parameter
+    topBarManager: TopBarManager
 ) {
     NavHost(
         navController = navHostController,
@@ -23,15 +23,13 @@ fun RootNavGraph(
     ) {
         composable<Screen.Root> {
             RootScreen(
-                topBarManager = topBarManager, // Pass to RootScreen
-                navigateToSettings = { navHostController.navigate(Screen.Settings) }
+                topNavHostController = navHostController,
+                topBarManager = topBarManager,
             )
         }
         composable<Screen.Settings> {
             val viewModel = koinViewModel<SettingsViewModel>()
-            // SettingsView might also want to configure the TopAppBar
-            // If so, it would also need access to topBarManager, perhaps via its ViewModel
-            SettingsView(navHostController, viewModel, topBarManager)
+            SettingsView(navHostController, viewModel)
         }
     }
 }

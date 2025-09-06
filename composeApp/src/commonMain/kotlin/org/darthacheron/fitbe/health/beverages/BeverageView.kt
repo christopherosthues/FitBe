@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +45,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun BeverageView(
     beverageViewModel: BeverageViewModel,
-    topBarManager: TopBarManager
 ) {
+    LaunchedEffect(Unit) {
+        beverageViewModel.updateTopBarConfig()
+    }
     val beverages by beverageViewModel.todayIntake.collectAsState(initial = listOf())
     val todayProgress by beverageViewModel.todayProgress.collectAsState()
 

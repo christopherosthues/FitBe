@@ -33,15 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
 import fitbe.composeapp.generated.resources.add_edit_training_equipment_reset_to_default
-import fitbe.composeapp.generated.resources.ic_cancel // Assume this exists
+import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
-import fitbe.composeapp.generated.resources.ic_edit // Assume this exists
+import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
@@ -54,7 +53,6 @@ import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.darthacheron.fitbe.components.ImageWithDefault
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -65,8 +63,6 @@ import kotlin.uuid.Uuid
 fun TrainingEquipmentDetailView(
     equipmentId: Uuid?,
     viewModel: TrainingEquipmentDetailViewModel,
-    navHostController: NavHostController,
-    topBarManager: TopBarManager
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -85,18 +81,13 @@ fun TrainingEquipmentDetailView(
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
-        isInEditMode = (equipmentId == null) 
+        isInEditMode = (equipmentId == null)
     }
 
     LaunchedEffect(Unit) {
+        viewModel.updateTopBarConfig()
         viewModel.saveCompletedEvent.collect {
-            isInEditMode = false 
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.navigateBackEvent.collect { // Handles navigation after delete
-            navHostController.popBackStack()
+            isInEditMode = false
         }
     }
 

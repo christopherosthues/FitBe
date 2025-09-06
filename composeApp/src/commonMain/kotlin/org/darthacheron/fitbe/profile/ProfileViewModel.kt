@@ -1,18 +1,24 @@
 package org.darthacheron.fitbe.profile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_profile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.settings.converters.BodyMeasurementUnitConverter
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
+import org.darthacheron.fitbe.ui.BottomNavigationBarViewModel
+import org.darthacheron.fitbe.ui.TopBarManager
+import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -21,8 +27,17 @@ class ProfileViewModel(
     private val profileRepository: ProfileRepository,
     private val settingsRepository: SettingsRepository,
     private val bodyMeasurementUnitConverter: BodyMeasurementUnitConverter,
-    private val weightUnitConverter: WeightUnitConverter
-) : ViewModel() {
+    private val weightUnitConverter: WeightUnitConverter,
+    topNavHostController: NavHostController,
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
+) : BottomNavigationBarViewModel(topNavHostController, navHostController, topBarManager) {
+    override val title: StringResource
+        get() = Res.string.top_bar_title_profile
+
+    override val bottomBarSelected: Screen?
+        get() = Screen.Profile
+
     private val _currentProfile = MutableStateFlow<Profile?>(null)
 
     init {
