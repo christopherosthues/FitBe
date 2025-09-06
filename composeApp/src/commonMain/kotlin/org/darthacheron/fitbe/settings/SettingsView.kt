@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.*
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -15,7 +16,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun SettingsView(
     navHostController: NavHostController,
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    topBarManager: TopBarManager
 ) {
     val settings = viewModel.currentSettings
 

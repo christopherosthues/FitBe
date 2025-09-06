@@ -9,11 +9,15 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
 import org.darthacheron.fitbe.components.AppTheme
-import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.darthacheron.fitbe.navigation.RootNavGraph
+import org.darthacheron.fitbe.settings.SettingsViewModel
+import org.darthacheron.fitbe.ui.ActualTopBarManager
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.compose.getKoin
+import org.koin.core.Koin
+import org.koin.dsl.module
 
 @Composable
 @Preview
@@ -22,6 +26,8 @@ fun App() {
         val koin = getKoin()
         val settingsViewModel = remember { koin.get<SettingsViewModel>() }
         val startUpService = remember { koin.get<StartUpService>() }
+        val topBarManager = remember { koin.get<TopBarManager>() } // Get TopBarManager
+
         LaunchedEffect(Unit) {
             startUpService.initialize()
         }
@@ -37,7 +43,10 @@ fun App() {
         AppTheme(themeMode = settingsViewModel.currentSettings.themeMode) {
             MaterialTheme {
                 val navHostController = rememberNavController()
-                RootNavGraph(navHostController = navHostController)
+                RootNavGraph(
+                    navHostController = navHostController,
+                    topBarManager = topBarManager // Pass TopBarManager
+                )
             }
         }
     }

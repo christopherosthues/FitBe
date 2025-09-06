@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,55 +40,70 @@ import fitbe.composeapp.generated.resources.top_bar_title_training_equipment
 import org.darthacheron.fitbe.navigation.BottomBarNavGraph
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.navigation.bottomBarDestinations
+import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.ui.state.TopBarConfig
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+// @Preview // Preview might be complex with TopBarManager injection, can be added later if needed with a mock
 @Composable
-fun RootScreen(navigateToSettings: () -> Unit) {
+fun RootScreen(
+    topBarManager: TopBarManager, // Injected
+    navigateToSettings: () -> Unit
+) {
     val navHostController = rememberNavController()
     val backStackEntry by navHostController.currentBackStackEntryAsState()
-    val currentDestination by remember { derivedStateOf { backStackEntry?.destination?.route } }
+    val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
+
+    val topBarConfig by topBarManager.topBarConfigFlow.collectAsState(initial = TopBarConfig())
+
+    // Determine if the current route is a main bottom bar destination
+    val isMainBottomBarDestination = remember(currentRoute) {
+        bottomBarDestinations.any { currentRoute?.startsWith(it.screen.toString()) == true }
+    }
+
+    val defaultTitle = getDefaultTopBarTitle(currentRoute)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = topBarTitle(
-                            // TODO: Title
-                            currentDestination?.substringAfterLast(".")?.substringBefore("/")
-                                ?.substringBefore("?")
-                        )
-                    )
+                    val titleRes = topBarConfig.title ?: defaultTitle
+                    titleRes?.let { Text(text = stringResource(it)) }
                 },
                 navigationIcon = {
-                    AnimatedVisibility(
-                        visible = !isTopBottomBarNavigation(currentDestination)
-                    ) {
-                        IconButton(
-                            onClick = { navHostController.navigateUp() }
-                        ) {
+                    val navIconVisible = topBarConfig.navigationIconVisible ?: !isMainBottomBarDestination
+                    AnimatedVisibility(visible = navIconVisible) {
+                        IconButton(onClick = { navHostController.navigateUp() }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_back),
-                                contentDescription = null
+                                contentDescription = null // stringResource(Res.string.ic_back) // Accessibility
                             )
                         }
                     }
                 },
                 actions = {
-                    AnimatedVisibility(
-                        visible = isTopBottomBarNavigation(currentDestination)
-                    ) {
-                        IconButton(
-                            onClick = navigateToSettings
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_settings),
-                                contentDescription = null
-                            )
+                    if (topBarConfig.actions.isNotEmpty()) {
+                        topBarConfig.actions.forEach { action ->
+                            AnimatedVisibility(visible = action.isVisible) {
+                                IconButton(onClick = action.onClick) {
+                                    Icon(
+                                        painter = painterResource(action.icon),
+                                        contentDescription = action.contentDescription?.let { stringResource(it) }
+                                    )
+                                }
+                            }
+                        }
+                    } else if (isMainBottomBarDestination) {
+                        // Default settings icon for main bottom bar destinations if no other actions are specified
+                        AnimatedVisibility(visible = true) {
+                            IconButton(onClick = navigateToSettings) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_settings),
+                                    contentDescription = null //stringResource(Res.string.ic_settings) // Accessibility
+                                )
+                            }
                         }
                     }
                 }
@@ -97,8 +113,8 @@ fun RootScreen(navigateToSettings: () -> Unit) {
             NavigationBar {
                 bottomBarDestinations.forEach {
                     val isSelected = checkIfSelected(
-                        currentDestination = currentDestination,
-                        currentBottomBarItem = it.screen.toString()
+                        currentDestinationRoute = currentRoute,
+                        currentBottomBarItemRoute = it.screen.toString()
                     )
                     NavigationBarItem(
                         selected = isSelected,
@@ -121,7 +137,7 @@ fun RootScreen(navigateToSettings: () -> Unit) {
                         icon = {
                             Icon(
                                 painter = painterResource(it.icon),
-                                contentDescription = null,
+                                contentDescription = null, // Label is descriptive enough
                                 modifier = Modifier.size(24.dp),
                                 tint = if (isSelected) Color.Red else Color.Black
                             )
@@ -131,57 +147,61 @@ fun RootScreen(navigateToSettings: () -> Unit) {
             }
         }
     ) { paddingValues ->
-        BottomBarNavGraph(navHostController = navHostController, paddingValues = paddingValues)
+        BottomBarNavGraph(
+            navHostController = navHostController,
+            paddingValues = paddingValues,
+            topBarManager = topBarManager // Pass TopBarManager down
+        )
     }
 }
 
 @Composable
-private fun topBarTitle(currentDestination: String?): String {
-    return when (currentDestination) {
-        Screen.Home.toString() -> stringResource(Res.string.top_bar_title_home)
-        Screen.ExercisesDashboard.toString() -> stringResource(Res.string.top_bar_title_exercises_dashboard)
-        Screen.Exercises.toString() -> stringResource(Res.string.top_bar_title_exercises)
-        Screen.ExerciseDetail.toString() -> stringResource(Res.string.top_bar_title_exercises) // TODO
-        Screen.TrainingEquipment.toString() -> stringResource(Res.string.top_bar_title_training_equipment)
-        Screen.TrainingEquipmentDetail.toString() -> stringResource(Res.string.top_bar_title_training_equipment) // TODO
-        Screen.Health.toString() -> stringResource(Res.string.top_bar_title_health)
-        Screen.Profile.toString() -> stringResource(Res.string.top_bar_title_profile)
-        Screen.Sleeps.toString() -> stringResource(Res.string.top_bar_title_sleeps)
-        Screen.Steps.toString() -> stringResource(Res.string.top_bar_title_steps)
-        Screen.Beverages.toString() -> stringResource(Res.string.top_bar_title_beverages)
-        Screen.BeveragesOverview.toString() -> stringResource(Res.string.top_bar_title_beverages_overview)
-        Screen.BodyWeights.toString() -> stringResource(Res.string.top_bar_title_body_weights)
-        Screen.Settings.toString() -> stringResource(Res.string.top_bar_title_settings)
-        else -> ""
+private fun getDefaultTopBarTitle(currentRoute: String?): org.jetbrains.compose.resources.StringResource? {
+    val screenPart = currentRoute?.substringAfterLast(".")?.substringBefore("/")?.substringBefore("?")
+    return when (screenPart) {
+        Screen.Home.toString().substringAfterLast(".") -> Res.string.top_bar_title_home
+        Screen.ExercisesDashboard.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises_dashboard
+        Screen.Exercises.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises
+        "ExerciseDetail" -> Res.string.top_bar_title_exercises // Simplified
+        Screen.TrainingEquipment.toString().substringAfterLast(".") -> Res.string.top_bar_title_training_equipment
+        "TrainingEquipmentDetail" -> Res.string.top_bar_title_training_equipment // Simplified
+        Screen.Health.toString().substringAfterLast(".") -> Res.string.top_bar_title_health
+        Screen.Profile.toString().substringAfterLast(".") -> Res.string.top_bar_title_profile
+        Screen.Sleeps.toString().substringAfterLast(".") -> Res.string.top_bar_title_sleeps
+        Screen.Steps.toString().substringAfterLast(".") -> Res.string.top_bar_title_steps
+        Screen.Beverages.toString().substringAfterLast(".") -> Res.string.top_bar_title_beverages
+        Screen.BeveragesOverview.toString().substringAfterLast(".") -> Res.string.top_bar_title_beverages_overview
+        Screen.BodyWeights.toString().substringAfterLast(".") -> Res.string.top_bar_title_body_weights
+        Screen.Settings.toString().substringAfterLast(".") -> Res.string.top_bar_title_settings
+        else -> null // Let it be blank or handled by screen-specific config
     }
-}
-
-private fun isTopBottomBarNavigation(currentDestination: String?): Boolean {
-    for (bottomNavigationItem in bottomBarDestinations) {
-        if (currentDestination?.contains(bottomNavigationItem.screen.toString()) ?: false) {
-            return true
-        }
-    }
-
-    return false
 }
 
 private fun checkIfSelected(
-    currentDestination: String?,
-    currentBottomBarItem: String
+    currentDestinationRoute: String?,
+    currentBottomBarItemRoute: String // This is the route of the BottomBarDestination's screen
 ): Boolean {
-    return if (currentDestination?.contains(currentBottomBarItem) == true) true
-    else if ((currentDestination?.contains(Screen.Beverages.toString()) == true ||
-                currentDestination?.contains(Screen.BeveragesOverview.toString()) == true ||
-                currentDestination?.contains(Screen.Sleeps.toString()) == true ||
-                currentDestination?.contains(Screen.Steps.toString()) == true ||
-                currentDestination?.contains(Screen.BodyWeights.toString()) == true) &&
-        currentBottomBarItem == Screen.Health.toString() ||
-        (currentDestination?.contains(Screen.TrainingEquipment.toString()) == true ||
-                currentDestination?.contains(Screen.TrainingEquipmentDetail.toString()) == true ||
-                currentDestination?.contains(Screen.Exercises.toString()) == true ||
-                currentDestination?.contains(Screen.ExerciseDetail.toString()) == true) &&
-        currentBottomBarItem == Screen.ExercisesDashboard.toString()
-    ) true
-    else false
+    if (currentDestinationRoute == null) return false
+
+    // Direct match
+    if (currentDestinationRoute.startsWith(currentBottomBarItemRoute)) return true
+
+    // Handle parent-child relationships for selection
+    val healthScreens = listOf(
+        Screen.Beverages.toString(), Screen.BeveragesOverview.toString(), Screen.Sleeps.toString(),
+        Screen.Steps.toString(), Screen.BodyWeights.toString()
+    )
+    val exercisesDashboardScreens = listOf(
+        Screen.TrainingEquipment.toString(), Screen.TrainingEquipmentDetail::class.simpleName!!,
+        Screen.Exercises.toString(), Screen.ExerciseDetail::class.simpleName!!
+    )
+
+    if (currentBottomBarItemRoute == Screen.Health.toString() && healthScreens.any { currentDestinationRoute.startsWith(it) }) {
+        return true
+    }
+    if (currentBottomBarItemRoute == Screen.ExercisesDashboard.toString() && exercisesDashboardScreens.any { currentDestinationRoute.startsWith(it) }) {
+        return true
+    }
+
+    return false
 }

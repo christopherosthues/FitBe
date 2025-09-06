@@ -31,6 +31,8 @@ import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.darthacheron.fitbe.settings.converters.BodyMeasurementUnitConverter
 import org.darthacheron.fitbe.settings.converters.DistanceUnitConverter
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
+import org.darthacheron.fitbe.ui.ActualTopBarManager
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -66,6 +68,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().equipmentDao }
 
     singleOf(::StartUpService)
+    single<TopBarManager> { ActualTopBarManager() }
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::SettingsViewModel)
