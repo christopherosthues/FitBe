@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.exercises.exercises
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
@@ -35,7 +33,6 @@ import fitbe.composeapp.generated.resources.ic_add
 // import fitbe.composeapp.generated.resources.exercise_add 
 import org.darthacheron.fitbe.navigation.Screen // Assuming Screen.AddEditExercise(id) exists
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -66,7 +63,7 @@ fun ExercisesView(
                         ExerciseCard(
                             exercise = exercise,
                             // Assuming you have a navigation route like Screen.AddEditExercise
-                            onClick = { navHostController.navigate(Screen.AddEditExercise(exercise.id.toString())) }, 
+                            onClick = { navHostController.navigate(Screen.ExerciseDetail(exercise.id.toString())) },
                             contentDescription = "View or Edit ${exercise.name}"
                         )
                     }
@@ -75,7 +72,7 @@ fun ExercisesView(
         }
 
         FloatingActionButton(
-            onClick = { navHostController.navigate(Screen.AddEditExercise(null)) }, // For adding a new exercise
+            onClick = { navHostController.navigate(Screen.ExerciseDetail(null)) }, // For adding a new exercise
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

@@ -2,7 +2,6 @@ package org.darthacheron.fitbe.navigation
 
 import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Serializable
 sealed class Screen {
@@ -21,12 +20,16 @@ sealed class Screen {
     @Serializable
     data object Exercises : Screen()
 
+    @OptIn(ExperimentalUuidApi::class)
+    @Serializable
+    data class ExerciseDetail(val id: String?) : Screen()
+
     @Serializable
     data object TrainingEquipment : Screen()
 
     @OptIn(ExperimentalUuidApi::class)
     @Serializable
-    data class AddEditTrainingEquipment(val id: String?) : Screen()
+    data class TrainingEquipmentDetail(val id: String?) : Screen()
 
     @Serializable
     data object Health : Screen()

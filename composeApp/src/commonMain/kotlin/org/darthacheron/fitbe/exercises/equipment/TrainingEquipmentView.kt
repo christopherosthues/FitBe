@@ -67,7 +67,7 @@ fun TrainingEquipmentView(
                         val equipment = allEquipment[equipmentIndex]
                         TrainingEquipmentCard(
                             equipment = equipment,
-                            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(equipment.id.toString())) },
+                            onClick = { navHostController.navigate(Screen.TrainingEquipmentDetail(equipment.id.toString())) },
                             contentDescription = "View or Edit ${getEquipmentName(equipment.name, equipment.default)}"
                         )
                     }
@@ -76,7 +76,7 @@ fun TrainingEquipmentView(
         }
 
         FloatingActionButton(
-            onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(null)) },
+            onClick = { navHostController.navigate(Screen.TrainingEquipmentDetail(null)) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

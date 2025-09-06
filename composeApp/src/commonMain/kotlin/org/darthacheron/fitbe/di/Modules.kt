@@ -11,6 +11,7 @@ import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentViewModel
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.exercises.exercises.ExerciseRepository
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
@@ -74,10 +75,11 @@ val sharedModule = module {
     viewModelOf(::BeverageOverviewViewModel)
     viewModelOf(::SleepViewModel)
     viewModelOf(::HealthOverviewViewModel)
-    viewModelOf(::ExercisesViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::WeightOverviewViewModel)
     viewModelOf(::StepsViewModel)
+    viewModelOf(::ExercisesViewModel)
+    viewModelOf(::ExerciseDetailViewModel)
     viewModelOf(::TrainingEquipmentViewModel)
     viewModelOf(::TrainingEquipmentDetailViewModel)
 }

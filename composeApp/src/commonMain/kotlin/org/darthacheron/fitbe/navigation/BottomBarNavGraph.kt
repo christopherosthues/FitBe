@@ -37,6 +37,8 @@ import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailView
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailViewModel
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDetailView
+import org.darthacheron.fitbe.exercises.exercises.ExerciseDetailViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -75,14 +77,20 @@ fun BottomBarNavGraph(navHostController: NavHostController, paddingValues: Paddi
         }
         composable<Screen.Exercises> {
             val viewModel = koinViewModel<ExercisesViewModel>()
-            ExercisesView(viewModel)
+            ExercisesView(viewModel, navHostController)
+        }
+        composable<Screen.ExerciseDetail> { backStackEntry ->
+            val addEditExerciseRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
+            val viewModel = koinViewModel<ExerciseDetailViewModel>()
+            val id = if (addEditExerciseRoute.id != null) Uuid.parse(addEditExerciseRoute.id) else null
+            ExerciseDetailView(id, viewModel, navHostController)
         }
         composable<Screen.TrainingEquipment>{
             val viewModel = koinViewModel<TrainingEquipmentViewModel>()
             TrainingEquipmentView(viewModel, navHostController)
         }
-        composable<Screen.AddEditTrainingEquipment> { backStackEntry ->
-            val addEditTrainingEquipmentRoute: Screen.AddEditTrainingEquipment = backStackEntry.toRoute()
+        composable<Screen.TrainingEquipmentDetail> { backStackEntry ->
+            val addEditTrainingEquipmentRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>()
             val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
             TrainingEquipmentDetailView(id, viewModel, navHostController)

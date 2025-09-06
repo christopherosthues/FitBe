@@ -23,7 +23,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_back
-import fitbe.composeapp.generated.resources.ic_health
 import fitbe.composeapp.generated.resources.ic_settings
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
@@ -142,7 +141,9 @@ private fun topBarTitle(currentDestination: String?): String {
         Screen.Home.toString() -> stringResource(Res.string.top_bar_title_home)
         Screen.ExercisesDashboard.toString() -> stringResource(Res.string.top_bar_title_exercises_dashboard)
         Screen.Exercises.toString() -> stringResource(Res.string.top_bar_title_exercises)
+        Screen.ExerciseDetail.toString() -> stringResource(Res.string.top_bar_title_exercises) // TODO
         Screen.TrainingEquipment.toString() -> stringResource(Res.string.top_bar_title_training_equipment)
+        Screen.TrainingEquipmentDetail.toString() -> stringResource(Res.string.top_bar_title_training_equipment) // TODO
         Screen.Health.toString() -> stringResource(Res.string.top_bar_title_health)
         Screen.Profile.toString() -> stringResource(Res.string.top_bar_title_profile)
         Screen.Sleeps.toString() -> stringResource(Res.string.top_bar_title_sleeps)
@@ -176,7 +177,10 @@ private fun checkIfSelected(
                 currentDestination?.contains(Screen.Steps.toString()) == true ||
                 currentDestination?.contains(Screen.BodyWeights.toString()) == true) &&
         currentBottomBarItem == Screen.Health.toString() ||
-        (currentDestination?.contains(Screen.TrainingEquipment.toString()) == true) &&
+        (currentDestination?.contains(Screen.TrainingEquipment.toString()) == true ||
+                currentDestination?.contains(Screen.TrainingEquipmentDetail.toString()) == true ||
+                currentDestination?.contains(Screen.Exercises.toString()) == true ||
+                currentDestination?.contains(Screen.ExerciseDetail.toString()) == true) &&
         currentBottomBarItem == Screen.ExercisesDashboard.toString()
     ) true
     else false
