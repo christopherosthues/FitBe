@@ -7,9 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.exercises.equipment.EquipmentDao
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.exercises.equipment.fromTrainingEquipmentEntity
+import org.darthacheron.fitbe.exercises.exercises.ExerciseEntity
+import org.darthacheron.fitbe.exercises.exercises.MuscleGroup
+import org.darthacheron.fitbe.exercises.exercises.fromExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 internal val equipmentList = listOf(
@@ -60,9 +64,24 @@ internal val equipmentList = listOf(
     "default_training_equipment_spotter_arms",
 )
 
+internal val exerciseList = listOf(
+    Pair("default_exercise_squat", listOf(MuscleGroup.QUADS)),
+    Pair("default_exercise_deadlift", listOf(MuscleGroup.GLUTES)),
+    Pair("default_exercise_bench_press", listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS)),
+    Pair("default_exercise_overhead_press", listOf(MuscleGroup.SHOULDERS)),
+    Pair("default_exercise_pull_ups", listOf(MuscleGroup.BACK)),
+    Pair("default_exercise_push_ups", listOf(MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.BACK, MuscleGroup.CHEST)),
+    Pair("default_exercise_lunges", listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS)),
+    Pair("default_exercise_sit_ups", listOf(MuscleGroup.ABS)),
+    Pair("default_exercise_plank", listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK)),
+    Pair("default_exercise_jumping_jacks", listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK)),
+    Pair("default_exercise_side_lunges", listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS)),
+)
+
 @OptIn(ExperimentalUuidApi::class)
 class PrepopulateCallback(
-    private val exerciseDaoProvider: () -> ExerciseDao
+    private val exerciseDaoProvider: () -> ExerciseDao,
+    private val equipmentDaoProvider: () -> EquipmentDao,
 ) : RoomDatabase.Callback() {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -71,22 +90,37 @@ class PrepopulateCallback(
         super.onCreate(connection)
         applicationScope.launch {
             val exerciseDao = exerciseDaoProvider()
-            populateDatabase(exerciseDao)
+            val equipmentDao = equipmentDaoProvider()
+            populateDefaultEquipment(equipmentDao)
+            populateDefaultExercises(exerciseDao)
         }
     }
 
-    private suspend fun populateDatabase(exerciseDao: ExerciseDao) {
+    private suspend fun populateDefaultEquipment(equipmentDao: EquipmentDao) {
         equipmentList.forEach { equipmentKey ->
             val equipment = TrainingEquipmentEntity(
-                name = equipmentKey, // This is now the full resource key
+                name = equipmentKey,
                 imageUri = "ic_$equipmentKey",
                 default = true,
             )
-            exerciseDao.upsertEquipment(equipment)
-            // The fromTrainingEquipmentEntity function will use equipment.name (the full resource key)
-            // for DefaultTrainingEquipmentEntity.name
-            exerciseDao.insertDefaultEquipment(
+            equipmentDao.upsertEquipment(equipment)
+            equipmentDao.insertDefaultEquipment(
                 fromTrainingEquipmentEntity(equipment)
+            )
+        }
+    }
+
+    private suspend fun populateDefaultExercises(exerciseDao: ExerciseDao) {
+        exerciseList.forEach { exerciseKey ->
+            val exercise = ExerciseEntity(
+                name = exerciseKey.first,
+                guide = "${exerciseKey}_guide",
+                targetMuscleGroups = exerciseKey.second,
+                default = true,
+            )
+            exerciseDao.upsertExercise(exercise)
+            exerciseDao.insertDefaultExercise(
+                fromExerciseEntity(exercise)
             )
         }
     }

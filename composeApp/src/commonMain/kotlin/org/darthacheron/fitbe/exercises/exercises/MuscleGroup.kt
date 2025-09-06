@@ -13,5 +13,6 @@ enum class MuscleGroup {
     ABS,
     CARDIO,
     FULL_BODY,
+    GLUTES,
     OTHER
 }
