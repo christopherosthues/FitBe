@@ -59,6 +59,7 @@ fun BottomBarNavGraph(
             bottom = paddingValues.calculateBottomPadding()
         )
     ) {
+        // TODO: navigation is broken when navigating to settings and back
         navigation<Screen.BottomBarGraph>(
             startDestination = Screen.Home
         ) {
