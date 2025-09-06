@@ -5,6 +5,7 @@ import org.darthacheron.fitbe.StartUpService
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
+import org.darthacheron.fitbe.exercises.equipment.EquipmentDao
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentDetailViewModel
 import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
 import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
@@ -51,7 +52,7 @@ val sharedModule = module {
 
     single {
         get<DatabaseFactory>().create()
-            .addCallback(PrepopulateCallback { get<ExerciseDao>() })
+            .addCallback(PrepopulateCallback({ get<ExerciseDao>() }, { get<EquipmentDao>() }))
             .setDriver(BundledSQLiteDriver())
             .build()
     }

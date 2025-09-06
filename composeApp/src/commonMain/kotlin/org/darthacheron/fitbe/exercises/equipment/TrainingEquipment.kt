@@ -18,7 +18,7 @@ open class TrainingEquipment(
 )
 
 @Composable
-internal fun getLocalizedName(name: String, default: Boolean): String {
+internal fun getEquipmentName(name: String, default: Boolean): String {
     return if (default && equipmentList.contains(name)) {
         DefaultEquipmentResProvider.equipmentNameMap[name]?.let {
             stringResource(it)
@@ -29,7 +29,7 @@ internal fun getLocalizedName(name: String, default: Boolean): String {
 }
 
 @Composable
-internal fun getLocalizedImage(imageUri: String?, default: Boolean): DrawableResource? {
+internal fun getEquipmentImage(imageUri: String?, default: Boolean): DrawableResource? {
     return if (default && imageUri != null && imageUri.startsWith("ic_default_training_equipment_")) {
         DefaultEquipmentResProvider.equipmentImageMap[imageUri]
     } else {

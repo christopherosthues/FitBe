@@ -16,12 +16,12 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_verified
 import io.github.vinceglb.filekit.PlatformFile
-import org.darthacheron.fitbe.exercises.equipment.getLocalizedImage
+import org.darthacheron.fitbe.exercises.equipment.getEquipmentImage
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ImageWithDefault(imageUri: String?, default: Boolean, contentDescription: String?, modifier: Modifier) {
-    val imageResource = getLocalizedImage(imageUri, default)
+    val imageResource = getEquipmentImage(imageUri, default)
     Box {
         if (imageResource == null && imageUri != null) {
             AsyncImage(

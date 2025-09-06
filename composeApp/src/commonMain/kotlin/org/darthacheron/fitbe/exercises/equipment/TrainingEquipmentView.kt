@@ -68,7 +68,7 @@ fun TrainingEquipmentView(
                         TrainingEquipmentCard(
                             equipment = equipment,
                             onClick = { navHostController.navigate(Screen.AddEditTrainingEquipment(equipment.id.toString())) },
-                            contentDescription = "View or Edit ${getLocalizedName(equipment.name, equipment.default)}"
+                            contentDescription = "View or Edit ${getEquipmentName(equipment.name, equipment.default)}"
                         )
                     }
                 }
@@ -134,7 +134,7 @@ fun TrainingEquipmentCard(
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = getLocalizedName(equipment.name, equipment.default),
+                        text = getEquipmentName(equipment.name, equipment.default),
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.align(Alignment.Center).padding(vertical = 8.dp)
