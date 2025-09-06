@@ -58,12 +58,18 @@ fun RootScreen(
 
     val topBarConfig by topBarManager.topBarConfigFlow.collectAsState(initial = TopBarConfig())
 
+    val currentDestinationRoute = currentRoute?.substringAfterLast(".")?.substringBefore("/")
+        ?.substringBefore("?")
     // Determine if the current route is a main bottom bar destination
     val isMainBottomBarDestination = remember(currentRoute) {
-        bottomBarDestinations.any { currentRoute?.startsWith(it.screen.toString()) == true }
+        bottomBarDestinations.any { currentDestinationRoute?.endsWith(it.screen.toString()) == true }
     }
 
-    val defaultTitle = getDefaultTopBarTitle(currentRoute)
+    println("Main bottom: $isMainBottomBarDestination")
+    println("Current route: $currentRoute")
+    println("Routes: ${bottomBarDestinations.map { it.screen.toString() }}")
+
+    val defaultTitle = getDefaultTopBarTitle(currentDestinationRoute)
 
     Scaffold(
         topBar = {
@@ -157,14 +163,13 @@ fun RootScreen(
 
 @Composable
 private fun getDefaultTopBarTitle(currentRoute: String?): org.jetbrains.compose.resources.StringResource? {
-    val screenPart = currentRoute?.substringAfterLast(".")?.substringBefore("/")?.substringBefore("?")
-    return when (screenPart) {
+    return when (currentRoute) {
         Screen.Home.toString().substringAfterLast(".") -> Res.string.top_bar_title_home
         Screen.ExercisesDashboard.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises_dashboard
         Screen.Exercises.toString().substringAfterLast(".") -> Res.string.top_bar_title_exercises
-        "ExerciseDetail" -> Res.string.top_bar_title_exercises // Simplified
+        Screen.ExerciseDetail::class.simpleName!! -> Res.string.top_bar_title_exercises // Simplified
         Screen.TrainingEquipment.toString().substringAfterLast(".") -> Res.string.top_bar_title_training_equipment
-        "TrainingEquipmentDetail" -> Res.string.top_bar_title_training_equipment // Simplified
+        Screen.TrainingEquipmentDetail::class.simpleName!! -> Res.string.top_bar_title_training_equipment // Simplified
         Screen.Health.toString().substringAfterLast(".") -> Res.string.top_bar_title_health
         Screen.Profile.toString().substringAfterLast(".") -> Res.string.top_bar_title_profile
         Screen.Sleeps.toString().substringAfterLast(".") -> Res.string.top_bar_title_sleeps
@@ -181,10 +186,12 @@ private fun checkIfSelected(
     currentDestinationRoute: String?,
     currentBottomBarItemRoute: String // This is the route of the BottomBarDestination's screen
 ): Boolean {
+    // TODO: last . and first before /
+    println("Current destination: $currentDestinationRoute")
     if (currentDestinationRoute == null) return false
 
     // Direct match
-    if (currentDestinationRoute.startsWith(currentBottomBarItemRoute)) return true
+    if (currentDestinationRoute.endsWith(currentBottomBarItemRoute)) return true
 
     // Handle parent-child relationships for selection
     val healthScreens = listOf(
@@ -196,10 +203,10 @@ private fun checkIfSelected(
         Screen.Exercises.toString(), Screen.ExerciseDetail::class.simpleName!!
     )
 
-    if (currentBottomBarItemRoute == Screen.Health.toString() && healthScreens.any { currentDestinationRoute.startsWith(it) }) {
+    if (currentBottomBarItemRoute == Screen.Health.toString() && healthScreens.any { currentDestinationRoute.endsWith(it) }) {
         return true
     }
-    if (currentBottomBarItemRoute == Screen.ExercisesDashboard.toString() && exercisesDashboardScreens.any { currentDestinationRoute.startsWith(it) }) {
+    if (currentBottomBarItemRoute == Screen.ExercisesDashboard.toString() && exercisesDashboardScreens.any { currentDestinationRoute.endsWith(it) }) {
         return true
     }
 

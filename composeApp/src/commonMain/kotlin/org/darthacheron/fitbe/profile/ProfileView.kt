@@ -85,6 +85,7 @@ import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.toDoubleString
 import org.darthacheron.fitbe.utils.toUintString
 import org.jetbrains.compose.resources.painterResource
@@ -96,7 +97,8 @@ import kotlin.uuid.Uuid
 @Composable
 fun ProfileView(
     profileViewModel: ProfileViewModel,
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
+    topBarManager: TopBarManager
 ) {
     val profiles by profileViewModel.profiles.collectAsState()
     val currentProfile by profileViewModel.currentProfile.collectAsState()

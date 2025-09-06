@@ -31,11 +31,15 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.health.steps.PlotSteps
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BeverageOverviewView(beverageOverviewViewModel: BeverageOverviewViewModel) {
+fun BeverageOverviewView(
+    beverageOverviewViewModel: BeverageOverviewViewModel,
+    topBarManager: TopBarManager
+) {
     val beverages by beverageOverviewViewModel.beverages.collectAsState()
     val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
     val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()

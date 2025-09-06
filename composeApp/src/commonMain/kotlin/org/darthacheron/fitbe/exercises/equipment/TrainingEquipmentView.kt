@@ -36,6 +36,7 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.training_equipment_add
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -44,7 +45,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun TrainingEquipmentView(
     viewModel: TrainingEquipmentViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
 ) {
     val allEquipment by viewModel.allEquipment.collectAsState()
 

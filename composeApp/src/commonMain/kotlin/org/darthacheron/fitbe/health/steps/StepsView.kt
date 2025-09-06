@@ -33,12 +33,14 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun StepsView(
-    stepsViewModel: StepsViewModel
+    stepsViewModel: StepsViewModel,
+    topBarManager: TopBarManager
 ) {
     val steps by stepsViewModel.steps.collectAsState()
     val dateRange by stepsViewModel.dateRangeFlow.collectAsState()

@@ -33,6 +33,7 @@ import fitbe.composeapp.generated.resources.card_title_training_equipment
 import fitbe.composeapp.generated.resources.ic_exercises
 import fitbe.composeapp.generated.resources.ic_training_equipment
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.ui.TopBarManager
 // Import your placeholder drawable resources here once they are added
 // For example:
 // import fitbe.composeapp.generated.resources.ic_exercises_overview_card
@@ -42,7 +43,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ExercisesDashboardView(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(300.dp),

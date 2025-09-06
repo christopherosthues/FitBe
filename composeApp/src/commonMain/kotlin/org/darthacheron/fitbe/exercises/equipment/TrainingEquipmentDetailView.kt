@@ -54,6 +54,7 @@ import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.darthacheron.fitbe.components.ImageWithDefault
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -64,7 +65,8 @@ import kotlin.uuid.Uuid
 fun TrainingEquipmentDetailView(
     equipmentId: Uuid?,
     viewModel: TrainingEquipmentDetailViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()

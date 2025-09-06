@@ -26,6 +26,7 @@ import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -35,7 +36,8 @@ import kotlin.uuid.ExperimentalUuidApi
 fun HealthOverviewView(
     healthOverviewViewModel: HealthOverviewViewModel,
     settingsRepository: SettingsRepository,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
 ) {
     val settings by settingsRepository.getSettingsFlow().collectAsState(Settings())
 

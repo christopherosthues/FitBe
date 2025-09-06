@@ -35,13 +35,17 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_beverage
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
 import org.darthacheron.fitbe.components.DropdownSelection
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun BeverageView(beverageViewModel: BeverageViewModel) {
+fun BeverageView(
+    beverageViewModel: BeverageViewModel,
+    topBarManager: TopBarManager
+) {
     val beverages by beverageViewModel.todayIntake.collectAsState(initial = listOf())
     val todayProgress by beverageViewModel.todayProgress.collectAsState()
 

@@ -36,6 +36,7 @@ import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
@@ -44,7 +45,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun WeightOverviewView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
+    topBarManager: TopBarManager
 ) {
     val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()

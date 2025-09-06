@@ -64,6 +64,7 @@ import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.date.TimePickerDialog
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.ceil
@@ -73,7 +74,10 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SleepOverviewView(viewModel: SleepViewModel) {
+fun SleepOverviewView(
+    viewModel: SleepViewModel,
+    topBarManager: TopBarManager
+) {
     val sleeps by viewModel.sleeps.collectAsState()
     var selectedViewTypeIndex by remember { mutableStateOf(0) }
     val startDate by viewModel.startDate.collectAsState()
@@ -91,17 +95,20 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
             ) {
                 Row {
                     Column {
-                        Text(text =
-                            startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                        Text(
+                            text =
+                                startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                         )
-                        Text(text =
-                            endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                        Text(
+                            text =
+                                endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                         )
                     }
                     Icon(
                         painterResource(Res.drawable.ic_date_range),
                         contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 8.dp).align(Alignment.CenterVertically)
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                            .align(Alignment.CenterVertically)
                     )
                 }
             }
@@ -133,13 +140,19 @@ fun SleepOverviewView(viewModel: SleepViewModel) {
                 onClick = {},
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Icon(painter = painterResource(Res.drawable.ic_arrow_back), contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
             }
             IconButton(
                 onClick = {},
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
-                Icon(painter = painterResource(Res.drawable.ic_arrow_forward), contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_forward),
+                    contentDescription = null
+                )
             }
             FilledIconButton(
                 onClick = { showAddDialog = true },
@@ -189,7 +202,10 @@ fun Plot(sleeps: List<Point<LocalDate, Double>>) {
         val dates = sleeps.map { it.x }
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = DoubleLinearAxisModel(range = 0.0..sleeps.maxOf { ceil(it.y) }, minorTickCount = 1),
+            yAxisModel = DoubleLinearAxisModel(
+                range = 0.0..sleeps.maxOf { ceil(it.y) },
+                minorTickCount = 1
+            ),
             xAxisLabels = {
                 Text(
                     it.toString(),
@@ -232,8 +248,17 @@ fun AddSleepDialog(
     onAdd: (hours: Long, minutes: Long) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var startDateTime by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())) }
-    var endDateTime by remember { mutableStateOf(Clock.System.now().plus(value = 8, unit = DateTimeUnit.HOUR).toLocalDateTime(TimeZone.currentSystemDefault())) }
+    var startDateTime by remember {
+        mutableStateOf(
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+    }
+    var endDateTime by remember {
+        mutableStateOf(
+            Clock.System.now().plus(value = 8, unit = DateTimeUnit.HOUR)
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+    }
 
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
@@ -260,20 +285,28 @@ fun AddSleepDialog(
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showStartDatePicker = true }) {
-                                Icon(painterResource(Res.drawable.ic_date_range), contentDescription = null)
+                                Icon(
+                                    painterResource(Res.drawable.ic_date_range),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
-                        value = "${startDateTime.hour.toString().padStart(2, '0')}:${startDateTime.minute.toString().padStart(2, '0')}",
+                        value = "${
+                            startDateTime.hour.toString().padStart(2, '0')
+                        }:${startDateTime.minute.toString().padStart(2, '0')}",
                         onValueChange = {},
                         label = { Text("Start Time") },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showStartTimePicker = true }) {
-                                Icon(painterResource(Res.drawable.ic_access_time), contentDescription = null)
+                                Icon(
+                                    painterResource(Res.drawable.ic_access_time),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier.weight(0.75f)
@@ -289,20 +322,28 @@ fun AddSleepDialog(
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showEndDatePicker = true }) {
-                                Icon(painterResource(Res.drawable.ic_date_range), contentDescription = null)
+                                Icon(
+                                    painterResource(Res.drawable.ic_date_range),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier.padding(top = 16.dp).weight(1f)
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
-                        value = "${endDateTime.hour.toString().padStart(2, '0')}:${endDateTime.minute.toString().padStart(2, '0')}",
+                        value = "${
+                            endDateTime.hour.toString().padStart(2, '0')
+                        }:${endDateTime.minute.toString().padStart(2, '0')}",
                         onValueChange = {},
                         label = { Text("End Time") },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showEndTimePicker = true }) {
-                                Icon(painterResource(Res.drawable.ic_access_time), contentDescription = null)
+                                Icon(
+                                    painterResource(Res.drawable.ic_access_time),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier.padding(top = 16.dp).weight(0.75f)
@@ -339,7 +380,8 @@ fun AddSleepDialog(
         DatePickerModal(
             onDateSelected = { millis ->
                 millis?.let {
-                    val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    val date = Instant.fromEpochMilliseconds(it)
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
                     startDateTime = LocalDateTime(date, startDateTime.time)
                 }
                 showStartDatePicker = false
@@ -362,7 +404,8 @@ fun AddSleepDialog(
         DatePickerModal(
             onDateSelected = { millis ->
                 millis?.let {
-                    val date = Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    val date = Instant.fromEpochMilliseconds(it)
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
                     endDateTime = LocalDateTime(date, endDateTime.time)
                 }
                 showEndDatePicker = false

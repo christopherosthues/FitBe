@@ -32,6 +32,7 @@ import fitbe.composeapp.generated.resources.ic_add
 // Assuming you will create a string resource for adding an exercise
 // import fitbe.composeapp.generated.resources.exercise_add 
 import org.darthacheron.fitbe.navigation.Screen // Assuming Screen.AddEditExercise(id) exists
+import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -39,7 +40,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ExercisesView(
     viewModel: ExercisesViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    topBarManager: TopBarManager
 ) {
     val allExercises by viewModel.allExercises.collectAsState()
 
