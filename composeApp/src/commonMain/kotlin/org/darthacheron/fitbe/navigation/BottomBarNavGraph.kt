@@ -36,8 +36,6 @@ import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.ui.TopBarManager // Added import
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -48,43 +46,42 @@ import kotlin.uuid.Uuid
 @Composable
 fun BottomBarNavGraph(
     topNavHostController: NavHostController,
-    navHostController: NavHostController, 
+    bottomBarNavHostController: NavHostController,
     paddingValues: PaddingValues,
 ) {
     NavHost(
-        navController = navHostController,
+        navController = bottomBarNavHostController,
         startDestination = Screen.BottomBarGraph,
         modifier = Modifier.padding(
             top = paddingValues.calculateTopPadding(),
             bottom = paddingValues.calculateBottomPadding()
         )
     ) {
-        // TODO: navigation is broken when navigating to settings and back
         navigation<Screen.BottomBarGraph>(
             startDestination = Screen.Home
         ) {
             composable<Screen.Home>{
                 val viewModel = koinViewModel<HomeViewModel>(
-                    parameters = { parametersOf(topNavHostController, navHostController) }
+                    parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
                 )
                 HomeView(viewModel)
             }
             composable<Screen.ExercisesDashboard> {
                 val viewModel = koinViewModel<ExercisesDashboardViewModel>(
-                    parameters = { parametersOf(topNavHostController, navHostController) }
+                    parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
                 )
                 ExercisesDashboardView(viewModel)
             }
             composable<Screen.Health> {
                 val viewModel = koinViewModel<HealthOverviewViewModel>(
-                    parameters = { parametersOf(topNavHostController, navHostController) }
+                    parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
                 )
                 val settingsRepository = getKoin().get<SettingsRepository>()
                 HealthOverviewView(viewModel, settingsRepository)
             }
             composable<Screen.Profile> {
                 val viewModel = koinViewModel<ProfileViewModel>(
-                    parameters = { parametersOf(topNavHostController, navHostController) }
+                    parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
                 )
                 val settingsRepository = getKoin().get<SettingsRepository>()
                 ProfileView(viewModel, settingsRepository)
@@ -92,28 +89,28 @@ fun BottomBarNavGraph(
         }
         composable<Screen.Exercises> {
             val viewModel = koinViewModel<ExercisesViewModel>(
-                parameters = { parametersOf(navHostController) }
+                parameters = { parametersOf(bottomBarNavHostController) }
             )
             ExercisesView(viewModel)
         }
         composable<Screen.ExerciseDetail> { backStackEntry ->
             val addEditExerciseRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<ExerciseDetailViewModel>(
-                parameters = { parametersOf(navHostController) }
+                parameters = { parametersOf(bottomBarNavHostController) }
             )
             val id = if (addEditExerciseRoute.id != null) Uuid.parse(addEditExerciseRoute.id) else null
             ExerciseDetailView(id, viewModel)
         }
         composable<Screen.TrainingEquipment>{
             val viewModel = koinViewModel<TrainingEquipmentViewModel>(
-                parameters = { parametersOf(navHostController) }
+                parameters = { parametersOf(bottomBarNavHostController) }
             )
             TrainingEquipmentView(viewModel)
         }
         composable<Screen.TrainingEquipmentDetail> { backStackEntry ->
             val addEditTrainingEquipmentRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>(
-                parameters = { parametersOf(navHostController) }
+                parameters = { parametersOf(bottomBarNavHostController) }
             )
             val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
             TrainingEquipmentDetailView(id, viewModel)

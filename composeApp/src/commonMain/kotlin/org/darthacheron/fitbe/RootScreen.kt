@@ -22,11 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_back
 import org.darthacheron.fitbe.navigation.BottomBarNavGraph
-import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.navigation.bottomBarDestinations
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarConfig
@@ -37,10 +35,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun RootScreen(
     topNavHostController: NavHostController,
+    bottomBarNavController: NavHostController,
     topBarManager: TopBarManager,
 ) {
-    val navHostController = rememberNavController()
-    val backStackEntry by navHostController.currentBackStackEntryAsState()
+    val backStackEntry by bottomBarNavController.currentBackStackEntryAsState()
     val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
 
     val topBarConfig by topBarManager.topBarConfigFlow.collectAsState(initial = TopBarConfig())
@@ -62,7 +60,7 @@ fun RootScreen(
                 navigationIcon = {
                     val navIconVisible = topBarConfig.backNavigationIconVisible ?: !isMainBottomBarDestination
                     AnimatedVisibility(visible = navIconVisible) {
-                        IconButton(onClick = { navHostController.navigateUp() }) {
+                        IconButton(onClick = { bottomBarNavController.navigateUp() }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_back),
                                 contentDescription = null // stringResource(Res.string.ic_back) // Accessibility
@@ -88,13 +86,13 @@ fun RootScreen(
         },
         bottomBar = {
             NavigationBar {
-                bottomBarDestinations.forEach {
-                    val isSelected = topBarConfig.bottomBarSelected == it.screen
+                bottomBarDestinations.forEach { bottomBarDestination ->
+                    val isSelected = topBarConfig.bottomBarSelected == bottomBarDestination.screen
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
-                            navHostController.navigate(it.screen) {
-                                popUpTo(navHostController.graph.findStartDestination().route!!) {
+                            bottomBarNavController.navigate(bottomBarDestination.screen) {
+                                popUpTo(bottomBarNavController.graph.findStartDestination().route!!) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -104,14 +102,14 @@ fun RootScreen(
                         modifier = Modifier.height(55.dp),
                         label = {
                             Text(
-                                text = stringResource(it.label),
+                                text = stringResource(bottomBarDestination.label),
                                 color = if (isSelected) Color.Red else Color.Black
                             )
                         },
                         icon = {
                             Icon(
-                                painter = painterResource(it.icon),
-                                contentDescription = null, // Label is descriptive enough
+                                painter = painterResource(bottomBarDestination.icon),
+                                contentDescription = null,
                                 modifier = Modifier.size(24.dp),
                                 tint = if (isSelected) Color.Red else Color.Black
                             )
@@ -123,7 +121,7 @@ fun RootScreen(
     ) { paddingValues ->
         BottomBarNavGraph(
             topNavHostController = topNavHostController,
-            navHostController = navHostController,
+            bottomBarNavHostController = bottomBarNavController,
             paddingValues = paddingValues,
         )
     }

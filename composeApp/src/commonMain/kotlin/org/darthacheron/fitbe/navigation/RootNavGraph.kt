@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import org.darthacheron.fitbe.RootScreen
 import org.darthacheron.fitbe.settings.SettingsView
 import org.darthacheron.fitbe.settings.SettingsViewModel
@@ -17,6 +18,8 @@ fun RootNavGraph(
     navHostController: NavHostController,
     topBarManager: TopBarManager
 ) {
+    val bottomBarNavController = rememberNavController()
+
     NavHost(
         navController = navHostController,
         startDestination = Screen.Root
@@ -24,6 +27,7 @@ fun RootNavGraph(
         composable<Screen.Root> {
             RootScreen(
                 topNavHostController = navHostController,
+                bottomBarNavController = bottomBarNavController,
                 topBarManager = topBarManager,
             )
         }
