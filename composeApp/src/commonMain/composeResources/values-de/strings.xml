@@ -206,6 +206,7 @@
     <string name="muscle_group_abs">Bauchmuskeln</string>
     <string name="muscle_group_cardio">Cardio</string>
     <string name="muscle_group_full_body">Ganzkörper</string>
+    <string name="muscle_group_glutes">Gesäßmuskeln</string>
     <string name="muscle_group_other">Sonstiges</string>
     <string name="card_title_exercises_overview">Übungsübersicht</string>
     <string name="card_title_training_equipment">Geräte verwalten</string>
@@ -265,4 +266,27 @@
     <string name="add_edit_training_equipment_reset_to_default">Auf Standard zurücksetzen</string>
 
     <string name="settings_content_description_title">Einstellungen öffnen</string>
+
+    <string name="exercise_detail_name">Name</string>
+    <string name="exercise_detail_guide">Anleitung</string>
+    <string name="exercise_detail_target_muscle_groups">Zielmuskelgruppen</string>
+    <string name="exercise_detail_content_description_remove_muscle_groups">Muskelgruppe entfernen</string>
+    <string name="exercise_detail_content_description_add_muscle_groups">Muskelgruppe hinzufügen</string>
+    <string name="exercise_detail_content_description_reset_to_default">Übung zurücksetzen</string>
+    <string name="exercise_detail_content_description_delete">Übung löschen</string>
+    <string name="exercise_detail_content_description_cancel">Abbrechen</string>
+    <string name="exercise_detail_content_description_save">Übung speichern</string>
+    <string name="exercise_detail_content_description_edit">Übung bearbeiten</string>
+    <string name="exercise_detail_error_exercise_not_found">Übung konnte nicht gefunden werden</string>
+    <string name="exercise_detail_error_loading_exercise">Übung konnte nicht geladen werden</string>
+    <string name="exercise_detail_error_missing_name">Der Name darf nicht leer sein</string>
+    <string name="exercise_detail_error_name_already_exists">Der Name ist bereits vergeben</string>
+    <string name="exercise_detail_error_missing_guide">Die Anleitung darf nicht leer sein</string>
+    <string name="exercise_detail_error_missing_muscle_group">Mindestens eine Muskelgruppe muss ausgewählt sein</string>
+    <string name="exercise_detail_error_saving_exercise">Übung konnte nicht gespeichert werden</string>
+    <string name="exercise_detail_error_reset_default_exercise">Übung konnte nicht zurückgesetzt werden</string>
+    <string name="exercise_detail_error_reset_new_exercise">Eine neue Übung kann nicht zurückgesetzt werden</string>
+    <string name="exercise_detail_error_reset_non_default_exercise">Eine benutzerdefinierte Übung kann nicht zurückgesetzt werden</string>
+    <string name="exercise_detail_error_delete_new_exercise">Eine neue Übung kann nicht gelöscht werden</string>
+    <string name="exercise_detail_error_delete_default_exercise">Eine Standardübung kann nicht gelöscht werden</string>
 </resources>

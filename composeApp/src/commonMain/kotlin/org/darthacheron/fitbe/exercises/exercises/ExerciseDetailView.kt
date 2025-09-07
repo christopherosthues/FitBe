@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,6 +42,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_muscle_groups
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_cancel
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_delete
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_edit
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_muscle_groups
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_reset_to_default
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_save
+import fitbe.composeapp.generated.resources.exercise_detail_guide
+import fitbe.composeapp.generated.resources.exercise_detail_name
+import fitbe.composeapp.generated.resources.exercise_detail_target_muscle_groups
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
@@ -63,19 +75,12 @@ fun ExerciseDetailView(
     val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
     val scrollState = rememberScrollState()
 
-    var isInEditMode by remember {
-        mutableStateOf(exerciseId == null)
-    }
-
     LaunchedEffect(exerciseId) {
         viewModel.loadExercise(exerciseId?.toString())
     }
 
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
-        viewModel.saveCompletedEvent.collect {
-            isInEditMode = false 
-        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -85,7 +90,7 @@ fun ExerciseDetailView(
                 .fillMaxSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp) 
         ) {
-            if (uiState.isLoading && uiState.exerciseId != null && !isInEditMode) {
+            if (uiState.isLoading && uiState.exerciseId != null && !uiState.isEditing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
                 Column(
@@ -95,28 +100,35 @@ fun ExerciseDetailView(
                 ) {
                     OutlinedTextField(
                         value = uiState.name,
-                        onValueChange = { if (isInEditMode) viewModel.onNameChange(it) },
-                        label = { Text("Exercise Name") }, // TODO: SR
+                        onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
+                        label = { Text(text = stringResource(Res.string.exercise_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        readOnly = !isInEditMode,
-                        isError = uiState.error != null && uiState.name.isBlank(),
+                        readOnly = !uiState.isEditing,
+                        isError = uiState.error.hasNameError,
                         supportingText = {
-                            if (uiState.error != null && uiState.name.isBlank()) Text(uiState.error!!)
+                            if (uiState.error.hasNameError) Text(text = stringResource(uiState.error.nameError!!))
                         }
                     )
 
                     OutlinedTextField(
                         value = uiState.guide,
-                        onValueChange = { if (isInEditMode) viewModel.onGuideChange(it) },
-                        label = { Text("Guide") }, // TODO: SR
+                        onValueChange = { if (uiState.isEditing) viewModel.onGuideChange(it) },
+                        label = { Text(text = stringResource(Res.string.exercise_detail_guide)) },
                         modifier = Modifier.fillMaxWidth().height(120.dp), 
-                        readOnly = !isInEditMode
+                        readOnly = !uiState.isEditing,
+                        isError = uiState.error.hasGuideError,
+                        supportingText = {
+                            if (uiState.error.hasGuideError) Text(text = stringResource(uiState.error.guideError!!))
+                        }
                     )
 
                     // Target Muscle Groups
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text("Target Muscle Groups", style = MaterialTheme.typography.titleMedium) // TODO: SR
+                        Text(
+                            text = stringResource(Res.string.exercise_detail_target_muscle_groups),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
@@ -127,28 +139,36 @@ fun ExerciseDetailView(
                                 InputChip(
                                     selected = false, // Not a selectable chip, just for display
                                     onClick = { /* Could be used for something else if needed */ },
-                                    label = { Text(muscleGroup.name) }, // TODO: Consider localized names
+                                    label = { Text(text = stringResource(muscleGroup.localizedString()))  },
                                     trailingIcon = {
-                                        if (isInEditMode) {
+                                        if (uiState.isEditing) {
                                             IconButton(onClick = { viewModel.removeMuscleGroup(muscleGroup) }, modifier = Modifier.size(18.dp)) {
-                                                Icon(painterResource(Res.drawable.ic_remove), "Remove muscle group") // TODO: SR
+                                                Icon(
+                                                    painterResource(Res.drawable.ic_remove),
+                                                    stringResource(Res.string.exercise_detail_content_description_remove_muscle_groups)
+                                                )
                                             }
                                         }
                                     },
-                                    enabled = isInEditMode
+                                    enabled = uiState.isEditing
                                 )
                             }
 
-                            if (isInEditMode && availableMuscleGroups.isNotEmpty()) {
+                            if (uiState.isEditing && availableMuscleGroups.isNotEmpty()) {
                                 var muscleGroupDropdownExpanded by remember { mutableStateOf(false) }
                                 ExposedDropdownMenuBox(
                                     expanded = muscleGroupDropdownExpanded,
-                                    onExpandedChange = { muscleGroupDropdownExpanded = !muscleGroupDropdownExpanded }
+                                    onExpandedChange = { muscleGroupDropdownExpanded = !muscleGroupDropdownExpanded },
                                 ) {
-                                    TextButton(onClick = { muscleGroupDropdownExpanded = true }, modifier = Modifier.menuAnchor()) {
-                                        Icon(painterResource(Res.drawable.ic_add), contentDescription = "Add Muscle Group", modifier = Modifier.size(18.dp)) // TODO: SR
-                                        Spacer(Modifier.size(8.dp))
-                                        Text("Add Group") // TODO: SR
+                                    TextButton(onClick = { muscleGroupDropdownExpanded = true }, modifier = Modifier.menuAnchor(
+                                        MenuAnchorType.SecondaryEditable)) {
+                                        Icon(
+                                            painterResource(Res.drawable.ic_add),
+                                            contentDescription = stringResource(Res.string.exercise_detail_content_description_add_muscle_groups),
+                                            modifier = Modifier.size(18.dp)
+                                        )
+//                                        Spacer(Modifier.size(8.dp))
+//                                        Text("Add Group") // TODO: SR
                                     }
                                     ExposedDropdownMenu(
                                         expanded = muscleGroupDropdownExpanded,
@@ -156,7 +176,7 @@ fun ExerciseDetailView(
                                     ) {
                                         availableMuscleGroups.forEach { muscleGroup ->
                                             DropdownMenuItem(
-                                                text = { Text(muscleGroup.name) }, // TODO: SR for muscle group names
+                                                text = { Text(text = stringResource(muscleGroup.localizedString())) },
                                                 onClick = {
                                                     viewModel.addMuscleGroup(muscleGroup)
                                                     muscleGroupDropdownExpanded = false
@@ -167,6 +187,13 @@ fun ExerciseDetailView(
                                 }
                             }
                         }
+                        if (uiState.error.hasMuscleGroupError) {
+                            Text(
+                                text = stringResource(uiState.error.muscleGroupError!!),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.titleSmall,
+                            )
+                        }
                     }
 
                     // Equipment List Display & Edit Button
@@ -176,16 +203,16 @@ fun ExerciseDetailView(
                         uiState.equipmentList.forEach {
                             Text(text = getEquipmentName(it.name, it.default))
                         }
-                        if (isInEditMode) {
+                        if (uiState.isEditing) {
                            // Button(onClick = { /* TODO: Implement equipment selection */ }) {
                            //     Text("Edit Equipment") // TODO: SR
                            // }
                         }
                     }
 
-                    if (uiState.error != null && !(uiState.name.isBlank() && isInEditMode)) {
+                    if (uiState.error.hasGeneralError) {
                         Text(
-                            text = uiState.error!!,
+                            text = stringResource(uiState.error.generalError!!),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(top = 8.dp)
@@ -198,7 +225,7 @@ fun ExerciseDetailView(
         // FABs ... (rest of the code remains the same)
         // FAB for Reset to Default (Top End)
         AnimatedVisibility(
-            visible = isInEditMode && uiState.exerciseId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
+            visible = uiState.isEditing && uiState.exerciseId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
             FloatingActionButton(
@@ -208,7 +235,7 @@ fun ExerciseDetailView(
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_reset_default),
-                    contentDescription = "Reset to Default" // TODO: String Resource
+                    contentDescription = stringResource(Res.string.exercise_detail_content_description_reset_to_default)
                 )
             }
         }
@@ -221,7 +248,7 @@ fun ExerciseDetailView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Delete FAB (Bottom Start)
-            AnimatedVisibility(visible = !isInEditMode && uiState.exerciseId != null && !uiState.default) {
+            AnimatedVisibility(visible = !uiState.isEditing && uiState.exerciseId != null && !uiState.default) {
                 FloatingActionButton(
                     onClick = {
                         if (!uiState.isLoading) {
@@ -232,7 +259,7 @@ fun ExerciseDetailView(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
-                        contentDescription = "Delete Exercise" // TODO: String Resource
+                        contentDescription = stringResource(Res.string.exercise_detail_content_description_delete)
                     )
                 }
             }
@@ -246,49 +273,49 @@ fun ExerciseDetailView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Cancel FAB
-            AnimatedVisibility(visible = isInEditMode && uiState.exerciseId != null) {
+            AnimatedVisibility(visible = uiState.isEditing && uiState.exerciseId != null) {
                 FloatingActionButton(
                     onClick = {
                         viewModel.loadExercise(uiState.exerciseId.toString()) // Reload original data
-                        isInEditMode = false
+                        viewModel.setIsEditing(false)
                     },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_cancel),
-                        contentDescription = "Cancel" // TODO: String Resource
+                        contentDescription = stringResource(Res.string.exercise_detail_content_description_cancel)
                     )
                 }
             }
 
             // Save FAB (if in edit mode)
-            AnimatedVisibility(visible = isInEditMode) {
+            AnimatedVisibility(visible = uiState.isEditing) {
                 FloatingActionButton(
                     onClick = {
                         if (!uiState.isLoading) {
                             viewModel.saveExercise()
                         }
                     },
-                    containerColor = if (!uiState.isLoading && uiState.name.isNotBlank()) MaterialTheme.colorScheme.primary else Color.Gray,
+                    containerColor = if (!uiState.isLoading && !uiState.error.hasError) MaterialTheme.colorScheme.primary else Color.Gray,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = "Save Exercise" // TODO: String Resource
+                        contentDescription = stringResource(Res.string.exercise_detail_content_description_save)
                     )
                 }
             }
 
             // Edit FAB (if not in edit mode and exercise exists)
-            AnimatedVisibility(visible = !isInEditMode && uiState.exerciseId != null) {
+            AnimatedVisibility(visible = !uiState.isEditing && uiState.exerciseId != null) {
                 FloatingActionButton(
                     onClick = {
-                        isInEditMode = true
+                        viewModel.setIsEditing(true)
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_edit),
-                        contentDescription = "Edit Exercise" // TODO: String Resource
+                        contentDescription = stringResource(Res.string.exercise_detail_content_description_edit)
                     )
                 }
             }

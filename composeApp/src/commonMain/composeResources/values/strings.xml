@@ -194,6 +194,7 @@
     <string name="beverages_chart_thumbnail_title">Beverages</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
+
     <string name="muscle_group_chest">Chest</string>
     <string name="muscle_group_back">Back</string>
     <string name="muscle_group_shoulders">Shoulders</string>
@@ -206,7 +207,9 @@
     <string name="muscle_group_abs">Abs</string>
     <string name="muscle_group_cardio">Cardio</string>
     <string name="muscle_group_full_body">Full Body</string>
+    <string name="muscle_group_glutes">Glutes</string>
     <string name="muscle_group_other">Other</string>
+
     <string name="card_title_exercises_overview">Exercises Overview</string>
     <string name="card_title_training_equipment">Manage Equipment</string>
 
@@ -265,4 +268,28 @@
     <string name="add_edit_training_equipment_reset_to_default">Reset to Default</string>
 
     <string name="settings_content_description_title">Open settings</string>
+
+    <string name="exercise_detail_name">Name</string>
+    <string name="exercise_detail_guide">Guide</string>
+    <string name="exercise_detail_target_muscle_groups">Target Muscle Groups</string>
+    <string name="exercise_detail_content_description_remove_muscle_groups">Remove muscle group</string>
+    <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
+    <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
+    <string name="exercise_detail_content_description_delete">Delete exercise</string>
+    <string name="exercise_detail_content_description_cancel">Cancel</string>
+    <string name="exercise_detail_content_description_save">Save exercise</string>
+    <string name="exercise_detail_content_description_edit">Edit Exercise</string>
+    <string name="exercise_detail_error_exercise_not_found">Exercise not found</string>
+    <string name="exercise_detail_error_loading_exercise">Failed to load exercise</string>
+    <string name="exercise_detail_error_missing_name">Name cannot be empty</string>
+    <string name="exercise_detail_error_name_already_exists">Name has to be unique</string>
+    <string name="exercise_detail_error_missing_guide">Guide cannot be empty</string>
+    <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
+    <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
+    <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
+    <string name="exercise_detail_error_delete_exercise">Failed to delete exercise</string>
+    <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
+    <string name="exercise_detail_error_reset_non_default_exercise">Cannot reset non-default exercise</string>
+    <string name="exercise_detail_error_delete_new_exercise">Cannot delete a new exercise</string>
+    <string name="exercise_detail_error_delete_default_exercise">Cannot delete a default exercise</string>
 </resources>
