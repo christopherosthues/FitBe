@@ -33,4 +33,8 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
     suspend fun resetExerciseToDefault(exerciseId: Uuid) {
         exerciseDao.resetExerciseToDefault(exerciseId)
     }
+
+    suspend fun updateExerciseEquipmentLinks(exerciseId: Uuid, equipmentIds: List<Uuid>) {
+        exerciseDao.updateExerciseEquipmentLinks(exerciseId, equipmentIds)
+    }
 }

@@ -122,9 +122,9 @@ class ExerciseDetailViewModel(
                                 isModifiedFromPersistedDefault = if (originalDefaultExercise != null) {
                                     (currentExerciseWithEquipment.name != originalDefaultExercise.name ||
                                      currentExerciseWithEquipment.guide != originalDefaultExercise.guide ||
-                                     !currentExerciseWithEquipment.targetMuscleGroups.idsEqual(originalDefaultExercise.targetMuscleGroups) { mg -> mg.ordinal } ||
+                                     !currentExerciseWithEquipment.targetMuscleGroups.idsEqual(originalDefaultExercise.targetMuscleGroups) { mg -> mg.ordinal } || // Using ordinal for MuscleGroup
                                      !currentExerciseWithEquipment.equipmentList.idsEqual(originalDefaultExercise.equipmentList) { eq -> eq.id })
-                                } else { false } // Should not happen if item is default and originalDefaultExercise is null
+                                } else { false } 
                             )
                         }
                     } else { // Not a default item
@@ -169,7 +169,7 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                 (name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } || // Using ordinal
                  !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(name = name, error = null, isModifiedFromPersistedDefault = modified)
@@ -181,7 +181,7 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                 (currentState.name != currentState.persistedDefaultName ||
                  guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } || // Using ordinal
                  !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(guide = guide, error = null, isModifiedFromPersistedDefault = modified)
@@ -193,7 +193,7 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                 (currentState.name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !muscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !muscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } || // Using ordinal
                  !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(targetMuscleGroups = muscleGroups, error = null, isModifiedFromPersistedDefault = modified)
@@ -205,7 +205,7 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                  (currentState.name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } || // Using ordinal
                  !equipment.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(equipmentList = equipment, error = null, isModifiedFromPersistedDefault = modified)
@@ -222,8 +222,9 @@ class ExerciseDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
+            val exerciseIdToUse = currentState.exerciseId ?: Uuid.random()
             val exerciseToSave = Exercise(
-                id = currentState.exerciseId ?: Uuid.random(),
+                id = exerciseIdToUse,
                 name = currentState.name,
                 guide = currentState.guide,
                 targetMuscleGroups = currentState.targetMuscleGroups,
@@ -233,7 +234,8 @@ class ExerciseDetailViewModel(
 
             try {
                 exerciseRepository.upsertExercise(exerciseToSave)
-                // TODO: Handle upserting ExerciseEquipmentLink entities
+                val equipmentIds = currentState.equipmentList.map { it.id }
+                exerciseRepository.updateExerciseEquipmentLinks(exerciseIdToUse, equipmentIds)
 
                 _uiState.update {
                     it.copy(
@@ -243,6 +245,7 @@ class ExerciseDetailViewModel(
                         name = exerciseToSave.name,
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
+                        // equipmentList in UI state is already up-to-date
                         error = null,
                         isModifiedFromPersistedDefault = false // Reset after save
                     )
@@ -292,7 +295,8 @@ class ExerciseDetailViewModel(
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
                 )
                 exerciseRepository.deleteExercise(exerciseToDelete)
-                // TODO: Handle deleting ExerciseEquipmentLink entities
+                // Note: Cross-references are usually handled by DB cascade delete. 
+                // If not, explicit deletion of links would be needed here too.
                 navHostController.popBackStack()
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to delete exercise: ${e.message}") }

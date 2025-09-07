@@ -8,12 +8,13 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
-interface ExerciseDao { // Example, you might have separate DAOs
+interface ExerciseDao { 
     @Upsert
     suspend fun upsertExercise(exercise: ExerciseEntity): Long
 
@@ -34,18 +35,33 @@ interface ExerciseDao { // Example, you might have separate DAOs
     fun getDefaultExerciseWithEquipment(exerciseId: Uuid): Flow<DefaultExerciseWithEquipmentEntity?>
 
     @Transaction
-    suspend fun resetExerciseToDefault(equipmentId: Uuid) {
-        val defaultExercise = getDefaultExerciseByIdForReset(equipmentId)
+    suspend fun resetExerciseToDefault(exerciseId: Uuid) { // Renamed parameter for clarity
+        val defaultExercise = getDefaultExerciseByIdForReset(exerciseId)
         if (defaultExercise != null) {
             upsertExercise(defaultExercise.toExerciseEntity())
+            // Also reset equipment links for default exercises if needed
+            val defaultEquipmentLinks = getDefaultExerciseWithEquipment(exerciseId).firstOrNull()?.equipmentList?.map { it.id } ?: emptyList()
+            updateExerciseEquipmentLinks(exerciseId, defaultEquipmentLinks)
         }
     }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addExerciseEquipmentCrossRef(crossRef: ExerciseEquipmentCrossRef)
+    // Methods for managing ExerciseEquipmentCrossRef
+    @Query("DELETE FROM exercise_equipment_cross_ref WHERE exerciseId = :exerciseId")
+    suspend fun deleteCrossRefsByExerciseId(exerciseId: Uuid)
 
-    @Query("DELETE FROM exercise_equipment_cross_ref WHERE exerciseId = :exerciseId AND equipmentId = :equipmentId")
-    suspend fun removeExerciseEquipmentCrossRef(exerciseId: Uuid, equipmentId: Uuid)
+    @Insert(onConflict = OnConflictStrategy.IGNORE) // IGNORE might be fine if we always delete first
+    suspend fun insertCrossRefs(crossRefs: List<ExerciseEquipmentCrossRef>)
+
+    @Transaction
+    suspend fun updateExerciseEquipmentLinks(exerciseId: Uuid, newEquipmentIds: List<Uuid>) {
+        deleteCrossRefsByExerciseId(exerciseId)
+        if (newEquipmentIds.isNotEmpty()) {
+            val newCrossRefs = newEquipmentIds.map { equipmentId ->
+                ExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = equipmentId)
+            }
+            insertCrossRefs(newCrossRefs)
+        }
+    }
 
     @Transaction // Important for relations
     @Query("SELECT * FROM exercises WHERE id = :exerciseId")
