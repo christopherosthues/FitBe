@@ -4,23 +4,30 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,45 +40,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
+import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
-import org.darthacheron.fitbe.exercises.equipment.getEquipmentName // Assuming this can be used or adapted
+import org.darthacheron.fitbe.exercises.equipment.getEquipmentName 
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-// TODO: Add actual string resources
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ExerciseDetailView(
     exerciseId: Uuid?,
     viewModel: ExerciseDetailViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
     val scrollState = rememberScrollState()
 
-    // Default to edit mode if it's a new exercise (exerciseId is null)
-    // or if the exercise is being loaded (uiState.isLoading and uiState.exerciseId != null)
-    // or if uiState.isEditing is true (e.g. after failing to load, or explicitly set by VM)
-    var isInEditMode by remember(exerciseId, uiState.isLoading, uiState.isEditing, uiState.exerciseId) {
-        mutableStateOf(exerciseId == null || uiState.isEditing)
+    var isInEditMode by remember {
+        mutableStateOf(exerciseId == null)
     }
 
     LaunchedEffect(exerciseId) {
         viewModel.loadExercise(exerciseId?.toString())
-        // After loading, ViewModel's uiState.isEditing will reflect the correct edit mode for existing exercises.
-        // For new exercises, exerciseId is null, loadExercise sets isEditing = true.
     }
 
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
         viewModel.saveCompletedEvent.collect {
-            isInEditMode = false // Exit edit mode after successful save
+            isInEditMode = false 
         }
     }
 
@@ -80,7 +83,7 @@ fun ExerciseDetailView(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp) // padding for FABs
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp) 
         ) {
             if (uiState.isLoading && uiState.exerciseId != null && !isInEditMode) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -93,7 +96,7 @@ fun ExerciseDetailView(
                     OutlinedTextField(
                         value = uiState.name,
                         onValueChange = { if (isInEditMode) viewModel.onNameChange(it) },
-                        label = { Text("Exercise Name") }, // TODO: String resource
+                        label = { Text("Exercise Name") }, // TODO: SR
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         readOnly = !isInEditMode,
@@ -106,18 +109,62 @@ fun ExerciseDetailView(
                     OutlinedTextField(
                         value = uiState.guide,
                         onValueChange = { if (isInEditMode) viewModel.onGuideChange(it) },
-                        label = { Text("Guide") }, // TODO: String resource
-                        modifier = Modifier.fillMaxWidth().height(120.dp), // Allow multiple lines
+                        label = { Text("Guide") }, // TODO: SR
+                        modifier = Modifier.fillMaxWidth().height(120.dp), 
                         readOnly = !isInEditMode
                     )
 
-                    // Target Muscle Groups Display & Edit Button
+                    // Target Muscle Groups
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text("Target Muscle Groups", style = MaterialTheme.typography.titleMedium) // TODO: SR
-                        Text(uiState.targetMuscleGroups.joinToString { it.name }) // TODO: SR for each muscle group
-                        if (isInEditMode) {
-                            Button(onClick = { /* TODO: Implement muscle group selection */ }) {
-                                Text("Edit Muscle Groups") // TODO: SR
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            uiState.targetMuscleGroups.forEach { muscleGroup ->
+                                InputChip(
+                                    selected = false, // Not a selectable chip, just for display
+                                    onClick = { /* Could be used for something else if needed */ },
+                                    label = { Text(muscleGroup.name) }, // TODO: Consider localized names
+                                    trailingIcon = {
+                                        if (isInEditMode) {
+                                            IconButton(onClick = { viewModel.removeMuscleGroup(muscleGroup) }, modifier = Modifier.size(18.dp)) {
+                                                Icon(painterResource(Res.drawable.ic_remove), "Remove muscle group") // TODO: SR
+                                            }
+                                        }
+                                    },
+                                    enabled = isInEditMode
+                                )
+                            }
+
+                            if (isInEditMode && availableMuscleGroups.isNotEmpty()) {
+                                var muscleGroupDropdownExpanded by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(
+                                    expanded = muscleGroupDropdownExpanded,
+                                    onExpandedChange = { muscleGroupDropdownExpanded = !muscleGroupDropdownExpanded }
+                                ) {
+                                    TextButton(onClick = { muscleGroupDropdownExpanded = true }, modifier = Modifier.menuAnchor()) {
+                                        Icon(painterResource(Res.drawable.ic_add), contentDescription = "Add Muscle Group", modifier = Modifier.size(18.dp)) // TODO: SR
+                                        Spacer(Modifier.size(8.dp))
+                                        Text("Add Group") // TODO: SR
+                                    }
+                                    ExposedDropdownMenu(
+                                        expanded = muscleGroupDropdownExpanded,
+                                        onDismissRequest = { muscleGroupDropdownExpanded = false }
+                                    ) {
+                                        availableMuscleGroups.forEach { muscleGroup ->
+                                            DropdownMenuItem(
+                                                text = { Text(muscleGroup.name) }, // TODO: SR for muscle group names
+                                                onClick = {
+                                                    viewModel.addMuscleGroup(muscleGroup)
+                                                    muscleGroupDropdownExpanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -125,13 +172,14 @@ fun ExerciseDetailView(
                     // Equipment List Display & Edit Button
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text("Required Equipment", style = MaterialTheme.typography.titleMedium) // TODO: SR
+                        // TODO: Implement similar Chip + Add Dropdown for Equipment
                         uiState.equipmentList.forEach {
                             Text(text = getEquipmentName(it.name, it.default))
                         }
                         if (isInEditMode) {
-                            Button(onClick = { /* TODO: Implement equipment selection */ }) {
-                                Text("Edit Equipment") // TODO: SR
-                            }
+                           // Button(onClick = { /* TODO: Implement equipment selection */ }) {
+                           //     Text("Edit Equipment") // TODO: SR
+                           // }
                         }
                     }
 
@@ -147,6 +195,7 @@ fun ExerciseDetailView(
             }
         }
 
+        // FABs ... (rest of the code remains the same)
         // FAB for Reset to Default (Top End)
         AnimatedVisibility(
             visible = isInEditMode && uiState.exerciseId != null && uiState.default && uiState.isModifiedFromPersistedDefault,

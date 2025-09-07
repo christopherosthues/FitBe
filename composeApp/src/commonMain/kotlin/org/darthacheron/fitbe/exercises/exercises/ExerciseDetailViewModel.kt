@@ -6,18 +6,20 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_add_edit_exercise
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.exercises.equipment.TrainingEquipment // Assuming TrainingEquipment is accessible
-// Assuming MuscleGroup is accessible and has an 'id' property, e.g., defined in this package or imported
-// import org.darthacheron.fitbe.shared.MuscleGroup 
+import org.darthacheron.fitbe.exercises.equipment.TrainingEquipment
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
@@ -32,7 +34,7 @@ data class AddEditExerciseUiState(
     val targetMuscleGroups: List<MuscleGroup> = emptyList(),
     val equipmentList: List<TrainingEquipment> = emptyList(),
     val isLoading: Boolean = false,
-    val isEditing: Boolean = false, // True if UI should be in edit mode
+    val isEditing: Boolean = false,
     val exerciseId: Uuid? = null,
     val error: String? = null,
     val default: Boolean = false,
@@ -64,11 +66,14 @@ class ExerciseDetailViewModel(
     private val _saveCompletedEvent = MutableSharedFlow<Unit>()
     val saveCompletedEvent = _saveCompletedEvent.asSharedFlow()
 
-    // Helper function to compare lists by IDs
+    val availableMuscleGroups: StateFlow<List<MuscleGroup>> = _uiState
+        .map { currentState ->
+            MuscleGroup.entries.filter { it !in currentState.targetMuscleGroups }
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, MuscleGroup.entries)
+
     private fun <T> List<T>.idsEqual(other: List<T>, idSelector: (T) -> Any): Boolean {
         if (this.size != other.size) return false
-        // If both are empty, they are equal by IDs.
-        // If sizes are equal and not zero, compare the sets of IDs.
         return this.map(idSelector).toSet() == other.map(idSelector).toSet()
     }
 
@@ -200,6 +205,18 @@ class ExerciseDetailViewModel(
         }
     }
 
+    fun addMuscleGroup(muscleGroup: MuscleGroup) {
+        val currentGroups = _uiState.value.targetMuscleGroups
+        if (muscleGroup !in currentGroups) {
+            onTargetMuscleGroupsChange(currentGroups + muscleGroup)
+        }
+    }
+
+    fun removeMuscleGroup(muscleGroup: MuscleGroup) {
+        val currentGroups = _uiState.value.targetMuscleGroups
+        onTargetMuscleGroupsChange(currentGroups - muscleGroup)
+    }
+
     fun onEquipmentListChange(equipment: List<TrainingEquipment>) {
         _uiState.update { currentState ->
             val modified = if (currentState.default) {
@@ -240,14 +257,13 @@ class ExerciseDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        isEditing = false, // Or true, depending on desired behavior post-save
+                        isEditing = false, 
                         exerciseId = exerciseToSave.id,
                         name = exerciseToSave.name,
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
-                        // equipmentList in UI state is already up-to-date
                         error = null,
-                        isModifiedFromPersistedDefault = false // Reset after save
+                        isModifiedFromPersistedDefault = false 
                     )
                 }
                 _saveCompletedEvent.emit(Unit)
@@ -268,7 +284,7 @@ class ExerciseDetailViewModel(
         viewModelScope.launch {
             try {
                 exerciseRepository.resetExerciseToDefault(currentState.exerciseId)
-                loadExercise(currentState.exerciseId.toString()) // Reload to reflect reset state
+                loadExercise(currentState.exerciseId.toString()) 
                 _saveCompletedEvent.emit(Unit) 
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to reset exercise: ${e.message}") }
@@ -286,7 +302,7 @@ class ExerciseDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                val exerciseToDelete = Exercise( // Construct based on current state to pass to repository
+                val exerciseToDelete = Exercise( 
                     id = currentState.exerciseId,
                     name = currentState.name,
                     guide = currentState.guide,
@@ -295,8 +311,6 @@ class ExerciseDetailViewModel(
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
                 )
                 exerciseRepository.deleteExercise(exerciseToDelete)
-                // Note: Cross-references are usually handled by DB cascade delete. 
-                // If not, explicit deletion of links would be needed here too.
                 navHostController.popBackStack()
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to delete exercise: ${e.message}") }

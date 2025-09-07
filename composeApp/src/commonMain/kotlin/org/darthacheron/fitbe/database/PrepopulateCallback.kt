@@ -114,7 +114,7 @@ class PrepopulateCallback(
         exerciseList.forEach { exerciseKey ->
             val exercise = ExerciseEntity(
                 name = exerciseKey.first,
-                guide = "${exerciseKey}_guide",
+                guide = "${exerciseKey.first}_guide",
                 targetMuscleGroups = exerciseKey.second,
                 default = true,
             )
