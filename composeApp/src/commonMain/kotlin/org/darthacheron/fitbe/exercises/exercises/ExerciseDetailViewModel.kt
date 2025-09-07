@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.database.equipmentList
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipment // Assuming TrainingEquipment is accessible
-// Assuming MuscleGroup is accessible, e.g., defined in this package or imported
+// Assuming MuscleGroup is accessible and has an 'id' property, e.g., defined in this package or imported
 // import org.darthacheron.fitbe.shared.MuscleGroup 
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.FitBeViewModel
@@ -65,6 +64,14 @@ class ExerciseDetailViewModel(
     private val _saveCompletedEvent = MutableSharedFlow<Unit>()
     val saveCompletedEvent = _saveCompletedEvent.asSharedFlow()
 
+    // Helper function to compare lists by IDs
+    private fun <T> List<T>.idsEqual(other: List<T>, idSelector: (T) -> Any): Boolean {
+        if (this.size != other.size) return false
+        // If both are empty, they are equal by IDs.
+        // If sizes are equal and not zero, compare the sets of IDs.
+        return this.map(idSelector).toSet() == other.map(idSelector).toSet()
+    }
+
     fun loadExercise(exerciseIdString: String?) {
         if (exerciseIdString == null) {
             _uiState.update {
@@ -97,9 +104,6 @@ class ExerciseDetailViewModel(
                 if (currentExerciseWithEquipment != null) {
                     if (currentExerciseWithEquipment.default) {
                         val originalDefaultExercise = exerciseRepository.getDefaultExerciseWithEquipment(currentExerciseWithEquipment.id).firstOrNull()
-                        // Note: originalDefaultExercise (type Exercise) does not contain equipment.
-                        // For persistedDefaultEquipmentList, we'll use the currentExerciseWithEquipment's list as the initial baseline for a default item.
-                        // A more robust solution would involve fetching the original default equipment configuration if it can differ.
                         _uiState.update {
                             it.copy(
                                 name = currentExerciseWithEquipment.name,
@@ -108,19 +112,19 @@ class ExerciseDetailViewModel(
                                 equipmentList = currentExerciseWithEquipment.equipmentList,
                                 default = true,
                                 isLoading = false,
-                                isEditing = true, // Default to edit mode for existing exercises too
+                                isEditing = true,
                                 exerciseId = currentExerciseWithEquipment.id,
                                 error = null,
                                 persistedDefaultName = originalDefaultExercise?.name,
                                 persistedDefaultGuide = originalDefaultExercise?.guide,
                                 persistedDefaultMuscleGroups = originalDefaultExercise?.targetMuscleGroups,
-                                persistedDefaultEquipmentList = originalDefaultExercise?.equipmentList, // Baseline for default equipment
+                                persistedDefaultEquipmentList = originalDefaultExercise?.equipmentList,
                                 isModifiedFromPersistedDefault = if (originalDefaultExercise != null) {
                                     (currentExerciseWithEquipment.name != originalDefaultExercise.name ||
                                      currentExerciseWithEquipment.guide != originalDefaultExercise.guide ||
-                                     !currentExerciseWithEquipment.targetMuscleGroups.equalsSet(originalDefaultExercise.targetMuscleGroups) ||
-                                     !currentExerciseWithEquipment.equipmentList.equalsSet(originalDefaultExercise.equipmentList)) // TODO: Need a robust equalsSet for list comparison if order doesn't matter
-                                } else { false }
+                                     !currentExerciseWithEquipment.targetMuscleGroups.idsEqual(originalDefaultExercise.targetMuscleGroups) { mg -> mg.ordinal } ||
+                                     !currentExerciseWithEquipment.equipmentList.idsEqual(originalDefaultExercise.equipmentList) { eq -> eq.id })
+                                } else { false } // Should not happen if item is default and originalDefaultExercise is null
                             )
                         }
                     } else { // Not a default item
@@ -132,7 +136,7 @@ class ExerciseDetailViewModel(
                                 equipmentList = currentExerciseWithEquipment.equipmentList,
                                 default = false,
                                 isLoading = false,
-                                isEditing = true, // Default to edit mode
+                                isEditing = true,
                                 exerciseId = currentExerciseWithEquipment.id,
                                 error = null,
                                 persistedDefaultName = null,
@@ -160,18 +164,13 @@ class ExerciseDetailViewModel(
         }
     }
 
-    private fun <T> List<T>.equalsSet(other: List<T>?): Boolean {
-        if (other == null) return false
-        return this.size == other.size && this.toSet() == other.toSet()
-    }
-
     fun onNameChange(name: String) {
         _uiState.update { currentState ->
             val modified = if (currentState.default) {
                 (name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.equalsSet(currentState.persistedDefaultMuscleGroups ?: emptyList()) ||
-                 !currentState.equipmentList.equalsSet(currentState.persistedDefaultEquipmentList ?: emptyList()))
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(name = name, error = null, isModifiedFromPersistedDefault = modified)
         }
@@ -182,8 +181,8 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                 (currentState.name != currentState.persistedDefaultName ||
                  guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.equalsSet(currentState.persistedDefaultMuscleGroups ?: emptyList()) ||
-                 !currentState.equipmentList.equalsSet(currentState.persistedDefaultEquipmentList ?: emptyList()))
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(guide = guide, error = null, isModifiedFromPersistedDefault = modified)
         }
@@ -194,8 +193,8 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                 (currentState.name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !muscleGroups.equalsSet(currentState.persistedDefaultMuscleGroups ?: emptyList()) ||
-                 !currentState.equipmentList.equalsSet(currentState.persistedDefaultEquipmentList ?: emptyList()))
+                 !muscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !currentState.equipmentList.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(targetMuscleGroups = muscleGroups, error = null, isModifiedFromPersistedDefault = modified)
         }
@@ -206,8 +205,8 @@ class ExerciseDetailViewModel(
             val modified = if (currentState.default) {
                  (currentState.name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
-                 !currentState.targetMuscleGroups.equalsSet(currentState.persistedDefaultMuscleGroups ?: emptyList()) ||
-                 !equipment.equalsSet(currentState.persistedDefaultEquipmentList ?: emptyList()))
+                 !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
+                 !equipment.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(equipmentList = equipment, error = null, isModifiedFromPersistedDefault = modified)
         }
@@ -233,22 +232,19 @@ class ExerciseDetailViewModel(
             )
 
             try {
-                // IMPORTANT: Persisting equipmentList with the exercise is not directly handled by
-                // exerciseRepository.upsertExercise(Exercise). This linkage needs to be handled
-                // in the repository/DAO layer, possibly by a separate method or by modifying Exercise entity/DAO.
                 exerciseRepository.upsertExercise(exerciseToSave)
-                // Example: exerciseRepository.updateExerciseEquipmentLinks(exerciseToSave.id, currentState.equipmentList.map { it.id })
+                // TODO: Handle upserting ExerciseEquipmentLink entities
 
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        isEditing = false,
+                        isEditing = false, // Or true, depending on desired behavior post-save
                         exerciseId = exerciseToSave.id,
                         name = exerciseToSave.name,
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
-                        // equipmentList remains as is in UI state, or could be re-fetched
                         error = null,
+                        isModifiedFromPersistedDefault = false // Reset after save
                     )
                 }
                 _saveCompletedEvent.emit(Unit)
@@ -296,6 +292,7 @@ class ExerciseDetailViewModel(
                     dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
                 )
                 exerciseRepository.deleteExercise(exerciseToDelete)
+                // TODO: Handle deleting ExerciseEquipmentLink entities
                 navHostController.popBackStack()
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = "Failed to delete exercise: ${e.message}") }
