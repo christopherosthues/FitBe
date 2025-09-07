@@ -27,6 +27,7 @@ import org.darthacheron.fitbe.exercises.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.exercises.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.exercises.exercises.DefaultExerciseEntity
+import org.darthacheron.fitbe.exercises.exercises.DefaultExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -49,7 +50,8 @@ import kotlin.uuid.ExperimentalUuidApi
         BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
-        DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class
+        DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
+        DefaultExerciseEquipmentCrossRef::class
                ],
     version = 1
 )

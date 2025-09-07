@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.database.equipmentList
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipment // Assuming TrainingEquipment is accessible
 // Assuming MuscleGroup is accessible, e.g., defined in this package or imported
 // import org.darthacheron.fitbe.shared.MuscleGroup 
@@ -95,7 +96,7 @@ class ExerciseDetailViewModel(
 
                 if (currentExerciseWithEquipment != null) {
                     if (currentExerciseWithEquipment.default) {
-                        val originalDefaultExercise = exerciseRepository.getDefaultExerciseId(currentExerciseWithEquipment.id).firstOrNull()
+                        val originalDefaultExercise = exerciseRepository.getDefaultExerciseWithEquipment(currentExerciseWithEquipment.id).firstOrNull()
                         // Note: originalDefaultExercise (type Exercise) does not contain equipment.
                         // For persistedDefaultEquipmentList, we'll use the currentExerciseWithEquipment's list as the initial baseline for a default item.
                         // A more robust solution would involve fetching the original default equipment configuration if it can differ.
@@ -110,10 +111,10 @@ class ExerciseDetailViewModel(
                                 isEditing = true, // Default to edit mode for existing exercises too
                                 exerciseId = currentExerciseWithEquipment.id,
                                 error = null,
-                                persistedDefaultName = originalDefaultExercise?.name ?: currentExerciseWithEquipment.name,
-                                persistedDefaultGuide = originalDefaultExercise?.guide ?: currentExerciseWithEquipment.guide,
-                                persistedDefaultMuscleGroups = originalDefaultExercise?.targetMuscleGroups ?: currentExerciseWithEquipment.targetMuscleGroups,
-                                persistedDefaultEquipmentList = currentExerciseWithEquipment.equipmentList, // Baseline for default equipment
+                                persistedDefaultName = originalDefaultExercise?.name,
+                                persistedDefaultGuide = originalDefaultExercise?.guide,
+                                persistedDefaultMuscleGroups = originalDefaultExercise?.targetMuscleGroups,
+                                persistedDefaultEquipmentList = originalDefaultExercise?.equipmentList, // Baseline for default equipment
                                 isModifiedFromPersistedDefault = if (originalDefaultExercise != null) {
                                     (currentExerciseWithEquipment.name != originalDefaultExercise.name ||
                                      currentExerciseWithEquipment.guide != originalDefaultExercise.guide ||
@@ -241,18 +242,13 @@ class ExerciseDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        // isEditing = false, // Or true, depending on desired behavior post-save
+                        isEditing = false,
                         exerciseId = exerciseToSave.id,
                         name = exerciseToSave.name,
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
                         // equipmentList remains as is in UI state, or could be re-fetched
                         error = null,
-                        persistedDefaultName = if(it.default) exerciseToSave.name else null,
-                        persistedDefaultGuide = if(it.default) exerciseToSave.guide else null,
-                        persistedDefaultMuscleGroups = if(it.default) exerciseToSave.targetMuscleGroups else null,
-                        persistedDefaultEquipmentList = if(it.default) currentState.equipmentList else null,
-                        isModifiedFromPersistedDefault = false // Reset after save
                     )
                 }
                 _saveCompletedEvent.emit(Unit)

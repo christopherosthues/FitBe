@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.exercises.equipment
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
@@ -79,7 +78,7 @@ class TrainingEquipmentDetailViewModel(
                 if (currentEquipment != null) {
                     if (currentEquipment.default) {
                         // Fetch the true default values from default_training_equipment table
-                        val persistedDefaultEntity = equipmentRepository.getDefaultEquipmentById(currentEquipment.id).firstOrNull()
+                        val originalDefaultEquipment = equipmentRepository.getDefaultEquipmentById(currentEquipment.id).firstOrNull()
                         _uiState.update {
                             it.copy(
                                 name = currentEquipment.name,
@@ -89,10 +88,10 @@ class TrainingEquipmentDetailViewModel(
                                 isEditing = true,
                                 equipmentId = currentEquipment.id,
                                 error = null,
-                                persistedDefaultName = persistedDefaultEntity?.name,
-                                persistedDefaultImageUri = persistedDefaultEntity?.imageUri,
-                                isModifiedFromPersistedDefault = if (persistedDefaultEntity != null) {
-                                    (currentEquipment.name != persistedDefaultEntity.name || currentEquipment.imageUri != persistedDefaultEntity.imageUri)
+                                persistedDefaultName = originalDefaultEquipment?.name,
+                                persistedDefaultImageUri = originalDefaultEquipment?.imageUri,
+                                isModifiedFromPersistedDefault = if (originalDefaultEquipment != null) {
+                                    (currentEquipment.name != originalDefaultEquipment.name || currentEquipment.imageUri != originalDefaultEquipment.imageUri)
                                 } else {
                                     false // Should not happen if item is default, but defensive
                                 },

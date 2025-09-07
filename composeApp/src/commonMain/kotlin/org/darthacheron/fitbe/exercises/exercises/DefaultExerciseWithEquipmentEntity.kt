@@ -1,0 +1,34 @@
+package org.darthacheron.fitbe.exercises.exercises
+
+import androidx.room.Embedded
+import androidx.room.Junction
+import androidx.room.Relation
+import org.darthacheron.fitbe.exercises.equipment.DefaultTrainingEquipmentEntity
+import kotlin.uuid.ExperimentalUuidApi
+
+class DefaultExerciseWithEquipmentEntity(
+    @Embedded val exercise: DefaultExerciseEntity,
+    @Relation(
+        parentColumn = "id", // From ExerciseEntity (the @Embedded entity)
+        entityColumn = "id",   // From TrainingEquipmentEntity (the entity in the List)
+        associateBy = Junction(
+            value = DefaultExerciseEquipmentCrossRef::class,
+            parentColumn = "exerciseId", // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
+            entityColumn = "equipmentId" // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
+        )
+    )
+    val equipmentList: List<DefaultTrainingEquipmentEntity>
+) {
+    @OptIn(ExperimentalUuidApi::class)
+    fun toDefaultExerciseWithEquipment(): ExerciseWithEquipment {
+        return ExerciseWithEquipment(
+            id = exercise.id,
+            name = exercise.name,
+            guide = exercise.guide,
+            targetMuscleGroups = exercise.targetMuscleGroups,
+            default = true,
+            dateUtc = exercise.dateUtc,
+            equipmentList = equipmentList.map { it.toTrainingEquipment() }
+        )
+    }
+}

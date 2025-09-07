@@ -29,6 +29,10 @@ interface ExerciseDao { // Example, you might have separate DAOs
     @Query("SELECT * FROM default_exercises WHERE id = :exerciseId")
     suspend fun getDefaultExerciseByIdForReset(exerciseId: Uuid): DefaultExerciseEntity?
 
+    @Transaction // Important for relations
+    @Query("SELECT * FROM default_exercises WHERE id = :exerciseId")
+    fun getDefaultExerciseWithEquipment(exerciseId: Uuid): Flow<DefaultExerciseWithEquipmentEntity?>
+
     @Transaction
     suspend fun resetExerciseToDefault(equipmentId: Uuid) {
         val defaultExercise = getDefaultExerciseByIdForReset(equipmentId)
@@ -42,7 +46,6 @@ interface ExerciseDao { // Example, you might have separate DAOs
 
     @Query("DELETE FROM exercise_equipment_cross_ref WHERE exerciseId = :exerciseId AND equipmentId = :equipmentId")
     suspend fun removeExerciseEquipmentCrossRef(exerciseId: Uuid, equipmentId: Uuid)
-
 
     @Transaction // Important for relations
     @Query("SELECT * FROM exercises WHERE id = :exerciseId")

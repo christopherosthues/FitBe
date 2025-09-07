@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -124,7 +125,9 @@ fun ExerciseDetailView(
                     // Equipment List Display & Edit Button
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text("Required Equipment", style = MaterialTheme.typography.titleMedium) // TODO: SR
-                        Text(uiState.equipmentList.joinToString { getEquipmentName(it.name, it.default) })
+                        uiState.equipmentList.forEach {
+                            Text(text = getEquipmentName(it.name, it.default))
+                        }
                         if (isInEditMode) {
                             Button(onClick = { /* TODO: Implement equipment selection */ }) {
                                 Text("Edit Equipment") // TODO: SR
