@@ -25,19 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_button_select_image
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_image_content_description
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_label_name
-import fitbe.composeapp.generated.resources.add_edit_training_equipment_reset_to_default
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
@@ -47,7 +40,16 @@ import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_verified
-import fitbe.composeapp.generated.resources.profile_save
+import fitbe.composeapp.generated.resources.training_equipment_detail_button_select_image
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_cancel_editing
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_default_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_delete
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_edit
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_image
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_remove_image
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_reset_to_default
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_save
+import fitbe.composeapp.generated.resources.training_equipment_detail_name
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -67,13 +69,11 @@ fun TrainingEquipmentDetailView(
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
-    var isInEditMode by remember { mutableStateOf(equipmentId == null) }
-
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
         mode = FileKitMode.Single,
         onResult = {
-            if (it != null && isInEditMode) {
+            if (it != null && uiState.isEditing) {
                 viewModel.onImageUriChange(it.absolutePath())
             }
         }
@@ -81,14 +81,10 @@ fun TrainingEquipmentDetailView(
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
-        isInEditMode = (equipmentId == null)
     }
 
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
-        viewModel.saveCompletedEvent.collect {
-            isInEditMode = false
-        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -98,7 +94,7 @@ fun TrainingEquipmentDetailView(
                 .fillMaxSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
         ) {
-            if (uiState.isLoading && uiState.equipmentId != null && !isInEditMode) {
+            if (uiState.isLoading && uiState.equipmentId != null && !uiState.isEditing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
                 Column(
@@ -111,54 +107,64 @@ fun TrainingEquipmentDetailView(
                             ImageWithDefault(
                                 imageUri = uiState.imageUri,
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.add_edit_training_equipment_image_content_description),
+                                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_image),
                                 modifier = Modifier.size(256.dp).align(Alignment.Center)
                             )
-                            if (isInEditMode) {
+                            if (uiState.isEditing) {
                                 IconButton(
                                     onClick = { viewModel.onImageUriChange(null) },
                                     modifier = Modifier.align(Alignment.TopEnd),
-                                    enabled = isInEditMode
+                                    enabled = uiState.isEditing
                                 ) {
                                     Icon(
                                         painter = painterResource(Res.drawable.ic_remove),
-                                        contentDescription = "Remove image" // TODO: String resource
+                                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_remove_image)
                                     )
                                 }
                             }
                         } else {
                             ImagePlaceholder(uiState = uiState)
                         }
-                        if (isInEditMode) {
+                        if (uiState.isEditing) {
                             IconButton(
                                 onClick = { galleryLauncher.launch() },
                                 modifier = Modifier.align(Alignment.BottomStart),
-                                enabled = isInEditMode
+                                enabled = uiState.isEditing
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_photo_library),
-                                    contentDescription = stringResource(Res.string.add_edit_training_equipment_button_select_image)
+                                    contentDescription = stringResource(Res.string.training_equipment_detail_button_select_image)
                                 )
                             }
                         }
                     }
 
                     OutlinedTextField(
-                        value = getEquipmentName(uiState.name, uiState.default),
-                        onValueChange = { if (isInEditMode) viewModel.onNameChange(it) },
-                        label = { Text(stringResource(Res.string.add_edit_training_equipment_label_name)) },
+                        value = uiState.name, // Display raw name, not getEquipmentName
+                        onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
+                        label = { Text(stringResource(Res.string.training_equipment_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        readOnly = !isInEditMode,
-                        isError = uiState.error != null && uiState.name.isBlank(),
-                        supportingText = { 
-                            if (uiState.error != null && uiState.name.isBlank()) Text(uiState.error!!) 
+                        readOnly = !uiState.isEditing,
+                        isError = uiState.error.hasNameError,
+                        supportingText = {
+                            if (uiState.error.hasNameError) {
+                                Text(stringResource(uiState.error.nameError!!))
+                            }
+                        },
+                        trailingIcon = {
+                            if (uiState.default && !uiState.isEditing) { // Show verified icon only when not editing and it's a default item
+                                Icon(
+                                    painterResource(Res.drawable.ic_verified),
+                                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment)
+                                )
+                            }
                         }
                     )
 
-                    if (uiState.error != null && !(uiState.name.isBlank() && isInEditMode)) {
+                    if (uiState.error.hasGeneralError) {
                         Text(
-                            text = uiState.error!!,
+                            text = stringResource(uiState.error.generalError!!),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(top = 8.dp)
@@ -169,7 +175,7 @@ fun TrainingEquipmentDetailView(
         }
 
         AnimatedVisibility(
-            visible = isInEditMode && uiState.equipmentId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
+            visible = uiState.isEditing && uiState.equipmentId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
             FloatingActionButton(
@@ -179,7 +185,7 @@ fun TrainingEquipmentDetailView(
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_reset_default),
-                    contentDescription = stringResource(Res.string.add_edit_training_equipment_reset_to_default)
+                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_reset_to_default)
                 )
             }
         }
@@ -190,18 +196,18 @@ fun TrainingEquipmentDetailView(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(!isInEditMode && uiState.equipmentId != null && !uiState.default) {
+            AnimatedVisibility(!uiState.isEditing && uiState.equipmentId != null && !uiState.default) {
                 FloatingActionButton(
                     onClick = {
                         if (!uiState.isLoading) {
                             viewModel.deleteEquipment()
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
-                        contentDescription = "Delete Equipment" // TODO: stringResource(Res.string.delete_equipment_content_description)
+                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_delete)
                     )
                 }
             }
@@ -213,48 +219,50 @@ fun TrainingEquipmentDetailView(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(isInEditMode && uiState.equipmentId != null) {
+            AnimatedVisibility(uiState.isEditing && uiState.equipmentId != null && !uiState.isModifiedFromPersistedDefault) {
                 FloatingActionButton(
                     onClick = {
-                        viewModel.loadEquipment(uiState.equipmentId.toString())
-                        isInEditMode = false
+                        viewModel.loadEquipment(uiState.equipmentId.toString()) // Reload original state
+                        viewModel.setEditing(false)
                     },
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     modifier = Modifier.padding(end = 16.dp)
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_cancel),
-                        contentDescription = "Cancel" // TODO: stringResource(Res.string.cancel_editing_content_description)
+                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_cancel_editing)
                     )
                 }
             }
 
-            AnimatedVisibility(isInEditMode) {
+            AnimatedVisibility(uiState.isEditing) {
                 FloatingActionButton(
                     onClick = {
-                        if (!uiState.isLoading) {
+                        if (!uiState.isLoading && !uiState.error.hasError) {
                             viewModel.saveEquipment()
                         }
                     },
-                    containerColor = if (!uiState.isLoading) MaterialTheme.colorScheme.primary else Color.Gray,
+                    containerColor = if (!uiState.isLoading && !uiState.error.hasError) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.12f
+                    ),
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = stringResource(Res.string.profile_save)
+                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_save)
                     )
                 }
             }
 
-            AnimatedVisibility(!isInEditMode && uiState.equipmentId != null) {
+            AnimatedVisibility(!uiState.isEditing && uiState.equipmentId != null) {
                 FloatingActionButton(
                     onClick = {
-                        isInEditMode = true
+                        viewModel.setEditing(true)
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_edit),
-                        contentDescription = /*Res.string.edit_equipment_content_description*/ "Edit Equipment"
+                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_edit)
                     )
                 }
             }
@@ -263,7 +271,7 @@ fun TrainingEquipmentDetailView(
 }
 
 @Composable
-private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) { 
+private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
     Box(
         modifier = Modifier
             .size(256.dp)
@@ -271,27 +279,21 @@ private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(Res.drawable.ic_launcher), 
-            contentDescription = null, 
-            modifier = Modifier.size(256.dp),
-            contentScale = ContentScale.Crop
+            painter = painterResource(Res.drawable.ic_launcher), // Replace with a more generic placeholder if available
+            contentDescription = null, // Decorative
+            modifier = Modifier.size(128.dp), // Smaller icon for placeholder
+            contentScale = ContentScale.Fit
         )
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
-                .background(Color.Black.copy(alpha = 0.6f))
+                .background(Color.Black.copy(alpha = 0.3f))
                 .fillMaxSize()
-        ) {
-            Text(
-                text = stringResource(Res.string.add_edit_training_equipment_image_content_description),
-                modifier = Modifier.align(Alignment.Center).padding(16.dp),
-                color = Color.White
-            )
-        }
-        if (uiState.default) {
+        )
+        if (uiState.default && !uiState.isEditing) { // Show verified icon only when not editing and it's a default item
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
-                contentDescription = "Default equipment", // TODO: String resource
+                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment),
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(8.dp)

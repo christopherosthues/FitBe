@@ -176,7 +176,7 @@ class ExerciseDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = it.error.copy(
+                            error = ExerciseError(
                                 hasGeneralError = true,
                                 generalError = Res.string.exercise_detail_error_exercise_not_found
                             ),
@@ -192,7 +192,7 @@ class ExerciseDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = it.error.copy(
+                        error = ExerciseError(
                             hasGeneralError = true,
                             generalError = Res.string.exercise_detail_error_loading_exercise
                         ),
@@ -212,12 +212,8 @@ class ExerciseDetailViewModel(
     }
 
     fun onNameChange(name: String) {
-        var hasNameError = false
-        var nameError: StringResource? = null
-        if (name.isBlank()) {
-            hasNameError = true
-            nameError = Res.string.exercise_detail_error_missing_name
-        }
+        val nameError =
+            if (name.isBlank()) Res.string.exercise_detail_error_missing_name else null
         // TODO: check if exercise with same name already exists
         // set hasNameError = true and nameError = Res.string.exercise_detail_error_name_already_exists
 
@@ -230,19 +226,15 @@ class ExerciseDetailViewModel(
             } else { false }
             currentState.copy(
                 name = name,
-                error = currentState.error.copy(hasNameError = hasNameError, nameError = nameError),
+                error = currentState.error.copy(hasNameError = nameError != null, nameError = nameError),
                 isModifiedFromPersistedDefault = modified
             )
         }
     }
 
     fun onGuideChange(guide: String) {
-        var hasGuideError = false
-        var guideError: StringResource? = null
-        if (guide.isBlank()) {
-            hasGuideError = true
-            guideError = Res.string.exercise_detail_error_missing_guide
-        }
+        val guideError =
+            if (guide.isBlank()) Res.string.exercise_detail_error_missing_guide else null
 
         _uiState.update { currentState ->
             val modified = if (currentState.default) {
@@ -254,7 +246,7 @@ class ExerciseDetailViewModel(
             currentState.copy(
                 guide = guide,
                 error = currentState.error.copy(
-                    hasGuideError = hasGuideError,
+                    hasGuideError = guideError != null,
                     guideError = guideError
                 ),
                 isModifiedFromPersistedDefault = modified
@@ -263,12 +255,8 @@ class ExerciseDetailViewModel(
     }
 
     private fun onTargetMuscleGroupsChange(muscleGroups: List<MuscleGroup>) {
-        var hasMuscleGroupError = false
-        var muscleGroupError: StringResource? = null
-        if (muscleGroups.isEmpty()) {
-            hasMuscleGroupError = true
-            muscleGroupError = Res.string.exercise_detail_error_missing_muscle_group
-        }
+        val muscleGroupError =
+            if (muscleGroups.isEmpty()) Res.string.exercise_detail_error_missing_muscle_group else null
 
          _uiState.update { currentState ->
             val modified = if (currentState.default) {
@@ -280,7 +268,7 @@ class ExerciseDetailViewModel(
              currentState.copy(
                  targetMuscleGroups = muscleGroups,
                  error = currentState.error.copy(
-                     hasMuscleGroupError = hasMuscleGroupError,
+                     hasMuscleGroupError = muscleGroupError != null,
                      muscleGroupError = muscleGroupError
                  ),
                  isModifiedFromPersistedDefault = modified
@@ -364,22 +352,18 @@ class ExerciseDetailViewModel(
 
     fun resetExerciseToDefault() {
         val currentState = _uiState.value
-        if (currentState.exerciseId == null) {
+        val errorRes = when {
+            currentState.exerciseId == null -> Res.string.exercise_detail_error_reset_new_exercise
+            !currentState.default -> Res.string.exercise_detail_error_reset_non_default_exercise
+            else -> null // No error, proceed with reset
+        }
+
+        if (errorRes != null) {
             _uiState.update {
                 it.copy(
-                    error = it.error.copy(
+                    error = ExerciseError(
                         hasGeneralError = true,
-                        generalError = Res.string.exercise_detail_error_reset_new_exercise
-                    )
-                )
-            }
-            return
-        } else if (!currentState.default) {
-            _uiState.update {
-                it.copy(
-                    error = it.error.copy(
-                        hasGeneralError = true,
-                        generalError = Res.string.exercise_detail_error_reset_non_default_exercise
+                        generalError = errorRes
                     )
                 )
             }
@@ -389,8 +373,10 @@ class ExerciseDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                exerciseRepository.resetExerciseToDefault(currentState.exerciseId)
-                loadExercise(currentState.exerciseId.toString()) 
+                currentState.exerciseId?.let {
+                    exerciseRepository.resetExerciseToDefault(currentState.exerciseId)
+                    loadExercise(currentState.exerciseId.toString())
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
@@ -407,22 +393,18 @@ class ExerciseDetailViewModel(
 
     fun deleteExercise() {
         val currentState = _uiState.value
-        if (currentState.exerciseId == null) {
+        val errorRes = when {
+            currentState.exerciseId == null -> Res.string.exercise_detail_error_delete_new_exercise
+            currentState.default -> Res.string.exercise_detail_error_delete_default_exercise
+            else -> null // No error, proceed with delete
+        }
+
+        if (errorRes != null) {
             _uiState.update {
                 it.copy(
-                    error = it.error.copy(
+                    error = ExerciseError(
                         hasGeneralError = true,
-                        generalError = Res.string.exercise_detail_error_delete_new_exercise
-                    )
-                )
-            }
-            return
-        } else if (!currentState.default) {
-            _uiState.update {
-                it.copy(
-                    error = it.error.copy(
-                        hasGeneralError = true,
-                        generalError = Res.string.exercise_detail_error_delete_default_exercise
+                        generalError = errorRes
                     )
                 )
             }
@@ -432,16 +414,18 @@ class ExerciseDetailViewModel(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                val exerciseToDelete = Exercise( 
-                    id = currentState.exerciseId,
-                    name = currentState.name,
-                    guide = currentState.guide,
-                    targetMuscleGroups = currentState.targetMuscleGroups,
-                    default = currentState.default,
-                    dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
-                )
-                exerciseRepository.deleteExercise(exerciseToDelete)
-                navHostController.popBackStack()
+                currentState.exerciseId?.let { exerciseId ->
+                    val exerciseToDelete = Exercise(
+                        id = exerciseId,
+                        name = currentState . name,
+                        guide = currentState.guide,
+                        targetMuscleGroups = currentState.targetMuscleGroups,
+                        default = currentState.default,
+                        dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                    )
+                    exerciseRepository.deleteExercise(exerciseToDelete)
+                    navHostController.popBackStack()
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(

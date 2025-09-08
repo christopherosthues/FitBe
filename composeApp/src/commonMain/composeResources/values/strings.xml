@@ -261,11 +261,26 @@
     <string name="default_training_equipment_spotter_arms">Spotter Arms</string>
     <string name="training_equipment_add">Add equipment</string>
 
-    <string name="add_edit_training_equipment_button_select_image">Select Image</string>
-    <string name="add_edit_training_equipment_button_take_photo">Take Photo</string>
-    <string name="add_edit_training_equipment_image_content_description">Training Equipment Image</string>
-    <string name="add_edit_training_equipment_label_name">Name</string>
-    <string name="add_edit_training_equipment_reset_to_default">Reset to Default</string>
+    <string name="training_equipment_detail_button_select_image">Select Image</string>
+    <string name="training_equipment_detail_content_description_image">Training Equipment Image</string>
+    <string name="training_equipment_detail_name">Name</string>
+    <string name="training_equipment_detail_content_description_reset_to_default">Reset training equipment to default</string>
+    <string name="training_equipment_detail_content_description_remove_image">Remove image</string>
+    <string name="training_equipment_detail_content_description_delete">Delete equipment</string>
+    <string name="training_equipment_detail_content_description_cancel_editing">Cancel editing</string>
+    <string name="training_equipment_detail_content_description_save">Save equipment</string>
+    <string name="training_equipment_detail_content_description_edit">Edit equipment</string>
+    <string name="training_equipment_detail_content_description_default_equipment">Default equipment</string>
+    <string name="training_equipment_detail_error_not_found">Equipment not found</string>
+    <string name="training_equipment_detail_error_loading">Failed to load equipment</string>
+    <string name="training_equipment_detail_error_missing_name">Name cannot be empty</string>
+    <string name="training_equipment_detail_error_saving">Failed to save equipment</string>
+    <string name="training_equipment_detail_error_reset_default_exercise">Failed to reset equipment</string>
+    <string name="training_equipment_detail_error_reset_new_equipment">Cannot reset new equipment.</string>
+    <string name="training_equipment_detail_error_reset_non_default_equipment">Cannot reset non-default equipment.</string>
+    <string name="training_equipment_detail_error_delete_equipment">Failed to delete equipment</string>
+    <string name="training_equipment_detail_error_delete_new_equipment">Cannot delete new equipment.</string>
+    <string name="training_equipment_detail_error_delete_default_equipment">Cannot delete default equipment.</string>
 
     <string name="settings_content_description_title">Open settings</string>
 
@@ -276,7 +291,7 @@
     <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
     <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
     <string name="exercise_detail_content_description_delete">Delete exercise</string>
-    <string name="exercise_detail_content_description_cancel">Cancel</string>
+    <string name="exercise_detail_content_description_cancel">Cancel editing</string>
     <string name="exercise_detail_content_description_save">Save exercise</string>
     <string name="exercise_detail_content_description_edit">Edit Exercise</string>
     <string name="exercise_detail_error_exercise_not_found">Exercise not found</string>
@@ -287,9 +302,9 @@
     <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
     <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
     <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
-    <string name="exercise_detail_error_delete_exercise">Failed to delete exercise</string>
     <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
     <string name="exercise_detail_error_reset_non_default_exercise">Cannot reset non-default exercise</string>
+    <string name="exercise_detail_error_delete_exercise">Failed to delete exercise</string>
     <string name="exercise_detail_error_delete_new_exercise">Cannot delete a new exercise</string>
     <string name="exercise_detail_error_delete_default_exercise">Cannot delete a default exercise</string>
 </resources>

@@ -4,10 +4,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_add_edit_training_equipment
-import kotlinx.coroutines.flow.MutableSharedFlow
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_delete_default_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_delete_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_delete_new_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_loading
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_name_blank
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_not_found
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_default_exercise
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_new_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_non_default_equipment
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_saving
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
@@ -23,6 +31,16 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+data class TrainingEquipmentError(
+    val hasGeneralError: Boolean = false,
+    val generalError: StringResource? = null,
+    val hasNameError: Boolean = false,
+    val nameError: StringResource? = null
+) {
+    val hasError: Boolean
+        get() = hasGeneralError || hasNameError
+}
+
 @OptIn(ExperimentalUuidApi::class)
 data class AddEditTrainingEquipmentUiState(
     val name: String = "",
@@ -31,7 +49,7 @@ data class AddEditTrainingEquipmentUiState(
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val equipmentId: Uuid? = null,
-    val error: String? = null,
+    val error: TrainingEquipmentError = TrainingEquipmentError(),
     val persistedDefaultName: String? = null,
     val persistedDefaultImageUri: String? = null,
     val isModifiedFromPersistedDefault: Boolean = false,
@@ -56,15 +74,21 @@ class TrainingEquipmentDetailViewModel(
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())
     val uiState: StateFlow<AddEditTrainingEquipmentUiState> = _uiState.asStateFlow()
 
-    private val _saveCompletedEvent = MutableSharedFlow<Unit>()
-    val saveCompletedEvent = _saveCompletedEvent.asSharedFlow()
-
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
             _uiState.update {
                 it.copy(
-                    isLoading = false, isEditing = false, default = false, equipmentId = null, name = "", imageUri = null, error = null,
-                    persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false, exercises = emptyList(),
+                    isLoading = false,
+                    isEditing = true,
+                    default = false,
+                    equipmentId = null,
+                    name = "",
+                    imageUri = null,
+                    error = TrainingEquipmentError(),
+                    persistedDefaultName = null,
+                    persistedDefaultImageUri = null,
+                    isModifiedFromPersistedDefault = false,
+                    exercises = emptyList(),
                 )
             }
             return
@@ -74,41 +98,43 @@ class TrainingEquipmentDetailViewModel(
         viewModelScope.launch {
             try {
                 val parsedEquipmentId = Uuid.parse(equipmentIdString)
-                val currentEquipment = equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId).firstOrNull()
+                val currentEquipment =
+                    equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId)
+                        .firstOrNull()
                 if (currentEquipment != null) {
                     if (currentEquipment.default) {
-                        // Fetch the true default values from default_training_equipment table
-                        val originalDefaultEquipment = equipmentRepository.getDefaultEquipmentById(currentEquipment.id).firstOrNull()
+                        val originalDefaultEquipment =
+                            equipmentRepository.getDefaultEquipmentById(currentEquipment.id)
+                                .firstOrNull()
                         _uiState.update {
                             it.copy(
                                 name = currentEquipment.name,
                                 imageUri = currentEquipment.imageUri,
                                 default = true,
                                 isLoading = false,
-                                isEditing = true,
+                                isEditing = false,
                                 equipmentId = currentEquipment.id,
-                                error = null,
+                                error = TrainingEquipmentError(),
                                 persistedDefaultName = originalDefaultEquipment?.name,
                                 persistedDefaultImageUri = originalDefaultEquipment?.imageUri,
                                 isModifiedFromPersistedDefault = if (originalDefaultEquipment != null) {
                                     (currentEquipment.name != originalDefaultEquipment.name || currentEquipment.imageUri != originalDefaultEquipment.imageUri)
                                 } else {
-                                    false // Should not happen if item is default, but defensive
+                                    false
                                 },
                                 exercises = currentEquipment.exercises
                             )
                         }
                     } else {
-                        // Not a default item
                         _uiState.update {
                             it.copy(
                                 name = currentEquipment.name,
                                 imageUri = currentEquipment.imageUri,
                                 default = false,
                                 isLoading = false,
-                                isEditing = true,
+                                isEditing = false,
                                 equipmentId = currentEquipment.id,
-                                error = null,
+                                error = TrainingEquipmentError(),
                                 persistedDefaultName = null,
                                 persistedDefaultImageUri = null,
                                 isModifiedFromPersistedDefault = false,
@@ -118,19 +144,41 @@ class TrainingEquipmentDetailViewModel(
                     }
                 } else {
                     _uiState.update {
-                        it.copy(isLoading = false, error = "Equipment not found", isEditing = false,
-                                persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false,
-                                exercises = emptyList())
+                        it.copy(
+                            isLoading = false,
+                            error = TrainingEquipmentError(
+                                hasGeneralError = true,
+                                generalError = Res.string.training_equipment_detail_error_not_found
+                            ),
+                            isEditing = false,
+                            persistedDefaultName = null,
+                            persistedDefaultImageUri = null,
+                            isModifiedFromPersistedDefault = false,
+                            exercises = emptyList()
+                        )
                     }
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(isLoading = false, error = "Failed to load equipment: ${e.message}", isEditing = false,
-                            persistedDefaultName = null, persistedDefaultImageUri = null, isModifiedFromPersistedDefault = false,
-                            exercises = emptyList())
+                    it.copy(
+                        isLoading = false,
+                        error = TrainingEquipmentError(
+                            hasGeneralError = true,
+                            generalError = Res.string.training_equipment_detail_error_loading
+                        ),
+                        isEditing = false,
+                        persistedDefaultName = null,
+                        persistedDefaultImageUri = null,
+                        isModifiedFromPersistedDefault = false,
+                        exercises = emptyList()
+                    )
                 }
             }
         }
+    }
+
+    fun setEditing(isEditing: Boolean) {
+        _uiState.update { it.copy(isEditing = isEditing) }
     }
 
     fun onNameChange(name: String) {
@@ -140,27 +188,52 @@ class TrainingEquipmentDetailViewModel(
             } else {
                 false
             }
-            currentState.copy(name = name, error = null, isModifiedFromPersistedDefault = modified)
+            val nameError =
+                if (name.isBlank()) Res.string.training_equipment_detail_error_missing_name else null
+            currentState.copy(
+                name = name,
+                error = currentState.error.copy(
+                    hasNameError = nameError != null,
+                    nameError = nameError,
+                    hasGeneralError = false,
+                    generalError = null
+                ),
+                isModifiedFromPersistedDefault = modified
+            )
         }
     }
 
     fun onImageUriChange(imageUri: String?) {
         _uiState.update { currentState ->
-            val modified = if (currentState.default && currentState.persistedDefaultName != null) { // Check persistedDefaultName as a proxy for defaults being loaded
+            val modified = if (currentState.default && currentState.persistedDefaultName != null) {
                 (currentState.name != currentState.persistedDefaultName || imageUri != currentState.persistedDefaultImageUri)
             } else {
                 false
             }
-            currentState.copy(imageUri = imageUri, error = null, isModifiedFromPersistedDefault = modified)
+            currentState.copy(
+                imageUri = imageUri,
+                error = currentState.error.copy(hasGeneralError = false, generalError = null),
+                isModifiedFromPersistedDefault = modified
+            )
         }
     }
 
     fun saveEquipment() {
         val currentState = _uiState.value
         if (currentState.name.isBlank()) {
-            _uiState.update { it.copy(error = "Name cannot be empty") }
+            _uiState.update {
+                it.copy(
+                    error = it.error.copy(
+                        hasNameError = true,
+                        nameError = Res.string.training_equipment_detail_error_name_blank,
+                        hasGeneralError = false,
+                        generalError = null
+                    )
+                )
+            }
             return
         }
+        if (currentState.error.hasError) return
 
         _uiState.update { it.copy(isLoading = true) }
 
@@ -175,67 +248,118 @@ class TrainingEquipmentDetailViewModel(
 
             try {
                 equipmentRepository.upsertEquipment(equipmentToSave)
-                // After save, the current state is the new baseline for modification tracking if it's a default item.
-                // The current name/imageUri become the new persistedDefaultName/ImageUri for this session.
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        isEditing = true, 
-                        equipmentId = equipmentToSave.id, 
-                        name = equipmentToSave.name, 
+                        isEditing = false,
+                        equipmentId = equipmentToSave.id,
+                        name = equipmentToSave.name,
                         imageUri = equipmentToSave.imageUri,
-                        error = null
+                        error = TrainingEquipmentError(),
+                        isModifiedFromPersistedDefault = false // Reset modified status after save
                     )
                 }
-                _saveCompletedEvent.emit(Unit)
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Failed to save equipment: ${e.message}") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = TrainingEquipmentError(
+                            hasGeneralError = true,
+                            generalError = Res.string.training_equipment_detail_error_saving
+                        )
+                    )
+                }
             }
         }
     }
 
     fun resetEquipmentToDefault() {
         val currentState = _uiState.value
-        if (currentState.equipmentId == null || !currentState.default) {
-            _uiState.update { it.copy(error = "Cannot reset non-default equipment or new equipment.") }
+        val errorRes = when {
+            currentState.equipmentId == null -> Res.string.training_equipment_detail_error_reset_new_equipment
+            !currentState.default -> Res.string.training_equipment_detail_error_reset_non_default_equipment
+            else -> null // No error, proceed with reset
+        }
+
+        if (errorRes != null) {
+            _uiState.update {
+                it.copy(
+                    error = TrainingEquipmentError(
+                        hasGeneralError = true,
+                        generalError = errorRes
+                    )
+                )
+            }
             return
         }
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                equipmentRepository.resetEquipmentToDefault(currentState.equipmentId)
-                loadEquipment(currentState.equipmentId.toString())
-                _saveCompletedEvent.emit(Unit)
+                currentState.equipmentId?.let { equipmentId ->
+                    equipmentRepository.resetEquipmentToDefault(equipmentId)
+                    loadEquipment(equipmentId.toString())
+                }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Failed to reset equipment: ${e.message}") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = TrainingEquipmentError(
+                            hasGeneralError = true,
+                            generalError = Res.string.training_equipment_detail_error_reset_default_exercise
+                        )
+                    )
+                }
             }
         }
     }
 
     fun deleteEquipment() {
         val currentState = _uiState.value
-        if (currentState.equipmentId == null || currentState.default) {
-            _uiState.update { it.copy(error = "Cannot delete default equipment or new equipment.") }
+        val errorRes = when {
+            currentState.equipmentId == null -> Res.string.training_equipment_detail_error_delete_new_equipment
+            currentState.default -> Res.string.training_equipment_detail_error_delete_default_equipment
+            else -> null // No error, proceed with delete
+        }
+
+        if (errorRes != null) {
+            _uiState.update {
+                it.copy(
+                    error = TrainingEquipmentError(
+                        hasGeneralError = true,
+                        generalError = errorRes
+                    )
+                )
+            }
             return
         }
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                val equipmentToDelete = TrainingEquipment(
-                    id = currentState.equipmentId,
-                    name = currentState.name,
-                    imageUri = currentState.imageUri,
-                    default = currentState.default,
-                    dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date 
-                )
-                equipmentRepository.deleteEquipment(equipmentToDelete)
-                navHostController.popBackStack()
+                currentState.equipmentId?.let { equipmentId ->
+                    val equipmentToDelete = TrainingEquipment(
+                        id = equipmentId,
+                        name = currentState.name,
+                        imageUri = currentState.imageUri,
+                        default = currentState.default, // Should be false here based on prior checks
+                        dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                    )
+                    equipmentRepository.deleteEquipment(equipmentToDelete)
+                    navHostController.popBackStack()
+                }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = "Failed to delete equipment: ${e.message}") }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = TrainingEquipmentError(
+                            hasGeneralError = true,
+                            generalError = Res.string.training_equipment_detail_error_delete_equipment
+                        )
+                    )
+                }
             } finally {
-                 _uiState.update { it.copy(isLoading = false) }
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

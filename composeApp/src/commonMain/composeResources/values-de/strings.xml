@@ -259,11 +259,26 @@
     <string name="default_training_equipment_spotter_arms">Sicherheitsablagen</string>
     <string name="training_equipment_add">Gerät hinzufügen</string>
 
-    <string name="add_edit_training_equipment_button_select_image">Bild auswählen</string>
-    <string name="add_edit_training_equipment_button_take_photo">Foto aufnehmen</string>
-    <string name="add_edit_training_equipment_image_content_description">Trainingsgerät Bild</string>
-    <string name="add_edit_training_equipment_label_name">Name</string>
-    <string name="add_edit_training_equipment_reset_to_default">Auf Standard zurücksetzen</string>
+    <string name="training_equipment_detail_content_description_button_select_image">Bild auswählen</string>
+    <string name="training_equipment_detail_content_description_image">Trainingsgerät Bild</string>
+    <string name="training_equipment_detail_name">Name</string>
+    <string name="training_equipment_detail_content_description_reset_to_default">Auf Standard zurücksetzen</string>
+    <string name="training_equipment_detail_content_description_remove_image">Bild entfernen</string>
+    <string name="training_equipment_detail_content_description_delete">Gerät löschen</string>
+    <string name="training_equipment_detail_content_description_cancel_editing">Bearbeitung abbrechen</string>
+    <string name="training_equipment_detail_content_description_save">Gerät speichern</string>
+    <string name="training_equipment_detail_content_description_edit">Gerät bearbeiten</string>
+    <string name="training_equipment_detail_content_description_default_equipment">Standardgerät</string>
+    <string name="training_equipment_detail_error_not_found">Gerät nicht gefunden</string>
+    <string name="training_equipment_detail_error_loading">Fehler beim Laden des Geräts</string>
+    <string name="training_equipment_detail_error_missing_name">Name darf nicht leer sein</string>
+    <string name="training_equipment_detail_error_saving">Fehler beim Speichern des Geräts</string>
+    <string name="training_equipment_detail_error_reset_default_exercise">Fehler beim Zurücksetzen des Geräts</string>
+    <string name="training_equipment_detail_error_reset_new_equipment">Neues Gerät kann nicht zurückgesetzt werden.</string>
+    <string name="training_equipment_detail_error_reset_non_default_equipment">Nicht-Standard-Gerät kann nicht zurückgesetzt werden.</string>
+    <string name="training_equipment_detail_error_delete_equipment">Fehler beim Löschen des Geräts</string>
+    <string name="training_equipment_detail_error_delete_new_equipment">Neues Gerät kann nicht gelöscht werden.</string>
+    <string name="training_equipment_detail_error_delete_default_equipment">Standardgerät kann nicht gelöscht werden.</string>
 
     <string name="settings_content_description_title">Einstellungen öffnen</string>
 
@@ -274,7 +289,7 @@
     <string name="exercise_detail_content_description_add_muscle_groups">Muskelgruppe hinzufügen</string>
     <string name="exercise_detail_content_description_reset_to_default">Übung zurücksetzen</string>
     <string name="exercise_detail_content_description_delete">Übung löschen</string>
-    <string name="exercise_detail_content_description_cancel">Abbrechen</string>
+    <string name="exercise_detail_content_description_cancel">Bearbeitung abbrechen</string>
     <string name="exercise_detail_content_description_save">Übung speichern</string>
     <string name="exercise_detail_content_description_edit">Übung bearbeiten</string>
     <string name="exercise_detail_error_exercise_not_found">Übung konnte nicht gefunden werden</string>
@@ -285,6 +300,7 @@
     <string name="exercise_detail_error_missing_muscle_group">Mindestens eine Muskelgruppe muss ausgewählt sein</string>
     <string name="exercise_detail_error_saving_exercise">Übung konnte nicht gespeichert werden</string>
     <string name="exercise_detail_error_reset_default_exercise">Übung konnte nicht zurückgesetzt werden</string>
+    <string name="exercise_detail_error_delete_exercise">Fehler beim Löschen der Übung</string>
     <string name="exercise_detail_error_reset_new_exercise">Eine neue Übung kann nicht zurückgesetzt werden</string>
     <string name="exercise_detail_error_reset_non_default_exercise">Eine benutzerdefinierte Übung kann nicht zurückgesetzt werden</string>
     <string name="exercise_detail_error_delete_new_exercise">Eine neue Übung kann nicht gelöscht werden</string>

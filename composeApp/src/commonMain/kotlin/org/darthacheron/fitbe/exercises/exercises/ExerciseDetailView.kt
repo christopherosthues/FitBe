@@ -292,11 +292,11 @@ fun ExerciseDetailView(
             AnimatedVisibility(visible = uiState.isEditing) {
                 FloatingActionButton(
                     onClick = {
-                        if (!uiState.isLoading) {
+                        if (!uiState.isLoading && !uiState.error.hasError) {
                             viewModel.saveExercise()
                         }
                     },
-                    containerColor = if (!uiState.isLoading && !uiState.error.hasError) MaterialTheme.colorScheme.primary else Color.Gray,
+                    containerColor = if (!uiState.isLoading && !uiState.error.hasError) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
