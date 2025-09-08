@@ -99,7 +99,7 @@ fun ExerciseDetailView(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedTextField(
-                        value = uiState.name,
+                        value = getEuiState.name,
                         onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
                         label = { Text(text = stringResource(Res.string.exercise_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),

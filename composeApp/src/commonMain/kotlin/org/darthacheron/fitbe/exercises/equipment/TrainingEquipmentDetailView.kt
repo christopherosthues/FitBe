@@ -140,7 +140,7 @@ fun TrainingEquipmentDetailView(
                     }
 
                     OutlinedTextField(
-                        value = uiState.name, // Display raw name, not getEquipmentName
+                        value = getEquipmentName(uiState.name, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
                         label = { Text(stringResource(Res.string.training_equipment_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),
@@ -150,14 +150,6 @@ fun TrainingEquipmentDetailView(
                         supportingText = {
                             if (uiState.error.hasNameError) {
                                 Text(stringResource(uiState.error.nameError!!))
-                            }
-                        },
-                        trailingIcon = {
-                            if (uiState.default && !uiState.isEditing) { // Show verified icon only when not editing and it's a default item
-                                Icon(
-                                    painterResource(Res.drawable.ic_verified),
-                                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment)
-                                )
                             }
                         }
                     )

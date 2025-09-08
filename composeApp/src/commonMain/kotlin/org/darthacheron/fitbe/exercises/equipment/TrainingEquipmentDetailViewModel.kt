@@ -8,7 +8,7 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_error_dele
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_delete_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_delete_new_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_loading
-import fitbe.composeapp.generated.resources.training_equipment_detail_error_name_blank
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_missing_name
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_not_found
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_default_exercise
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_new_equipment
@@ -220,20 +220,9 @@ class TrainingEquipmentDetailViewModel(
 
     fun saveEquipment() {
         val currentState = _uiState.value
-        if (currentState.name.isBlank()) {
-            _uiState.update {
-                it.copy(
-                    error = it.error.copy(
-                        hasNameError = true,
-                        nameError = Res.string.training_equipment_detail_error_name_blank,
-                        hasGeneralError = false,
-                        generalError = null
-                    )
-                )
-            }
+        if (currentState.error.hasError) {
             return
         }
-        if (currentState.error.hasError) return
 
         _uiState.update { it.copy(isLoading = true) }
 
