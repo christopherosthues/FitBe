@@ -20,7 +20,7 @@ import org.darthacheron.fitbe.exercises.equipment.getEquipmentImage
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun ImageWithDefault(imageUri: String?, default: Boolean, contentDescription: String?, modifier: Modifier) {
+fun ImageWithDefault(imageUri: String?, default: Boolean, contentDescription: String?, modifier: Modifier, defaultContentDescription: String?) {
     val imageResource = getEquipmentImage(imageUri, default)
     Box {
         if (imageResource == null && imageUri != null) {
@@ -42,7 +42,7 @@ fun ImageWithDefault(imageUri: String?, default: Boolean, contentDescription: St
         if (default) {
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
-                contentDescription = "Default equipment",
+                contentDescription = defaultContentDescription,
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(8.dp)

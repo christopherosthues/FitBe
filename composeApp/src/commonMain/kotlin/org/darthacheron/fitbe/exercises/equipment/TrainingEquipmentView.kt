@@ -31,13 +31,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
-import fitbe.composeapp.generated.resources.training_equipment_add
+import fitbe.composeapp.generated.resources.training_equipment_content_description_add
+import fitbe.composeapp.generated.resources.training_equipment_content_description_card
+import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
+import fitbe.composeapp.generated.resources.training_equipment_no_equipments
 import org.darthacheron.fitbe.components.ImageWithDefault
-import org.darthacheron.fitbe.navigation.Screen
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -59,7 +59,7 @@ fun TrainingEquipmentView(
                 .padding(16.dp)
         ) {
             if (allEquipment.isEmpty()) {
-                Text("No equipment found. Add some!")
+                Text(text = stringResource(Res.string.training_equipment_no_equipments))
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),
@@ -72,7 +72,10 @@ fun TrainingEquipmentView(
                         TrainingEquipmentCard(
                             equipment = equipment,
                             onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id.toString()) },
-                            contentDescription = "View or Edit ${getEquipmentName(equipment.name, equipment.default)}"
+                            contentDescription = stringResource(
+                                Res.string.training_equipment_content_description_card,
+                                getEquipmentName(equipment.name, equipment.default)
+                            )
                         )
                     }
                 }
@@ -88,7 +91,7 @@ fun TrainingEquipmentView(
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
-                contentDescription = stringResource(Res.string.training_equipment_add)
+                contentDescription = stringResource(Res.string.training_equipment_content_description_add)
             )
         }
     }
@@ -115,6 +118,7 @@ fun TrainingEquipmentCard(
                 imageUri = equipment.imageUri,
                 default = equipment.default,
                 contentDescription = null,
+                defaultContentDescription = stringResource(Res.string.training_equipment_content_description_default_equipment),
                 modifier = Modifier.fillMaxSize()
             )
 

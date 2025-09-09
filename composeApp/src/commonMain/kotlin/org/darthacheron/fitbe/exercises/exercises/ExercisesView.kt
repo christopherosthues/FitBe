@@ -1,12 +1,16 @@
 package org.darthacheron.fitbe.exercises.exercises
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +20,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,17 +30,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_content_description_add
+import fitbe.composeapp.generated.resources.exercise_content_description_card
+import fitbe.composeapp.generated.resources.exercise_content_description_default_exercise
+import fitbe.composeapp.generated.resources.exercise_no_exercises
 import fitbe.composeapp.generated.resources.ic_add
-// Assuming you will create a string resource for adding an exercise
-// import fitbe.composeapp.generated.resources.exercise_add 
-import org.darthacheron.fitbe.navigation.Screen // Assuming Screen.AddEditExercise(id) exists
-import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
@@ -54,7 +63,7 @@ fun ExercisesView(
                 .padding(16.dp)
         ) {
             if (allExercises.isEmpty()) {
-                Text("No exercises found. Add some!")
+                Text(text = stringResource(Res.string.exercise_no_exercises))
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),
@@ -67,7 +76,10 @@ fun ExercisesView(
                         ExerciseCard(
                             exercise = exercise,
                             onClick = { viewModel.navigateToExerciseDetail(exercise.id.toString()) },
-                            contentDescription = "View or Edit ${exercise.name}"
+                            contentDescription = stringResource(
+                                Res.string.exercise_content_description_card,
+                                getExerciseName(exercise.name, exercise.default)
+                            )
                         )
                     }
                 }
@@ -83,8 +95,7 @@ fun ExercisesView(
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
-                // Replace with actual resource: stringResource(Res.string.exercise_add)
-                contentDescription = "Add Exercise" 
+                contentDescription = stringResource(Res.string.exercise_content_description_add)
             )
         }
     }
@@ -100,33 +111,70 @@ fun ExerciseCard(
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-//            .height(200.dp) // Height can be dynamic or fixed as per your design needs
-//            .width(200.dp)  // Width can be dynamic or fixed
+            .height(200.dp)
+            .width(200.dp)
             .clickable(onClick = onClick)
             .semantics { this.contentDescription = contentDescription },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp) // Add some padding inside the card
+                .fillMaxSize()
         ) {
-            Column {
-                Text(
-                    text = exercise.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(
-                    text = "Muscles: ${exercise.targetMuscleGroups.joinToString { it.name }}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                // You can add more details from the 'exercise' object here, like 'guide'
-                // Text(
-                // text = exercise.guide,
-                // style = MaterialTheme.typography.bodySmall
-                // )
+            ImageWithDefault(
+                imageUri = null, //exercise.imageUri,
+                default = exercise.default,
+                contentDescription = null,
+                defaultContentDescription = stringResource(Res.string.exercise_content_description_default_exercise),
+                modifier = Modifier.fillMaxSize()
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(
+                                bottomStart = 16.dp,
+                                bottomEnd = 16.dp,
+                                topStart = 0.dp,
+                                topEnd = 0.dp
+                            )
+                        )
+                        .background(Color.Black.copy(alpha = 0.6f))
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Column() {
+                        Text(
+                            text = getExerciseName(exercise.name, exercise.default),
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            val chipColors = SuggestionChipDefaults.suggestionChipColors()
+                            exercise.targetMuscleGroups.take(2).forEach {
+                                SuggestionChip(
+                                    onClick = { },
+                                    label = { Text(text = stringResource(it.localizedString())) },
+                                    enabled = false,
+                                    colors = SuggestionChipDefaults.suggestionChipColors(
+                                        disabledContainerColor = chipColors.containerColor,
+                                        disabledLabelColor = chipColors.labelColor,
+                                    ),
+                                    modifier = Modifier.height(24.dp) // Added height modifier
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

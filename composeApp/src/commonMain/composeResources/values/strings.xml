@@ -1,4 +1,184 @@
 <resources>
+    <!-- Bottom Bar -->
+    <string name="bottom_bar_home">Home</string>
+    <string name="bottom_bar_exercises">Exercises</string>
+    <string name="bottom_bar_health">Health</string>
+    <string name="bottom_bar_profile">Profile</string>
+
+    <!-- Top Bar -->
+    <string name="top_bar_title_home">Home</string>
+    <string name="top_bar_title_exercises_dashboard">Exercises</string>
+    <string name="top_bar_title_exercises">Exercises</string>
+    <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
+    <string name="top_bar_title_training_equipment">Training equipment</string>
+    <string name="top_bar_title_add_edit_training_equipment">Add/Edit Training Equipment</string>
+    <string name="top_bar_title_health">Health</string>
+    <string name="top_bar_title_profile">Profile</string>
+    <string name="top_bar_title_sleeps">Sleeps</string>
+    <string name="top_bar_title_steps">Steps</string>
+    <string name="top_bar_title_beverages">Beverages</string>
+    <string name="top_bar_title_beverages_overview">Beverages Overview</string>
+    <string name="top_bar_title_body_weights">Body weight</string>
+    <string name="top_bar_title_settings">Settings</string>
+
+    <!-- Exercise dashboard -->
+    <string name="card_title_exercises_overview">Exercises Overview</string>
+    <string name="card_title_training_equipment">Manage Equipment</string>
+
+    <!-- Exercise -->
+    <string name="exercise_no_exercises">No exercises found. Add some!</string>
+    <string name="exercise_content_description_card">View details of %1$s</string>
+    <string name="exercise_content_description_add">Add exercise</string>
+    <string name="exercise_content_description_default_exercise">Default exercise</string>
+
+    <!-- Exercise Detail -->
+    <string name="exercise_detail_name">Name</string>
+    <string name="exercise_detail_guide">Guide</string>
+    <string name="exercise_detail_target_muscle_groups">Target Muscle Groups</string>
+    <string name="exercise_detail_content_description_remove_muscle_groups">Remove muscle group</string>
+    <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
+    <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
+    <string name="exercise_detail_content_description_delete">Delete exercise</string>
+    <string name="exercise_detail_content_description_cancel">Cancel editing</string>
+    <string name="exercise_detail_content_description_save">Save exercise</string>
+    <string name="exercise_detail_content_description_edit">Edit Exercise</string>
+    <string name="exercise_detail_error_exercise_not_found">Exercise not found</string>
+    <string name="exercise_detail_error_loading_exercise">Failed to load exercise</string>
+    <string name="exercise_detail_error_missing_name">Name cannot be empty</string>
+    <string name="exercise_detail_error_name_already_exists">Name has to be unique</string>
+    <string name="exercise_detail_error_missing_guide">Guide cannot be empty</string>
+    <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
+    <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
+    <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
+    <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
+    <string name="exercise_detail_error_reset_non_default_exercise">Cannot reset non-default exercise</string>
+    <string name="exercise_detail_error_delete_exercise">Failed to delete exercise</string>
+    <string name="exercise_detail_error_delete_new_exercise">Cannot delete a new exercise</string>
+    <string name="exercise_detail_error_delete_default_exercise">Cannot delete a default exercise</string>
+
+    <!-- Muscle Groups -->
+    <string name="muscle_group_chest">Chest</string>
+    <string name="muscle_group_back">Back</string>
+    <string name="muscle_group_shoulders">Shoulders</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_triceps">Triceps</string>
+    <string name="muscle_group_forearms">Forearms</string>
+    <string name="muscle_group_quads">Quads</string>
+    <string name="muscle_group_hamstrings">Hamstrings</string>
+    <string name="muscle_group_calves">Calves</string>
+    <string name="muscle_group_abs">Abs</string>
+    <string name="muscle_group_cardio">Cardio</string>
+    <string name="muscle_group_full_body">Full Body</string>
+    <string name="muscle_group_glutes">Glutes</string>
+    <string name="muscle_group_other">Other</string>
+
+    <!-- Default Exercise Names -->
+    <string name="default_exercise_squat_name">Squat</string>
+    <string name="default_exercise_deadlift_name">Deadlift</string>
+    <string name="default_exercise_bench_press_name">Bench Press</string>
+    <string name="default_exercise_overhead_press_name">Overhead Press</string>
+    <string name="default_exercise_pull_ups_name">Pull Ups</string>
+    <string name="default_exercise_push_ups_name">Push Ups</string>
+    <string name="default_exercise_lunges_name">Lunges</string>
+    <string name="default_exercise_sit_ups_name">Sit Ups</string>
+    <string name="default_exercise_plank_name">Plank</string>
+    <string name="default_exercise_jumping_jacks_name">Jumping Jacks</string>
+    <string name="default_exercise_side_lunges_name">Side Lunges</string>
+    <string name="default_exercise_burpees_name">Burpees</string>
+    <string name="default_exercise_mountain_climbers_name">Mountain Climbers</string>
+
+    <!-- Default Exercise Guides -->
+    <string name="default_exercise_squat_guide">How to perform a Squat...</string>
+    <string name="default_exercise_deadlift_guide">How to perform a Deadlift...</string>
+    <string name="default_exercise_bench_press_guide">How to perform a Bench Press...</string>
+    <string name="default_exercise_overhead_press_guide">How to perform an Overhead Press...</string>
+    <string name="default_exercise_pull_ups_guide">How to perform Pull Ups...</string>
+    <string name="default_exercise_push_ups_guide">How to perform Push Ups...</string>
+    <string name="default_exercise_lunges_guide">How to perform Lunges...</string>
+    <string name="default_exercise_sit_ups_guide">How to perform Sit Ups...</string>
+    <string name="default_exercise_plank_guide">How to perform a Plank...</string>
+    <string name="default_exercise_jumping_jacks_guide">How to perform Jumping Jacks...</string>
+    <string name="default_exercise_side_lunges_guide">How to perform Side Lunges...</string>
+    <string name="default_exercise_burpees_guide">How to perform Burpees...</string>
+    <string name="default_exercise_mountain_climbers_guide">How to perform Mountain Climbers...</string>
+
+    <!-- Training Equipment -->
+    <string name="training_equipment_no_equipments">No equipments found. Add some!</string>
+    <string name="training_equipment_content_description_card">View details of %1$s</string>
+    <string name="training_equipment_content_description_add">Add equipment</string>
+    <string name="training_equipment_content_description_default_equipment">Default equipment</string>
+
+    <!-- Training Equipment Detail -->
+    <string name="training_equipment_detail_button_select_image">Select Image</string>
+    <string name="training_equipment_detail_content_description_image">Training Equipment Image</string>
+    <string name="training_equipment_detail_name">Name</string>
+    <string name="training_equipment_detail_content_description_reset_to_default">Reset training equipment to default</string>
+    <string name="training_equipment_detail_content_description_remove_image">Remove image</string>
+    <string name="training_equipment_detail_content_description_delete">Delete equipment</string>
+    <string name="training_equipment_detail_content_description_cancel_editing">Cancel editing</string>
+    <string name="training_equipment_detail_content_description_save">Save equipment</string>
+    <string name="training_equipment_detail_content_description_edit">Edit equipment</string>
+    <string name="training_equipment_detail_content_description_default_equipment">Default equipment</string>
+    <string name="training_equipment_detail_error_not_found">Equipment not found</string>
+    <string name="training_equipment_detail_error_loading">Failed to load equipment</string>
+    <string name="training_equipment_detail_error_missing_name">Name cannot be empty</string>
+    <string name="training_equipment_detail_error_saving">Failed to save equipment</string>
+    <string name="training_equipment_detail_error_reset_default_exercise">Failed to reset equipment</string>
+    <string name="training_equipment_detail_error_reset_new_equipment">Cannot reset new equipment.</string>
+    <string name="training_equipment_detail_error_reset_non_default_equipment">Cannot reset non-default equipment.</string>
+    <string name="training_equipment_detail_error_delete_equipment">Failed to delete equipment</string>
+    <string name="training_equipment_detail_error_delete_new_equipment">Cannot delete new equipment.</string>
+    <string name="training_equipment_detail_error_delete_default_equipment">Cannot delete default equipment.</string>
+
+    <!-- Default Training Equipment -->
+    <string name="default_training_equipment_barbell">Barbell</string>
+    <string name="default_training_equipment_dumbbell">Dumbbell</string>
+    <string name="default_training_equipment_bodyweight">Bodyweight</string>
+    <string name="default_training_equipment_kettlebell">Kettlebell</string>
+    <string name="default_training_equipment_dip_station">Dip Station</string>
+    <string name="default_training_equipment_bench">Bench</string>
+    <string name="default_training_equipment_rowing_machine">Rowing Machine</string>
+    <string name="default_training_equipment_chest_press_machine">Chest Press Machine</string>
+    <string name="default_training_equipment_ez_curl_bar">EZ Curl Bar</string>
+    <string name="default_training_equipment_weight_plates">Weight Plates</string>
+    <string name="default_training_equipment_ankle_weights">Ankle Weights</string>
+    <string name="default_training_equipment_wrist_weights">Wrist Weights</string>
+    <string name="default_training_equipment_cable_machine">Cable Machine</string>
+    <string name="default_training_equipment_lat_pulldown_machine">Lat Pulldown Machine</string>
+    <string name="default_training_equipment_leg_press_machine">Leg Press Machine</string>
+    <string name="default_training_equipment_leg_extension_machine">Leg Extension Machine</string>
+    <string name="default_training_equipment_leg_curl_machine">Leg Curl Machine</string>
+    <string name="default_training_equipment_smith_machine">Smith Machine</string>
+    <string name="default_training_equipment_shoulder_press_machine">Shoulder Press Machine</string>
+    <string name="default_training_equipment_seated_row_machine">Seated Row Machine</string>
+    <string name="default_training_equipment_pull_up_bar">Pull-up Bar</string>
+    <string name="default_training_equipment_dip_bars">Dip Bars</string>
+    <string name="default_training_equipment_push_up_handles">Push-up Handles</string>
+    <string name="default_training_equipment_parallettes">Parallettes</string>
+    <string name="default_training_equipment_gymnastic_rings">Gymnastic Rings</string>
+    <string name="default_training_equipment_suspension_trainer">Suspension Trainer</string>
+    <string name="default_training_equipment_plyo_box">Plyo Box</string>
+    <string name="default_training_equipment_medicine_ball">Medicine Ball</string>
+    <string name="default_training_equipment_slam_ball">Slam Ball</string>
+    <string name="default_training_equipment_wall_ball">Wall Ball</string>
+    <string name="default_training_equipment_battle_ropes">Battle Ropes</string>
+    <string name="default_training_equipment_sandbag">Sandbag</string>
+    <string name="default_training_equipment_bulgarian_bag">Bulgarian Bag</string>
+    <string name="default_training_equipment_resistance_bands">Resistance Bands</string>
+    <string name="default_training_equipment_foam_roller">Foam Roller</string>
+    <string name="default_training_equipment_balance_pad">Balance Pad</string>
+    <string name="default_training_equipment_bosu_ball">Bosu Ball</string>
+    <string name="default_training_equipment_treadmill">Treadmill</string>
+    <string name="default_training_equipment_elliptical_trainer">Elliptical Trainer</string>
+    <string name="default_training_equipment_stationary_bike">Stationary Bike</string>
+    <string name="default_training_equipment_stair_climber">Stair Climber</string>
+    <string name="default_training_equipment_air_bike">Air Bike</string>
+    <string name="default_training_equipment_power_rack">Power Rack</string>
+    <string name="default_training_equipment_squat_rack">Squat Rack</string>
+    <string name="default_training_equipment_spotter_arms">Spotter Arms</string>
+
+
+
     <string name="add_beverage">Add beverage</string>
     <plurals name="fluid_unit_cup">
         <item quantity="zero">cups</item>
@@ -52,24 +232,8 @@
     <string name="sleep_view_type_week">Week</string>
     <string name="sleep_view_type_month">Month</string>
     <string name="sleep_view_type_year">Year</string>
-    <string name="bottom_bar_home">Home</string>
-    <string name="bottom_bar_exercises">Exercises</string>
-    <string name="bottom_bar_health">Health</string>
-    <string name="bottom_bar_profile">Profile</string>
-    <string name="top_bar_title_home">Home</string>
-    <string name="top_bar_title_exercises_dashboard">Exercises</string>
-    <string name="top_bar_title_exercises">Exercises</string>
-    <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
-    <string name="top_bar_title_training_equipment">Training equipment</string>
-    <string name="top_bar_title_add_edit_training_equipment">Add/Edit Training Equipment</string>
-    <string name="top_bar_title_health">Health</string>
-    <string name="top_bar_title_profile">Profile</string>
-    <string name="top_bar_title_sleeps">Sleeps</string>
-    <string name="top_bar_title_steps">Steps</string>
-    <string name="top_bar_title_beverages">Beverages</string>
-    <string name="top_bar_title_beverages_overview">Beverages Overview</string>
-    <string name="top_bar_title_body_weights">Body weight</string>
-    <string name="top_bar_title_settings">Settings</string>
+
+    <!-- Settings -->
     <string name="settings_weight_unit">Weight Unit</string>
     <string name="settings_kg">kg</string>
     <string name="settings_pound">lb</string>
@@ -84,6 +248,9 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Reset to Defaults</string>
+    <string name="settings_content_description_title">Open settings</string>
+
+    <!-- Profile -->
     <string name="profile_add">Add Profile</string>
     <string name="profile_gender">Gender</string>
     <string name="profile_gender_unknown">Unknown</string>
@@ -113,6 +280,8 @@
     <string name="profile_error_steps">Enter a value between 0 and 500,000.</string>
     <string name="profile_error_height_cm">Enter a value between 0.0 and 300.0 cm.</string>
     <string name="profile_error_height_inch">Enter a value between 0.0 and 118.11 inches.</string>
+
+
     <string name="body_weight_total_weight_error_kg">Enter a value between 0.0 and 600.0 kg.</string>
     <string name="body_weight_total_weight_error_lb">Enter a value between 0.0 and 1322.77 lb.</string>
     <string name="body_weight_body_fat_error">Enter a value between 0.0 and 100.0 %.</string>
@@ -142,6 +311,7 @@
     <string name="body_weight_chart_annotation_body_fat">Body fat</string>
     <string name="body_weight_chart_annotation_body_water">Body water</string>
     <string name="body_weight_chart_annotation_total_weight">Total weight</string>
+
     <string name="year_range_picker_start_headline_content_description">Start year</string>
     <string name="year_range_picker_end_headline_content_description">End year</string>
     <string name="year_range_picker_year_in_range_content_description">Year in selected range</string>
@@ -168,9 +338,11 @@
     <string name="week_range_picker_current_week_content_description">Current week</string>
     <string name="date_range_picker_ok">OK</string>
     <string name="date_range_picker_cancel">Cancel</string>
+
     <string name="timer_dialog_title">Select time</string>
     <string name="timer_dialog_ok">OK</string>
     <string name="timer_dialog_cancel">Cancel</string>
+
     <string name="month_january">January</string>
     <string name="month_february">February</string>
     <string name="month_march">March</string>
@@ -183,6 +355,7 @@
     <string name="month_october">October</string>
     <string name="month_november">November</string>
     <string name="month_december">December</string>
+
     <string name="steps_chart_thumbnail_title">Steps</string>
     <string name="steps_chart_y_axis_title">Steps</string>
     <string name="steps_add_steps_title">Record steps</string>
@@ -191,120 +364,8 @@
     <string name="steps_save">Save</string>
     <string name="steps_cancel">Cancel</string>
     <string name="steps_error_count">Enter a value between 0 and 100,000.</string>
+
     <string name="beverages_chart_thumbnail_title">Beverages</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
-
-    <string name="muscle_group_chest">Chest</string>
-    <string name="muscle_group_back">Back</string>
-    <string name="muscle_group_shoulders">Shoulders</string>
-    <string name="muscle_group_biceps">Biceps</string>
-    <string name="muscle_group_triceps">Triceps</string>
-    <string name="muscle_group_forearms">Forearms</string>
-    <string name="muscle_group_quads">Quads</string>
-    <string name="muscle_group_hamstrings">Hamstrings</string>
-    <string name="muscle_group_calves">Calves</string>
-    <string name="muscle_group_abs">Abs</string>
-    <string name="muscle_group_cardio">Cardio</string>
-    <string name="muscle_group_full_body">Full Body</string>
-    <string name="muscle_group_glutes">Glutes</string>
-    <string name="muscle_group_other">Other</string>
-
-    <string name="card_title_exercises_overview">Exercises Overview</string>
-    <string name="card_title_training_equipment">Manage Equipment</string>
-
-    <!-- Default Training Equipment -->
-    <string name="default_training_equipment_barbell">Barbell</string>
-    <string name="default_training_equipment_dumbbell">Dumbbell</string>
-    <string name="default_training_equipment_bodyweight">Bodyweight</string>
-    <string name="default_training_equipment_kettlebell">Kettlebell</string>
-    <string name="default_training_equipment_dip_station">Dip Station</string>
-    <string name="default_training_equipment_bench">Bench</string>
-    <string name="default_training_equipment_rowing_machine">Rowing Machine</string>
-    <string name="default_training_equipment_chest_press_machine">Chest Press Machine</string>
-    <string name="default_training_equipment_ez_curl_bar">EZ Curl Bar</string>
-    <string name="default_training_equipment_weight_plates">Weight Plates</string>
-    <string name="default_training_equipment_ankle_weights">Ankle Weights</string>
-    <string name="default_training_equipment_wrist_weights">Wrist Weights</string>
-    <string name="default_training_equipment_cable_machine">Cable Machine</string>
-    <string name="default_training_equipment_lat_pulldown_machine">Lat Pulldown Machine</string>
-    <string name="default_training_equipment_leg_press_machine">Leg Press Machine</string>
-    <string name="default_training_equipment_leg_extension_machine">Leg Extension Machine</string>
-    <string name="default_training_equipment_leg_curl_machine">Leg Curl Machine</string>
-    <string name="default_training_equipment_smith_machine">Smith Machine</string>
-    <string name="default_training_equipment_shoulder_press_machine">Shoulder Press Machine</string>
-    <string name="default_training_equipment_seated_row_machine">Seated Row Machine</string>
-    <string name="default_training_equipment_pull_up_bar">Pull-up Bar</string>
-    <string name="default_training_equipment_dip_bars">Dip Bars</string>
-    <string name="default_training_equipment_push_up_handles">Push-up Handles</string>
-    <string name="default_training_equipment_parallettes">Parallettes</string>
-    <string name="default_training_equipment_gymnastic_rings">Gymnastic Rings</string>
-    <string name="default_training_equipment_suspension_trainer">Suspension Trainer</string>
-    <string name="default_training_equipment_plyo_box">Plyo Box</string>
-    <string name="default_training_equipment_medicine_ball">Medicine Ball</string>
-    <string name="default_training_equipment_slam_ball">Slam Ball</string>
-    <string name="default_training_equipment_wall_ball">Wall Ball</string>
-    <string name="default_training_equipment_battle_ropes">Battle Ropes</string>
-    <string name="default_training_equipment_sandbag">Sandbag</string>
-    <string name="default_training_equipment_bulgarian_bag">Bulgarian Bag</string>
-    <string name="default_training_equipment_resistance_bands">Resistance Bands</string>
-    <string name="default_training_equipment_foam_roller">Foam Roller</string>
-    <string name="default_training_equipment_balance_pad">Balance Pad</string>
-    <string name="default_training_equipment_bosu_ball">Bosu Ball</string>
-    <string name="default_training_equipment_treadmill">Treadmill</string>
-    <string name="default_training_equipment_elliptical_trainer">Elliptical Trainer</string>
-    <string name="default_training_equipment_stationary_bike">Stationary Bike</string>
-    <string name="default_training_equipment_stair_climber">Stair Climber</string>
-    <string name="default_training_equipment_air_bike">Air Bike</string>
-    <string name="default_training_equipment_power_rack">Power Rack</string>
-    <string name="default_training_equipment_squat_rack">Squat Rack</string>
-    <string name="default_training_equipment_spotter_arms">Spotter Arms</string>
-    <string name="training_equipment_add">Add equipment</string>
-
-    <string name="training_equipment_detail_button_select_image">Select Image</string>
-    <string name="training_equipment_detail_content_description_image">Training Equipment Image</string>
-    <string name="training_equipment_detail_name">Name</string>
-    <string name="training_equipment_detail_content_description_reset_to_default">Reset training equipment to default</string>
-    <string name="training_equipment_detail_content_description_remove_image">Remove image</string>
-    <string name="training_equipment_detail_content_description_delete">Delete equipment</string>
-    <string name="training_equipment_detail_content_description_cancel_editing">Cancel editing</string>
-    <string name="training_equipment_detail_content_description_save">Save equipment</string>
-    <string name="training_equipment_detail_content_description_edit">Edit equipment</string>
-    <string name="training_equipment_detail_content_description_default_equipment">Default equipment</string>
-    <string name="training_equipment_detail_error_not_found">Equipment not found</string>
-    <string name="training_equipment_detail_error_loading">Failed to load equipment</string>
-    <string name="training_equipment_detail_error_missing_name">Name cannot be empty</string>
-    <string name="training_equipment_detail_error_saving">Failed to save equipment</string>
-    <string name="training_equipment_detail_error_reset_default_exercise">Failed to reset equipment</string>
-    <string name="training_equipment_detail_error_reset_new_equipment">Cannot reset new equipment.</string>
-    <string name="training_equipment_detail_error_reset_non_default_equipment">Cannot reset non-default equipment.</string>
-    <string name="training_equipment_detail_error_delete_equipment">Failed to delete equipment</string>
-    <string name="training_equipment_detail_error_delete_new_equipment">Cannot delete new equipment.</string>
-    <string name="training_equipment_detail_error_delete_default_equipment">Cannot delete default equipment.</string>
-
-    <string name="settings_content_description_title">Open settings</string>
-
-    <string name="exercise_detail_name">Name</string>
-    <string name="exercise_detail_guide">Guide</string>
-    <string name="exercise_detail_target_muscle_groups">Target Muscle Groups</string>
-    <string name="exercise_detail_content_description_remove_muscle_groups">Remove muscle group</string>
-    <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
-    <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
-    <string name="exercise_detail_content_description_delete">Delete exercise</string>
-    <string name="exercise_detail_content_description_cancel">Cancel editing</string>
-    <string name="exercise_detail_content_description_save">Save exercise</string>
-    <string name="exercise_detail_content_description_edit">Edit Exercise</string>
-    <string name="exercise_detail_error_exercise_not_found">Exercise not found</string>
-    <string name="exercise_detail_error_loading_exercise">Failed to load exercise</string>
-    <string name="exercise_detail_error_missing_name">Name cannot be empty</string>
-    <string name="exercise_detail_error_name_already_exists">Name has to be unique</string>
-    <string name="exercise_detail_error_missing_guide">Guide cannot be empty</string>
-    <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
-    <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
-    <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
-    <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
-    <string name="exercise_detail_error_reset_non_default_exercise">Cannot reset non-default exercise</string>
-    <string name="exercise_detail_error_delete_exercise">Failed to delete exercise</string>
-    <string name="exercise_detail_error_delete_new_exercise">Cannot delete a new exercise</string>
-    <string name="exercise_detail_error_delete_default_exercise">Cannot delete a default exercise</string>
 </resources>

@@ -108,6 +108,7 @@ fun TrainingEquipmentDetailView(
                                 imageUri = uiState.imageUri,
                                 default = uiState.default,
                                 contentDescription = stringResource(Res.string.training_equipment_detail_content_description_image),
+                                defaultContentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment),
                                 modifier = Modifier.size(256.dp).align(Alignment.Center)
                             )
                             if (uiState.isEditing) {

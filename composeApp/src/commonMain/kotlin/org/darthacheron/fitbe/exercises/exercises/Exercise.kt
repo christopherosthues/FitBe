@@ -33,7 +33,7 @@ internal fun getExerciseName(name: String, default: Boolean): String {
 @Composable
 internal fun getExerciseGuide(guide: String, default: Boolean): String {
     return if (default && exerciseList.contains(guide)) {
-        DefaultEquipmentResProvider.exerciseGuideMap[guide]?.let {
+        DefaultExerciseResProvider.exerciseGuideMap[guide]?.let {
             stringResource(it)
         } ?: guide
     } else {

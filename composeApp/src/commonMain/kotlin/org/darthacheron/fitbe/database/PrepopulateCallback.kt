@@ -64,18 +64,20 @@ internal val equipmentList = listOf(
     "default_training_equipment_spotter_arms",
 )
 
-internal val exerciseList = listOf(
-    Pair("default_exercise_squat", listOf(MuscleGroup.QUADS)),
-    Pair("default_exercise_deadlift", listOf(MuscleGroup.GLUTES)),
-    Pair("default_exercise_bench_press", listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS)),
-    Pair("default_exercise_overhead_press", listOf(MuscleGroup.SHOULDERS)),
-    Pair("default_exercise_pull_ups", listOf(MuscleGroup.BACK)),
-    Pair("default_exercise_push_ups", listOf(MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.BACK, MuscleGroup.CHEST)),
-    Pair("default_exercise_lunges", listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS)),
-    Pair("default_exercise_sit_ups", listOf(MuscleGroup.ABS)),
-    Pair("default_exercise_plank", listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK)),
-    Pair("default_exercise_jumping_jacks", listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK)),
-    Pair("default_exercise_side_lunges", listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS)),
+internal val exerciseList: Map<String, List<MuscleGroup>> = mapOf(
+    "default_exercise_squat" to listOf(MuscleGroup.QUADS),
+    "default_exercise_deadlift" to listOf(MuscleGroup.GLUTES),
+    "default_exercise_bench_press" to listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS),
+    "default_exercise_overhead_press" to listOf(MuscleGroup.SHOULDERS),
+    "default_exercise_pull_ups" to listOf(MuscleGroup.BACK),
+    "default_exercise_push_ups" to listOf(MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.BACK, MuscleGroup.CHEST),
+    "default_exercise_lunges" to listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS),
+    "default_exercise_sit_ups" to listOf(MuscleGroup.ABS),
+    "default_exercise_plank" to listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK),
+    "default_exercise_jumping_jacks" to listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK),
+    "default_exercise_side_lunges" to listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS),
+    "default_exercise_burpees" to listOf(MuscleGroup.OTHER),
+    "default_exercise_mountain_climbers" to listOf(MuscleGroup.OTHER),
 )
 
 @OptIn(ExperimentalUuidApi::class)
@@ -113,9 +115,9 @@ class PrepopulateCallback(
     private suspend fun populateDefaultExercises(exerciseDao: ExerciseDao) {
         exerciseList.forEach { exerciseKey ->
             val exercise = ExerciseEntity(
-                name = exerciseKey.first,
-                guide = "${exerciseKey.first}_guide",
-                targetMuscleGroups = exerciseKey.second,
+                name = exerciseKey.key,
+                guide = "${exerciseKey.key}_guide",
+                targetMuscleGroups = exerciseKey.value,
                 default = true,
             )
             exerciseDao.upsertExercise(exercise)

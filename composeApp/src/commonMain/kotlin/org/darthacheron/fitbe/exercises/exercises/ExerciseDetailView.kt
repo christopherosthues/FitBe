@@ -24,10 +24,12 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -99,7 +101,7 @@ fun ExerciseDetailView(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedTextField(
-                        value = getEuiState.name,
+                        value = getExerciseName(uiState.name, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
                         label = { Text(text = stringResource(Res.string.exercise_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),
@@ -112,7 +114,7 @@ fun ExerciseDetailView(
                     )
 
                     OutlinedTextField(
-                        value = uiState.guide,
+                        value = getExerciseGuide(uiState.guide, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onGuideChange(it) },
                         label = { Text(text = stringResource(Res.string.exercise_detail_guide)) },
                         modifier = Modifier.fillMaxWidth().height(120.dp), 
@@ -137,8 +139,8 @@ fun ExerciseDetailView(
                         ) {
                             uiState.targetMuscleGroups.forEach { muscleGroup ->
                                 InputChip(
-                                    selected = false, // Not a selectable chip, just for display
-                                    onClick = { /* Could be used for something else if needed */ },
+                                    selected = false,
+                                    onClick = {  },
                                     label = { Text(text = stringResource(muscleGroup.localizedString()))  },
                                     trailingIcon = {
                                         if (uiState.isEditing) {
@@ -150,7 +152,8 @@ fun ExerciseDetailView(
                                             }
                                         }
                                     },
-                                    enabled = uiState.isEditing
+                                    enabled = uiState.isEditing,
+                                    colors = InputChipDefaults.inputChipColors()
                                 )
                             }
 
