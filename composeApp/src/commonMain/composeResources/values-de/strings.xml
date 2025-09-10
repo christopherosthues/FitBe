@@ -35,6 +35,10 @@
     <string name="exercise_detail_name">Name</string>
     <string name="exercise_detail_guide">Anleitung</string>
     <string name="exercise_detail_target_muscle_groups">Zielmuskelgruppen</string>
+    <string name="exercise_detail_content_description_select_image">Bild auswählen</string>
+    <string name="exercise_detail_content_description_image">Übung Bild</string>
+    <string name="exercise_detail_content_description_remove_image">Bild entfernen</string>
+    <string name="exercise_detail_content_description_default_equipment">Standardübung</string>
     <string name="exercise_detail_content_description_remove_muscle_groups">Muskelgruppe entfernen</string>
     <string name="exercise_detail_content_description_add_muscle_groups">Muskelgruppe hinzufügen</string>
     <string name="exercise_detail_content_description_reset_to_default">Übung zurücksetzen</string>
@@ -109,9 +113,9 @@
     <string name="training_equipment_content_description_default_equipment">Standardgerät</string>
 
     <!-- Training Equipment Detail -->
-    <string name="training_equipment_detail_content_description_button_select_image">Bild auswählen</string>
-    <string name="training_equipment_detail_content_description_image">Trainingsgerät Bild</string>
     <string name="training_equipment_detail_name">Name</string>
+    <string name="training_equipment_detail_content_description_select_image">Bild auswählen</string>
+    <string name="training_equipment_detail_content_description_image">Trainingsgerät Bild</string>
     <string name="training_equipment_detail_content_description_reset_to_default">Auf Standard zurücksetzen</string>
     <string name="training_equipment_detail_content_description_remove_image">Bild entfernen</string>
     <string name="training_equipment_detail_content_description_delete">Gerät löschen</string>

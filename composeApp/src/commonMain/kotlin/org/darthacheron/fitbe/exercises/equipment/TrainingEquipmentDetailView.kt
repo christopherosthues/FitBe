@@ -1,8 +1,6 @@
 package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,20 +25,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
-import fitbe.composeapp.generated.resources.ic_launcher
 import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
-import fitbe.composeapp.generated.resources.ic_verified
-import fitbe.composeapp.generated.resources.training_equipment_detail_button_select_image
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_cancel_editing
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_default_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_delete
@@ -49,11 +42,13 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_content_de
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_remove_image
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_reset_to_default
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_save
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_select_image
 import fitbe.composeapp.generated.resources.training_equipment_detail_name
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import org.darthacheron.fitbe.components.ImagePlaceholder
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -125,7 +120,11 @@ fun TrainingEquipmentDetailView(
                                 }
                             }
                         } else {
-                            ImagePlaceholder(uiState = uiState)
+                            ImagePlaceholder(
+                                isEditing = uiState.isEditing,
+                                default = uiState.default,
+                                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment)
+                            )
                         }
                         if (uiState.isEditing) {
                             IconButton(
@@ -135,7 +134,7 @@ fun TrainingEquipmentDetailView(
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_photo_library),
-                                    contentDescription = stringResource(Res.string.training_equipment_detail_button_select_image)
+                                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_select_image)
                                 )
                             }
                         }
@@ -260,40 +259,6 @@ fun TrainingEquipmentDetailView(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ImagePlaceholder(uiState: AddEditTrainingEquipmentUiState) {
-    Box(
-        modifier = Modifier
-            .size(256.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(Res.drawable.ic_launcher), // Replace with a more generic placeholder if available
-            contentDescription = null, // Decorative
-            modifier = Modifier.size(128.dp), // Smaller icon for placeholder
-            contentScale = ContentScale.Fit
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .background(Color.Black.copy(alpha = 0.3f))
-                .fillMaxSize()
-        )
-        if (uiState.default && !uiState.isEditing) { // Show verified icon only when not editing and it's a default item
-            Icon(
-                painter = painterResource(Res.drawable.ic_verified),
-                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment),
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-                    .size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
         }
     }
 }

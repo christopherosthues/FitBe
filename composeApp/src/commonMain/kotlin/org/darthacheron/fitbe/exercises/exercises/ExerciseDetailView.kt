@@ -54,9 +54,20 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
+import fitbe.composeapp.generated.resources.ic_photo_library
 import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_select_image
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_equipment
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_image
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image
+import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.dialogs.FileKitMode
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import org.darthacheron.fitbe.components.ImagePlaceholder
+import org.darthacheron.fitbe.components.ImageWithDefault
 import org.darthacheron.fitbe.exercises.equipment.getEquipmentName
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -72,6 +83,16 @@ fun ExerciseDetailView(
     val uiState by viewModel.uiState.collectAsState()
     val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
     val scrollState = rememberScrollState()
+
+    val galleryLauncher = rememberFilePickerLauncher(
+        type = FileKitType.Image,
+        mode = FileKitMode.Single,
+        onResult = {
+            if (it != null && uiState.isEditing) {
+                viewModel.onImageUriChange(it.absolutePath())
+            }
+        }
+    )
 
     LaunchedEffect(exerciseId) {
         viewModel.loadExercise(exerciseId?.toString())
@@ -96,6 +117,49 @@ fun ExerciseDetailView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    Box {
+                        if (uiState.imageUri != null) {
+                            ImageWithDefault(
+                                imageUri = uiState.imageUri,
+                                imageResource = getExerciseImage(uiState.imageUri, uiState.default),
+                                default = uiState.default,
+                                contentDescription = stringResource(Res.string.exercise_detail_content_description_image),
+                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment),
+                                modifier = Modifier.size(256.dp).align(Alignment.Center)
+                            )
+                            if (uiState.isEditing) {
+                                IconButton(
+                                    onClick = { viewModel.onImageUriChange(null) },
+                                    modifier = Modifier.align(Alignment.TopEnd),
+                                    enabled = uiState.isEditing
+                                ) {
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_remove),
+                                        contentDescription = stringResource(Res.string.exercise_detail_content_description_remove_image)
+                                    )
+                                }
+                            }
+                        } else {
+                            ImagePlaceholder(
+                                isEditing = uiState.isEditing,
+                                default = uiState.default,
+                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment),
+                            )
+                        }
+                        if (uiState.isEditing) {
+                            IconButton(
+                                onClick = { galleryLauncher.launch() },
+                                modifier = Modifier.align(Alignment.BottomStart),
+                                enabled = uiState.isEditing
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_photo_library),
+                                    contentDescription = stringResource(Res.string.exercise_detail_content_description_select_image)
+                                )
+                            }
+                        }
+                    }
+
                     OutlinedTextField(
                         value = getExerciseName(uiState.name, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },

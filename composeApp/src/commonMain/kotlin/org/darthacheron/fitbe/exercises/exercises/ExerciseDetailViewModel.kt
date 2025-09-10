@@ -41,6 +41,7 @@ data class AddEditExerciseUiState(
     val name: String = "",
     val guide: String = "",
     val targetMuscleGroups: List<MuscleGroup> = emptyList(),
+    val imageUri: String? = null,
     val equipmentList: List<TrainingEquipment> = emptyList(),
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
@@ -49,6 +50,7 @@ data class AddEditExerciseUiState(
     val default: Boolean = false,
     val persistedDefaultName: String? = null,
     val persistedDefaultGuide: String? = null,
+    val persistedDefaultImageUri: String? = null,
     val persistedDefaultMuscleGroups: List<MuscleGroup>? = null,
     val persistedDefaultEquipmentList: List<TrainingEquipment>? = null,
     val isModifiedFromPersistedDefault: Boolean = false
@@ -211,6 +213,21 @@ class ExerciseDetailViewModel(
         _uiState.update { it.copy(isEditing = isEditing) }
     }
 
+    fun onImageUriChange(imageUri: String?) {
+        _uiState.update { currentState ->
+            val modified = if (currentState.default && currentState.persistedDefaultName != null) {
+                (currentState.name != currentState.persistedDefaultName || imageUri != currentState.persistedDefaultImageUri)
+            } else {
+                false
+            }
+            currentState.copy(
+                imageUri = imageUri,
+                error = currentState.error.copy(hasGeneralError = false, generalError = null),
+                isModifiedFromPersistedDefault = modified
+            )
+        }
+    }
+
     fun onNameChange(name: String) {
         val nameError =
             if (name.isBlank()) Res.string.exercise_detail_error_missing_name else null
@@ -226,7 +243,12 @@ class ExerciseDetailViewModel(
             } else { false }
             currentState.copy(
                 name = name,
-                error = currentState.error.copy(hasNameError = nameError != null, nameError = nameError),
+                error = currentState.error.copy(
+                    hasNameError = nameError != null,
+                    nameError = nameError,
+                    hasGeneralError = false,
+                    generalError = null
+                ),
                 isModifiedFromPersistedDefault = modified
             )
         }
@@ -247,7 +269,9 @@ class ExerciseDetailViewModel(
                 guide = guide,
                 error = currentState.error.copy(
                     hasGuideError = guideError != null,
-                    guideError = guideError
+                    guideError = guideError,
+                    hasGeneralError = false,
+                    generalError = null
                 ),
                 isModifiedFromPersistedDefault = modified
             )
@@ -269,7 +293,9 @@ class ExerciseDetailViewModel(
                  targetMuscleGroups = muscleGroups,
                  error = currentState.error.copy(
                      hasMuscleGroupError = muscleGroupError != null,
-                     muscleGroupError = muscleGroupError
+                     muscleGroupError = muscleGroupError,
+                     hasGeneralError = false,
+                     generalError = null
                  ),
                  isModifiedFromPersistedDefault = modified
              )
@@ -296,7 +322,13 @@ class ExerciseDetailViewModel(
                  !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
                  !equipment.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
-            currentState.copy(equipmentList = equipment, isModifiedFromPersistedDefault = modified)
+            currentState.copy(
+                equipmentList = equipment,
+                error = currentState.error.copy(
+                    hasGeneralError = false,
+                    generalError = null
+                ),
+                isModifiedFromPersistedDefault = modified)
         }
     }
 
