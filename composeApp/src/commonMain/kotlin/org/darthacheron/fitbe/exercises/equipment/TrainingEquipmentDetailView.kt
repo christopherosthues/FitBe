@@ -106,6 +106,7 @@ fun TrainingEquipmentDetailView(
                         if (uiState.imageUri != null) {
                             ImageWithDefault(
                                 imageUri = uiState.imageUri,
+                                imageResource = getEquipmentImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
                                 contentDescription = stringResource(Res.string.training_equipment_detail_content_description_image),
                                 defaultContentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment),

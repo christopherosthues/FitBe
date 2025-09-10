@@ -116,6 +116,7 @@ fun TrainingEquipmentCard(
         Box(modifier = Modifier.fillMaxSize()) {
             ImageWithDefault(
                 imageUri = equipment.imageUri,
+                imageResource = getEquipmentImage(equipment.imageUri, equipment.default),
                 default = equipment.default,
                 contentDescription = null,
                 defaultContentDescription = stringResource(Res.string.training_equipment_content_description_default_equipment),

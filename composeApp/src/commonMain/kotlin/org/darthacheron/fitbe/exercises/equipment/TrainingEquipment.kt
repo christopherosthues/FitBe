@@ -30,7 +30,7 @@ internal fun getEquipmentName(name: String, default: Boolean): String {
 
 @Composable
 internal fun getEquipmentImage(imageUri: String?, default: Boolean): DrawableResource? {
-    return if (default && imageUri != null && imageUri.startsWith("ic_default_training_equipment_")) {
+    return if (default && imageUri != null && imageUri.startsWith("default_training_equipment_")) {
         DefaultEquipmentResProvider.equipmentImageMap[imageUri]
     } else {
         null

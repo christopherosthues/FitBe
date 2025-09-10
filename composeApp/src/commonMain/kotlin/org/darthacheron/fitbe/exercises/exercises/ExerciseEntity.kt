@@ -21,6 +21,7 @@ data class ExerciseEntity(
     @ColumnInfo(name = "name") val name: String,
     val guide: String,
     val targetMuscleGroups: List<MuscleGroup> = emptyList(), // Added
+    val imageUri: String? = null,
     val default: Boolean = false,
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
 ) {
@@ -30,6 +31,7 @@ data class ExerciseEntity(
             name = name,
             guide = guide,
             targetMuscleGroups = targetMuscleGroups,
+            imageUri = imageUri,
             default = default,
             dateUtc = dateUtc
         )
@@ -43,6 +45,7 @@ fun toEntity(exercise: Exercise): ExerciseEntity {
         name = exercise.name,
         guide = exercise.guide,
         targetMuscleGroups = exercise.targetMuscleGroups,
+        imageUri = exercise.imageUri,
         default = exercise.default,
         dateUtc = exercise.dateUtc
     )

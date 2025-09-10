@@ -102,7 +102,7 @@ class PrepopulateCallback(
         equipmentList.forEach { equipmentKey ->
             val equipment = TrainingEquipmentEntity(
                 name = equipmentKey,
-                imageUri = "ic_$equipmentKey",
+                imageUri = equipmentKey,
                 default = true,
             )
             equipmentDao.upsertEquipment(equipment)
@@ -116,7 +116,8 @@ class PrepopulateCallback(
         exerciseList.forEach { exerciseKey ->
             val exercise = ExerciseEntity(
                 name = exerciseKey.key,
-                guide = "${exerciseKey.key}_guide",
+                guide = exerciseKey.key,
+                imageUri = exerciseKey.key,
                 targetMuscleGroups = exerciseKey.value,
                 default = true,
             )

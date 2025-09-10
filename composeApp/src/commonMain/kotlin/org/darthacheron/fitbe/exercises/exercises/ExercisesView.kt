@@ -122,7 +122,8 @@ fun ExerciseCard(
                 .fillMaxSize()
         ) {
             ImageWithDefault(
-                imageUri = null, //exercise.imageUri,
+                imageUri = exercise.imageUri,
+                imageResource = getExerciseImage(exercise.imageUri, exercise.default),
                 default = exercise.default,
                 contentDescription = null,
                 defaultContentDescription = stringResource(Res.string.exercise_content_description_default_exercise),

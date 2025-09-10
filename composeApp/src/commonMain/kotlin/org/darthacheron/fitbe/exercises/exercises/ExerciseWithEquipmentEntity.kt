@@ -27,6 +27,7 @@ data class ExerciseWithEquipmentEntity(
             name = exercise.name,
             guide = exercise.guide,
             targetMuscleGroups = exercise.targetMuscleGroups,
+            imageUri = exercise.imageUri,
             default = exercise.default,
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
@@ -42,6 +43,7 @@ fun toEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmen
             name = exerciseWithEquipment.name,
             guide = exerciseWithEquipment.guide,
             targetMuscleGroups = exerciseWithEquipment.targetMuscleGroups,
+            imageUri = exerciseWithEquipment.imageUri,
             default = exerciseWithEquipment.default,
             dateUtc = exerciseWithEquipment.dateUtc
         ),

@@ -27,6 +27,8 @@ import fitbe.composeapp.generated.resources.default_exercise_sit_ups_guide
 import fitbe.composeapp.generated.resources.default_exercise_sit_ups_name
 import fitbe.composeapp.generated.resources.default_exercise_squat_guide
 import fitbe.composeapp.generated.resources.default_exercise_squat_name
+import fitbe.composeapp.generated.resources.ic_launcher
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
 object DefaultExerciseResProvider {
@@ -60,6 +62,21 @@ object DefaultExerciseResProvider {
         "default_exercise_side_lunges" to Res.string.default_exercise_side_lunges_guide,
         "default_exercise_burpees" to Res.string.default_exercise_burpees_guide,
         "default_exercise_mountain_climbers" to Res.string.default_exercise_mountain_climbers_guide,
+    )
 
+    val exerciseImageMap: Map<String, DrawableResource> = mapOf(
+        "default_exercise_squat" to Res.drawable.ic_launcher,
+        "default_exercise_deadlift" to Res.drawable.ic_launcher,
+        "default_exercise_bench_press" to Res.drawable.ic_launcher,
+        "default_exercise_overhead_press" to Res.drawable.ic_launcher,
+        "default_exercise_pull_ups" to Res.drawable.ic_launcher,
+        "default_exercise_push_ups" to Res.drawable.ic_launcher,
+        "default_exercise_lunges" to Res.drawable.ic_launcher,
+        "default_exercise_sit_ups" to Res.drawable.ic_launcher,
+        "default_exercise_plank" to Res.drawable.ic_launcher,
+        "default_exercise_jumping_jacks" to Res.drawable.ic_launcher,
+        "default_exercise_side_lunges" to Res.drawable.ic_launcher,
+        "default_exercise_burpees" to Res.drawable.ic_launcher,
+        "default_exercise_mountain_climbers" to Res.drawable.ic_launcher,
     )
 }

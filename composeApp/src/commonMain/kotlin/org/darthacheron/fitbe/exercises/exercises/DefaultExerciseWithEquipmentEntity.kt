@@ -26,6 +26,7 @@ class DefaultExerciseWithEquipmentEntity(
             name = exercise.name,
             guide = exercise.guide,
             targetMuscleGroups = exercise.targetMuscleGroups,
+            imageUri = exercise.imageUri,
             default = true,
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }

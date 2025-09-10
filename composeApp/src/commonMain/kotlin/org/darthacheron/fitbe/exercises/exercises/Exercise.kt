@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.database.equipmentList
 import org.darthacheron.fitbe.database.exerciseList
 import org.darthacheron.fitbe.exercises.equipment.DefaultEquipmentResProvider
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -15,6 +16,7 @@ open class Exercise(
     open val name: String,
     open val guide: String,
     open val targetMuscleGroups: List<MuscleGroup> = emptyList(),
+    open val imageUri: String? = null,
     open val default: Boolean = false,
     open val dateUtc: LocalDate
 )
@@ -38,5 +40,14 @@ internal fun getExerciseGuide(guide: String, default: Boolean): String {
         } ?: guide
     } else {
         guide
+    }
+}
+
+@Composable
+internal fun getExerciseImage(imageUri: String?, default: Boolean): DrawableResource? {
+    return if (default && imageUri != null && imageUri.startsWith("default_exercise_")) {
+        DefaultExerciseResProvider.exerciseImageMap[imageUri]
+    } else {
+        null
     }
 }
