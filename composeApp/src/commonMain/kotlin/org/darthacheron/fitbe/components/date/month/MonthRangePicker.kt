@@ -49,20 +49,20 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.month_range_picker_april
 import fitbe.composeapp.generated.resources.month_range_picker_august
-import fitbe.composeapp.generated.resources.month_range_picker_current_month_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_current_month
 import fitbe.composeapp.generated.resources.month_range_picker_december
-import fitbe.composeapp.generated.resources.month_range_picker_end_headline_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_end_headline
 import fitbe.composeapp.generated.resources.month_range_picker_february
 import fitbe.composeapp.generated.resources.month_range_picker_january
 import fitbe.composeapp.generated.resources.month_range_picker_july
 import fitbe.composeapp.generated.resources.month_range_picker_june
 import fitbe.composeapp.generated.resources.month_range_picker_march
 import fitbe.composeapp.generated.resources.month_range_picker_may
-import fitbe.composeapp.generated.resources.month_range_picker_month_in_range_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_month_in_range
 import fitbe.composeapp.generated.resources.month_range_picker_november
 import fitbe.composeapp.generated.resources.month_range_picker_october
 import fitbe.composeapp.generated.resources.month_range_picker_september
-import fitbe.composeapp.generated.resources.month_range_picker_start_headline_content_description
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_start_headline
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -332,17 +332,17 @@ private fun monthContentDescription(
     val descriptionBuilder = StringBuilder()
     when {
         isStartYearMonth ->
-            descriptionBuilder.append(stringResource(Res.string.month_range_picker_start_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.month_range_picker_content_description_start_headline))
 
         isEndYearMonth ->
-            descriptionBuilder.append(stringResource(Res.string.month_range_picker_end_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.month_range_picker_content_description_end_headline))
 
         isInRange ->
-            descriptionBuilder.append(stringResource(Res.string.month_range_picker_month_in_range_content_description))
+            descriptionBuilder.append(stringResource(Res.string.month_range_picker_content_description_month_in_range))
     }
     if (isCurrentYearMonth) {
         if (descriptionBuilder.isNotEmpty()) descriptionBuilder.append(", ")
-        descriptionBuilder.append(stringResource(Res.string.month_range_picker_current_month_content_description))
+        descriptionBuilder.append(stringResource(Res.string.month_range_picker_content_description_current_month))
     }
     return if (descriptionBuilder.isEmpty()) null else descriptionBuilder.toString()
 }

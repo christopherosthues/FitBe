@@ -47,10 +47,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.week_range_picker_current_week_content_description
-import fitbe.composeapp.generated.resources.week_range_picker_end_headline_content_description
-import fitbe.composeapp.generated.resources.week_range_picker_start_headline_content_description
-import fitbe.composeapp.generated.resources.week_range_picker_week_in_range_content_description
+import fitbe.composeapp.generated.resources.week_range_picker_content_description_current_week
+import fitbe.composeapp.generated.resources.week_range_picker_content_description_end_headline
+import fitbe.composeapp.generated.resources.week_range_picker_content_description_start_headline
+import fitbe.composeapp.generated.resources.week_range_picker_content_description_week_in_range
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
@@ -347,17 +347,17 @@ private fun weekContentDescription(
     val descriptionBuilder = StringBuilder()
     when {
         isStartYearWeek ->
-            descriptionBuilder.append(stringResource(Res.string.week_range_picker_start_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.week_range_picker_content_description_start_headline))
 
         isEndYearWeek ->
-            descriptionBuilder.append(stringResource(Res.string.week_range_picker_end_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.week_range_picker_content_description_end_headline))
 
         isInRange ->
-            descriptionBuilder.append(stringResource(Res.string.week_range_picker_week_in_range_content_description))
+            descriptionBuilder.append(stringResource(Res.string.week_range_picker_content_description_week_in_range))
     }
     if (isCurrentYearWeek) {
         if (descriptionBuilder.isNotEmpty()) descriptionBuilder.append(", ")
-        descriptionBuilder.append(stringResource(Res.string.week_range_picker_current_week_content_description))
+        descriptionBuilder.append(stringResource(Res.string.week_range_picker_content_description_current_week))
     }
     return if (descriptionBuilder.isEmpty()) null else descriptionBuilder.toString()
 }

@@ -51,10 +51,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.year_range_picker_current_year_content_description
-import fitbe.composeapp.generated.resources.year_range_picker_end_headline_content_description
-import fitbe.composeapp.generated.resources.year_range_picker_start_headline_content_description
-import fitbe.composeapp.generated.resources.year_range_picker_year_in_range_content_description
+import fitbe.composeapp.generated.resources.year_range_picker_content_description_current_year
+import fitbe.composeapp.generated.resources.year_range_picker_content_description_end_headline
+import fitbe.composeapp.generated.resources.year_range_picker_content_description_start_headline
+import fitbe.composeapp.generated.resources.year_range_picker_content_description_year_in_range
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -296,15 +296,15 @@ private fun yearContentDescription(
     val descriptionBuilder = StringBuilder()
     when {
         isStartYear ->
-            descriptionBuilder.append(stringResource(Res.string.year_range_picker_start_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_content_description_start_headline))
         isEndYear ->
-            descriptionBuilder.append(stringResource(Res.string.year_range_picker_end_headline_content_description))
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_content_description_end_headline))
         isInRange ->
-            descriptionBuilder.append(stringResource(Res.string.year_range_picker_year_in_range_content_description))
+            descriptionBuilder.append(stringResource(Res.string.year_range_picker_content_description_year_in_range))
     }
     if (isCurrentYear) {
         if (descriptionBuilder.isNotEmpty()) descriptionBuilder.append(", ")
-        descriptionBuilder.append(stringResource(Res.string.year_range_picker_current_year_content_description))
+        descriptionBuilder.append(stringResource(Res.string.year_range_picker_content_description_current_year))
     }
     return if (descriptionBuilder.isEmpty()) null else descriptionBuilder.toString()
 }

@@ -177,10 +177,51 @@
     <string name="default_training_equipment_squat_rack">Squat Rack</string>
     <string name="default_training_equipment_spotter_arms">Sicherheitsablagen</string>
 
+    <!-- Date unit -->
+    <string name="date_unit_day">Tag</string>
+    <string name="date_unit_week">Woche</string>
+    <string name="date_unit_month">Monat</string>
+    <string name="date_unit_year">Jahr</string>
 
+    <!-- Advanced timer dialog -->
+    <string name="timer_dialog_title">Uhrzeit auswählen</string>
+    <string name="timer_dialog_ok">OK</string>
+    <string name="timer_dialog_cancel">Abbrechen</string>
 
+    <!-- Date range picker dialog -->
+    <string name="date_range_picker_ok">OK</string>
+    <string name="date_range_picker_cancel">Abbrechen</string>
 
-    <string name="add_beverage">Getr\u00e4nk hinzuf\u00fcgen</string>
+    <!-- Month range picker -->
+    <string name="month_range_picker_content_description_start_headline">Startmonat</string>
+    <string name="month_range_picker_content_description_end_headline">Endmonat</string>
+    <string name="month_range_picker_content_description_month_in_range">Monat im ausgewählten Bereich</string>
+    <string name="month_range_picker_content_description_current_month">Aktueller Monat</string>
+    <string name="month_range_picker_january">Jan</string>
+    <string name="month_range_picker_february">Feb</string>
+    <string name="month_range_picker_march">Mär</string>
+    <string name="month_range_picker_april">Apr</string>
+    <string name="month_range_picker_may">Mai</string>
+    <string name="month_range_picker_june">Jun</string>
+    <string name="month_range_picker_july">Jul</string>
+    <string name="month_range_picker_august">Aug</string>
+    <string name="month_range_picker_september">Sep</string>
+    <string name="month_range_picker_october">Okt</string>
+    <string name="month_range_picker_november">Nov</string>
+    <string name="month_range_picker_december">Dez</string>
+
+    <!-- Week range picker -->
+    <string name="week_range_picker_content_description_start_headline">Startwoche</string>
+    <string name="week_range_picker_content_description_end_headline">Endwoche</string>
+    <string name="week_range_picker_content_description_week_in_range">Woche im ausgewählten Bereich</string>
+    <string name="week_range_picker_content_description_current_week">Aktueller Woche</string>
+
+    <!-- Year range picker -->
+    <string name="year_range_picker_content_description_start_headline">Startjahr</string>
+    <string name="year_range_picker_content_description_end_headline">Endjahr</string>
+    <string name="year_range_picker_content_description_year_in_range">Jahr im ausgewählten Bereich</string>
+    <string name="year_range_picker_content_description_current_year">Aktuelles Jahr</string>
+
     <plurals name="fluid_unit_cup">
         <item quantity="zero">Tassen</item>
         <item quantity="one">Tasse</item>
@@ -205,6 +246,9 @@
     <string name="fluid_unit_centiliter">cl</string>
     <string name="fluid_unit_deciliter">dl</string>
     <string name="fluid_unit_liter">l</string>
+
+
+    <string name="add_beverage">Getr\u00e4nk hinzuf\u00fcgen</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
         <item quantity="one">%1$d Tasse %2$s</item>
@@ -229,10 +273,7 @@
     <string name="beverage_in_centiliter">%1$d cl %2$s</string>
     <string name="beverage_in_deciliter">%1$d dl %2$s</string>
     <string name="beverage_in_liter">%1$d l %2$s</string>
-    <string name="sleep_view_type_day">Tag</string>
-    <string name="sleep_view_type_week">Woche</string>
-    <string name="sleep_view_type_month">Monat</string>
-    <string name="sleep_view_type_year">Jahr</string>
+
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>
@@ -312,37 +353,6 @@
     <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
     <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
     <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
-
-    <string name="year_range_picker_start_headline_content_description">Startjahr</string>
-    <string name="year_range_picker_end_headline_content_description">Endjahr</string>
-    <string name="year_range_picker_year_in_range_content_description">Jahr im ausgewählten Bereich</string>
-    <string name="year_range_picker_current_year_content_description">Aktuelles Jahr</string>
-    <string name="month_range_picker_start_headline_content_description">Startmonat</string>
-    <string name="month_range_picker_end_headline_content_description">Endmonat</string>
-    <string name="month_range_picker_month_in_range_content_description">Monat im ausgewählten Bereich</string>
-    <string name="month_range_picker_current_month_content_description">Aktueller Monat</string>
-    <string name="month_range_picker_january">Jan</string>
-    <string name="month_range_picker_february">Feb</string>
-    <string name="month_range_picker_march">Mär</string>
-    <string name="month_range_picker_april">Apr</string>
-    <string name="month_range_picker_may">Mai</string>
-    <string name="month_range_picker_june">Jun</string>
-    <string name="month_range_picker_july">Jul</string>
-    <string name="month_range_picker_august">Aug</string>
-    <string name="month_range_picker_september">Sep</string>
-    <string name="month_range_picker_october">Okt</string>
-    <string name="month_range_picker_november">Nov</string>
-    <string name="month_range_picker_december">Dez</string>
-    <string name="week_range_picker_start_headline_content_description">Startwoche</string>
-    <string name="week_range_picker_end_headline_content_description">Endwoche</string>
-    <string name="week_range_picker_week_in_range_content_description">Woche im ausgewählten Bereich</string>
-    <string name="week_range_picker_current_week_content_description">Aktueller Woche</string>
-    <string name="date_range_picker_ok">OK</string>
-    <string name="date_range_picker_cancel">Abbrechen</string>
-
-    <string name="timer_dialog_title">Uhrzeit auswählen</string>
-    <string name="timer_dialog_ok">OK</string>
-    <string name="timer_dialog_cancel">Abbrechen</string>
 
     <string name="month_january">Januar</string>
     <string name="month_february">Februar</string>
