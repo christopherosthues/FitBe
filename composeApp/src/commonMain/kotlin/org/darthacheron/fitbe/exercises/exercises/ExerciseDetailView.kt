@@ -40,15 +40,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_detail_add_equipment
+import fitbe.composeapp.generated.resources.exercise_detail_add_muscle_groups
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_equipment
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_muscle_groups
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_cancel
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_delete
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_edit
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_equipment
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_muscle_groups
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_reset_to_default
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_save
 import fitbe.composeapp.generated.resources.exercise_detail_guide
 import fitbe.composeapp.generated.resources.exercise_detail_name
+import fitbe.composeapp.generated.resources.exercise_detail_required_equipment
 import fitbe.composeapp.generated.resources.exercise_detail_target_muscle_groups
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_cancel
@@ -82,6 +87,7 @@ fun ExerciseDetailView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
+    val availableEquipments by viewModel.availableEquipments.collectAsState()
     val scrollState = rememberScrollState()
 
     val galleryLauncher = rememberFilePickerLauncher(
@@ -107,7 +113,7 @@ fun ExerciseDetailView(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp) 
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
         ) {
             if (uiState.isLoading && uiState.exerciseId != null && !uiState.isEditing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -177,7 +183,7 @@ fun ExerciseDetailView(
                         value = getExerciseGuide(uiState.guide, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onGuideChange(it) },
                         label = { Text(text = stringResource(Res.string.exercise_detail_guide)) },
-                        modifier = Modifier.fillMaxWidth().height(120.dp), 
+                        modifier = Modifier.fillMaxWidth().height(120.dp),
                         readOnly = !uiState.isEditing,
                         isError = uiState.error.hasGuideError,
                         supportingText = {
@@ -200,8 +206,8 @@ fun ExerciseDetailView(
                             uiState.targetMuscleGroups.forEach { muscleGroup ->
                                 InputChip(
                                     selected = false,
-                                    onClick = {  },
-                                    label = { Text(text = stringResource(muscleGroup.localizedString()))  },
+                                    onClick = { },
+                                    label = { Text(text = stringResource(muscleGroup.localizedString())) },
                                     trailingIcon = {
                                         if (uiState.isEditing) {
                                             IconButton(onClick = { viewModel.removeMuscleGroup(muscleGroup) }, modifier = Modifier.size(18.dp)) {
@@ -223,15 +229,18 @@ fun ExerciseDetailView(
                                     expanded = muscleGroupDropdownExpanded,
                                     onExpandedChange = { muscleGroupDropdownExpanded = !muscleGroupDropdownExpanded },
                                 ) {
-                                    TextButton(onClick = { muscleGroupDropdownExpanded = true }, modifier = Modifier.menuAnchor(
-                                        MenuAnchorType.SecondaryEditable)) {
+                                    TextButton(
+                                        onClick = { muscleGroupDropdownExpanded = true }, modifier = Modifier.menuAnchor(
+                                            MenuAnchorType.SecondaryEditable
+                                        )
+                                    ) {
                                         Icon(
                                             painterResource(Res.drawable.ic_add),
                                             contentDescription = stringResource(Res.string.exercise_detail_content_description_add_muscle_groups),
                                             modifier = Modifier.size(18.dp)
                                         )
-//                                        Spacer(Modifier.size(8.dp))
-//                                        Text("Add Group") // TODO: SR
+                                        Spacer(Modifier.size(8.dp))
+                                        Text(stringResource(Res.string.exercise_detail_add_muscle_groups))
                                     }
                                     ExposedDropdownMenu(
                                         expanded = muscleGroupDropdownExpanded,
@@ -261,15 +270,75 @@ fun ExerciseDetailView(
 
                     // Equipment List Display & Edit Button
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text("Required Equipment", style = MaterialTheme.typography.titleMedium) // TODO: SR
-                        // TODO: Implement similar Chip + Add Dropdown for Equipment
-                        uiState.equipmentList.forEach {
-                            Text(text = getEquipmentName(it.name, it.default))
+                        Text(stringResource(Res.string.exercise_detail_required_equipment), style = MaterialTheme.typography.titleMedium)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            uiState.equipmentList.forEach { equipment ->
+                                InputChip(
+                                    selected = false,
+                                    onClick = { },
+                                    label = { Text(text = getEquipmentName(equipment.name, equipment.default)) },
+                                    trailingIcon = {
+                                        if (uiState.isEditing) {
+                                            IconButton(onClick = { viewModel.removeEquipment(equipment) }, modifier = Modifier.size(18.dp)) {
+                                                Icon(
+                                                    painterResource(Res.drawable.ic_remove),
+                                                    stringResource(Res.string.exercise_detail_content_description_remove_equipment)
+                                                )
+                                            }
+                                        }
+                                    },
+                                    enabled = uiState.isEditing,
+                                    colors = InputChipDefaults.inputChipColors()
+                                )
+                            }
+
+                            if (uiState.isEditing && availableEquipments.isNotEmpty()) {
+                                var equipmentDropdownExpanded by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(
+                                    expanded = equipmentDropdownExpanded,
+                                    onExpandedChange = { equipmentDropdownExpanded = !equipmentDropdownExpanded },
+                                ) {
+                                    TextButton(
+                                        onClick = { equipmentDropdownExpanded = true }, modifier = Modifier.menuAnchor(
+                                            MenuAnchorType.SecondaryEditable
+                                        )
+                                    ) {
+                                        Icon(
+                                            painterResource(Res.drawable.ic_add),
+                                            contentDescription = stringResource(Res.string.exercise_detail_content_description_add_equipment),
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(Modifier.size(8.dp))
+                                        Text(stringResource(Res.string.exercise_detail_add_equipment))
+                                    }
+                                    ExposedDropdownMenu(
+                                        expanded = equipmentDropdownExpanded,
+                                        onDismissRequest = { equipmentDropdownExpanded = false }
+                                    ) {
+                                        availableEquipments.forEach { equipment ->
+                                            DropdownMenuItem(
+                                                text = { Text(text = getEquipmentName(equipment.name, equipment.default)) },
+                                                onClick = {
+                                                    viewModel.addEquipment(equipment)
+                                                    equipmentDropdownExpanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        if (uiState.isEditing) {
-                           // Button(onClick = { /* TODO: Implement equipment selection */ }) {
-                           //     Text("Edit Equipment") // TODO: SR
-                           // }
+                        if (uiState.error.hasEquipmentError) {
+                            Text(
+                                text = stringResource(uiState.error.equipmentError!!),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.titleSmall,
+                            )
                         }
                     }
 

@@ -8,6 +8,7 @@ import fitbe.composeapp.generated.resources.exercise_detail_error_delete_exercis
 import fitbe.composeapp.generated.resources.exercise_detail_error_delete_new_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_error_exercise_not_found
 import fitbe.composeapp.generated.resources.exercise_detail_error_loading_exercise
+import fitbe.composeapp.generated.resources.exercise_detail_error_missing_equipment
 import fitbe.composeapp.generated.resources.exercise_detail_error_missing_guide
 import fitbe.composeapp.generated.resources.exercise_detail_error_missing_muscle_group
 import fitbe.composeapp.generated.resources.exercise_detail_error_missing_name
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.exercises.equipment.EquipmentRepository
 import org.darthacheron.fitbe.exercises.equipment.TrainingEquipment
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.FitBeViewModel
@@ -65,14 +68,17 @@ data class ExerciseError(
     val guideError: StringResource? = null,
     val hasMuscleGroupError: Boolean = false,
     val muscleGroupError: StringResource? = null,
+    val hasEquipmentError: Boolean = false,
+    val equipmentError: StringResource? = null
 ) {
     val hasError: Boolean
-        get() = hasGeneralError || hasNameError || hasGuideError || hasMuscleGroupError
+        get() = hasGeneralError || hasNameError || hasGuideError || hasMuscleGroupError || hasEquipmentError
 }
 
 @OptIn(ExperimentalUuidApi::class)
 class ExerciseDetailViewModel(
     private val exerciseRepository: ExerciseRepository,
+    private val equipmentRepository: EquipmentRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
@@ -93,6 +99,17 @@ class ExerciseDetailViewModel(
             MuscleGroup.entries.filter { it !in currentState.targetMuscleGroups }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, MuscleGroup.entries)
+
+    val availableEquipments: StateFlow<List<TrainingEquipment>> =
+        combine(
+            equipmentRepository.getAllEquipments(),
+            uiState
+        ) { equipments, uiState ->
+            equipments.filter {
+                val isNotIn = it.id !in uiState.equipmentList.map { eq -> eq.id }
+                isNotIn
+            }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private fun <T> List<T>.idsEqual(other: List<T>, idSelector: (T) -> Any): Boolean {
         if (this.size != other.size) return false
@@ -153,7 +170,7 @@ class ExerciseDetailViewModel(
                                      currentExerciseWithEquipment.guide != originalDefaultExercise.guide ||
                                      !currentExerciseWithEquipment.targetMuscleGroups.idsEqual(originalDefaultExercise.targetMuscleGroups) { mg -> mg.ordinal } ||
                                      !currentExerciseWithEquipment.equipmentList.idsEqual(originalDefaultExercise.equipmentList) { eq -> eq.id })
-                                } else { false } 
+                                } else { false }
                             )
                         }
                     } else { // Not a default item
@@ -319,22 +336,38 @@ class ExerciseDetailViewModel(
         onTargetMuscleGroupsChange(currentGroups - muscleGroup)
     }
 
-    fun onEquipmentListChange(equipment: List<TrainingEquipment>) {
+    private fun onEquipmentListChange(equipments: List<TrainingEquipment>) {
+        val equipmentError =
+            if (equipments.isEmpty()) Res.string.exercise_detail_error_missing_equipment else null
         _uiState.update { currentState ->
             val modified = if (currentState.default) {
                  (currentState.name != currentState.persistedDefaultName ||
                  currentState.guide != currentState.persistedDefaultGuide ||
                  !currentState.targetMuscleGroups.idsEqual(currentState.persistedDefaultMuscleGroups ?: emptyList()) { mg -> mg.ordinal } ||
-                 !equipment.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
+                 !equipments.idsEqual(currentState.persistedDefaultEquipmentList ?: emptyList()) { eq -> eq.id })
             } else { false }
             currentState.copy(
-                equipmentList = equipment,
+                equipmentList = equipments,
                 error = currentState.error.copy(
+                    hasEquipmentError = equipmentError != null,
+                    equipmentError = equipmentError,
                     hasGeneralError = false,
                     generalError = null
                 ),
                 isModifiedFromPersistedDefault = modified)
         }
+    }
+
+    fun addEquipment(equipment: TrainingEquipment) {
+        val currentEquipments = _uiState.value.equipmentList
+        if (equipment !in currentEquipments) {
+            onEquipmentListChange(currentEquipments + equipment)
+        }
+    }
+
+    fun removeEquipment(equipment: TrainingEquipment) {
+        val currentEquipments = _uiState.value.equipmentList
+        onEquipmentListChange(currentEquipments - equipment)
     }
 
     fun saveExercise() {
@@ -371,6 +404,7 @@ class ExerciseDetailViewModel(
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
                         imageUri = exerciseToSave.imageUri,
+                        equipmentList = currentState.equipmentList, // Persist equipment list to state
                         error = ExerciseError(),
                         isModifiedFromPersistedDefault = false 
                     )

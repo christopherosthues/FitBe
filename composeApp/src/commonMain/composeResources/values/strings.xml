@@ -35,12 +35,17 @@
     <string name="exercise_detail_name">Name</string>
     <string name="exercise_detail_guide">Guide</string>
     <string name="exercise_detail_target_muscle_groups">Target Muscle Groups</string>
+    <string name="exercise_detail_add_muscle_groups">Add muscle group</string>
+    <string name="exercise_detail_required_equipment">Required Equipment</string>
+    <string name="exercise_detail_add_equipment">Add equipment</string>
     <string name="exercise_detail_content_description_select_image">Select Image</string>
     <string name="exercise_detail_content_description_image">Exercise Image</string>
     <string name="exercise_detail_content_description_remove_image">Remove image</string>
     <string name="exercise_detail_content_description_default_equipment">Default exercise</string>
     <string name="exercise_detail_content_description_remove_muscle_groups">Remove muscle group</string>
     <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
+    <string name="exercise_detail_content_description_add_equipment">Add equipment</string>
+    <string name="exercise_detail_content_description_remove_equipment">Remove equipment</string>
     <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
     <string name="exercise_detail_content_description_delete">Delete exercise</string>
     <string name="exercise_detail_content_description_cancel">Cancel editing</string>
@@ -52,6 +57,7 @@
     <string name="exercise_detail_error_name_already_exists">Name has to be unique</string>
     <string name="exercise_detail_error_missing_guide">Guide cannot be empty</string>
     <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
+    <string name="exercise_detail_error_missing_equipment">At least one equipment has to be selected</string>
     <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
     <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
     <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
