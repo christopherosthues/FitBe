@@ -103,7 +103,6 @@ fun RootScreen(
                         label = {
                             Text(
                                 text = stringResource(bottomBarDestination.label),
-                                color = if (isSelected) Color.Red else Color.Black
                             )
                         },
                         icon = {
@@ -111,7 +110,6 @@ fun RootScreen(
                                 painter = painterResource(bottomBarDestination.icon),
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp),
-                                tint = if (isSelected) Color.Red else Color.Black
                             )
                         }
                     )
