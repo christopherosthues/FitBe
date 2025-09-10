@@ -110,6 +110,7 @@ class ExerciseDetailViewModel(
                     name = "",
                     guide = "",
                     targetMuscleGroups = emptyList(),
+                    imageUri = null,
                     equipmentList = emptyList(),
                     error = ExerciseError(),
                     persistedDefaultName = null,
@@ -136,6 +137,7 @@ class ExerciseDetailViewModel(
                                 name = currentExerciseWithEquipment.name,
                                 guide = currentExerciseWithEquipment.guide,
                                 targetMuscleGroups = currentExerciseWithEquipment.targetMuscleGroups,
+                                imageUri = currentExerciseWithEquipment.imageUri,
                                 equipmentList = currentExerciseWithEquipment.equipmentList,
                                 default = true,
                                 isLoading = false,
@@ -160,6 +162,7 @@ class ExerciseDetailViewModel(
                                 name = currentExerciseWithEquipment.name,
                                 guide = currentExerciseWithEquipment.guide,
                                 targetMuscleGroups = currentExerciseWithEquipment.targetMuscleGroups,
+                                imageUri = currentExerciseWithEquipment.imageUri,
                                 equipmentList = currentExerciseWithEquipment.equipmentList,
                                 default = false,
                                 isLoading = false,
@@ -186,6 +189,7 @@ class ExerciseDetailViewModel(
                             name = "",
                             guide = "",
                             targetMuscleGroups = emptyList(),
+                            imageUri = null,
                             equipmentList = emptyList()
                         )
                     }
@@ -202,6 +206,7 @@ class ExerciseDetailViewModel(
                         name = "",
                         guide = "",
                         targetMuscleGroups = emptyList(),
+                        imageUri = null,
                         equipmentList = emptyList()
                     )
                 }
@@ -347,6 +352,7 @@ class ExerciseDetailViewModel(
                 name = currentState.name,
                 guide = currentState.guide,
                 targetMuscleGroups = currentState.targetMuscleGroups,
+                imageUri = currentState.imageUri,
                 default = currentState.default,
                 dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
             )
@@ -364,6 +370,7 @@ class ExerciseDetailViewModel(
                         name = exerciseToSave.name,
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
+                        imageUri = exerciseToSave.imageUri,
                         error = ExerciseError(),
                         isModifiedFromPersistedDefault = false 
                     )
@@ -452,6 +459,7 @@ class ExerciseDetailViewModel(
                         name = currentState . name,
                         guide = currentState.guide,
                         targetMuscleGroups = currentState.targetMuscleGroups,
+                        imageUri = currentState.imageUri,
                         default = currentState.default,
                         dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                     )
