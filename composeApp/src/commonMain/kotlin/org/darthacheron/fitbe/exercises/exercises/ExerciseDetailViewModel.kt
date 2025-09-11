@@ -515,4 +515,15 @@ class ExerciseDetailViewModel(
             }
         }
     }
+
+    fun clearGeneralError() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                error = currentState.error.copy(
+                    hasGeneralError = false,
+                    generalError = null
+                )
+            )
+        }
+    }
 }

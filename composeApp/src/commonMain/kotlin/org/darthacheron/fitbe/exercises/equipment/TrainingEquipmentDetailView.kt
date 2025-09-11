@@ -1,16 +1,23 @@
 package org.darthacheron.fitbe.exercises.equipment
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -18,11 +25,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -43,13 +54,18 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_content_de
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_reset_to_default
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_save
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_select_image
+import fitbe.composeapp.generated.resources.training_equipment_detail_exercises_title
 import fitbe.composeapp.generated.resources.training_equipment_detail_name
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.components.FitBeImage
 import org.darthacheron.fitbe.components.ImagePlaceholder
 import org.darthacheron.fitbe.components.ImageWithDefault
+import org.darthacheron.fitbe.exercises.exercises.getExerciseImage
+import org.darthacheron.fitbe.exercises.exercises.getExerciseName
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -63,6 +79,8 @@ fun TrainingEquipmentDetailView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
@@ -82,18 +100,34 @@ fun TrainingEquipmentDetailView(
         viewModel.updateTopBarConfig()
     }
 
+    val generalErrorResId = uiState.error.generalError
+    val generalErrorMessage = if (generalErrorResId != null && uiState.error.hasGeneralError) {
+        stringResource(generalErrorResId)
+    } else {
+        null
+    }
+
+    LaunchedEffect(generalErrorMessage) {
+        if (generalErrorMessage != null) {
+            scope.launch {
+                snackbarHostState.showSnackbar(generalErrorMessage)
+                viewModel.clearGeneralError() // Clear the error after showing Snackbar
+            }
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        Box(
+        Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
         ) {
             if (uiState.isLoading && uiState.equipmentId != null && !uiState.isEditing) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -155,13 +189,40 @@ fun TrainingEquipmentDetailView(
                         }
                     )
 
-                    if (uiState.error.hasGeneralError) {
+                    // Display Exercises
+                    if (uiState.exercises.isNotEmpty()) {
                         Text(
-                            text = stringResource(uiState.error.generalError!!),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(top = 8.dp)
+                            text = stringResource(Res.string.training_equipment_detail_exercises_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.align(Alignment.Start)
                         )
+                        uiState.exercises.forEach { exercise ->
+                            Card(
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .padding(vertical = 4.dp)
+                                    .clickable(enabled = !uiState.isEditing) { viewModel.navigateToExerciseDetail(exercise.id) },
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                            ) {
+                                Row( // This Row might differ if previous changes were not applied as expected
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    FitBeImage(
+                                        getExerciseImage(exercise.imageUri, exercise.default),
+                                        exercise.imageUri,
+                                        null,
+                                        Modifier.size(24.dp)
+                                    )
+                                    Text(
+                                        text = getExerciseName(exercise.name, exercise.default),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -260,5 +321,9 @@ fun TrainingEquipmentDetailView(
                 }
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }

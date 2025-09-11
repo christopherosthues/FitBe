@@ -352,4 +352,19 @@ class TrainingEquipmentDetailViewModel(
             }
         }
     }
+
+    fun navigateToExerciseDetail(exerciseId: Uuid) {
+        navHostController.navigate(Screen.ExerciseDetail(exerciseId.toString()))
+    }
+
+    fun clearGeneralError() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                error = currentState.error.copy(
+                    hasGeneralError = false,
+                    generalError = null
+                )
+            )
+        }
+    }
 }

@@ -27,6 +27,8 @@ import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,6 +74,7 @@ import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.components.ImagePlaceholder
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.darthacheron.fitbe.exercises.equipment.getEquipmentName
@@ -89,6 +93,8 @@ fun ExerciseDetailView(
     val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
     val availableEquipments by viewModel.availableEquipments.collectAsState()
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     val galleryLauncher = rememberFilePickerLauncher(
         type = FileKitType.Image,
@@ -106,6 +112,22 @@ fun ExerciseDetailView(
 
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
+    }
+
+    val generalErrorResId = uiState.error.generalError
+    val generalErrorMessage = if (generalErrorResId != null && uiState.error.hasGeneralError) {
+        stringResource(generalErrorResId)
+    } else {
+        null
+    }
+
+    LaunchedEffect(generalErrorMessage) {
+        if (generalErrorMessage != null) {
+            scope.launch {
+                snackbarHostState.showSnackbar(generalErrorMessage)
+                viewModel.clearGeneralError()
+            }
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -341,15 +363,6 @@ fun ExerciseDetailView(
                             )
                         }
                     }
-
-                    if (uiState.error.hasGeneralError) {
-                        Text(
-                            text = stringResource(uiState.error.generalError!!),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
                 }
             }
         }
@@ -452,5 +465,9 @@ fun ExerciseDetailView(
                 }
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }

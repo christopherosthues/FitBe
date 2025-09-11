@@ -120,6 +120,7 @@
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>
+    <string name="training_equipment_detail_exercises_title">Übungen</string>
     <string name="training_equipment_detail_content_description_select_image">Bild auswählen</string>
     <string name="training_equipment_detail_content_description_image">Trainingsgerät Bild</string>
     <string name="training_equipment_detail_content_description_reset_to_default">Auf Standard zurücksetzen</string>
