@@ -2,8 +2,8 @@ package org.darthacheron.fitbe.profile
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.darthacheron.fitbe.exercises.exercises.ProfileFavoriteExerciseCrossRef
-import org.darthacheron.fitbe.exercises.exercises.ProfileWithFavoritesEntity
+import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
+import org.darthacheron.fitbe.workouts.exercises.ProfileWithFavoritesEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

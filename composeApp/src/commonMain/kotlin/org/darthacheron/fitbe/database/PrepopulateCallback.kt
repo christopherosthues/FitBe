@@ -7,13 +7,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.darthacheron.fitbe.exercises.equipment.EquipmentDao
-import org.darthacheron.fitbe.exercises.exercises.ExerciseDao
-import org.darthacheron.fitbe.exercises.equipment.TrainingEquipmentEntity
-import org.darthacheron.fitbe.exercises.equipment.fromTrainingEquipmentEntity
-import org.darthacheron.fitbe.exercises.exercises.ExerciseEntity
-import org.darthacheron.fitbe.exercises.exercises.MuscleGroup
-import org.darthacheron.fitbe.exercises.exercises.fromExerciseEntity
+import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
+import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.equipment.fromTrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
+import org.darthacheron.fitbe.workouts.exercises.fromExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 internal val equipmentList = listOf(
