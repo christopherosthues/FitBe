@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -72,4 +73,17 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM exercises")
     fun getAllExercises(): Flow<List<ExerciseEntity>>
+
+    // Methods for managing ProfileFavoriteExerciseCrossRef
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFavorite(crossRef: ProfileFavoriteExerciseCrossRef)
+
+    @Delete
+    suspend fun removeFavorite(crossRef: ProfileFavoriteExerciseCrossRef)
+
+    @Query("SELECT exerciseId FROM profile_favorite_exercise_cross_ref WHERE profileId = :profileId")
+    fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM profile_favorite_exercise_cross_ref WHERE profileId = :profileId AND exerciseId = :exerciseId)")
+    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean>
 }

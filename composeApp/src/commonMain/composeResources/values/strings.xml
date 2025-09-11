@@ -28,6 +28,8 @@
     <!-- Exercise -->
     <string name="exercise_no_exercises">No exercises found. Add some!</string>
     <string name="exercise_content_description_card">View details of %1$s</string>
+    <string name="exercise_content_description_card_add_favorite">Mark as favorite</string>
+    <string name="exercise_content_description_card_remove_favorite">Unmark as favorite</string>
     <string name="exercise_content_description_add">Add exercise</string>
     <string name="exercise_content_description_default_exercise">Default exercise</string>
 
@@ -38,6 +40,8 @@
     <string name="exercise_detail_add_muscle_groups">Add muscle group</string>
     <string name="exercise_detail_required_equipment">Required Equipment</string>
     <string name="exercise_detail_add_equipment">Add equipment</string>
+    <string name="exercise_detail_content_description_add_favorite">Add exercise to favorites</string>
+    <string name="exercise_detail_content_description_remove_favorite">Remove exercise from favorites</string>
     <string name="exercise_detail_content_description_select_image">Select Image</string>
     <string name="exercise_detail_content_description_image">Exercise Image</string>
     <string name="exercise_detail_content_description_remove_image">Remove image</string>

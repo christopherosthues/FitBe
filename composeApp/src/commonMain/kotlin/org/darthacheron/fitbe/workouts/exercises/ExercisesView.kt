@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -36,11 +37,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_content_description_card_add_favorite
+import fitbe.composeapp.generated.resources.exercise_content_description_card_remove_favorite
 import fitbe.composeapp.generated.resources.exercise_content_description_add
 import fitbe.composeapp.generated.resources.exercise_content_description_card
 import fitbe.composeapp.generated.resources.exercise_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_no_exercises
 import fitbe.composeapp.generated.resources.ic_add
+import fitbe.composeapp.generated.resources.ic_favorite
+import fitbe.composeapp.generated.resources.ic_favorite_border
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -55,6 +60,7 @@ fun ExercisesView(
         viewModel.updateTopBarConfig()
     }
     val allExercises by viewModel.allExercises.collectAsState()
+    val favoriteExerciseIds by viewModel.favoriteExerciseIds.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -73,8 +79,11 @@ fun ExercisesView(
                 ) {
                     items(allExercises.size, key = { allExercises[it].id.toString() }) { exerciseIndex ->
                         val exercise = allExercises[exerciseIndex]
+                        val isFavorite = favoriteExerciseIds.contains(exercise.id)
                         ExerciseCard(
                             exercise = exercise,
+                            isFavorite = isFavorite,
+                            onToggleFavorite = { viewModel.toggleFavorite(exercise.id) },
                             onClick = { viewModel.navigateToExerciseDetail(exercise.id.toString()) },
                             contentDescription = stringResource(
                                 Res.string.exercise_content_description_card,
@@ -104,6 +113,8 @@ fun ExercisesView(
 @Composable
 fun ExerciseCard(
     exercise: Exercise,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
     onClick: () -> Unit,
     contentDescription: String,
     modifier: Modifier = Modifier
@@ -129,6 +140,17 @@ fun ExerciseCard(
                 defaultContentDescription = stringResource(Res.string.exercise_content_description_default_exercise),
                 modifier = Modifier.fillMaxSize()
             )
+
+            IconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
+            ) {
+                Icon(
+                    painter = painterResource(if (isFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border),
+                    contentDescription = stringResource(if (isFavorite) Res.string.exercise_content_description_card_remove_favorite else Res.string.exercise_content_description_card_add_favorite),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
 
             Box(
                 modifier = Modifier
@@ -170,7 +192,7 @@ fun ExerciseCard(
                                         disabledContainerColor = chipColors.containerColor,
                                         disabledLabelColor = chipColors.labelColor,
                                     ),
-                                    modifier = Modifier.height(24.dp) // Added height modifier
+                                    modifier = Modifier.height(24.dp)
                                 )
                             }
                         }

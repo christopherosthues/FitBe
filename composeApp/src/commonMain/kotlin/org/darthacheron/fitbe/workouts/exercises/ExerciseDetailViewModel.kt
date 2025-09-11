@@ -3,6 +3,8 @@ package org.darthacheron.fitbe.workouts.exercises
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_favorite
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_favorite
 import fitbe.composeapp.generated.resources.exercise_detail_error_delete_default_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_error_delete_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_error_delete_new_exercise
@@ -16,13 +18,19 @@ import fitbe.composeapp.generated.resources.exercise_detail_error_reset_default_
 import fitbe.composeapp.generated.resources.exercise_detail_error_reset_new_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_error_reset_non_default_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_error_saving_exercise
+import fitbe.composeapp.generated.resources.ic_favorite
+import fitbe.composeapp.generated.resources.ic_favorite_border
 import fitbe.composeapp.generated.resources.top_bar_title_add_edit_exercise
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -30,11 +38,13 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.workouts.equipment.EquipmentRepository
-import org.darthacheron.fitbe.workouts.equipment.TrainingEquipment
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.ui.state.TopBarAction
+import org.darthacheron.fitbe.workouts.equipment.EquipmentRepository
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipment
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -56,7 +66,8 @@ data class AddEditExerciseUiState(
     val persistedDefaultImageUri: String? = null,
     val persistedDefaultMuscleGroups: List<MuscleGroup>? = null,
     val persistedDefaultEquipmentList: List<TrainingEquipment>? = null,
-    val isModifiedFromPersistedDefault: Boolean = false
+    val isModifiedFromPersistedDefault: Boolean = false,
+    val isFavorite: Boolean = false
 )
 
 data class ExerciseError(
@@ -75,10 +86,11 @@ data class ExerciseError(
         get() = hasGeneralError || hasNameError || hasGuideError || hasMuscleGroupError || hasEquipmentError
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class ExerciseDetailViewModel(
     private val exerciseRepository: ExerciseRepository,
-    private val equipmentRepository: EquipmentRepository,
+    equipmentRepository: EquipmentRepository,
+    settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
@@ -93,6 +105,63 @@ class ExerciseDetailViewModel(
 
     private val _uiState = MutableStateFlow(AddEditExerciseUiState())
     val uiState: StateFlow<AddEditExerciseUiState> = _uiState.asStateFlow()
+
+    private val currentProfileId: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
+        .map { it.selectedProfileId }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private val isFavoriteFlow: StateFlow<Boolean> =
+        combine(uiState.map { it.exerciseId }.distinctUntilChanged(), currentProfileId) { exerciseId, profileId ->
+            if (exerciseId != null && profileId != null) {
+                exerciseRepository.isFavorite(profileId, exerciseId)
+            } else {
+                flowOf(false)
+            }
+        }.flatMapLatest { it }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    init {
+        viewModelScope.launch {
+            isFavoriteFlow.collect { isFav ->
+                // This ensures the state is consistent with the database
+                _uiState.update { it.copy(isFavorite = isFav) }
+                updateTopBarConfig()
+            }
+        }
+    }
+
+    override val actions: List<TopBarAction>
+        get() {
+            val currentExerciseId = _uiState.value.exerciseId
+            val currentProfId = currentProfileId.value
+            val isCurrentlyFavorite = _uiState.value.isFavorite
+
+            val favoriteAction = TopBarAction(
+                icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
+                contentDescription = if (isCurrentlyFavorite) Res.string.exercise_detail_content_description_remove_favorite else Res.string.exercise_detail_content_description_add_favorite,
+                onClick = { toggleFavorite() },
+                isVisible = currentExerciseId != null && currentProfId != null
+            )
+            return listOf(favoriteAction) 
+        }
+
+    private fun toggleFavorite() {
+        val exerciseId = _uiState.value.exerciseId
+        val profileId = currentProfileId.value
+
+        if (exerciseId != null && profileId != null) {
+            val currentIsFavorite = _uiState.value.isFavorite
+            val newIsFavorite = !currentIsFavorite
+
+            viewModelScope.launch {
+                if (newIsFavorite) {
+                    exerciseRepository.addFavorite(profileId, exerciseId)
+                } else {
+                    exerciseRepository.removeFavorite(profileId, exerciseId)
+                }
+            }
+        }
+    }
 
     val availableMuscleGroups: StateFlow<List<MuscleGroup>> = _uiState
         .map { currentState ->
@@ -121,7 +190,7 @@ class ExerciseDetailViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    isEditing = true, // New exercise starts in edit mode
+                    isEditing = true,
                     default = false,
                     exerciseId = null,
                     name = "",
@@ -134,13 +203,14 @@ class ExerciseDetailViewModel(
                     persistedDefaultGuide = null,
                     persistedDefaultMuscleGroups = null,
                     persistedDefaultEquipmentList = null,
-                    isModifiedFromPersistedDefault = false
+                    isModifiedFromPersistedDefault = false,
+                    isFavorite = false 
                 )
             }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, exerciseId = Uuid.parse(exerciseIdString)) }
         viewModelScope.launch {
             try {
                 val parsedExerciseId = Uuid.parse(exerciseIdString)
@@ -159,7 +229,6 @@ class ExerciseDetailViewModel(
                                 default = true,
                                 isLoading = false,
                                 isEditing = false,
-                                exerciseId = currentExerciseWithEquipment.id,
                                 error = ExerciseError(),
                                 persistedDefaultName = originalDefaultExercise?.name,
                                 persistedDefaultGuide = originalDefaultExercise?.guide,
@@ -173,7 +242,7 @@ class ExerciseDetailViewModel(
                                 } else { false }
                             )
                         }
-                    } else { // Not a default item
+                    } else { 
                         _uiState.update {
                             it.copy(
                                 name = currentExerciseWithEquipment.name,
@@ -184,7 +253,6 @@ class ExerciseDetailViewModel(
                                 default = false,
                                 isLoading = false,
                                 isEditing = false,
-                                exerciseId = currentExerciseWithEquipment.id,
                                 error = ExerciseError(),
                                 persistedDefaultName = null,
                                 persistedDefaultGuide = null,
@@ -404,7 +472,7 @@ class ExerciseDetailViewModel(
                         guide = exerciseToSave.guide,
                         targetMuscleGroups = exerciseToSave.targetMuscleGroups,
                         imageUri = exerciseToSave.imageUri,
-                        equipmentList = currentState.equipmentList, // Persist equipment list to state
+                        equipmentList = currentState.equipmentList,
                         error = ExerciseError(),
                         isModifiedFromPersistedDefault = false 
                     )
@@ -428,7 +496,7 @@ class ExerciseDetailViewModel(
         val errorRes = when {
             currentState.exerciseId == null -> Res.string.exercise_detail_error_reset_new_exercise
             !currentState.default -> Res.string.exercise_detail_error_reset_non_default_exercise
-            else -> null // No error, proceed with reset
+            else -> null
         }
 
         if (errorRes != null) {
@@ -469,7 +537,7 @@ class ExerciseDetailViewModel(
         val errorRes = when {
             currentState.exerciseId == null -> Res.string.exercise_detail_error_delete_new_exercise
             currentState.default -> Res.string.exercise_detail_error_delete_default_exercise
-            else -> null // No error, proceed with delete
+            else -> null
         }
 
         if (errorRes != null) {

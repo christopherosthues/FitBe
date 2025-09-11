@@ -37,4 +37,20 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
     suspend fun updateExerciseEquipmentLinks(exerciseId: Uuid, equipmentIds: List<Uuid>) {
         exerciseDao.updateExerciseEquipmentLinks(exerciseId, equipmentIds)
     }
+
+    fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>> {
+        return exerciseDao.getFavoriteExerciseIds(profileId)
+    }
+
+    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean> {
+        return exerciseDao.isFavorite(profileId, exerciseId)
+    }
+
+    suspend fun addFavorite(profileId: Uuid, exerciseId: Uuid) {
+        exerciseDao.addFavorite(ProfileFavoriteExerciseCrossRef(profileId, exerciseId))
+    }
+
+    suspend fun removeFavorite(profileId: Uuid, exerciseId: Uuid) {
+        exerciseDao.removeFavorite(ProfileFavoriteExerciseCrossRef(profileId, exerciseId))
+    }
 }
