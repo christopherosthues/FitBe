@@ -20,6 +20,8 @@ import org.darthacheron.fitbe.workouts.workouts.SetDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionDao
 // Import for new Repository
 import org.darthacheron.fitbe.workouts.workouts.WorkoutRepository
+// Import for new ViewModel
+import org.darthacheron.fitbe.workouts.workouts.WorkoutOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
@@ -98,5 +100,7 @@ val sharedModule = module {
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::SettingsViewModel)
+    // Add new ViewModel
+    viewModelOf(::WorkoutOverviewViewModel)
 }
 

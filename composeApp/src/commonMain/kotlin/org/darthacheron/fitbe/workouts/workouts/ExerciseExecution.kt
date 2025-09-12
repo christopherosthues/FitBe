@@ -15,5 +15,11 @@ data class ExerciseExecution(
     val distanceKm: Double? = null,    // Distance in kilometers
     val durationSeconds: Long? = null,
     val notes: String? = null,
-    val setId: Uuid? = null            // Optional: if part of a set
+    val setId: Uuid? = null,            // Optional: if part of a set
+    // Added target value fields
+    val targetRepetitions: Int? = null,
+    val targetWeightKg: Double? = null,
+    val targetDistanceKm: Double? = null,
+    val targetDurationSeconds: Long? = null
 )
+

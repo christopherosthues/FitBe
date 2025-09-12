@@ -27,7 +27,7 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
-            entity = SetEntity::class, // Will be created next
+            entity = SetEntity::class,
             parentColumns = ["id"],
             childColumns = ["setId"],
             onDelete = ForeignKey.SET_NULL
@@ -49,9 +49,13 @@ data class ExerciseExecutionEntity(
     val distanceKm: Double? = null,
     val durationSeconds: Long? = null,
     val notes: String? = null,
-    val setId: Uuid? = null // Nullable foreign key
+    val setId: Uuid? = null, // Nullable foreign key
+    // Added target value fields
+    val targetRepetitions: Int? = null,
+    val targetWeightKg: Double? = null,
+    val targetDistanceKm: Double? = null,
+    val targetDurationSeconds: Long? = null
 ) {
-    // Renamed to match convention
     fun toExerciseExecution(): ExerciseExecution {
         return ExerciseExecution(
             id = this.id,
@@ -63,12 +67,16 @@ data class ExerciseExecutionEntity(
             distanceKm = this.distanceKm,
             durationSeconds = this.durationSeconds,
             notes = this.notes,
-            setId = this.setId
+            setId = this.setId,
+            // Map target fields
+            targetRepetitions = this.targetRepetitions,
+            targetWeightKg = this.targetWeightKg,
+            targetDistanceKm = this.targetDistanceKm,
+            targetDurationSeconds = this.targetDurationSeconds
         )
     }
 }
 
-// Top-level function to match convention
 @OptIn(ExperimentalUuidApi::class)
 fun toEntity(exerciseExecution: ExerciseExecution): ExerciseExecutionEntity {
     return ExerciseExecutionEntity(
@@ -81,7 +89,12 @@ fun toEntity(exerciseExecution: ExerciseExecution): ExerciseExecutionEntity {
         distanceKm = exerciseExecution.distanceKm,
         durationSeconds = exerciseExecution.durationSeconds,
         notes = exerciseExecution.notes,
-        setId = exerciseExecution.setId
+        setId = exerciseExecution.setId,
+        // Map target fields
+        targetRepetitions = exerciseExecution.targetRepetitions,
+        targetWeightKg = exerciseExecution.targetWeightKg,
+        targetDistanceKm = exerciseExecution.targetDistanceKm,
+        targetDurationSeconds = exerciseExecution.targetDurationSeconds
     )
 }
 

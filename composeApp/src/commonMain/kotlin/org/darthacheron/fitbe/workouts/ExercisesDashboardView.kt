@@ -28,14 +28,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.card_title_content_description_exercises_overview
+import fitbe.composeapp.generated.resources.card_title_content_description_training_equipment_overview
+import fitbe.composeapp.generated.resources.card_title_content_description_workouts_overview
 import fitbe.composeapp.generated.resources.card_title_exercises_overview
-import fitbe.composeapp.generated.resources.card_title_training_equipment
+import fitbe.composeapp.generated.resources.card_title_training_equipment_overview
+import fitbe.composeapp.generated.resources.card_title_workouts_overview
 import fitbe.composeapp.generated.resources.ic_exercises
 import fitbe.composeapp.generated.resources.ic_training_equipment
-// Import your placeholder drawable resources here once they are added
-// For example:
-// import fitbe.composeapp.generated.resources.ic_exercises_overview_card
-// import fitbe.composeapp.generated.resources.ic_manage_equipment_card
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -56,18 +56,26 @@ fun ExercisesDashboardView(
     ) {
         item {
             DashboardCard(
-                title = stringResource(Res.string.card_title_exercises_overview),
+                title = stringResource(Res.string.card_title_workouts_overview),
                 imagePainter = painterResource(Res.drawable.ic_exercises),
-                onClick = { exercisesDashboardViewModel.navigateToExercises() },
-                contentDescription = "Navigate to Exercises Overview"
+                onClick = { exercisesDashboardViewModel.navigateToWorkouts() },
+                contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
             )
         }
         item {
             DashboardCard(
-                title = stringResource(Res.string.card_title_training_equipment),
+                title = stringResource(Res.string.card_title_exercises_overview),
+                imagePainter = painterResource(Res.drawable.ic_exercises),
+                onClick = { exercisesDashboardViewModel.navigateToExercises() },
+                contentDescription = stringResource(Res.string.card_title_content_description_exercises_overview)
+            )
+        }
+        item {
+            DashboardCard(
+                title = stringResource(Res.string.card_title_training_equipment_overview),
                 imagePainter = painterResource(Res.drawable.ic_training_equipment),
                 onClick = { exercisesDashboardViewModel.navigateToEquipment() },
-                contentDescription = "Navigate to Manage Training Equipment"
+                contentDescription = stringResource(Res.string.card_title_content_description_training_equipment_overview)
             )
         }
     }
@@ -93,7 +101,7 @@ private fun DashboardCard(
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
                 painter = imagePainter,
-                contentDescription = null, // Decorative image, title provides context
+                contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )

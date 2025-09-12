@@ -8,6 +8,7 @@
     <!-- Top Bar -->
     <string name="top_bar_title_home">Start</string>
     <string name="top_bar_title_exercises_dashboard">Übungen</string>
+    <string name="top_bar_title_workout_overview">Workouts</string>
     <string name="top_bar_title_exercises">Übungen</string>
     <string name="top_bar_title_add_edit_exercise">Übung hinzufügen/bearbeiten</string>
     <string name="top_bar_title_training_equipment">Trainingsgeräte</string>
@@ -22,8 +23,18 @@
     <string name="top_bar_title_settings">Einstellungen</string>
 
     <!-- Exercise dashboard -->
+    <string name="card_title_workouts_overview">Workoutübersicht</string>
     <string name="card_title_exercises_overview">Übungsübersicht</string>
-    <string name="card_title_training_equipment">Geräte verwalten</string>
+    <string name="card_title_training_equipment_overview">Geräteübersicht</string>
+    <string name="card_title_content_description_workouts_overview">Navigiere zur Workoutübersicht</string>
+    <string name="card_title_content_description_exercises_overview">Navigiere zur Übungsübersicht</string>
+    <string name="card_title_content_description_training_equipment_overview">Navigiere zur Geräteübersicht</string>
+
+    <!-- Workout Overview -->
+    <string name="workout_overview_empty">Keine Workouts gefunden. Starte ein Neues!</string>
+    <string name="workout_overview_content_description_start_new_workout_fab">Starte ein neues Workout</string>
+    <string name="workout_overview_error_no_profile_selected">Kein Profil ausgewählt. Wähle oder erstelle ein Profil unter Profil.</string>
+    <string name="workout_overview_error_loading_workouts">Workouts konnten nicht geladen werden. Bitte versuche es erneut.</string>
 
     <!-- Exercise -->
     <string name="exercise_no_exercises">Keine Übungen gefunden. Füge welche hinzu!</string>

@@ -8,6 +8,7 @@
     <!-- Top Bar -->
     <string name="top_bar_title_home">Home</string>
     <string name="top_bar_title_exercises_dashboard">Exercises</string>
+    <string name="top_bar_title_workout_overview">Workout Overview</string>
     <string name="top_bar_title_exercises">Exercises</string>
     <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
     <string name="top_bar_title_training_equipment">Training equipment</string>
@@ -22,8 +23,18 @@
     <string name="top_bar_title_settings">Settings</string>
 
     <!-- Exercise dashboard -->
+    <string name="card_title_workouts_overview">Workouts Overview</string>
     <string name="card_title_exercises_overview">Exercises Overview</string>
-    <string name="card_title_training_equipment">Manage Equipment</string>
+    <string name="card_title_training_equipment_overview">Training equipment Overview</string>
+    <string name="card_title_content_description_workouts_overview">Navigate to Workouts Overview</string>
+    <string name="card_title_content_description_exercises_overview">Navigate to Exercises Overview</string>
+    <string name="card_title_content_description_training_equipment_overview">Navigate to Training Equipment Overview</string>
+
+    <!-- Workout Overview -->
+    <string name="workout_overview_empty">No workouts yet. Start a new one!</string>
+    <string name="workout_overview_content_description_start_new_workout_fab">Start new workout</string>
+    <string name="workout_overview_error_no_profile_selected">No profile selected. Please select or create a profile in settings.</string>
+    <string name="workout_overview_error_loading_workouts">Error loading workouts. Please try again.</string>
 
     <!-- Exercise -->
     <string name="exercise_no_exercises">No exercises found. Add some!</string>
