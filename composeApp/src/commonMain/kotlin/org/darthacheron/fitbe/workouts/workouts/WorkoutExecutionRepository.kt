@@ -2,6 +2,10 @@ package org.darthacheron.fitbe.workouts.workouts
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.Instant // Added import
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -10,18 +14,52 @@ class WorkoutExecutionRepository(
     private val workoutExecutionSessionDao: WorkoutExecutionSessionDao
 ) {
 
-    // WorkoutExecutionSession operations
+    /**
+     * Upserts a WorkoutExecutionSession. 
+     * If it's a new session being scheduled, ensure `scheduledTimestamp` is set and `startTimestamp` is null.
+     * If it's an ongoing or completed session, `startTimestamp` should be set.
+     * Also upserts its performed sets if any.
+     */
     suspend fun upsertWorkoutExecutionSession(session: WorkoutExecutionSession) {
         workoutExecutionSessionDao.upsertWorkoutExecutionSession(session.toEntity())
-        // Also upsert its performed sets if any
         if (session.performedSets.isNotEmpty()) {
             workoutExecutionSessionDao.upsertPerformedSets(session.performedSets.map { it.toEntity() })
         }
     }
 
+    /**
+     * Schedules a workout execution session. 
+     * The session's `scheduledTimestamp` must be set, and `startTimestamp` should be null.
+     * Its performed sets (which define the planned exercises and sets for the scheduled workout) will also be saved.
+     */
+    suspend fun scheduleWorkoutExecutionSession(session: WorkoutExecutionSession) {
+        require(session.scheduledTimestamp != null) { "Scheduled timestamp must be set for scheduling a session." }
+        require(session.startTimestamp == null) { "Start timestamp must be null for a new scheduled session." }
+        upsertWorkoutExecutionSession(session) // Uses the general upsert
+    }
+
+    /**
+     * Starts a previously scheduled workout.
+     * Sets the `startTimestamp` of the session and re-upserts it.
+     */
+    suspend fun startScheduledWorkoutExecution(sessionId: Uuid, startTime: Instant) {
+        val sessionWithSets = workoutExecutionSessionDao.getWorkoutExecutionSessionWithSets(sessionId).firstOrNull()
+        require(sessionWithSets != null) { "Scheduled session with ID $sessionId not found." }
+        require(sessionWithSets.session.scheduledTimestamp != null) { "Session with ID $sessionId was not scheduled." }
+        require(sessionWithSets.session.startTimestamp == null) { "Session with ID $sessionId has already been started." }
+
+        val updatedSession = sessionWithSets.toWorkoutExecutionSession().copy(startTimestamp = startTime)
+        upsertWorkoutExecutionSession(updatedSession)
+    }
+
     suspend fun deleteWorkoutExecutionSession(session: WorkoutExecutionSession) {
-        // Deleting the session should cascade delete its performed sets due to ForeignKey constraints
         workoutExecutionSessionDao.deleteWorkoutExecutionSession(session.toEntity())
+    }
+    
+    suspend fun deleteWorkoutExecutionSessionById(sessionId: Uuid) {
+        getWorkoutExecutionSessionWithSets(sessionId).firstOrNull()?.let {
+            workoutExecutionSessionDao.deleteWorkoutExecutionSession(it.toEntity())
+        }
     }
 
     fun getWorkoutExecutionSessionWithSets(sessionId: Uuid): Flow<WorkoutExecutionSession?> {
@@ -30,34 +68,47 @@ class WorkoutExecutionRepository(
         }
     }
 
-    fun getWorkoutExecutionSessionsByProfileId(profileId: Uuid): Flow<List<WorkoutExecutionSession>> {
-        // This could be heavy if there are many sessions with many sets.
-        // Consider if a lighter version (without sets) is needed for list views.
-        // For now, fetching with sets for completeness when a session is selected.
-        // This requires a new DAO method or modification of this logic to fetch sets separately if needed.
-        // For simplicity, this example will just map entity results if not fetching with sets by default.
-        return workoutExecutionSessionDao.getWorkoutExecutionSessionsByProfileId(profileId).map { entities ->
-            entities.map { entity -> 
-                // This map will not include performedSets unless fetched by getWorkoutExecutionSessionWithSets
-                // You might need a more complex mapping here, fetching sets for each session, or a new DAO method.
-                // For now, returning sessions without sets if using this specific DAO method.
-                entity.toWorkoutExecutionSession() 
-            }
+    // --- Methods for COMPLETED or IN-PROGRESS sessions ---
+    fun getCompletedOrInProgressSessionsByProfileId(profileId: Uuid): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getCompletedOrInProgressSessionsByProfileId(profileId).map { entities ->
+            entities.map { it.toWorkoutExecutionSession() } // Sets not included by default for list performance
+        }
+    }
+
+    fun getLastCompletedOrInProgressSessionWithSets(profileId: Uuid): Flow<WorkoutExecutionSession?> {
+        return workoutExecutionSessionDao.getLastCompletedOrInProgressSessionByProfileId(profileId).map { entity ->
+            entity?.let { workoutExecutionSessionDao.getWorkoutExecutionSessionWithSets(it.id) }?.map { it?.toWorkoutExecutionSession() } ?: flowOf(null)
+        }.flatMapConcat { it ?: kotlinx.coroutines.flow.flowOf(null) }
+    }
+
+    fun getCompletedOrInProgressSessionsByProfileIdAndDateRange(profileId: Uuid, fromInstant: Instant, toInstant: Instant): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getCompletedOrInProgressSessionsByProfileIdAndDateRange(profileId, fromInstant, toInstant).map { entities ->
+            entities.map { it.toWorkoutExecutionSession() } // Sets not included
+        }
+    }
+
+    // --- Methods for SCHEDULED sessions ---
+    fun getScheduledWorkoutExecutionSessions(profileId: Uuid): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getScheduledWorkoutExecutionSessions(profileId).map { entities ->
+            entities.map { it.toWorkoutExecutionSession() } // Sets not included by default for list performance
+        }
+    }
+
+    fun getScheduledWorkoutExecutionSessionsWithSets(profileId: Uuid): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getScheduledWorkoutExecutionSessionsWithSets(profileId).map { entitiesWithSets ->
+            entitiesWithSets.map { it.toWorkoutExecutionSession() }
+        }
+    }
+
+    fun getScheduledWorkoutExecutionSessionsByDateRange(profileId: Uuid, fromInstant: Instant, toInstant: Instant): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getScheduledWorkoutExecutionSessionsByDateRange(profileId, fromInstant, toInstant).map { entities ->
+            entities.map { it.toWorkoutExecutionSession() } // Sets not included
         }
     }
     
-    // Example: To get sessions with sets, you would iterate and call the detail fetch or have a DAO method for List<WorkoutExecutionSessionWithSets>
-    // For a list view, it's often better to fetch session headers and then details on demand.
-
-    fun getLastWorkoutExecutionSessionByProfileId(profileId: Uuid): Flow<WorkoutExecutionSession?> {
-        return workoutExecutionSessionDao.getLastWorkoutExecutionSessionByProfileId(profileId).map { entity ->
-            entity?.let { workoutExecutionSessionDao.getWorkoutExecutionSessionWithSets(it.id) }?.map { it?.toWorkoutExecutionSession() } ?: kotlinx.coroutines.flow.flowOf(null)
-        }.kotlinx.coroutines.flow.flatMapConcat { it ?: kotlinx.coroutines.flow.flowOf(null) } // Flatten Flow<Flow<T?>>
-    }
-
-    fun getWorkoutExecutionSessionsByProfileIdAndDateRange(profileId: Uuid, startTime: Long, endTime: Long): Flow<List<WorkoutExecutionSession>> {
-        return workoutExecutionSessionDao.getWorkoutExecutionSessionsByProfileIdAndDateRange(profileId, startTime, endTime).map { entities ->
-            entities.map { it.toWorkoutExecutionSession() } // Similar to getWorkoutExecutionSessionsByProfileId, sets not included here by default
+    fun getScheduledWorkoutExecutionSessionsByDateRangeWithSets(profileId: Uuid, fromInstant: Instant, toInstant: Instant): Flow<List<WorkoutExecutionSession>> {
+        return workoutExecutionSessionDao.getScheduledWorkoutExecutionSessionsByDateRangeWithSets(profileId, fromInstant, toInstant).map { entitiesWithSets ->
+            entitiesWithSets.map { it.toWorkoutExecutionSession() }
         }
     }
 
@@ -79,15 +130,4 @@ class WorkoutExecutionRepository(
             entities.map { it.toPerformedSet() }
         }
     }
-
-    // To get all performances of a specific exercise across all sessions:
-    // Need a new DAO method: @Query("SELECT * FROM performed_sets WHERE exerciseId = :exerciseId ORDER BY timestamp DESC")
-    // fun getPerformedSetsByExerciseId(exerciseId: Uuid): Flow<List<PerformedSetEntity>>
-    /*
-    fun getPerformedSetsByExerciseId(exerciseId: Uuid): Flow<List<PerformedSet>> {
-        return workoutExecutionSessionDao.getPerformedSetsByExerciseId(exerciseId).map { entities ->
-            entities.map { it.toPerformedSet() }
-        }
-    }
-    */
 }

@@ -29,7 +29,8 @@ import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
     ],
     indices = [
         Index(value = ["profileId"]),
-        Index(value = ["workoutTemplateId"])
+        Index(value = ["workoutTemplateId"]),
+        Index(value = ["scheduledTimestamp"])
     ]
 )
 data class WorkoutExecutionSessionEntity(
@@ -37,7 +38,8 @@ data class WorkoutExecutionSessionEntity(
     val profileId: Uuid,
     val workoutTemplateId: Uuid? = null,
     val name: String, // Made non-null, can be derived from template or user input
-    val startTimestamp: Instant,
+    val scheduledTimestamp: Instant? = null, // When the workout is scheduled
+    val startTimestamp: Instant? = null, // When the workout actually started, null if only scheduled
     val endTimestamp: Instant? = null,
     val notes: String? = null
 ) {
@@ -47,6 +49,7 @@ data class WorkoutExecutionSessionEntity(
             profileId = this.profileId,
             workoutTemplateId = this.workoutTemplateId,
             name = this.name,
+            scheduledTimestamp = this.scheduledTimestamp,
             startTimestamp = this.startTimestamp,
             endTimestamp = this.endTimestamp,
             notes = this.notes
@@ -62,6 +65,7 @@ fun WorkoutExecutionSession.toEntity(): WorkoutExecutionSessionEntity {
         profileId = this.profileId,
         workoutTemplateId = this.workoutTemplateId,
         name = this.name,
+        scheduledTimestamp = this.scheduledTimestamp,
         startTimestamp = this.startTimestamp,
         endTimestamp = this.endTimestamp,
         notes = this.notes

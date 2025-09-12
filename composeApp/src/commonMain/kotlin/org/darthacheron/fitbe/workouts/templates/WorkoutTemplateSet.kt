@@ -5,7 +5,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class WorkoutTemplateSet(
-    val id: Uuid = Uuid(),
+    val id: Uuid = Uuid.random(),
     val workoutTemplateExerciseId: Uuid,
     val setOrder: Int,
     val targetRepetitions: Int? = null,

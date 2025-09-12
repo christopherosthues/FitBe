@@ -9,6 +9,7 @@
     <string name="top_bar_title_home">Start</string>
     <string name="top_bar_title_exercises_dashboard">Übungen</string>
     <string name="top_bar_title_workout_overview">Workouts</string>
+    <string name="top_bar_title_workout_templates">Workouts</string>
     <string name="top_bar_title_exercises">Übungen</string>
     <string name="top_bar_title_add_edit_exercise">Übung hinzufügen/bearbeiten</string>
     <string name="top_bar_title_training_equipment">Trainingsgeräte</string>
@@ -35,6 +36,9 @@
     <string name="workout_overview_content_description_start_new_workout_fab">Starte ein neues Workout</string>
     <string name="workout_overview_error_no_profile_selected">Kein Profil ausgewählt. Wähle oder erstelle ein Profil unter Profil.</string>
     <string name="workout_overview_error_loading_workouts">Workouts konnten nicht geladen werden. Bitte versuche es erneut.</string>
+    <string name="workout_overview_content_description_schedule_new_workout_fab">Neues Workout planen</string>
+    <string name="workout_overview_scheduled_header">Geplante Workouts</string>
+    <string name="workout_overview_past_header">Vergangene Workouts</string>
 
     <!-- Exercise -->
     <string name="exercise_no_exercises">Keine Übungen gefunden. Füge welche hinzu!</string>

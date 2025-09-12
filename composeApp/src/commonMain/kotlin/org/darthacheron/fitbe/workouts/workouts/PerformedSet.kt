@@ -6,7 +6,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class PerformedSet(
-    val id: Uuid = Uuid(),
+    val id: Uuid = Uuid.random(),
     val workoutExecutionSessionId: Uuid,
     val exerciseId: Uuid,
     val setOrder: Int,

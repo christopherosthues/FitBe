@@ -2,6 +2,8 @@ package org.darthacheron.fitbe.workouts.templates
 
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.top_bar_title_workout_templates
 // Assuming general resources might be needed, adjust as necessary
 // import fitbe.composeapp.generated.resources.Res
 // import fitbe.composeapp.generated.resources.some_string_resource
@@ -35,7 +37,7 @@ class WorkoutTemplatesViewModel(
     // private val settingsRepository: SettingsRepository, // If profile needed for starting execution from template
 ) : FitBeViewModel(topBarManager) {
 
-    // override val title: StringResource = Res.string.top_bar_title_workout_templates // Placeholder for actual resource
+     override val title: StringResource = Res.string.top_bar_title_workout_templates // Placeholder for actual resource
     override val bottomBarSelected: Screen? = Screen.ExercisesDashboard // Or a new dedicated screen for templates if it exists
     override val backNavigationIconVisible: Boolean? = true
 
