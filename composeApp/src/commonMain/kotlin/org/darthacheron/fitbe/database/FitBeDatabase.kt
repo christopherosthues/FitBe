@@ -28,14 +28,6 @@ import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
-// New imports for workout execution entities
-import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionEntity
-import org.darthacheron.fitbe.workouts.workouts.SetEntity
-import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionEntity
-// New imports for DAOs
-import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionDao
-import org.darthacheron.fitbe.workouts.workouts.SetDao
-import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionDao
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -47,6 +39,16 @@ import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
+// New Workout Template Entities
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateExerciseEntity
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateSetEntity
+// New Workout Execution Entities
+import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionEntity
+import org.darthacheron.fitbe.workouts.workouts.PerformedSetEntity
+// New DAOs
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
+import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionDao
 import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.hours
@@ -60,10 +62,10 @@ import kotlin.uuid.ExperimentalUuidApi
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
         DefaultExerciseEquipmentCrossRef::class,
-        // Added new entities
-        ExerciseExecutionEntity::class, SetEntity::class, WorkoutSessionEntity::class
-               ],
-    version = 1 // Version remains 1 as requested
+        WorkoutTemplateEntity::class, WorkoutTemplateExerciseEntity::class, WorkoutTemplateSetEntity::class,
+        WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
+    ],
+    version = 1
 )
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
@@ -79,10 +81,10 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val stepsDao: StepsDao
     abstract val exerciseDao: ExerciseDao
     abstract val equipmentDao: EquipmentDao
-    // Added DAOs for new entities
-    abstract val exerciseExecutionDao: ExerciseExecutionDao
-    abstract val setDao: SetDao
-    abstract val workoutSessionDao: WorkoutSessionDao
+
+    // New DAOs for Workouts
+    abstract val workoutTemplateDao: WorkoutTemplateDao
+    abstract val workoutExecutionSessionDao: WorkoutExecutionSessionDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

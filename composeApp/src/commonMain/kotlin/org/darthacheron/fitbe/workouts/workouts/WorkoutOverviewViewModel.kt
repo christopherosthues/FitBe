@@ -22,16 +22,20 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+// Import the new repository and domain model
+import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
+import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSession
+
 @OptIn(ExperimentalUuidApi::class)
 data class WorkoutOverviewUiState(
     val isLoading: Boolean = true,
-    val workoutSessions: List<WorkoutSession> = emptyList(),
+    val workoutSessions: List<WorkoutExecutionSession> = emptyList(), // Updated to WorkoutExecutionSession
     val error: StringResource? = null
 )
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class WorkoutOverviewViewModel(
-    private val workoutRepository: WorkoutRepository,
+    private val workoutExecutionRepository: WorkoutExecutionRepository, // Updated repository
     private val settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
@@ -53,11 +57,12 @@ class WorkoutOverviewViewModel(
                     )
                 )
             } else {
-                workoutRepository.getWorkoutSessionsByProfileId(profileId)
+                // Use the new repository and its methods
+                workoutExecutionRepository.getWorkoutExecutionSessionsByProfileId(profileId)
                     .map { sessions ->
                         WorkoutOverviewUiState(
                             isLoading = false,
-                            workoutSessions = sessions
+                            workoutSessions = sessions // Already List<WorkoutExecutionSession>
                         )
                     }
                     .catch { e ->
@@ -72,12 +77,12 @@ class WorkoutOverviewViewModel(
         )
 
     fun onWorkoutSessionClicked(sessionId: Uuid) {
-        // navHostController.navigate(Screen.WorkoutDetail(sessionId.toString())) // TODO: Define WorkoutDetail screen
+        // navHostController.navigate(Screen.WorkoutExecutionDetail(sessionId.toString())) // TODO: Define WorkoutExecutionDetail screen
         println("Workout session clicked: $sessionId (Navigation to detail not yet implemented)")
     }
 
     fun onStartNewWorkoutClicked() {
-        // navHostController.navigate(Screen.NewWorkout()) // TODO: Define NewWorkout screen
+        // navHostController.navigate(Screen.NewWorkoutExecution()) // TODO: Define NewWorkoutExecution screen
         println("Start new workout clicked (Navigation not yet implemented)")
     }
 }
