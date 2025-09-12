@@ -14,6 +14,12 @@ import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
+// Imports for new DAOs
+import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionDao
+import org.darthacheron.fitbe.workouts.workouts.SetDao
+import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionDao
+// Import for new Repository
+import org.darthacheron.fitbe.workouts.workouts.WorkoutRepository
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
@@ -49,6 +55,8 @@ val sharedModule = module {
     singleOf(::BeverageRepository)
     singleOf(::BodyWeightRepository)
     singleOf(::ProfileRepository)
+    // Add new Repository
+    singleOf(::WorkoutRepository)
 
     singleOf(::BodyMeasurementUnitConverter)
     singleOf(::DistanceUnitConverter)
@@ -67,6 +75,10 @@ val sharedModule = module {
     single { get<FitBeDatabase>().stepsDao }
     single { get<FitBeDatabase>().exerciseDao }
     single { get<FitBeDatabase>().equipmentDao }
+    // Add new DAOs to Koin module
+    single { get<FitBeDatabase>().exerciseExecutionDao }
+    single { get<FitBeDatabase>().setDao }
+    single { get<FitBeDatabase>().workoutSessionDao }
 
     singleOf(::StartUpService)
     single<TopBarManager> { ActualTopBarManager() }
@@ -87,3 +99,4 @@ val sharedModule = module {
     viewModelOf(::ProfileViewModel)
     viewModelOf(::SettingsViewModel)
 }
+

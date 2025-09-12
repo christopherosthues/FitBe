@@ -28,6 +28,14 @@ import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
+// New imports for workout execution entities
+import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionEntity
+import org.darthacheron.fitbe.workouts.workouts.SetEntity
+import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionEntity
+// New imports for DAOs
+import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionDao
+import org.darthacheron.fitbe.workouts.workouts.SetDao
+import org.darthacheron.fitbe.workouts.workouts.WorkoutSessionDao
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -51,9 +59,11 @@ import kotlin.uuid.ExperimentalUuidApi
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
-        DefaultExerciseEquipmentCrossRef::class
+        DefaultExerciseEquipmentCrossRef::class,
+        // Added new entities
+        ExerciseExecutionEntity::class, SetEntity::class, WorkoutSessionEntity::class
                ],
-    version = 1
+    version = 1 // Version remains 1 as requested
 )
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
@@ -69,6 +79,10 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val stepsDao: StepsDao
     abstract val exerciseDao: ExerciseDao
     abstract val equipmentDao: EquipmentDao
+    // Added DAOs for new entities
+    abstract val exerciseExecutionDao: ExerciseExecutionDao
+    abstract val setDao: SetDao
+    abstract val workoutSessionDao: WorkoutSessionDao
 
     companion object {
         const val DB_NAME = "fitbe.db"
@@ -83,7 +97,10 @@ suspend fun seedDatabase(db: FitBeDatabase) {
     val bodyWeightDao = db.bodyWeightDao
     val stepsDao = db.stepsDao
 
-    val profile = profileDao.getAllProfiles().first().first()
+    val profile = profileDao.getAllProfiles().first().firstOrNull() ?: run {
+        println("Warning: No profile found to associate with seed data.")
+        return
+    }
 
     for (i in 1..730) {
         val sleep = SleepEntity(
@@ -123,24 +140,15 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         )
         stepsDao.upsertSteps(steps)
 
-        // Step 1: Generate initial weight
         var weightInKg = Random.nextDouble(55.0, 130.0).roundToDecimals(2)
-
-        // Step 2: Randomize component masses in kg
         val muscleMassInKg = Random.nextDouble(20.0, weightInKg * 0.6).roundToDecimals(2)
         val boneMassInKg = Random.nextDouble(2.0, 4.0).roundToDecimals(2)
         val bodyFatInKg = Random.nextDouble(10.0, weightInKg * 0.3).roundToDecimals(2)
         val bodyWaterInKg = Random.nextDouble(25.0, weightInKg * 0.65).roundToDecimals(2)
-
-        // Step 3: Compute total of components
         val totalComponents = muscleMassInKg + boneMassInKg + bodyFatInKg + bodyWaterInKg
-
-        // Step 4: Adjust weight if needed
         if (totalComponents > weightInKg) {
             weightInKg = (totalComponents + Random.nextDouble(0.5, 2.0)).roundToDecimals(2)
         }
-
-        // Step 5: Calculate percentages based on final weight
         val bodyFatPercentage = (bodyFatInKg / weightInKg) * 100
         val bodyWaterPercentage = (bodyWaterInKg / weightInKg) * 100
         val bodyWeight = BodyWeightEntity(
