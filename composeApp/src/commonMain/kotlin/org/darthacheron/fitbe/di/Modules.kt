@@ -15,13 +15,11 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
 // New DAOs for workouts
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionDao
 // Refactored and new Repositories for workouts
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository // Assuming WorkoutRepository is refactored to this
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository // New repository for templates
 // ViewModels for workouts
-import org.darthacheron.fitbe.workouts.workouts.WorkoutOverviewViewModel
+import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesViewModel // New ViewModel for templates
 
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
@@ -105,7 +103,7 @@ val sharedModule = module {
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::SettingsViewModel)
-    viewModelOf(::WorkoutOverviewViewModel) // Will now use WorkoutExecutionRepository
+    viewModelOf(::PerformedWorkoutsOverviewViewModel) // Will now use WorkoutExecutionRepository
     viewModelOf(::WorkoutTemplatesViewModel) // New ViewModel for templates
 }
 

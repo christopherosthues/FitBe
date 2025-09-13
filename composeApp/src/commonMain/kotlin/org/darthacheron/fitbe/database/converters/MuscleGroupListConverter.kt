@@ -15,8 +15,6 @@ class MuscleGroupListConverter {
             try {
                 MuscleGroup.valueOf(it)
             } catch (e: IllegalArgumentException) {
-                // Handle cases where an enum constant might have been removed or renamed
-                // Or log a warning
                 null
             }
         }

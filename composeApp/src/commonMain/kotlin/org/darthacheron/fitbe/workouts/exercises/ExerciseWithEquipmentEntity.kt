@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.equipment.toEntity
+import org.darthacheron.fitbe.workouts.equipment.toEntity // Assuming this is for TrainingEquipment
 import kotlin.uuid.ExperimentalUuidApi
 
 data class ExerciseWithEquipmentEntity(
@@ -29,6 +29,8 @@ data class ExerciseWithEquipmentEntity(
             targetMuscleGroups = exercise.targetMuscleGroups,
             imageUri = exercise.imageUri,
             default = exercise.default,
+            recommendedFor = exercise.recommendedFor,
+            exerciseType = exercise.exerciseType, // Added field from embedded exercise
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
@@ -45,8 +47,10 @@ fun toEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmen
             targetMuscleGroups = exerciseWithEquipment.targetMuscleGroups,
             imageUri = exerciseWithEquipment.imageUri,
             default = exerciseWithEquipment.default,
+            recommendedFor = exerciseWithEquipment.recommendedFor,
+            exerciseType = exerciseWithEquipment.exerciseType, // Added field to embedded exercise
             dateUtc = exerciseWithEquipment.dateUtc
         ),
-        equipmentList = exerciseWithEquipment.equipmentList.map { toEntity(it) }
+        equipmentList = exerciseWithEquipment.equipmentList.map { toEntity(it) } // This toEntity is for TrainingEquipment
     )
 }

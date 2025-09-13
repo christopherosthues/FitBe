@@ -86,20 +86,21 @@
     <string name="exercise_detail_error_delete_default_exercise">Cannot delete a default exercise</string>
 
     <!-- Muscle Groups -->
-    <string name="muscle_group_chest">Chest</string>
-    <string name="muscle_group_back">Back</string>
-    <string name="muscle_group_shoulders">Shoulders</string>
-    <string name="muscle_group_biceps">Biceps</string>
-    <string name="muscle_group_triceps">Triceps</string>
-    <string name="muscle_group_forearms">Forearms</string>
-    <string name="muscle_group_quads">Quads</string>
-    <string name="muscle_group_hamstrings">Hamstrings</string>
-    <string name="muscle_group_calves">Calves</string>
     <string name="muscle_group_abs">Abs</string>
+    <string name="muscle_group_adductors">Adductors</string>
+    <string name="muscle_group_back">Back</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_calves">Calves</string>
     <string name="muscle_group_cardio">Cardio</string>
+    <string name="muscle_group_chest">Chest</string>
+    <string name="muscle_group_forearms">Forearms</string>
     <string name="muscle_group_full_body">Full Body</string>
     <string name="muscle_group_glutes">Glutes</string>
+    <string name="muscle_group_hamstrings">Hamstrings</string>
     <string name="muscle_group_other">Other</string>
+    <string name="muscle_group_quads">Quads</string>
+    <string name="muscle_group_shoulders">Shoulders</string>
+    <string name="muscle_group_triceps">Triceps</string>
 
     <!-- Default Exercise Names -->
     <string name="default_exercise_squat_name">Squat</string>

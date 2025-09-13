@@ -11,6 +11,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter // Added import
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.GenderConverter
 import org.darthacheron.fitbe.database.converters.InstantConverter
@@ -18,6 +19,7 @@ import org.darthacheron.fitbe.database.converters.LocalDateConverter
 import org.darthacheron.fitbe.database.converters.LocalDateTimeConverter
 import org.darthacheron.fitbe.database.converters.LocalTimeConverter
 import org.darthacheron.fitbe.database.converters.MuscleGroupListConverter
+import org.darthacheron.fitbe.database.converters.RecommendedForListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.workouts.equipment.DefaultTrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
@@ -70,7 +72,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
     LocalDateTimeConverter::class, GenderConverter::class, LocalTimeConverter::class,
-    LocalDateConverter::class, MuscleGroupListConverter::class
+    LocalDateConverter::class, MuscleGroupListConverter::class, RecommendedForListConverter::class,
+    ExerciseTypeConverter::class // Added converter
 )
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {

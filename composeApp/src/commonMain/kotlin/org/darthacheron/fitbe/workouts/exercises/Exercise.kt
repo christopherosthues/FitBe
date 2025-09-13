@@ -16,6 +16,8 @@ open class Exercise(
     open val targetMuscleGroups: List<MuscleGroup> = emptyList(),
     open val imageUri: String? = null,
     open val default: Boolean = false,
+    open val recommendedFor: List<RecommendedFor>,
+    open val exerciseType: ExerciseType, // Added field
     open val dateUtc: LocalDate
 )
 

@@ -20,7 +20,7 @@ class ExercisesDashboardViewModel(
         get() = Screen.ExercisesDashboard
 
     fun navigateToWorkouts() {
-        navHostController.navigate(Screen.WorkoutOverview)
+        navHostController.navigate(Screen.PerformedWorkoutsOverview)
     }
 
     fun navigateToExercises() {

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
@@ -26,11 +25,8 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSession
-
 @OptIn(ExperimentalUuidApi::class)
-data class WorkoutOverviewUiState(
+data class PerformedWorkoutsOverviewUiState(
     val isLoading: Boolean = true,
     val scheduledSessions: List<WorkoutExecutionSession> = emptyList(),
     val pastSessions: List<WorkoutExecutionSession> = emptyList(),
@@ -38,7 +34,7 @@ data class WorkoutOverviewUiState(
 )
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-class WorkoutOverviewViewModel(
+class PerformedWorkoutsOverviewViewModel(
     private val workoutExecutionRepository: WorkoutExecutionRepository,
     private val settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
@@ -49,12 +45,12 @@ class WorkoutOverviewViewModel(
     override val bottomBarSelected: Screen? = Screen.ExercisesDashboard
     override val backNavigationIconVisible: Boolean? = true
 
-    val uiState: StateFlow<WorkoutOverviewUiState> = settingsRepository.getSettingsFlow()
+    val uiState: StateFlow<PerformedWorkoutsOverviewUiState> = settingsRepository.getSettingsFlow()
         .map { it.selectedProfileId }
         .flatMapLatest { profileId ->
             if (profileId == null) {
                 flowOf(
-                    WorkoutOverviewUiState(
+                    PerformedWorkoutsOverviewUiState(
                         isLoading = false,
                         error = Res.string.workout_overview_error_no_profile_selected
                     )
@@ -64,21 +60,21 @@ class WorkoutOverviewViewModel(
                     workoutExecutionRepository.getScheduledWorkoutExecutionSessions(profileId),
                     workoutExecutionRepository.getCompletedOrInProgressSessionsByProfileId(profileId)
                 ) { scheduled, past ->
-                    WorkoutOverviewUiState(
+                    PerformedWorkoutsOverviewUiState(
                         isLoading = false,
                         scheduledSessions = scheduled,
                         pastSessions = past
                     )
                 }.catch { e ->
                     // You might want to log the exception e
-                    emit(WorkoutOverviewUiState(isLoading = false, error = Res.string.workout_overview_error_loading_workouts))
+                    emit(PerformedWorkoutsOverviewUiState(isLoading = false, error = Res.string.workout_overview_error_loading_workouts))
                 }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = WorkoutOverviewUiState(isLoading = true)
+            initialValue = PerformedWorkoutsOverviewUiState(isLoading = true)
         )
 
     fun onWorkoutSessionClicked(session: WorkoutExecutionSession) {

@@ -12,7 +12,9 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.equipment.fromTrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
+import org.darthacheron.fitbe.workouts.exercises.RecommendedFor
 import org.darthacheron.fitbe.workouts.exercises.fromExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -64,20 +66,92 @@ internal val equipmentList = listOf(
     "default_training_equipment_spotter_arms",
 )
 
-internal val exerciseList: Map<String, List<MuscleGroup>> = mapOf(
-    "default_exercise_squat" to listOf(MuscleGroup.QUADS),
-    "default_exercise_deadlift" to listOf(MuscleGroup.GLUTES),
-    "default_exercise_bench_press" to listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS),
-    "default_exercise_overhead_press" to listOf(MuscleGroup.SHOULDERS),
-    "default_exercise_pull_ups" to listOf(MuscleGroup.BACK),
-    "default_exercise_push_ups" to listOf(MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.BACK, MuscleGroup.CHEST),
-    "default_exercise_lunges" to listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS),
-    "default_exercise_sit_ups" to listOf(MuscleGroup.ABS),
-    "default_exercise_plank" to listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK),
-    "default_exercise_jumping_jacks" to listOf(MuscleGroup.ABS, MuscleGroup.CHEST, MuscleGroup.BACK),
-    "default_exercise_side_lunges" to listOf(MuscleGroup.CALVES, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS),
-    "default_exercise_burpees" to listOf(MuscleGroup.OTHER),
-    "default_exercise_mountain_climbers" to listOf(MuscleGroup.OTHER),
+internal data class ExerciseSeedData(
+    val key: String,
+    val muscleGroups: List<MuscleGroup>,
+    val recommendedFor: List<RecommendedFor>,
+    val exerciseType: ExerciseType
+)
+
+internal val exerciseSeedList: List<ExerciseSeedData> = listOf(
+    ExerciseSeedData(
+        key = "default_exercise_squat",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_deadlift",
+        muscleGroups = listOf(MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.BACK),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_bench_press",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_overhead_press",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_pull_ups",
+        muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_push_ups",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_lunges",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_sit_ups",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_plank",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.TIMED
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_jumping_jacks",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY),
+        recommendedFor = listOf(RecommendedFor.Warmup),
+        exerciseType = ExerciseType.TIMED
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_side_lunges",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ADDUCTORS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_burpees",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_mountain_climbers",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.QUADS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.TIMED
+    )
 )
 
 @OptIn(ExperimentalUuidApi::class)
@@ -113,12 +187,14 @@ class PrepopulateCallback(
     }
 
     private suspend fun populateDefaultExercises(exerciseDao: ExerciseDao) {
-        exerciseList.forEach { exerciseKey ->
+        exerciseSeedList.forEach { exerciseData ->
             val exercise = ExerciseEntity(
-                name = exerciseKey.key,
-                guide = exerciseKey.key,
-                imageUri = exerciseKey.key,
-                targetMuscleGroups = exerciseKey.value,
+                name = exerciseData.key,
+                guide = exerciseData.key, // Assuming guide key is same as name key
+                imageUri = exerciseData.key, // Assuming image key is same as name key
+                targetMuscleGroups = exerciseData.muscleGroups,
+                recommendedFor = exerciseData.recommendedFor,
+                exerciseType = exerciseData.exerciseType,
                 default = true,
             )
             exerciseDao.upsertExercise(exercise)

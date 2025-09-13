@@ -20,8 +20,8 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailViewMode
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentView
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 // New imports for WorkoutOverview
-import org.darthacheron.fitbe.workouts.workouts.WorkoutOverviewView
-import org.darthacheron.fitbe.workouts.workouts.WorkoutOverviewViewModel
+import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewView
+import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
@@ -140,11 +140,11 @@ fun BottomBarNavGraph(
             WeightOverviewView(viewModel, settingsRepository)
         }
         // Added WorkoutOverview screen
-        composable<Screen.WorkoutOverview> {
-            val viewModel = koinViewModel<WorkoutOverviewViewModel>(
+        composable<Screen.PerformedWorkoutsOverview> {
+            val viewModel = koinViewModel<PerformedWorkoutsOverviewViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
-            WorkoutOverviewView(viewModel)
+            PerformedWorkoutsOverviewView(viewModel)
         }
     }
 }

@@ -23,14 +23,13 @@ import fitbe.composeapp.generated.resources.workout_overview_empty
 import fitbe.composeapp.generated.resources.workout_overview_scheduled_header // New resource
 import fitbe.composeapp.generated.resources.workout_overview_past_header // New resource
 import kotlin.uuid.ExperimentalUuidApi
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun WorkoutOverviewView(
-    viewModel: WorkoutOverviewViewModel
+fun PerformedWorkoutsOverviewView(
+    viewModel: PerformedWorkoutsOverviewViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

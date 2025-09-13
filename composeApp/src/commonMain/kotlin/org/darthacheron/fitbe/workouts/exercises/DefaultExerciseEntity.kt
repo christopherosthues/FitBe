@@ -19,6 +19,8 @@ data class DefaultExerciseEntity(
     val guide: String,
     val targetMuscleGroups: List<MuscleGroup> = emptyList(),
     val imageUri: String? = null,
+    val recommendedFor: List<RecommendedFor>,
+    val exerciseType: ExerciseType, // Added field
     val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
 ) {
     fun toExerciseEntity(): ExerciseEntity {
@@ -29,6 +31,8 @@ data class DefaultExerciseEntity(
             targetMuscleGroups = targetMuscleGroups,
             imageUri = imageUri,
             default = true,
+            recommendedFor = recommendedFor,
+            exerciseType = exerciseType,
             dateUtc = dateUtc
         )
     }
@@ -41,6 +45,8 @@ data class DefaultExerciseEntity(
             targetMuscleGroups = targetMuscleGroups,
             imageUri = imageUri,
             default = true,
+            recommendedFor = recommendedFor,
+            exerciseType = exerciseType,
             dateUtc = dateUtc
         )
     }
@@ -54,6 +60,8 @@ fun fromExerciseEntity(entity: ExerciseEntity): DefaultExerciseEntity {
         guide = entity.guide,
         targetMuscleGroups = entity.targetMuscleGroups,
         imageUri = entity.imageUri,
+        recommendedFor = entity.recommendedFor,
+        exerciseType = entity.exerciseType, // Added field
         dateUtc = entity.dateUtc
     )
 }

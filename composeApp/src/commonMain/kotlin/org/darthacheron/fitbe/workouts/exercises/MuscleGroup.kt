@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.workouts.exercises
 import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.muscle_group_abs
+import fitbe.composeapp.generated.resources.muscle_group_adductors
 import fitbe.composeapp.generated.resources.muscle_group_back
 import fitbe.composeapp.generated.resources.muscle_group_biceps
 import fitbe.composeapp.generated.resources.muscle_group_calves
@@ -27,6 +28,7 @@ enum class MuscleGroup {
     FOREARMS,
     QUADS,
     HAMSTRINGS,
+    ADDUCTORS,
     CALVES,
     ABS,
     CARDIO,
@@ -50,6 +52,7 @@ enum class MuscleGroup {
             CARDIO -> Res.string.muscle_group_cardio
             FULL_BODY -> Res.string.muscle_group_full_body
             GLUTES -> Res.string.muscle_group_glutes
+            ADDUCTORS -> Res.string.muscle_group_adductors
             OTHER -> Res.string.muscle_group_other
         }
     }

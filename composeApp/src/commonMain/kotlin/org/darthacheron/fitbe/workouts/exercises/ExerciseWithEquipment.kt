@@ -13,6 +13,8 @@ data class ExerciseWithEquipment(
     override val targetMuscleGroups: List<MuscleGroup> = emptyList(),
     override val imageUri: String?,
     override val default: Boolean = false,
+    override val recommendedFor: List<RecommendedFor>,
+    override val exerciseType: ExerciseType,
     override val dateUtc: LocalDate,
     val equipmentList: List<TrainingEquipment>
-) : Exercise(id, name, guide, targetMuscleGroups, imageUri, default, dateUtc)
+) : Exercise(id, name, guide, targetMuscleGroups, imageUri, default, recommendedFor, exerciseType, dateUtc)
