@@ -39,6 +39,10 @@ import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailView
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailViewModel
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewView
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewModel
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -90,32 +94,32 @@ fun BottomBarNavGraph(
                 ProfileView(viewModel, settingsRepository)
             }
         }
-        composable<Screen.Exercises> {
+        composable<Screen.ExercisesOverview> {
             val viewModel = koinViewModel<ExercisesViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
             ExercisesView(viewModel)
         }
         composable<Screen.ExerciseDetail> { backStackEntry ->
-            val addEditExerciseRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
+            val exerciseDetailRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<ExerciseDetailViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
-            val id = if (addEditExerciseRoute.id != null) Uuid.parse(addEditExerciseRoute.id) else null
+            val id = exerciseDetailRoute.id.toUuidOrNull()
             ExerciseDetailView(id, viewModel)
         }
-        composable<Screen.TrainingEquipment>{
+        composable<Screen.TrainingEquipmentOverview>{
             val viewModel = koinViewModel<TrainingEquipmentViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
             TrainingEquipmentView(viewModel)
         }
         composable<Screen.TrainingEquipmentDetail> { backStackEntry ->
-            val addEditTrainingEquipmentRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
+            val trainingEquipmentDetailRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<TrainingEquipmentDetailViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
-            val id = if (addEditTrainingEquipmentRoute.id != null) Uuid.parse(addEditTrainingEquipmentRoute.id) else null
+            val id = trainingEquipmentDetailRoute.id.toUuidOrNull()
             TrainingEquipmentDetailView(id, viewModel)
         }
         composable<Screen.Sleeps> {
@@ -139,7 +143,20 @@ fun BottomBarNavGraph(
             val settingsRepository = getKoin().get<SettingsRepository>()
             WeightOverviewView(viewModel, settingsRepository)
         }
-        // Added WorkoutOverview screen
+        composable<Screen.WorkoutTemplatesOverview> {
+            val viewModel = koinViewModel<WorkoutTemplatesOverviewViewModel>(
+                parameters = { parametersOf(bottomBarNavHostController) }
+            )
+            WorkoutTemplatesOverviewView(viewModel)
+        }
+        composable<Screen.WorkoutTemplateDetail> { backStackEntry ->
+            val workoutTemplateRoute: Screen.TrainingEquipmentDetail = backStackEntry.toRoute()
+            val id = workoutTemplateRoute.id.toUuidOrNull()
+            val viewModel = koinViewModel<WorkoutTemplateDetailViewModel>(
+                parameters = { parametersOf(bottomBarNavHostController) }
+            )
+            WorkoutTemplateDetailView(id, viewModel)
+        }
         composable<Screen.PerformedWorkoutsOverview> {
             val viewModel = koinViewModel<PerformedWorkoutsOverviewViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
@@ -147,4 +164,16 @@ fun BottomBarNavGraph(
             PerformedWorkoutsOverviewView(viewModel)
         }
     }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun String?.toUuidOrNull(): Uuid? {
+    if (this == null) {
+        return null
+    }
+    return runCatching {
+        Uuid.parse(this)
+    }.onFailure {
+        println("Failed to parse UUID from string '$this': ${it.message}")
+    }.getOrNull()
 }

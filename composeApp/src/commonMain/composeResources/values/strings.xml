@@ -10,6 +10,7 @@
     <string name="top_bar_title_exercises_dashboard">Exercises</string>
     <string name="top_bar_title_workout_overview">Workout Overview</string>
     <string name="top_bar_title_workout_templates">Workout Templates</string>
+    <string name="top_bar_title_workout_template_detail">Workout Template detail</string>
     <string name="top_bar_title_exercises">Exercises</string>
     <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
     <string name="top_bar_title_training_equipment">Training equipment</string>

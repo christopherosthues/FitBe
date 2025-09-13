@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_launcher
 import org.jetbrains.compose.resources.painterResource
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 // Dummy data structures
 private data class ExerciseSetInfo(val description: String)
@@ -57,9 +59,12 @@ private val mainWorkoutExercisesList = listOf(
     ExerciseInfo("Bicep Curls", "ic_launcher", listOf(ExerciseSetInfo("10 reps"), ExerciseSetInfo("10 reps"), ExerciseSetInfo("8 reps")))
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun WorkoutView() {
+fun WorkoutTemplateDetailView(
+    workoutTemplateId: Uuid?,
+    workoutTemplateDetailViewModel: WorkoutTemplateDetailViewModel
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier

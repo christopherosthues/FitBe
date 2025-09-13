@@ -10,6 +10,7 @@
     <string name="top_bar_title_exercises_dashboard">Übungen</string>
     <string name="top_bar_title_workout_overview">Workouts</string>
     <string name="top_bar_title_workout_templates">Workouts</string>
+    <string name="top_bar_title_workout_template_detail">Workoutdetail</string>
     <string name="top_bar_title_exercises">Übungen</string>
     <string name="top_bar_title_add_edit_exercise">Übung hinzufügen/bearbeiten</string>
     <string name="top_bar_title_training_equipment">Trainingsgeräte</string>

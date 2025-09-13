@@ -71,7 +71,7 @@ fun TrainingEquipmentView(
                         val equipment = allEquipment[equipmentIndex]
                         TrainingEquipmentCard(
                             equipment = equipment,
-                            onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id.toString()) },
+                            onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id) },
                             contentDescription = stringResource(
                                 Res.string.training_equipment_content_description_card,
                                 getEquipmentName(equipment.name, equipment.default)

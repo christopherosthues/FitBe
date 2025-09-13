@@ -14,14 +14,10 @@ import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
-// New DAOs for workouts
-// Refactored and new Repositories for workouts
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository // Assuming WorkoutRepository is refactored to this
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository // New repository for templates
-// ViewModels for workouts
+import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository
 import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesViewModel // New ViewModel for templates
-
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
@@ -42,6 +38,7 @@ import org.darthacheron.fitbe.settings.converters.DistanceUnitConverter
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 import org.darthacheron.fitbe.ui.ActualTopBarManager
 import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -58,8 +55,8 @@ val sharedModule = module {
     singleOf(::BeverageRepository)
     singleOf(::BodyWeightRepository)
     singleOf(::ProfileRepository)
-    singleOf(::WorkoutExecutionRepository) // Replaces WorkoutRepository
-    singleOf(::WorkoutTemplateRepository)  // New repository for templates
+    singleOf(::WorkoutExecutionRepository)
+    singleOf(::WorkoutTemplateRepository)
 
     // Unit Converters
     singleOf(::BodyMeasurementUnitConverter)
@@ -80,8 +77,8 @@ val sharedModule = module {
     single { get<FitBeDatabase>().stepsDao }
     single { get<FitBeDatabase>().exerciseDao }
     single { get<FitBeDatabase>().equipmentDao }
-    single { get<FitBeDatabase>().workoutTemplateDao } // New DAO
-    single { get<FitBeDatabase>().workoutExecutionSessionDao } // New DAO (replaces WorkoutSessionDao if it existed)
+    single { get<FitBeDatabase>().workoutTemplateDao }
+    single { get<FitBeDatabase>().workoutExecutionSessionDao }
 
     // Services and Managers
     singleOf(::StartUpService)
@@ -103,7 +100,8 @@ val sharedModule = module {
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::SettingsViewModel)
-    viewModelOf(::PerformedWorkoutsOverviewViewModel) // Will now use WorkoutExecutionRepository
-    viewModelOf(::WorkoutTemplatesViewModel) // New ViewModel for templates
+    viewModelOf(::PerformedWorkoutsOverviewViewModel)
+    viewModelOf(::WorkoutTemplatesOverviewViewModel)
+    viewModelOf(::WorkoutTemplateDetailViewModel)
 }
 

@@ -18,14 +18,14 @@ sealed class Screen {
     data object ExercisesDashboard : Screen()
 
     @Serializable
-    data object Exercises : Screen()
+    data object ExercisesOverview : Screen()
 
     @OptIn(ExperimentalUuidApi::class)
     @Serializable
     data class ExerciseDetail(val id: String?) : Screen()
 
     @Serializable
-    data object TrainingEquipment : Screen()
+    data object TrainingEquipmentOverview : Screen()
 
     @OptIn(ExperimentalUuidApi::class)
     @Serializable
@@ -55,6 +55,12 @@ sealed class Screen {
     @Serializable
     data object Settings : Screen()
 
-    @Serializable // Added
-    data object PerformedWorkoutsOverview : Screen() // Added
+    @Serializable
+    data object PerformedWorkoutsOverview : Screen()
+
+    @Serializable
+    data object WorkoutTemplatesOverview : Screen()
+
+    @Serializable
+    data class WorkoutTemplateDetail(val id: String?) : Screen()
 }

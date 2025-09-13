@@ -23,7 +23,7 @@ open class Exercise(
 
 @Composable
 internal fun getExerciseName(name: String, default: Boolean): String {
-    return if (default && exerciseList.contains(name)) {
+    return if (default && exerciseList.any { it.key == name }) {
         DefaultExerciseResProvider.exerciseNameMap[name]?.let {
             stringResource(it)
         } ?: name
@@ -34,7 +34,7 @@ internal fun getExerciseName(name: String, default: Boolean): String {
 
 @Composable
 internal fun getExerciseGuide(guide: String, default: Boolean): String {
-    return if (default && exerciseList.contains(guide)) {
+    return if (default && exerciseList.any { it.key == guide }) {
         DefaultExerciseResProvider.exerciseGuideMap[guide]?.let {
             stringResource(it)
         } ?: guide

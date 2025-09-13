@@ -19,15 +19,19 @@ class ExercisesDashboardViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.ExercisesDashboard
 
+    fun navigateToWorkoutTemplatesOverview() {
+        navHostController.navigate(Screen.WorkoutTemplatesOverview)
+    }
+
     fun navigateToWorkouts() {
         navHostController.navigate(Screen.PerformedWorkoutsOverview)
     }
 
-    fun navigateToExercises() {
-        navHostController.navigate(Screen.Exercises)
+    fun navigateToExercisesOverview() {
+        navHostController.navigate(Screen.ExercisesOverview)
     }
 
-    fun navigateToEquipment() {
-        navHostController.navigate(Screen.TrainingEquipment)
+    fun navigateToEquipmentOverview() {
+        navHostController.navigate(Screen.TrainingEquipmentOverview)
     }
 }

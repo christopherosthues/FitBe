@@ -30,7 +30,7 @@ data class WorkoutTemplatesUiState(
 )
 
 @OptIn(ExperimentalUuidApi::class)
-class WorkoutTemplatesViewModel(
+class WorkoutTemplatesOverviewViewModel(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val navHostController: NavHostController, // For navigation actions
     topBarManager: TopBarManager
@@ -53,6 +53,10 @@ class WorkoutTemplatesViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = WorkoutTemplatesUiState(isLoading = true)
         )
+
+    fun navigateToWorkoutTemplateDetail(templateId: Uuid?) {
+        navHostController.navigate(Screen.WorkoutTemplateDetail(templateId.toString()))
+    }
 
     fun onTemplateClicked(templateId: Uuid) {
         // navHostController.navigate(Screen.WorkoutTemplateDetail(templateId.toString())) // TODO: Define WorkoutTemplateDetail screen

@@ -54,13 +54,13 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ExercisesView(
-    viewModel: ExercisesViewModel,
+    exercisesViewModel: ExercisesViewModel,
 ) {
     LaunchedEffect(Unit) {
-        viewModel.updateTopBarConfig()
+        exercisesViewModel.updateTopBarConfig()
     }
-    val allExercises by viewModel.allExercises.collectAsState()
-    val favoriteExerciseIds by viewModel.favoriteExerciseIds.collectAsState()
+    val allExercises by exercisesViewModel.allExercises.collectAsState()
+    val favoriteExerciseIds by exercisesViewModel.favoriteExerciseIds.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -83,8 +83,8 @@ fun ExercisesView(
                         ExerciseCard(
                             exercise = exercise,
                             isFavorite = isFavorite,
-                            onToggleFavorite = { viewModel.toggleFavorite(exercise.id) },
-                            onClick = { viewModel.navigateToExerciseDetail(exercise.id.toString()) },
+                            onToggleFavorite = { exercisesViewModel.toggleFavorite(exercise.id) },
+                            onClick = { exercisesViewModel.navigateToExerciseDetail(exercise.id) },
                             contentDescription = stringResource(
                                 Res.string.exercise_content_description_card,
                                 getExerciseName(exercise.name, exercise.default)
@@ -96,7 +96,7 @@ fun ExercisesView(
         }
 
         FloatingActionButton(
-            onClick = { viewModel.navigateToExerciseDetail(null) },
+            onClick = { exercisesViewModel.navigateToExerciseDetail(null) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

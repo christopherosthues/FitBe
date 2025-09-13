@@ -55,6 +55,15 @@ fun ExercisesDashboardView(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
+            // TODO
+            DashboardCard(
+                title = stringResource(Res.string.card_title_workouts_overview),
+                imagePainter = painterResource(Res.drawable.ic_exercises),
+                onClick = { exercisesDashboardViewModel.navigateToWorkoutTemplatesOverview() },
+                contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
+            )
+        }
+        item {
             DashboardCard(
                 title = stringResource(Res.string.card_title_workouts_overview),
                 imagePainter = painterResource(Res.drawable.ic_exercises),
@@ -66,7 +75,7 @@ fun ExercisesDashboardView(
             DashboardCard(
                 title = stringResource(Res.string.card_title_exercises_overview),
                 imagePainter = painterResource(Res.drawable.ic_exercises),
-                onClick = { exercisesDashboardViewModel.navigateToExercises() },
+                onClick = { exercisesDashboardViewModel.navigateToExercisesOverview() },
                 contentDescription = stringResource(Res.string.card_title_content_description_exercises_overview)
             )
         }
@@ -74,7 +83,7 @@ fun ExercisesDashboardView(
             DashboardCard(
                 title = stringResource(Res.string.card_title_training_equipment_overview),
                 imagePainter = painterResource(Res.drawable.ic_training_equipment),
-                onClick = { exercisesDashboardViewModel.navigateToEquipment() },
+                onClick = { exercisesDashboardViewModel.navigateToEquipmentOverview() },
                 contentDescription = stringResource(Res.string.card_title_content_description_training_equipment_overview)
             )
         }

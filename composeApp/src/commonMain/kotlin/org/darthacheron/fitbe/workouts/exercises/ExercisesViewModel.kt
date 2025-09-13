@@ -58,8 +58,8 @@ class ExercisesViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
 
-    fun navigateToExerciseDetail(id: String?) {
-        navHostController.navigate(Screen.ExerciseDetail(id))
+    fun navigateToExerciseDetail(id: Uuid?) {
+        navHostController.navigate(Screen.ExerciseDetail(id?.toString()))
     }
 
     fun toggleFavorite(exerciseId: Uuid) {

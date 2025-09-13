@@ -73,7 +73,7 @@ internal data class ExerciseSeedData(
     val exerciseType: ExerciseType
 )
 
-internal val exerciseSeedList: List<ExerciseSeedData> = listOf(
+internal val exerciseList: List<ExerciseSeedData> = listOf(
     ExerciseSeedData(
         key = "default_exercise_squat",
         muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
@@ -187,7 +187,7 @@ class PrepopulateCallback(
     }
 
     private suspend fun populateDefaultExercises(exerciseDao: ExerciseDao) {
-        exerciseSeedList.forEach { exerciseData ->
+        exerciseList.forEach { exerciseData ->
             val exercise = ExerciseEntity(
                 name = exerciseData.key,
                 guide = exerciseData.key, // Assuming guide key is same as name key

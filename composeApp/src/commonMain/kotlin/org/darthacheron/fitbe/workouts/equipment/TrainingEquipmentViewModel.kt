@@ -12,6 +12,7 @@ import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class TrainingEquipmentViewModel(
@@ -36,7 +37,7 @@ class TrainingEquipmentViewModel(
                 initialValue = emptyList()
             )
 
-    fun navigateToTrainingEquipmentDetail(id: String?) {
-        navHostController.navigate(Screen.TrainingEquipmentDetail(id))
+    fun navigateToTrainingEquipmentDetail(id: Uuid?) {
+        navHostController.navigate(Screen.TrainingEquipmentDetail(id?.toString()))
     }
 }
