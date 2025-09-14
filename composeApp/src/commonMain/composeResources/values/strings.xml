@@ -126,6 +126,11 @@
     <string name="exercise_type_completion_only">Completion Only</string>
     <string name="exercise_type_other">Other</string>
 
+    <!-- Training Goals -->
+    <string name="training_goal_maximum_strength">Maximum Strength</string>
+    <string name="training_goal_muscle_building">Muscle Building</string>
+    <string name="training_goal_strength_endurance">Strength Endurance</string>
+
     <!-- Default Exercise Names -->
     <string name="default_exercise_squat_name">Squat</string>
     <string name="default_exercise_deadlift_name">Deadlift</string>

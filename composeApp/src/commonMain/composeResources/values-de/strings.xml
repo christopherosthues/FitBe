@@ -126,6 +126,11 @@
     <string name="exercise_type_completion_only">Nur Abschluss</string>
     <string name="exercise_type_other">Andere</string>
 
+    <!-- Training Goals -->
+    <string name="training_goal_maximum_strength">Maximalkraft</string>
+    <string name="training_goal_muscle_building">Muskelaufbau</string>
+    <string name="training_goal_strength_endurance">Kraftausdauer</string>
+
     <!-- Default Exercise Names -->
     <string name="default_exercise_squat_name">Kniebeuge</string>
     <string name="default_exercise_deadlift_name">Kreuzheben</string>
