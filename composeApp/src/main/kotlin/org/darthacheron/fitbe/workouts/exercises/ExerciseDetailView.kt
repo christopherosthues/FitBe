@@ -19,7 +19,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -99,6 +98,7 @@ fun ExerciseDetailView(
     val availableMuscleGroups by viewModel.availableMuscleGroups.collectAsState()
     val availableEquipments by viewModel.availableEquipments.collectAsState()
     val availableRecommendedForItems by viewModel.availableRecommendedFor.collectAsState()
+    val availableExerciseTypes by viewModel.availableExerciseTypes.collectAsState()
     val scrollState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -220,13 +220,8 @@ fun ExerciseDetailView(
                         }
                     )
 
-                    // Exercise Type Dropdown
+                    // Exercise Type Picker
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = stringResource(Res.string.exercise_type_label),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
                         var exerciseTypeDropdownExpanded by remember { mutableStateOf(false) }
                         ExposedDropdownMenuBox(
                             expanded = exerciseTypeDropdownExpanded,
@@ -235,27 +230,25 @@ fun ExerciseDetailView(
                         ) {
                             OutlinedTextField(
                                 value = stringResource(uiState.exerciseType.localizedString()),
-                                onValueChange = {},
-                                label = { Text(stringResource(Res.string.exercise_type_label)) },
+                                onValueChange = { /* Do nothing, a dropdown */ },
+                                label = { Text(text = stringResource(Res.string.exercise_type_label)) },
                                 readOnly = true,
                                 trailingIcon = {
-                                    if (uiState.isEditing) {
-                                        ExposedDropdownMenuDefaults.TrailingIcon(
-                                            expanded = exerciseTypeDropdownExpanded
-                                        )
-                                    }
+                                    ExposedDropdownMenuDefaults.TrailingIcon(
+                                        expanded = exerciseTypeDropdownExpanded
+                                    )
                                 },
                                 modifier = Modifier.menuAnchor().fillMaxWidth(),
                                 enabled = uiState.isEditing,
-                                isError = uiState.error.hasExerciseTypeError
+                                isError = uiState.error.hasExerciseTypeError,
                             )
                             ExposedDropdownMenu(
-                                expanded = exerciseTypeDropdownExpanded && uiState.isEditing,
+                                expanded = exerciseTypeDropdownExpanded,
                                 onDismissRequest = { exerciseTypeDropdownExpanded = false }
                             ) {
-                                ExerciseType.entries.forEach { type ->
+                                availableExerciseTypes.forEach { type ->
                                     DropdownMenuItem(
-                                        text = { Text(stringResource(type.localizedString())) },
+                                        text = { Text(text = stringResource(type.localizedString())) },
                                         onClick = {
                                             viewModel.onExerciseTypeChange(type)
                                             exerciseTypeDropdownExpanded = false
@@ -269,7 +262,7 @@ fun ExerciseDetailView(
                                 text = stringResource(uiState.error.exerciseTypeError!!),
                                 color = MaterialTheme.colorScheme.error,
                                 style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                                modifier = Modifier.padding(start = 16.dp)
                             )
                         }
                     }
@@ -346,8 +339,7 @@ fun ExerciseDetailView(
                             Text(
                                 text = stringResource(uiState.error.muscleGroupError!!),
                                 color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                                style = MaterialTheme.typography.titleSmall,
                             )
                         }
                     }
@@ -424,8 +416,7 @@ fun ExerciseDetailView(
                             Text(
                                 text = stringResource(uiState.error.recommendedForError!!),
                                 color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                                style = MaterialTheme.typography.titleSmall,
                             )
                         }
                     }
@@ -499,8 +490,7 @@ fun ExerciseDetailView(
                             Text(
                                 text = stringResource(uiState.error.equipmentError!!),
                                 color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                                style = MaterialTheme.typography.titleSmall,
                             )
                         }
                     }

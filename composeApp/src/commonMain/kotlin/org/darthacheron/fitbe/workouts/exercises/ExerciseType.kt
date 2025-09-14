@@ -1,5 +1,18 @@
 package org.darthacheron.fitbe.workouts.exercises
 
+import androidx.compose.runtime.Composable
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.exercise_type_completion_only
+import fitbe.composeapp.generated.resources.exercise_type_distance
+import fitbe.composeapp.generated.resources.exercise_type_distance_timed
+import fitbe.composeapp.generated.resources.exercise_type_other
+import fitbe.composeapp.generated.resources.exercise_type_reps_only
+import fitbe.composeapp.generated.resources.exercise_type_timed
+import fitbe.composeapp.generated.resources.exercise_type_weight_reps
+import fitbe.composeapp.generated.resources.exercise_type_weight_reps_timed
+import fitbe.composeapp.generated.resources.exercise_type_weight_timed
+import org.jetbrains.compose.resources.StringResource
+
 enum class ExerciseType {
     /** Exercises tracked by weight and repetitions (e.g., Bench Press, Squats with weights) */
     WEIGHT_REPS,
@@ -27,4 +40,19 @@ enum class ExerciseType {
 
     /** For any other type of exercise or for exercises where tracking metrics are not predefined. */
     OTHER
+}
+
+@Composable
+fun ExerciseType.localizedString(): StringResource {
+    return when (this) {
+        ExerciseType.WEIGHT_REPS -> Res.string.exercise_type_weight_reps
+        ExerciseType.REPS_ONLY -> Res.string.exercise_type_reps_only
+        ExerciseType.TIMED -> Res.string.exercise_type_timed
+        ExerciseType.DISTANCE -> Res.string.exercise_type_distance
+        ExerciseType.WEIGHT_TIMED -> Res.string.exercise_type_weight_timed
+        ExerciseType.WEIGHT_REPS_TIMED -> Res.string.exercise_type_weight_reps_timed
+        ExerciseType.DISTANCE_TIMED -> Res.string.exercise_type_distance_timed
+        ExerciseType.COMPLETION_ONLY -> Res.string.exercise_type_completion_only
+        ExerciseType.OTHER -> Res.string.exercise_type_other
+    }
 }

@@ -56,6 +56,9 @@
     <string name="exercise_detail_add_muscle_groups">Add muscle group</string>
     <string name="exercise_detail_required_equipment">Required Equipment</string>
     <string name="exercise_detail_add_equipment">Add equipment</string>
+    <string name="exercise_detail_recommended_for">Recommended For</string>
+    <string name="exercise_detail_add_recommended_for">Add recommendation</string>
+    <string name="exercise_type_label">Exercise Type</string>
     <string name="exercise_detail_content_description_add_favorite">Add exercise to favorites</string>
     <string name="exercise_detail_content_description_remove_favorite">Remove exercise from favorites</string>
     <string name="exercise_detail_content_description_select_image">Select Image</string>
@@ -64,8 +67,10 @@
     <string name="exercise_detail_content_description_default_equipment">Default exercise</string>
     <string name="exercise_detail_content_description_remove_muscle_groups">Remove muscle group</string>
     <string name="exercise_detail_content_description_add_muscle_groups">Add muscle group</string>
-    <string name="exercise_detail_content_description_add_equipment">Add equipment</string>
     <string name="exercise_detail_content_description_remove_equipment">Remove equipment</string>
+    <string name="exercise_detail_content_description_add_equipment">Add equipment</string>
+    <string name="exercise_detail_content_description_remove_recommended_for">Remove recommendation</string>
+    <string name="exercise_detail_content_description_add_recommended_for">Add recommendation</string>
     <string name="exercise_detail_content_description_reset_to_default">Reset exercise to default</string>
     <string name="exercise_detail_content_description_delete">Delete exercise</string>
     <string name="exercise_detail_content_description_cancel">Cancel editing</string>
@@ -78,6 +83,8 @@
     <string name="exercise_detail_error_missing_guide">Guide cannot be empty</string>
     <string name="exercise_detail_error_missing_muscle_group">At least one muscle group has to be selected</string>
     <string name="exercise_detail_error_missing_equipment">At least one equipment has to be selected</string>
+    <string name="exercise_detail_error_missing_recommended_for">At least one recommendation has to be selected</string>
+    <string name="exercise_detail_error_missing_exercise_type">Exercise Type must be selected</string>
     <string name="exercise_detail_error_saving_exercise">Failed to save exercise</string>
     <string name="exercise_detail_error_reset_default_exercise">Failed to reset exercise</string>
     <string name="exercise_detail_error_reset_new_exercise">Cannot reset new exercise</string>
@@ -102,6 +109,21 @@
     <string name="muscle_group_quads">Quads</string>
     <string name="muscle_group_shoulders">Shoulders</string>
     <string name="muscle_group_triceps">Triceps</string>
+
+    <!-- Recommended For -->
+    <string name="recommended_for_warmup">Warmup</string>
+    <string name="recommended_for_workout">Workout</string>
+
+    <!-- Exercise Types -->
+    <string name="exercise_type_weight_reps">Weight &amp; Reps</string>
+    <string name="exercise_type_reps_only">Reps Only</string>
+    <string name="exercise_type_timed">Timed</string>
+    <string name="exercise_type_distance">Distance</string>
+    <string name="exercise_type_weight_timed">Weight &amp; Timed</string>
+    <string name="exercise_type_weight_reps_timed">Weight, Reps &amp; Timed</string>
+    <string name="exercise_type_distance_timed">Distance &amp; Timed</string>
+    <string name="exercise_type_completion_only">Completion Only</string>
+    <string name="exercise_type_other">Other</string>
 
     <!-- Default Exercise Names -->
     <string name="default_exercise_squat_name">Squat</string>

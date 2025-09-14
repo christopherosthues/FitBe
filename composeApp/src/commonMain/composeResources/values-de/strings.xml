@@ -56,6 +56,9 @@
     <string name="exercise_detail_add_muscle_groups">Muskelgruppe hinzufügen</string>
     <string name="exercise_detail_required_equipment">Benötigtes Gerät</string>
     <string name="exercise_detail_add_equipment">Gerät hinzufügen</string>
+    <string name="exercise_detail_recommended_for">Empfohlen für</string>
+    <string name="exercise_detail_add_recommended_for">Empfehlung hinzufügen</string>
+    <string name="exercise_type_label">Übungstyp</string>
     <string name="exercise_detail_content_description_add_favorite">Übung zu Favoriten hinzufügen</string>
     <string name="exercise_detail_content_description_remove_favorite">Übung aus Favoriten entfernen</string>
     <string name="exercise_detail_content_description_select_image">Bild auswählen</string>
@@ -64,8 +67,10 @@
     <string name="exercise_detail_content_description_default_equipment">Standardübung</string>
     <string name="exercise_detail_content_description_remove_muscle_groups">Muskelgruppe entfernen</string>
     <string name="exercise_detail_content_description_add_muscle_groups">Muskelgruppe hinzufügen</string>
-    <string name="exercise_detail_content_description_add_equipment">Gerät hinzufügen</string>
     <string name="exercise_detail_content_description_remove_equipment">Gerät entfernen</string>
+    <string name="exercise_detail_content_description_add_equipment">Gerät hinzufügen</string>
+    <string name="exercise_detail_content_description_remove_recommended_for">Empfehlung entfernen</string>
+    <string name="exercise_detail_content_description_add_recommended_for">Empfehlung hinzufügen</string>
     <string name="exercise_detail_content_description_reset_to_default">Übung zurücksetzen</string>
     <string name="exercise_detail_content_description_delete">Übung löschen</string>
     <string name="exercise_detail_content_description_cancel">Bearbeitung abbrechen</string>
@@ -78,6 +83,8 @@
     <string name="exercise_detail_error_missing_guide">Die Anleitung darf nicht leer sein</string>
     <string name="exercise_detail_error_missing_muscle_group">Mindestens eine Muskelgruppe muss ausgewählt sein</string>
     <string name="exercise_detail_error_missing_equipment">Mindestens ein Ausrüstungsgegenstand muss ausgewählt sein</string>
+    <string name="exercise_detail_error_missing_recommended_for">Mindestens eine Empfehlung muss ausgewählt sein</string>
+    <string name="exercise_detail_error_missing_exercise_type">Übungstyp muss ausgewählt sein</string>
     <string name="exercise_detail_error_saving_exercise">Übung konnte nicht gespeichert werden</string>
     <string name="exercise_detail_error_reset_default_exercise">Übung konnte nicht zurückgesetzt werden</string>
     <string name="exercise_detail_error_delete_exercise">Fehler beim Löschen der Übung</string>
@@ -102,6 +109,21 @@
     <string name="muscle_group_full_body">Ganzkörper</string>
     <string name="muscle_group_glutes">Gesäßmuskeln</string>
     <string name="muscle_group_other">Sonstiges</string>
+
+    <!-- Recommended For -->
+    <string name="recommended_for_warmup">Aufwärmen</string>
+    <string name="recommended_for_workout">Workout</string>
+
+    <!-- Exercise Types -->
+    <string name="exercise_type_weight_reps">Gewicht &amp; Wdh.</string>
+    <string name="exercise_type_reps_only">Nur Wdh.</string>
+    <string name="exercise_type_timed">Zeit</string>
+    <string name="exercise_type_distance">Distanz</string>
+    <string name="exercise_type_weight_timed">Gewicht &amp; Zeit</string>
+    <string name="exercise_type_weight_reps_timed">Gewicht, Wdh. &amp; Zeit</string>
+    <string name="exercise_type_distance_timed">Distanz &amp; Zeit</string>
+    <string name="exercise_type_completion_only">Nur Abschluss</string>
+    <string name="exercise_type_other">Andere</string>
 
     <!-- Default Exercise Names -->
     <string name="default_exercise_squat_name">Kniebeuge</string>
