@@ -21,6 +21,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
@@ -43,6 +44,7 @@ import fitbe.composeapp.generated.resources.exercise_content_description_add
 import fitbe.composeapp.generated.resources.exercise_content_description_card
 import fitbe.composeapp.generated.resources.exercise_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_no_exercises
+import fitbe.composeapp.generated.resources.filter_exercises_label
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
@@ -59,8 +61,9 @@ fun ExercisesView(
     LaunchedEffect(Unit) {
         exercisesViewModel.updateTopBarConfig()
     }
-    val allExercises by exercisesViewModel.allExercises.collectAsState()
+    val filteredExercises by exercisesViewModel.filteredExercises.collectAsState()
     val favoriteExerciseIds by exercisesViewModel.favoriteExerciseIds.collectAsState()
+    val filterText by exercisesViewModel.filterText.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -68,7 +71,13 @@ fun ExercisesView(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            if (allExercises.isEmpty()) {
+            OutlinedTextField(
+                value = filterText,
+                onValueChange = { exercisesViewModel.onFilterTextChanged(it) },
+                label = { Text(stringResource(Res.string.filter_exercises_label)) },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            )
+            if (filteredExercises.isEmpty()) {
                 Text(text = stringResource(Res.string.exercise_no_exercises))
             } else {
                 LazyVerticalGrid(
@@ -77,8 +86,8 @@ fun ExercisesView(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(allExercises.size, key = { allExercises[it].id.toString() }) { exerciseIndex ->
-                        val exercise = allExercises[exerciseIndex]
+                    items(filteredExercises.size, key = { filteredExercises[it].id.toString() }) { exerciseIndex ->
+                        val exercise = filteredExercises[exerciseIndex]
                         val isFavorite = favoriteExerciseIds.contains(exercise.id)
                         ExerciseCard(
                             exercise = exercise,
@@ -87,7 +96,7 @@ fun ExercisesView(
                             onClick = { exercisesViewModel.navigateToExerciseDetail(exercise.id) },
                             contentDescription = stringResource(
                                 Res.string.exercise_content_description_card,
-                                getExerciseName(exercise.name, exercise.default)
+                                exercise.name // Name is already localized from ViewModel
                             )
                         )
                     }
@@ -171,12 +180,13 @@ fun ExerciseCard(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
-                    Column() {
+                    Column {
                         Text(
-                            text = getExerciseName(exercise.name, exercise.default),
+                            text = exercise.name, // Name is already localized from ViewModel
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 8.dp).fillMaxWidth(),
+                            color = Color.White
                         )
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),

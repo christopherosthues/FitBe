@@ -74,7 +74,7 @@ data class AddEditTrainingEquipmentUiState(
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class TrainingEquipmentDetailViewModel(
     private val equipmentRepository: EquipmentRepository,
-    private val settingsRepository: SettingsRepository, // Added SettingsRepository
+    settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {

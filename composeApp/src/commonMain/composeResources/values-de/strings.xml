@@ -48,6 +48,7 @@
     <string name="exercise_content_description_card_remove_favorite">Favoritenstatus entfernen</string>
     <string name="exercise_content_description_add">Übung hinzufügen</string>
     <string name="exercise_content_description_default_exercise">Standardübung</string>
+    <string name="filter_exercises_label">Übungen filtern</string>
 
     <!-- Exercise Detail -->
     <string name="exercise_detail_name">Name</string>
@@ -168,6 +169,7 @@
     <string name="training_equipment_content_description_default_equipment">Standardgerät</string>
     <string name="training_equipment_content_description_card_add_favorite">Gerät als Favorit markieren</string>
     <string name="training_equipment_content_description_card_remove_favorite">Gerät als Favorit entfernen</string>
+    <string name="filter_equipment_label">Geräte filtern</string>
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>

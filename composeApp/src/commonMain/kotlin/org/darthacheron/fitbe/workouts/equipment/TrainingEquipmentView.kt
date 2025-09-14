@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +38,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
+import fitbe.composeapp.generated.resources.filter_equipment_label
 import fitbe.composeapp.generated.resources.training_equipment_content_description_add
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card
 import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
@@ -56,8 +59,9 @@ fun TrainingEquipmentView(
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
-    val allEquipment by viewModel.allEquipment.collectAsState()
+    val filteredEquipment by viewModel.allEquipment.collectAsState() // This is already filtered and sorted
     val favoriteEquipmentIds by viewModel.favoriteEquipmentIds.collectAsState()
+    val filterText by viewModel.filterText.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -65,7 +69,16 @@ fun TrainingEquipmentView(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            if (allEquipment.isEmpty()) {
+            OutlinedTextField(
+                value = filterText,
+                onValueChange = { viewModel.onFilterTextChanged(it) },
+                label = { Text(stringResource(Res.string.filter_equipment_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (filteredEquipment.isEmpty()) {
                 Text(text = stringResource(Res.string.training_equipment_no_equipments))
             } else {
                 LazyVerticalGrid(
@@ -74,8 +87,8 @@ fun TrainingEquipmentView(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(allEquipment.size, key = { allEquipment[it].id.toString() }) { equipmentIndex ->
-                        val equipment = allEquipment[equipmentIndex]
+                    items(filteredEquipment.size, key = { filteredEquipment[it].id.toString() }) { equipmentIndex ->
+                        val equipment = filteredEquipment[equipmentIndex]
                         val isFavorite = equipment.id in favoriteEquipmentIds
                         TrainingEquipmentCard(
                             equipment = equipment,
@@ -85,7 +98,7 @@ fun TrainingEquipmentView(
                             onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id) },
                             contentDescription = stringResource(
                                 Res.string.training_equipment_content_description_card,
-                                getEquipmentName(equipment.name, equipment.default)
+                                equipment.name // Name is already localized from ViewModel
                             )
                         )
                     }
@@ -168,7 +181,8 @@ fun TrainingEquipmentCard(
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = getEquipmentName(equipment.name, equipment.default),
+                        // equipment.name is already localized from the ViewModel
+                        text = equipment.name,
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.align(Alignment.Center).padding(vertical = 8.dp)

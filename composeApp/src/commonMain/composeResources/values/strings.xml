@@ -48,6 +48,7 @@
     <string name="exercise_content_description_card_remove_favorite">Unmark as favorite</string>
     <string name="exercise_content_description_add">Add exercise</string>
     <string name="exercise_content_description_default_exercise">Default exercise</string>
+    <string name="filter_exercises_label">Filter exercises</string>
 
     <!-- Exercise Detail -->
     <string name="exercise_detail_name">Name</string>
@@ -168,6 +169,7 @@
     <string name="training_equipment_content_description_default_equipment">Default equipment</string>
     <string name="training_equipment_content_description_card_add_favorite">Mark equipment as favorite</string>
     <string name="training_equipment_content_description_card_remove_favorite">Unmark equipment as favorite</string>
+    <string name="filter_equipment_label">Filter equipment</string>
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>
