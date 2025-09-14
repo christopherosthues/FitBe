@@ -16,7 +16,11 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
 import org.darthacheron.fitbe.workouts.exercises.RecommendedFor
 import org.darthacheron.fitbe.workouts.exercises.fromExerciseEntity
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
+import org.darthacheron.fitbe.workouts.templates.fromWorkoutTemplateEntity
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 internal val equipmentList = listOf(
     "default_training_equipment_barbell",
@@ -154,10 +158,26 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
     )
 )
 
+internal data class WorkoutTemplateSeedData(
+    val key: String,
+    val description: String? = null,
+    val imageKey: String? = null // Added imageKey for default image
+)
+
+internal val workoutList: List<WorkoutTemplateSeedData> = listOf(
+    // Example:
+    // WorkoutTemplateSeedData(
+    //     key = "default_workout_template_full_body_strength",
+    //     description = "A full body strength workout.",
+    //     imageKey = "default_workout_template_full_body_strength_image" // Example image key
+    // )
+)
+
 @OptIn(ExperimentalUuidApi::class)
 class PrepopulateCallback(
     private val exerciseDaoProvider: () -> ExerciseDao,
     private val equipmentDaoProvider: () -> EquipmentDao,
+    private val workoutTemplateDaoProvider: () -> WorkoutTemplateDao
 ) : RoomDatabase.Callback() {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -167,16 +187,19 @@ class PrepopulateCallback(
         applicationScope.launch {
             val exerciseDao = exerciseDaoProvider()
             val equipmentDao = equipmentDaoProvider()
+            val workoutTemplateDao = workoutTemplateDaoProvider()
             populateDefaultEquipment(equipmentDao)
             populateDefaultExercises(exerciseDao)
+            populateDefaultWorkoutTemplates(workoutTemplateDao)
         }
     }
 
     private suspend fun populateDefaultEquipment(equipmentDao: EquipmentDao) {
         equipmentList.forEach { equipmentKey ->
             val equipment = TrainingEquipmentEntity(
+                id = Uuid.random(),
                 name = equipmentKey,
-                imageUri = equipmentKey,
+                imageUri = equipmentKey, // Assumes image key is same as name key
                 default = true,
             )
             equipmentDao.upsertEquipment(equipment)
@@ -189,6 +212,7 @@ class PrepopulateCallback(
     private suspend fun populateDefaultExercises(exerciseDao: ExerciseDao) {
         exerciseList.forEach { exerciseData ->
             val exercise = ExerciseEntity(
+                id = Uuid.random(),
                 name = exerciseData.key,
                 guide = exerciseData.key, // Assuming guide key is same as name key
                 imageUri = exerciseData.key, // Assuming image key is same as name key
@@ -200,6 +224,22 @@ class PrepopulateCallback(
             exerciseDao.upsertExercise(exercise)
             exerciseDao.insertDefaultExercise(
                 fromExerciseEntity(exercise)
+            )
+        }
+    }
+
+    private suspend fun populateDefaultWorkoutTemplates(workoutTemplateDao: WorkoutTemplateDao) {
+        workoutList.forEach { workoutData ->
+            val workoutTemplate = WorkoutTemplateEntity(
+                id = Uuid.random(),
+                name = workoutData.key,
+                description = workoutData.description,
+                imageUri = workoutData.imageKey, // Set imageUri from imageKey
+                default = true
+            )
+            workoutTemplateDao.upsertWorkoutTemplate(workoutTemplate)
+            workoutTemplateDao.insertDefaultWorkoutTemplate(
+                fromWorkoutTemplateEntity(workoutTemplate)
             )
         }
     }

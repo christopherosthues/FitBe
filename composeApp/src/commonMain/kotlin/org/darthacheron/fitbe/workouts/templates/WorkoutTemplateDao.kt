@@ -2,6 +2,8 @@ package org.darthacheron.fitbe.workouts.templates
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -27,6 +29,16 @@ interface WorkoutTemplateDao {
 
     @Query("SELECT * FROM workout_templates ORDER BY name ASC")
     fun getAllWorkoutTemplates(): Flow<List<WorkoutTemplateEntity>>
+
+    // DefaultWorkoutTemplateEntity operations
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDefaultWorkoutTemplate(defaultWorkoutTemplate: DefaultWorkoutTemplateEntity)
+
+    @Query("SELECT * FROM default_workout_templates WHERE id = :id")
+    fun getDefaultWorkoutTemplateById(id: Uuid): Flow<DefaultWorkoutTemplateEntity?>
+
+    @Query("SELECT * FROM default_workout_templates ORDER BY name ASC")
+    fun getAllDefaultWorkoutTemplates(): Flow<List<DefaultWorkoutTemplateEntity>>
 
     // WorkoutTemplateExerciseEntity operations
     @Upsert

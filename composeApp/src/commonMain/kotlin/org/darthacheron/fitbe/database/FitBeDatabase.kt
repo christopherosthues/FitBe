@@ -42,6 +42,7 @@ import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
 // New Workout Template Entities
+import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateExerciseEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateSetEntity
@@ -65,9 +66,10 @@ import kotlin.uuid.ExperimentalUuidApi
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
         DefaultExerciseEquipmentCrossRef::class,
         WorkoutTemplateEntity::class, WorkoutTemplateExerciseEntity::class, WorkoutTemplateSetEntity::class,
+        DefaultWorkoutTemplateEntity::class, // Added DefaultWorkoutTemplateEntity
         WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
     ],
-    version = 1
+    version = 1 // TODO: Increment version when schema changes and add migration
 )
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,

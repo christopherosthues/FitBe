@@ -14,6 +14,7 @@ import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository
 import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
@@ -66,7 +67,7 @@ val sharedModule = module {
     // Database and DAOs
     single {
         get<DatabaseFactory>().create()
-            .addCallback(PrepopulateCallback({ get<ExerciseDao>() }, { get<EquipmentDao>() }))
+            .addCallback(PrepopulateCallback({ get<ExerciseDao>() }, { get<EquipmentDao>() }, { get<WorkoutTemplateDao>() })) // Added WorkoutTemplateDao
             .setDriver(BundledSQLiteDriver())
             .build()
     }
