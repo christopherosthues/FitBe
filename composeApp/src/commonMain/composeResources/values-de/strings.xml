@@ -115,6 +115,7 @@
     <string name="recommended_for_workout">Workout</string>
 
     <!-- Exercise Types -->
+    <string name="exercise_type_unknown">-</string>
     <string name="exercise_type_weight_reps">Gewicht &amp; Wdh.</string>
     <string name="exercise_type_reps_only">Nur Wdh.</string>
     <string name="exercise_type_timed">Zeit</string>

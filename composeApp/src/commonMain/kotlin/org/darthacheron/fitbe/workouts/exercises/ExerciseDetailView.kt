@@ -245,7 +245,7 @@ fun ExerciseDetailView(
                                         )
                                     }
                                 },
-                                modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable).fillMaxWidth(),
                                 enabled = uiState.isEditing,
                                 isError = uiState.error.hasExerciseTypeError
                             )
@@ -253,7 +253,7 @@ fun ExerciseDetailView(
                                 expanded = exerciseTypeDropdownExpanded && uiState.isEditing,
                                 onDismissRequest = { exerciseTypeDropdownExpanded = false }
                             ) {
-                                ExerciseType.entries.forEach { type ->
+                                ExerciseType.entries.filter { it != ExerciseType.UNKNOWN }.forEach { type ->
                                     DropdownMenuItem(
                                         text = { Text(stringResource(type.localizedString())) },
                                         onClick = {

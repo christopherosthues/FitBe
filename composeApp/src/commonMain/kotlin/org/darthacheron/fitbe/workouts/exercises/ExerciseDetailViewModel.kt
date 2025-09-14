@@ -59,7 +59,7 @@ data class ExerciseDetailUiState(
     val imageUri: String? = null,
     val equipmentList: List<TrainingEquipment> = emptyList(),
     val recommendedFor: List<RecommendedFor> = emptyList(),
-    val exerciseType: ExerciseType = ExerciseType.OTHER,
+    val exerciseType: ExerciseType = ExerciseType.UNKNOWN,
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val exerciseId: Uuid? = null,
@@ -216,7 +216,7 @@ class ExerciseDetailViewModel(
                     imageUri = null,
                     equipmentList = emptyList(),
                     recommendedFor = emptyList(),
-                    exerciseType = ExerciseType.OTHER,
+                    exerciseType = ExerciseType.UNKNOWN,
                     error = ExerciseError(),
                     persistedDefaultName = null,
                     persistedDefaultGuide = null,
@@ -306,7 +306,7 @@ class ExerciseDetailViewModel(
                             guide = "",
                             targetMuscleGroups = emptyList(),
                             recommendedFor = emptyList(),
-                            exerciseType = ExerciseType.OTHER,
+                            exerciseType = ExerciseType.UNKNOWN,
                             imageUri = null,
                             equipmentList = emptyList()
                         )
@@ -325,7 +325,7 @@ class ExerciseDetailViewModel(
                         guide = "",
                         targetMuscleGroups = emptyList(),
                         recommendedFor = emptyList(),
-                        exerciseType = ExerciseType.OTHER,
+                        exerciseType = ExerciseType.UNKNOWN,
                         imageUri = null,
                         equipmentList = emptyList()
                     )
@@ -508,7 +508,7 @@ class ExerciseDetailViewModel(
         val muscleGroupError = if (currentState.targetMuscleGroups.isEmpty()) Res.string.exercise_detail_error_missing_muscle_group else null
         val equipmentError = if (currentState.equipmentList.isEmpty()) Res.string.exercise_detail_error_missing_equipment else null
         val recommendedForError = if (currentState.recommendedFor.isEmpty()) Res.string.exercise_detail_error_missing_recommended_for else null
-        val exerciseTypeError = if (currentState.exerciseType == ExerciseType.OTHER && currentState.persistedDefaultExerciseType != ExerciseType.OTHER) Res.string.exercise_detail_error_missing_exercise_type else null
+        val exerciseTypeError = if (currentState.exerciseType == ExerciseType.UNKNOWN && currentState.persistedDefaultExerciseType != ExerciseType.UNKNOWN) Res.string.exercise_detail_error_missing_exercise_type else null
 
 
         val currentErrorState = ExerciseError(
