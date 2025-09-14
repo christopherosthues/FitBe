@@ -12,9 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
@@ -65,10 +66,13 @@ fun WorkoutTemplateDetailView(
     workoutTemplateId: Uuid?,
     workoutTemplateDetailViewModel: WorkoutTemplateDetailViewModel
 ) {
+    val scrollState = rememberScrollState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(bottom = 72.dp) // Space for the bottom button
         ) {
             // Top static info
@@ -118,9 +122,23 @@ fun WorkoutTemplateDetailView(
             }
 
             // Tab Content
-            when (selectedTabIndex) {
-                0 -> ExerciseListTabContent(exercises = warmUpExercisesList, modifier = Modifier.weight(1f))
-                1 -> ExerciseListTabContent(exercises = mainWorkoutExercisesList, modifier = Modifier.weight(1f))
+            val currentExercises = when (selectedTabIndex) {
+                0 -> warmUpExercisesList
+                1 -> mainWorkoutExercisesList
+                else -> emptyList()
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp), // Add padding above the list
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                currentExercises.forEach { exercise ->
+                    Box(modifier = Modifier.padding(horizontal = 16.dp)) { // Horizontal padding for items
+                        ExerciseItemCard(exercise = exercise)
+                    }
+                }
             }
         }
 
@@ -132,19 +150,6 @@ fun WorkoutTemplateDetailView(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
             Text("Start Workout")
-        }
-    }
-}
-
-@Composable
-private fun ExerciseListTabContent(exercises: List<ExerciseInfo>, modifier: Modifier = Modifier) {
-    LazyColumn(
-        modifier = modifier.padding(top = 8.dp), // Add padding above the list
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp) // Horizontal padding for items
-    ) {
-        items(exercises) { exercise ->
-            ExerciseItemCard(exercise = exercise)
         }
     }
 }

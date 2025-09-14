@@ -23,9 +23,9 @@ class ExercisesDashboardViewModel(
         navHostController.navigate(Screen.WorkoutTemplatesOverview)
     }
 
-    fun navigateToWorkouts() {
-        navHostController.navigate(Screen.PerformedWorkoutsOverview)
-    }
+//    fun navigateToWorkouts() {
+//        navHostController.navigate(Screen.PerformedWorkoutsOverview)
+//    }
 
     fun navigateToExercisesOverview() {
         navHostController.navigate(Screen.ExercisesOverview)

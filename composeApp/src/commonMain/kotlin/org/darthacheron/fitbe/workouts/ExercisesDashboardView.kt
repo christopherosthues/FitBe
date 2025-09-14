@@ -63,14 +63,14 @@ fun ExercisesDashboardView(
                 contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
             )
         }
-        item {
-            DashboardCard(
-                title = stringResource(Res.string.card_title_workouts_overview),
-                imagePainter = painterResource(Res.drawable.ic_exercises),
-                onClick = { exercisesDashboardViewModel.navigateToWorkouts() },
-                contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
-            )
-        }
+//        item {
+//            DashboardCard(
+//                title = stringResource(Res.string.card_title_workouts_overview),
+//                imagePainter = painterResource(Res.drawable.ic_exercises),
+//                onClick = { exercisesDashboardViewModel.navigateToWorkouts() },
+//                contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
+//            )
+//        }
         item {
             DashboardCard(
                 title = stringResource(Res.string.card_title_exercises_overview),
