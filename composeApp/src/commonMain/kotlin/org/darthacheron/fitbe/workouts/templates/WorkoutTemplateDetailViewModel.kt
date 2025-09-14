@@ -95,25 +95,25 @@ class WorkoutTemplateDetailViewModel(
                 val templateWithDetails = workoutTemplateRepository.getWorkoutTemplateWithExercisesAndSets(templateId).firstOrNull()
 
                 if (templateWithDetails != null) {
-                    val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->
-                        WorkoutTemplateExerciseWithDetails(
-                            templateExerciseId = exerciseWithSets.workoutTemplateExercise.id,
-                            exerciseId = exerciseWithSets.exercise.id,
-                            exerciseName = exerciseWithSets.exercise.name,
-                            exerciseImageUri = exerciseWithSets.exercise.imageUri,
-                            exerciseDefault = exerciseWithSets.exercise.default,
-                            exerciseOrder = exerciseWithSets.workoutTemplateExercise.exerciseOrder,
-                            notes = exerciseWithSets.workoutTemplateExercise.notes,
-                            sets = exerciseWithSets.sets.map { it.toWorkoutTemplateSet() } // Mapped to domain object
-                        )
-                    }
+//                    val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->
+//                        WorkoutTemplateExerciseWithDetails(
+//                            templateExerciseId = exerciseWithSets.workoutTemplateExercise.id,
+//                            exerciseId = exerciseWithSets.exercise.id,
+//                            exerciseName = exerciseWithSets.exercise.name,
+//                            exerciseImageUri = exerciseWithSets.exercise.imageUri,
+//                            exerciseDefault = exerciseWithSets.exercise.default,
+//                            exerciseOrder = exerciseWithSets.workoutTemplateExercise.exerciseOrder,
+//                            notes = exerciseWithSets.workoutTemplateExercise.notes,
+//                            sets = exerciseWithSets.sets.map { it.toWorkoutTemplateSet() } // Mapped to domain object
+//                        )
+//                    }
                     _uiState.update {
                         it.copy(
-                            name = templateWithDetails.workoutTemplate.name,
-                            description = templateWithDetails.workoutTemplate.description,
-                            imageUri = templateWithDetails.workoutTemplate.imageUri,
-                            default = templateWithDetails.workoutTemplate.default,
-                            exercises = detailedExercises,
+//                            name = templateWithDetails.workoutTemplate.name,
+//                            description = templateWithDetails.workoutTemplate.description,
+//                            imageUri = templateWithDetails.workoutTemplate.imageUri,
+//                            default = templateWithDetails.workoutTemplate.default,
+//                            exercises = detailedExercises,
                             isLoading = false,
                             isEditing = false
                             // TODO: Load persistedDefault values if reset functionality is added

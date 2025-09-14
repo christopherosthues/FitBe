@@ -260,7 +260,7 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
                     items(exercise.sets) { setInfo ->
                         AssistChip(
                             onClick = { /* Non-interactive for now */ },
-                            label = { Text("${setInfo.setOrder}. Reps: ${setInfo.repetitions ?: "-"}, Weight: ${setInfo.weight ?: "-"} kg, Time: ${setInfo.durationInSeconds ?: "-"}s") }
+                            label = { Text("${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, Weight: ${setInfo.targetWeightKg ?: "-"} kg, Time: ${setInfo.targetDurationSeconds ?: "-"}s") }
                         )
                     }
                 }
