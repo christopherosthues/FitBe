@@ -31,4 +31,19 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun resetEquipmentToDefault(equipmentId: Uuid) {
         equipmentDao.resetEquipmentToDefault(equipmentId)
     }
+
+    // Favorite methods
+    suspend fun addFavorite(profileId: Uuid, equipmentId: Uuid) {
+        equipmentDao.addFavorite(ProfileFavoriteEquipmentCrossRef(profileId, equipmentId))
+    }
+
+    suspend fun removeFavorite(profileId: Uuid, equipmentId: Uuid) {
+        equipmentDao.removeFavorite(ProfileFavoriteEquipmentCrossRef(profileId, equipmentId))
+    }
+
+    fun getFavoriteEquipmentIds(profileId: Uuid): Flow<List<Uuid>> = // Renamed for clarity from Dao
+        equipmentDao.getFavoriteEquipmentIds(profileId)
+
+    fun isFavorite(profileId: Uuid, equipmentId: Uuid): Flow<Boolean> =
+        equipmentDao.isFavorite(profileId, equipmentId)
 }

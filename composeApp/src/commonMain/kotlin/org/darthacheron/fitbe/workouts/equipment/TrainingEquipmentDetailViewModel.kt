@@ -10,23 +10,37 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_error_dele
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_loading
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_missing_name
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_not_found
-import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_default_exercise
+import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_default_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_new_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_non_default_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_saving
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_favorite
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_favorite
+import fitbe.composeapp.generated.resources.ic_favorite
+import fitbe.composeapp.generated.resources.ic_favorite_border
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.ui.state.TopBarAction
+import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -54,11 +68,13 @@ data class AddEditTrainingEquipmentUiState(
     val persistedDefaultImageUri: String? = null,
     val isModifiedFromPersistedDefault: Boolean = false,
     val exercises: List<Exercise> = emptyList(),
+    val isFavorite: Boolean = false // Added isFavorite
 )
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class TrainingEquipmentDetailViewModel(
     private val equipmentRepository: EquipmentRepository,
+    private val settingsRepository: SettingsRepository, // Added SettingsRepository
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
@@ -73,6 +89,63 @@ class TrainingEquipmentDetailViewModel(
 
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())
     val uiState: StateFlow<AddEditTrainingEquipmentUiState> = _uiState.asStateFlow()
+
+    private val currentProfileId: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
+        .map { it.selectedProfileId }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private val isFavoriteFlow: StateFlow<Boolean> =
+        combine(
+            uiState.map { it.equipmentId }.distinctUntilChanged(),
+            currentProfileId
+        ) { equipmentId, profileId ->
+            if (equipmentId != null && profileId != null) {
+                equipmentRepository.isFavorite(profileId, equipmentId)
+            } else {
+                flowOf(false)
+            }
+        }.flatMapLatest { it }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    init {
+        viewModelScope.launch {
+            isFavoriteFlow.collect { isFav ->
+                _uiState.update { it.copy(isFavorite = isFav) }
+                updateTopBarConfig() // Update top bar when favorite status changes
+            }
+        }
+    }
+
+    override val actions: List<TopBarAction>
+        get() {
+            val currentEquipmentId = _uiState.value.equipmentId
+            val currentProfId = currentProfileId.value
+            val isCurrentlyFavorite = _uiState.value.isFavorite
+
+            val favoriteAction = TopBarAction(
+                icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
+                contentDescription = if (isCurrentlyFavorite) Res.string.exercise_detail_content_description_remove_favorite else Res.string.exercise_detail_content_description_add_favorite, // Placeholder
+                onClick = { toggleFavorite() },
+                isVisible = currentEquipmentId != null && currentProfId != null
+            )
+            return listOf(favoriteAction)
+        }
+
+    private fun toggleFavorite() {
+        val equipmentId = _uiState.value.equipmentId
+        val profileId = currentProfileId.value
+
+        if (equipmentId != null && profileId != null) {
+            viewModelScope.launch {
+                if (_uiState.value.isFavorite) {
+                    equipmentRepository.removeFavorite(profileId, equipmentId)
+                } else {
+                    equipmentRepository.addFavorite(profileId, equipmentId)
+                }
+                // isFavorite state will be updated by isFavoriteFlow collection
+            }
+        }
+    }
 
     fun loadEquipment(equipmentIdString: String?) {
         if (equipmentIdString == null) {
@@ -89,15 +162,17 @@ class TrainingEquipmentDetailViewModel(
                     persistedDefaultImageUri = null,
                     isModifiedFromPersistedDefault = false,
                     exercises = emptyList(),
+                    isFavorite = false // Reset favorite for new equipment
                 )
             }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, equipmentId = Uuid.parse(equipmentIdString)) }
         viewModelScope.launch {
             try {
                 val parsedEquipmentId = Uuid.parse(equipmentIdString)
+                // isFavorite will be updated by the isFavoriteFlow collector
                 val currentEquipment =
                     equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId)
                         .firstOrNull()
@@ -113,7 +188,7 @@ class TrainingEquipmentDetailViewModel(
                                 default = true,
                                 isLoading = false,
                                 isEditing = false,
-                                equipmentId = currentEquipment.id,
+                                // equipmentId is already set
                                 error = TrainingEquipmentError(),
                                 persistedDefaultName = originalDefaultEquipment?.name,
                                 persistedDefaultImageUri = originalDefaultEquipment?.imageUri,
@@ -133,7 +208,7 @@ class TrainingEquipmentDetailViewModel(
                                 default = false,
                                 isLoading = false,
                                 isEditing = false,
-                                equipmentId = currentEquipment.id,
+                                // equipmentId is already set
                                 error = TrainingEquipmentError(),
                                 persistedDefaultName = null,
                                 persistedDefaultImageUri = null,
@@ -287,6 +362,7 @@ class TrainingEquipmentDetailViewModel(
             try {
                 currentState.equipmentId?.let { equipmentId ->
                     equipmentRepository.resetEquipmentToDefault(equipmentId)
+                    // Re-call loadEquipment to refresh all data, including persisted default values and isFavorite
                     loadEquipment(equipmentId.toString())
                 }
             } catch (e: Exception) {
@@ -295,10 +371,12 @@ class TrainingEquipmentDetailViewModel(
                         isLoading = false,
                         error = TrainingEquipmentError(
                             hasGeneralError = true,
-                            generalError = Res.string.training_equipment_detail_error_reset_default_exercise
+                            generalError = Res.string.training_equipment_detail_error_reset_default_equipment
                         )
                     )
                 }
+            } finally {
+                 _uiState.update { it.copy(isLoading = false) } // Ensure loading is stopped
             }
         }
     }

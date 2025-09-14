@@ -11,7 +11,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter // Added import
+import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.GenderConverter
 import org.darthacheron.fitbe.database.converters.InstantConverter
@@ -28,6 +28,7 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.equipment.ProfileFavoriteEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.health.beverages.BeverageDao
@@ -41,15 +42,12 @@ import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
-// New Workout Template Entities
 import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateExerciseEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateSetEntity
-// New Workout Execution Entities
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionEntity
 import org.darthacheron.fitbe.workouts.workouts.PerformedSetEntity
-// New DAOs
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionDao
 import org.darthacheron.fitbe.utils.roundToDecimals
@@ -63,13 +61,14 @@ import kotlin.uuid.ExperimentalUuidApi
         BeverageEntity::class, SleepEntity::class, ProfileEntity::class, BodyWeightEntity::class,
         StepsEntity::class, TrainingEquipmentEntity::class, ExerciseEntity::class,
         ExerciseEquipmentCrossRef::class, ProfileFavoriteExerciseCrossRef::class,
+        ProfileFavoriteEquipmentCrossRef::class,
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
         DefaultExerciseEquipmentCrossRef::class,
         WorkoutTemplateEntity::class, WorkoutTemplateExerciseEntity::class, WorkoutTemplateSetEntity::class,
-        DefaultWorkoutTemplateEntity::class, // Added DefaultWorkoutTemplateEntity
+        DefaultWorkoutTemplateEntity::class,
         WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
     ],
-    version = 1 // TODO: Increment version when schema changes and add migration
+    version = 1
 )
 @TypeConverters(
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,

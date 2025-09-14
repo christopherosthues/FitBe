@@ -166,6 +166,8 @@
     <string name="training_equipment_content_description_card">View details of %1$s</string>
     <string name="training_equipment_content_description_add">Add equipment</string>
     <string name="training_equipment_content_description_default_equipment">Default equipment</string>
+    <string name="training_equipment_content_description_card_add_favorite">Mark equipment as favorite</string>
+    <string name="training_equipment_content_description_card_remove_favorite">Unmark equipment as favorite</string>
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>
@@ -179,11 +181,13 @@
     <string name="training_equipment_detail_content_description_save">Save equipment</string>
     <string name="training_equipment_detail_content_description_edit">Edit equipment</string>
     <string name="training_equipment_detail_content_description_default_equipment">Default equipment</string>
+    <string name="training_equipment_detail_content_description_add_favorite">Add equipment to favorites</string>
+    <string name="training_equipment_detail_content_description_remove_favorite">Remove equipment from favorites</string>
     <string name="training_equipment_detail_error_not_found">Equipment not found</string>
     <string name="training_equipment_detail_error_loading">Failed to load equipment</string>
     <string name="training_equipment_detail_error_missing_name">Name cannot be empty</string>
     <string name="training_equipment_detail_error_saving">Failed to save equipment</string>
-    <string name="training_equipment_detail_error_reset_default_exercise">Failed to reset equipment</string>
+    <string name="training_equipment_detail_error_reset_default_equipment">Failed to reset equipment</string>
     <string name="training_equipment_detail_error_reset_new_equipment">Cannot reset new equipment.</string>
     <string name="training_equipment_detail_error_reset_non_default_equipment">Cannot reset non-default equipment.</string>
     <string name="training_equipment_detail_error_delete_equipment">Failed to delete equipment</string>

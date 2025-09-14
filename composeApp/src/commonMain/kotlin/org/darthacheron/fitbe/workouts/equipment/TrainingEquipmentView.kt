@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,14 +34,19 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
+import fitbe.composeapp.generated.resources.ic_favorite
+import fitbe.composeapp.generated.resources.ic_favorite_border
 import fitbe.composeapp.generated.resources.training_equipment_content_description_add
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card
 import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
 import fitbe.composeapp.generated.resources.training_equipment_no_equipments
+import fitbe.composeapp.generated.resources.training_equipment_content_description_card_add_favorite
+import fitbe.composeapp.generated.resources.training_equipment_content_description_card_remove_favorite
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
@@ -51,6 +57,7 @@ fun TrainingEquipmentView(
         viewModel.updateTopBarConfig()
     }
     val allEquipment by viewModel.allEquipment.collectAsState()
+    val favoriteEquipmentIds by viewModel.favoriteEquipmentIds.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -67,10 +74,14 @@ fun TrainingEquipmentView(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(allEquipment.size, key = { it.toString() }) { equipmentIndex ->
+                    items(allEquipment.size, key = { allEquipment[it].id.toString() }) { equipmentIndex ->
                         val equipment = allEquipment[equipmentIndex]
+                        val isFavorite = equipment.id in favoriteEquipmentIds
                         TrainingEquipmentCard(
                             equipment = equipment,
+                            isFavorite = isFavorite,
+                            onAddFavorite = { viewModel.addFavorite(equipment.id) },
+                            onRemoveFavorite = { viewModel.removeFavorite(equipment.id) },
                             onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id) },
                             contentDescription = stringResource(
                                 Res.string.training_equipment_content_description_card,
@@ -100,6 +111,9 @@ fun TrainingEquipmentView(
 @Composable
 fun TrainingEquipmentCard(
     equipment: TrainingEquipment,
+    isFavorite: Boolean,
+    onAddFavorite: () -> Unit,
+    onRemoveFavorite: () -> Unit,
     onClick: () -> Unit,
     contentDescription: String,
     modifier: Modifier = Modifier
@@ -118,10 +132,21 @@ fun TrainingEquipmentCard(
                 imageUri = equipment.imageUri,
                 imageResource = getEquipmentImage(equipment.imageUri, equipment.default),
                 default = equipment.default,
-                contentDescription = null,
+                contentDescription = null, // Image is decorative here, card has main content description
                 defaultContentDescription = stringResource(Res.string.training_equipment_content_description_default_equipment),
                 modifier = Modifier.fillMaxSize()
             )
+
+            IconButton(
+                onClick = { if (isFavorite) onRemoveFavorite() else onAddFavorite() },
+                modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
+            ) {
+                Icon(
+                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(Res.drawable.ic_favorite_border),
+                    contentDescription = stringResource(if (isFavorite) Res.string.training_equipment_content_description_card_remove_favorite else Res.string.training_equipment_content_description_card_add_favorite),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
 
             Box(
                 modifier = Modifier

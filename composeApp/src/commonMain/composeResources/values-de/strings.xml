@@ -166,6 +166,8 @@
     <string name="training_equipment_content_description_card">Details von %1$s anzeigen</string>
     <string name="training_equipment_content_description_add">Gerät hinzufügen</string>
     <string name="training_equipment_content_description_default_equipment">Standardgerät</string>
+    <string name="training_equipment_content_description_card_add_favorite">Gerät als Favorit markieren</string>
+    <string name="training_equipment_content_description_card_remove_favorite">Gerät als Favorit entfernen</string>
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>
@@ -179,11 +181,13 @@
     <string name="training_equipment_detail_content_description_save">Gerät speichern</string>
     <string name="training_equipment_detail_content_description_edit">Gerät bearbeiten</string>
     <string name="training_equipment_detail_content_description_default_equipment">Standardgerät</string>
+    <string name="training_equipment_detail_content_description_add_favorite">Gerät zu Favoriten hinzufügen</string>
+    <string name="training_equipment_detail_content_description_remove_favorite">Gerät aus Favoriten entfernen</string>
     <string name="training_equipment_detail_error_not_found">Gerät nicht gefunden</string>
     <string name="training_equipment_detail_error_loading">Fehler beim Laden des Geräts</string>
     <string name="training_equipment_detail_error_missing_name">Name darf nicht leer sein</string>
     <string name="training_equipment_detail_error_saving">Fehler beim Speichern des Geräts</string>
-    <string name="training_equipment_detail_error_reset_default_exercise">Fehler beim Zurücksetzen des Geräts</string>
+    <string name="training_equipment_detail_error_reset_default_equipment">Fehler beim Zurücksetzen des Geräts</string> <!-- Should be training_equipment_detail_error_reset_default_equipment -->
     <string name="training_equipment_detail_error_reset_new_equipment">Neues Gerät kann nicht zurückgesetzt werden.</string>
     <string name="training_equipment_detail_error_reset_non_default_equipment">Nicht-Standard-Gerät kann nicht zurückgesetzt werden.</string>
     <string name="training_equipment_detail_error_delete_equipment">Fehler beim Löschen des Geräts</string>
