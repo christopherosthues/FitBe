@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.workouts.exercises
 
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -43,7 +41,8 @@ class ExercisesViewModel(
     private val _filterText = MutableStateFlow("")
     val filterText: StateFlow<String> = _filterText.asStateFlow()
 
-    val allExercises: StateFlow<List<Exercise>> =
+    // Exposes the raw list of exercises from the repository
+    val rawExercises: StateFlow<List<Exercise>> =
         exerciseRepository.getAllExercises()
             .stateIn(
                 scope = viewModelScope,
@@ -55,6 +54,7 @@ class ExercisesViewModel(
         .map { it.selectedProfileId }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
+    // Exposes the set of favorite exercise IDs
     val favoriteExerciseIds: StateFlow<Set<Uuid>> = currentProfileId
         .flatMapLatest { profileId ->
             if (profileId != null) {
@@ -64,42 +64,6 @@ class ExercisesViewModel(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptySet())
-
-    @Composable
-    fun toExerciseWithLocalizedName(exercises: List<Exercise>): List<Exercise> {
-        return exercises.map {
-            Exercise(
-                id = it.id,
-                name = getExerciseName(it.name, it.default),
-                guide = it.guide,
-                targetMuscleGroups = it.targetMuscleGroups,
-                imageUri = it.imageUri,
-                default = it.default,
-                recommendedFor = it.recommendedFor,
-                exerciseType = it.exerciseType,
-                dateUtc = it.dateUtc
-            )
-        }
-    }
-
-    val filteredExercises: StateFlow<List<Exercise>> = combine(
-        allExercises,
-        filterText,
-        favoriteExerciseIds
-    ) { exercises, filter, favorites ->
-        val localizedExercises = toExerciseWithLocalizedName(exercises)
-        val filteredList = if (filter.isBlank()) {
-            localizedExercises
-        } else {
-            localizedExercises.filter {
-                it.name.contains(filter, ignoreCase = true)
-            }
-        }
-        filteredList.sortedWith(
-            compareByDescending<Exercise> { favorites.contains(it.id) }
-                .thenBy { it.name }
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun onFilterTextChanged(text: String) {
         _filterText.value = text

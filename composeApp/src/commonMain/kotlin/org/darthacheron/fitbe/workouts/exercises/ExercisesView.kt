@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +54,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 
+// Helper data class for processing within the Composable
+data class DisplayableExercise(
+    val exercise: Exercise,
+    val localizedName: String
+)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ExercisesView(
@@ -61,9 +68,30 @@ fun ExercisesView(
     LaunchedEffect(Unit) {
         exercisesViewModel.updateTopBarConfig()
     }
-    val filteredExercises by exercisesViewModel.filteredExercises.collectAsState()
+    val rawExercises by exercisesViewModel.rawExercises.collectAsState()
     val favoriteExerciseIds by exercisesViewModel.favoriteExerciseIds.collectAsState()
     val filterText by exercisesViewModel.filterText.collectAsState()
+
+    val localizedExercises = rawExercises.map {
+        DisplayableExercise(
+            exercise = it,
+            localizedName = getExerciseName(it.name, it.default) // Composable call
+        )
+    }
+    val processedExercises = remember(rawExercises, filterText, favoriteExerciseIds) {
+        val filteredList = if (filterText.isBlank()) {
+            localizedExercises
+        } else {
+            localizedExercises.filter {
+                it.localizedName.contains(filterText, ignoreCase = true)
+            }
+        }
+
+        filteredList.sortedWith(
+            compareByDescending<DisplayableExercise> { favoriteExerciseIds.contains(it.exercise.id) }
+                .thenBy { it.localizedName }
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -77,7 +105,7 @@ fun ExercisesView(
                 label = { Text(stringResource(Res.string.filter_exercises_label)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
-            if (filteredExercises.isEmpty()) {
+            if (processedExercises.isEmpty()) {
                 Text(text = stringResource(Res.string.exercise_no_exercises))
             } else {
                 LazyVerticalGrid(
@@ -86,17 +114,18 @@ fun ExercisesView(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(filteredExercises.size, key = { filteredExercises[it].id.toString() }) { exerciseIndex ->
-                        val exercise = filteredExercises[exerciseIndex]
-                        val isFavorite = favoriteExerciseIds.contains(exercise.id)
+                    items(processedExercises.size, key = { processedExercises[it].exercise.id.toString() }) { index ->
+                        val displayableExercise = processedExercises[index]
+                        val isFavorite = favoriteExerciseIds.contains(displayableExercise.exercise.id)
                         ExerciseCard(
-                            exercise = exercise,
+                            exercise = displayableExercise.exercise,
+                            localizedName = displayableExercise.localizedName, // Pass localized name
                             isFavorite = isFavorite,
-                            onToggleFavorite = { exercisesViewModel.toggleFavorite(exercise.id) },
-                            onClick = { exercisesViewModel.navigateToExerciseDetail(exercise.id) },
+                            onToggleFavorite = { exercisesViewModel.toggleFavorite(displayableExercise.exercise.id) },
+                            onClick = { exercisesViewModel.navigateToExerciseDetail(displayableExercise.exercise.id) },
                             contentDescription = stringResource(
                                 Res.string.exercise_content_description_card,
-                                exercise.name // Name is already localized from ViewModel
+                                displayableExercise.localizedName // Use localized name for content description
                             )
                         )
                     }
@@ -122,6 +151,7 @@ fun ExercisesView(
 @Composable
 fun ExerciseCard(
     exercise: Exercise,
+    localizedName: String, // Use passed localized name
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     onClick: () -> Unit,
@@ -182,7 +212,7 @@ fun ExerciseCard(
                 ) {
                     Column {
                         Text(
-                            text = exercise.name, // Name is already localized from ViewModel
+                            text = localizedName, // Use localized name
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(bottom = 8.dp).fillMaxWidth(),

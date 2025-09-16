@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +52,12 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+// Helper data class for processing within the Composable
+data class DisplayableTrainingEquipment(
+    val equipment: TrainingEquipment,
+    val localizedName: String
+)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun TrainingEquipmentView(
@@ -59,9 +66,31 @@ fun TrainingEquipmentView(
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
-    val filteredEquipment by viewModel.allEquipment.collectAsState() // This is already filtered and sorted
+    val rawEquipmentList by viewModel.rawEquipmentList.collectAsState()
     val favoriteEquipmentIds by viewModel.favoriteEquipmentIds.collectAsState()
     val filterText by viewModel.filterText.collectAsState()
+
+    val localizedList = rawEquipmentList.map {
+        DisplayableTrainingEquipment(
+            equipment = it,
+            localizedName = getEquipmentName(it.name, it.default) // Composable call
+        )
+    }
+    // Derived list for display: localized, filtered, and sorted
+    val processedEquipmentList = remember(rawEquipmentList, filterText, favoriteEquipmentIds) {
+        val filteredList = if (filterText.isBlank()) {
+            localizedList
+        } else {
+            localizedList.filter {
+                it.localizedName.contains(filterText, ignoreCase = true)
+            }
+        }
+
+        filteredList.sortedWith(
+            compareByDescending<DisplayableTrainingEquipment> { favoriteEquipmentIds.contains(it.equipment.id) }
+                .thenBy { it.localizedName }
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -78,7 +107,7 @@ fun TrainingEquipmentView(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (filteredEquipment.isEmpty()) {
+            if (processedEquipmentList.isEmpty()) {
                 Text(text = stringResource(Res.string.training_equipment_no_equipments))
             } else {
                 LazyVerticalGrid(
@@ -87,19 +116,17 @@ fun TrainingEquipmentView(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(filteredEquipment.size, key = { filteredEquipment[it].id.toString() }) { equipmentIndex ->
-                        val equipment = filteredEquipment[equipmentIndex]
-                        val isFavorite = equipment.id in favoriteEquipmentIds
+                    items(processedEquipmentList.size, key = { processedEquipmentList[it].equipment.id.toString() }) { index ->
+                        val displayableEquipment = processedEquipmentList[index]
+                        val isFavorite = displayableEquipment.equipment.id in favoriteEquipmentIds
                         TrainingEquipmentCard(
-                            equipment = equipment,
+                            equipment = displayableEquipment.equipment,
+                            localizedName = displayableEquipment.localizedName, // Pass localized name
                             isFavorite = isFavorite,
-                            onAddFavorite = { viewModel.addFavorite(equipment.id) },
-                            onRemoveFavorite = { viewModel.removeFavorite(equipment.id) },
-                            onClick = { viewModel.navigateToTrainingEquipmentDetail(equipment.id) },
-                            contentDescription = stringResource(
-                                Res.string.training_equipment_content_description_card,
-                                equipment.name // Name is already localized from ViewModel
-                            )
+                            onAddFavorite = { viewModel.addFavorite(displayableEquipment.equipment.id) },
+                            onRemoveFavorite = { viewModel.removeFavorite(displayableEquipment.equipment.id) },
+                            onClick = { viewModel.navigateToTrainingEquipmentDetail(displayableEquipment.equipment.id) },
+                            modifier = Modifier
                         )
                     }
                 }
@@ -124,20 +151,25 @@ fun TrainingEquipmentView(
 @Composable
 fun TrainingEquipmentCard(
     equipment: TrainingEquipment,
+    localizedName: String, // Use passed localized name
     isFavorite: Boolean,
     onAddFavorite: () -> Unit,
     onRemoveFavorite: () -> Unit,
     onClick: () -> Unit,
-    contentDescription: String,
     modifier: Modifier = Modifier
 ) {
+    val cardContentDescription = stringResource(
+        Res.string.training_equipment_content_description_card,
+        localizedName // Use localized name for content description
+    )
+
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .height(200.dp)
             .width(200.dp)
             .clickable(onClick = onClick)
-            .semantics { this.contentDescription = contentDescription },
+            .semantics { this.contentDescription = cardContentDescription },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -181,8 +213,7 @@ fun TrainingEquipmentCard(
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        // equipment.name is already localized from the ViewModel
-                        text = equipment.name,
+                        text = localizedName, // Display localized name
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.align(Alignment.Center).padding(vertical = 8.dp)

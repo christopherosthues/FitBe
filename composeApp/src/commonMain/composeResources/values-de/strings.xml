@@ -146,6 +146,10 @@
     <string name="default_exercise_side_lunges_name">Seitliche Ausfallschritte</string>
     <string name="default_exercise_burpees_name">Burpees</string>
     <string name="default_exercise_mountain_climbers_name">Mountain Climbers</string>
+    <string name="default_exercise_skull_crushers_name">Skull Crushers</string>
+    <string name="default_exercise_butterfly_patting_name">Butterfly Patting</string>
+    <string name="default_exercise_supine_opening_closing_name">Supine Opening &amp; Closing</string>
+    <string name="default_exercise_supported_hip_lift_name">Supported Hip Lift</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">Anleitung für Kniebeugen...</string>
@@ -161,6 +165,10 @@
     <string name="default_exercise_side_lunges_guide">Anleitung für Seitliche Ausfallschritte...</string>
     <string name="default_exercise_burpees_guide">Anleitung für Burpees...</string>
     <string name="default_exercise_mountain_climbers_guide">Anleitung für Mountain Climbers...</string>
+    <string name="default_exercise_skull_crushers_guide">Anleitung für Skull Crushers...</string>
+    <string name="default_exercise_butterfly_patting_guide">Anleitung für Butterfly Patting...</string>
+    <string name="default_exercise_supine_opening_closing_guide">Anleitung für Supine Opening &amp; Closing...</string>
+    <string name="default_exercise_supported_hip_lift_guide">Anleitung für Supported Hip Lift...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte gefunden. Füge welche hinzu!</string>

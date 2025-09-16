@@ -146,6 +146,10 @@
     <string name="default_exercise_side_lunges_name">Side Lunges</string>
     <string name="default_exercise_burpees_name">Burpees</string>
     <string name="default_exercise_mountain_climbers_name">Mountain Climbers</string>
+    <string name="default_exercise_skull_crushers_name">Skull Crushers</string>
+    <string name="default_exercise_butterfly_patting_name">Butterfly Patting</string>
+    <string name="default_exercise_supine_opening_closing_name">Supine Opening &amp; Closing</string>
+    <string name="default_exercise_supported_hip_lift_name">Supported Hip Lift</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">How to perform a Squat...</string>
@@ -161,6 +165,10 @@
     <string name="default_exercise_side_lunges_guide">How to perform Side Lunges...</string>
     <string name="default_exercise_burpees_guide">How to perform Burpees...</string>
     <string name="default_exercise_mountain_climbers_guide">How to perform Mountain Climbers...</string>
+    <string name="default_exercise_skull_crushers_guide">How to perform Skull Crushers...</string>
+    <string name="default_exercise_butterfly_patting_guide">How to perform Butterfly Patting...</string>
+    <string name="default_exercise_supine_opening_closing_guide">How to perform Supine Opening &amp; Closing...</string>
+    <string name="default_exercise_supported_hip_lift_guide">How to perform Supported Hip Lift...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments found. Add some!</string>

@@ -5,6 +5,8 @@ import fitbe.composeapp.generated.resources.default_exercise_bench_press_guide
 import fitbe.composeapp.generated.resources.default_exercise_bench_press_name
 import fitbe.composeapp.generated.resources.default_exercise_burpees_guide
 import fitbe.composeapp.generated.resources.default_exercise_burpees_name
+import fitbe.composeapp.generated.resources.default_exercise_butterfly_patting_guide
+import fitbe.composeapp.generated.resources.default_exercise_butterfly_patting_name
 import fitbe.composeapp.generated.resources.default_exercise_deadlift_guide
 import fitbe.composeapp.generated.resources.default_exercise_deadlift_name
 import fitbe.composeapp.generated.resources.default_exercise_jumping_jacks_guide
@@ -25,8 +27,14 @@ import fitbe.composeapp.generated.resources.default_exercise_side_lunges_guide
 import fitbe.composeapp.generated.resources.default_exercise_side_lunges_name
 import fitbe.composeapp.generated.resources.default_exercise_sit_ups_guide
 import fitbe.composeapp.generated.resources.default_exercise_sit_ups_name
+import fitbe.composeapp.generated.resources.default_exercise_skull_crushers_guide
+import fitbe.composeapp.generated.resources.default_exercise_skull_crushers_name
 import fitbe.composeapp.generated.resources.default_exercise_squat_guide
 import fitbe.composeapp.generated.resources.default_exercise_squat_name
+import fitbe.composeapp.generated.resources.default_exercise_supine_opening_closing_guide
+import fitbe.composeapp.generated.resources.default_exercise_supine_opening_closing_name
+import fitbe.composeapp.generated.resources.default_exercise_supported_hip_lift_guide
+import fitbe.composeapp.generated.resources.default_exercise_supported_hip_lift_name
 import fitbe.composeapp.generated.resources.ic_launcher
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -46,6 +54,10 @@ object DefaultExerciseResProvider {
         "default_exercise_side_lunges" to Res.string.default_exercise_side_lunges_name,
         "default_exercise_burpees" to Res.string.default_exercise_burpees_name,
         "default_exercise_mountain_climbers" to Res.string.default_exercise_mountain_climbers_name,
+        "default_exercise_skull_crushers" to Res.string.default_exercise_skull_crushers_name,
+        "default_exercise_butterfly_patting" to Res.string.default_exercise_butterfly_patting_name,
+        "default_exercise_supine_opening_closing" to Res.string.default_exercise_supine_opening_closing_name,
+        "default_exercise_supported_hip_lift" to Res.string.default_exercise_supported_hip_lift_name,
     )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
@@ -62,6 +74,10 @@ object DefaultExerciseResProvider {
         "default_exercise_side_lunges" to Res.string.default_exercise_side_lunges_guide,
         "default_exercise_burpees" to Res.string.default_exercise_burpees_guide,
         "default_exercise_mountain_climbers" to Res.string.default_exercise_mountain_climbers_guide,
+        "default_exercise_skull_crushers" to Res.string.default_exercise_skull_crushers_guide,
+        "default_exercise_butterfly_patting" to Res.string.default_exercise_butterfly_patting_guide,
+        "default_exercise_supine_opening_closing" to Res.string.default_exercise_supine_opening_closing_guide,
+        "default_exercise_supported_hip_lift" to Res.string.default_exercise_supported_hip_lift_guide,
     )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
@@ -78,5 +94,9 @@ object DefaultExerciseResProvider {
         "default_exercise_side_lunges" to Res.drawable.ic_launcher,
         "default_exercise_burpees" to Res.drawable.ic_launcher,
         "default_exercise_mountain_climbers" to Res.drawable.ic_launcher,
+        "default_exercise_skull_crushers" to Res.drawable.ic_launcher,
+        "default_exercise_butterfly_patting" to Res.drawable.ic_launcher,
+        "default_exercise_supine_opening_closing" to Res.drawable.ic_launcher,
+        "default_exercise_supported_hip_lift" to Res.drawable.ic_launcher,
     )
 }
