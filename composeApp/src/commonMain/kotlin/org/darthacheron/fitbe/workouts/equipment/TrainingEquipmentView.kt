@@ -16,18 +16,22 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,7 +51,9 @@ import fitbe.composeapp.generated.resources.training_equipment_no_equipments
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_add_favorite
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_remove_favorite
 import fitbe.composeapp.generated.resources.training_equipment_no_filtered_equipments
+import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.components.ImageWithDefault
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -67,19 +73,33 @@ fun TrainingEquipmentView(
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
-    val rawEquipmentList by viewModel.rawEquipmentList.collectAsState()
-    val favoriteEquipmentIds by viewModel.favoriteEquipmentIds.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val filterText by viewModel.filterText.collectAsState()
 
-    val localizedList = rawEquipmentList.map {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val currentErrorMessage: StringResource? = uiState.equipmentListError ?: uiState.favoriteStateError
+
+    currentErrorMessage?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) { 
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.clearErrorMessage()
+            }
+        }
+    }
+
+    val localizedList: List<DisplayableTrainingEquipment> = uiState.rawEquipmentList.map {
         DisplayableTrainingEquipment(
             equipment = it,
             localizedName = getEquipmentName(it.name, it.default) // Composable call
         )
     }
-    // Derived list for display: localized, filtered, and sorted
-    val processedEquipmentList = remember(rawEquipmentList, filterText, favoriteEquipmentIds) {
-        val filteredList = if (filterText.isBlank()) {
+    
+    val processedEquipmentList: List<DisplayableTrainingEquipment> = remember(uiState.rawEquipmentList, filterText, uiState.favoriteEquipmentIds) {
+        val filtered = if (filterText.isBlank()) {
             localizedList
         } else {
             localizedList.filter {
@@ -87,8 +107,8 @@ fun TrainingEquipmentView(
             }
         }
 
-        filteredList.sortedWith(
-            compareByDescending<DisplayableTrainingEquipment> { favoriteEquipmentIds.contains(it.equipment.id) }
+        filtered.sortedWith(
+            compareByDescending<DisplayableTrainingEquipment> { uiState.favoriteEquipmentIds.contains(it.equipment.id) }
                 .thenBy { it.localizedName }
         )
     }
@@ -108,20 +128,24 @@ fun TrainingEquipmentView(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (rawEquipmentList.isEmpty()) {
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (processedEquipmentList.isEmpty() && filterText.isNotBlank()) {
+                 Text(text = stringResource(Res.string.training_equipment_no_filtered_equipments))
+            } else if (uiState.rawEquipmentList.isEmpty() && uiState.equipmentListError == null) {
                 Text(text = stringResource(Res.string.training_equipment_no_equipments))
-            } else if (processedEquipmentList.isEmpty()) {
-                Text(text = stringResource(Res.string.training_equipment_no_filtered_equipments))
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().padding(bottom = 80.dp) // Add padding for FAB
                 ) {
                     items(processedEquipmentList.size, key = { processedEquipmentList[it].equipment.id.toString() }) { index ->
                         val displayableEquipment = processedEquipmentList[index]
-                        val isFavorite = displayableEquipment.equipment.id in favoriteEquipmentIds
+                        val isFavorite = uiState.favoriteEquipmentIds.contains(displayableEquipment.equipment.id)
                         TrainingEquipmentCard(
                             equipment = displayableEquipment.equipment,
                             localizedName = displayableEquipment.localizedName, // Pass localized name
@@ -148,6 +172,10 @@ fun TrainingEquipmentView(
                 contentDescription = stringResource(Res.string.training_equipment_content_description_add)
             )
         }
+         SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

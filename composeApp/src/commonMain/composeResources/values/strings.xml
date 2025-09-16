@@ -209,6 +209,11 @@
     <string name="training_equipment_detail_error_delete_new_equipment">Cannot delete new equipment.</string>
     <string name="training_equipment_detail_error_delete_default_equipment">Cannot delete default equipment.</string>
 
+    <!-- Training Equipment Errors -->
+    <string name="training_equipment_error_loading">Failed to load training equipment</string>
+    <string name="training_equipment_error_favorites">Failed to load favorite equipment</string>
+    <string name="training_equipment_error_toggle_favorite">Failed to update favorite status for equipment</string>
+
     <!-- Default Training Equipment -->
     <string name="default_training_equipment_barbell">Barbell</string>
     <string name="default_training_equipment_dumbbell">Dumbbell</string>

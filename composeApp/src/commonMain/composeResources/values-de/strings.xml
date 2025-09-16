@@ -209,6 +209,11 @@
     <string name="training_equipment_detail_error_delete_new_equipment">Neues Gerät kann nicht gelöscht werden.</string>
     <string name="training_equipment_detail_error_delete_default_equipment">Standardgerät kann nicht gelöscht werden.</string>
 
+    <!-- Trainingsgeräte Fehler -->
+    <string name="training_equipment_error_loading">Trainingsgeräte konnten nicht geladen werden</string>
+    <string name="training_equipment_error_favorites">Favorisierte Geräte konnten nicht geladen werden</string>
+    <string name="training_equipment_error_toggle_favorite">Favoritenstatus für Gerät konnte nicht aktualisiert werden</string>
+
     <!-- Default Training Equipment -->
     <string name="default_training_equipment_barbell">Langhantel</string>
     <string name="default_training_equipment_dumbbell">Kurzhantel</string>
