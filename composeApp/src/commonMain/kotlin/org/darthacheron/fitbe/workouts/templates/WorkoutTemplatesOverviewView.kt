@@ -5,8 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
@@ -35,19 +32,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.exercise_content_description_add // TODO: Consider a more specific string like "add_workout_template"
-import fitbe.composeapp.generated.resources.exercise_content_description_card
-import fitbe.composeapp.generated.resources.exercise_content_description_card_add_favorite
-import fitbe.composeapp.generated.resources.exercise_content_description_card_remove_favorite
+import fitbe.composeapp.generated.resources.exercise_content_description_add
 import fitbe.composeapp.generated.resources.exercise_content_description_default_exercise
 import fitbe.composeapp.generated.resources.ic_add
-import fitbe.composeapp.generated.resources.ic_favorite
-import fitbe.composeapp.generated.resources.ic_favorite_border
 import fitbe.composeapp.generated.resources.ic_launcher
 import org.darthacheron.fitbe.components.ImageWithDefault
-import org.darthacheron.fitbe.workouts.exercises.Exercise
-import org.darthacheron.fitbe.workouts.exercises.getExerciseImage
-import org.darthacheron.fitbe.workouts.exercises.getExerciseName
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi

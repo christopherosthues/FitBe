@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.ui.FilterableViewModel
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
@@ -28,7 +29,7 @@ class TrainingEquipmentViewModel(
     settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
-) : FitBeViewModel(topBarManager) {
+) : FilterableViewModel(topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_training_equipment
 
@@ -38,10 +39,6 @@ class TrainingEquipmentViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.ExercisesDashboard
 
-    private val _filterText = MutableStateFlow("")
-    val filterText: StateFlow<String> = _filterText.asStateFlow()
-
-    // Exposes the raw list of equipment from the repository
     val rawEquipmentList: StateFlow<List<TrainingEquipment>> =
         equipmentRepository.getAllEquipments()
             .stateIn(
@@ -64,10 +61,6 @@ class TrainingEquipmentViewModel(
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    fun onFilterTextChanged(text: String) {
-        _filterText.value = text
-    }
 
     fun navigateToTrainingEquipmentDetail(id: Uuid?) {
         navHostController.navigate(Screen.TrainingEquipmentDetail(id?.toString()))

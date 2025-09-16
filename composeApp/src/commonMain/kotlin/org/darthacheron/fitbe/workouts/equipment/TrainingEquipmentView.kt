@@ -46,6 +46,7 @@ import fitbe.composeapp.generated.resources.training_equipment_content_descripti
 import fitbe.composeapp.generated.resources.training_equipment_no_equipments
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_add_favorite
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_remove_favorite
+import fitbe.composeapp.generated.resources.training_equipment_no_filtered_equipments
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -107,8 +108,10 @@ fun TrainingEquipmentView(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (processedEquipmentList.isEmpty()) {
+            if (rawEquipmentList.isEmpty()) {
                 Text(text = stringResource(Res.string.training_equipment_no_equipments))
+            } else if (processedEquipmentList.isEmpty()) {
+                Text(text = stringResource(Res.string.training_equipment_no_filtered_equipments))
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),

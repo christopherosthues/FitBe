@@ -42,13 +42,17 @@
     <string name="workout_overview_past_header">Past Workouts</string>
 
     <!-- Exercise -->
-    <string name="exercise_no_exercises">No exercises found. Add some!</string>
+    <string name="exercise_no_exercises">No exercises available. Add some!</string>
+    <string name="exercise_no_filtered_exercises">No exercises found.</string>
     <string name="exercise_content_description_card">View details of %1$s</string>
     <string name="exercise_content_description_card_add_favorite">Mark as favorite</string>
     <string name="exercise_content_description_card_remove_favorite">Unmark as favorite</string>
     <string name="exercise_content_description_add">Add exercise</string>
     <string name="exercise_content_description_default_exercise">Default exercise</string>
-    <string name="filter_exercises_label">Filter exercises</string>
+    <string name="exercises_error_favorites">Failed to load favorites</string>
+    <string name="exercises_error_loading">Failed to load exercises</string>
+    <string name="exercises_error_toggle_favorite">Failed to toggle favorite</string>
+    <string name="exercises_filter_label">Filter exercises</string>
 
     <!-- Exercise Detail -->
     <string name="exercise_detail_name">Name</string>
@@ -171,7 +175,8 @@
     <string name="default_exercise_supported_hip_lift_guide">How to perform Supported Hip Lift...</string>
 
     <!-- Training Equipment -->
-    <string name="training_equipment_no_equipments">No equipments found. Add some!</string>
+    <string name="training_equipment_no_equipments">No equipments available. Add some!</string>
+    <string name="training_equipment_no_filtered_equipments">No equipments found.</string>
     <string name="training_equipment_content_description_card">View details of %1$s</string>
     <string name="training_equipment_content_description_add">Add equipment</string>
     <string name="training_equipment_content_description_default_equipment">Default equipment</string>

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.darthacheron.fitbe.navigation.Screen // Or your specific navigation class
+import org.darthacheron.fitbe.ui.FilterableViewModel
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
@@ -35,11 +36,14 @@ class WorkoutTemplatesOverviewViewModel(
     private val navHostController: NavHostController, // For navigation actions
     topBarManager: TopBarManager
     // private val settingsRepository: SettingsRepository, // If profile needed for starting execution from template
-) : FitBeViewModel(topBarManager) {
+) : FilterableViewModel(topBarManager) {
 
-     override val title: StringResource = Res.string.top_bar_title_workout_templates // Placeholder for actual resource
-    override val bottomBarSelected: Screen? = Screen.ExercisesDashboard // Or a new dedicated screen for templates if it exists
-    override val backNavigationIconVisible: Boolean? = true
+    override val title: StringResource
+        get() = Res.string.top_bar_title_workout_templates
+    override val bottomBarSelected: Screen?
+        get() = Screen.ExercisesDashboard
+    override val backNavigationIconVisible: Boolean?
+        get() = true
 
     val uiState: StateFlow<WorkoutTemplatesUiState> = workoutTemplateRepository.getAllWorkoutTemplatesWithExercisesAndSets()
         .map { templatesList ->
@@ -56,16 +60,6 @@ class WorkoutTemplatesOverviewViewModel(
 
     fun navigateToWorkoutTemplateDetail(templateId: Uuid?) {
         navHostController.navigate(Screen.WorkoutTemplateDetail(templateId.toString()))
-    }
-
-    fun onTemplateClicked(templateId: Uuid) {
-        // navHostController.navigate(Screen.WorkoutTemplateDetail(templateId.toString())) // TODO: Define WorkoutTemplateDetail screen
-        println("Workout template clicked: $templateId (Navigation to detail screen not yet implemented)")
-    }
-
-    fun onCreateNewTemplateClicked() {
-        // navHostController.navigate(Screen.CreateWorkoutTemplate()) // TODO: Define CreateWorkoutTemplate screen
-        println("Create new workout template clicked (Navigation not yet implemented)")
     }
 
     fun onStartWorkoutFromTemplateClicked(templateId: Uuid) {

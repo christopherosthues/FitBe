@@ -16,12 +16,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,11 +49,14 @@ import fitbe.composeapp.generated.resources.exercise_content_description_add
 import fitbe.composeapp.generated.resources.exercise_content_description_card
 import fitbe.composeapp.generated.resources.exercise_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_no_exercises
-import fitbe.composeapp.generated.resources.filter_exercises_label
+import fitbe.composeapp.generated.resources.exercise_no_filtered_exercises
+import fitbe.composeapp.generated.resources.exercises_filter_label
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
+import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.components.ImageWithDefault
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -68,17 +75,32 @@ fun ExercisesView(
     LaunchedEffect(Unit) {
         exercisesViewModel.updateTopBarConfig()
     }
-    val rawExercises by exercisesViewModel.rawExercises.collectAsState()
-    val favoriteExerciseIds by exercisesViewModel.favoriteExerciseIds.collectAsState()
-    val filterText by exercisesViewModel.filterText.collectAsState()
+    val uiState by exercisesViewModel.uiState.collectAsState()
+    val filterText by exercisesViewModel.filterText.collectAsState() // From FilterableViewModel
 
-    val localizedExercises = rawExercises.map {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val currentErrorMessage: StringResource? = uiState.exerciseListError ?: uiState.favoriteStateError
+
+    currentErrorMessage?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) { // Re-launch if error message (or its resolved string) changes
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                exercisesViewModel.clearErrorMessage() // Clears all errors
+            }
+        }
+    }
+
+    val localizedExercises = uiState.rawExercises.map {
         DisplayableExercise(
             exercise = it,
             localizedName = getExerciseName(it.name, it.default) // Composable call
         )
     }
-    val processedExercises = remember(rawExercises, filterText, favoriteExerciseIds) {
+    val processedExercises = remember(uiState.rawExercises, filterText, uiState.favoriteExerciseIds) {
+
         val filteredList = if (filterText.isBlank()) {
             localizedExercises
         } else {
@@ -88,44 +110,50 @@ fun ExercisesView(
         }
 
         filteredList.sortedWith(
-            compareByDescending<DisplayableExercise> { favoriteExerciseIds.contains(it.exercise.id) }
+            compareByDescending<DisplayableExercise> { uiState.favoriteExerciseIds.contains(it.exercise.id) }
                 .thenBy { it.localizedName }
         )
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) { // Main container Box
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp) // Apply padding directly to the content Column
         ) {
             OutlinedTextField(
                 value = filterText,
                 onValueChange = { exercisesViewModel.onFilterTextChanged(it) },
-                label = { Text(stringResource(Res.string.filter_exercises_label)) },
+                label = { Text(stringResource(Res.string.exercises_filter_label)) },
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
-            if (processedExercises.isEmpty()) {
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (processedExercises.isEmpty() && filterText.isNotBlank()) {
+                 Text(text = stringResource(Res.string.exercise_no_filtered_exercises))
+            } else if (uiState.rawExercises.isEmpty() && uiState.exerciseListError == null) {
                 Text(text = stringResource(Res.string.exercise_no_exercises))
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize().padding(bottom = 80.dp) // Add padding for FAB
                 ) {
                     items(processedExercises.size, key = { processedExercises[it].exercise.id.toString() }) { index ->
                         val displayableExercise = processedExercises[index]
-                        val isFavorite = favoriteExerciseIds.contains(displayableExercise.exercise.id)
+                        val isFavorite = uiState.favoriteExerciseIds.contains(displayableExercise.exercise.id)
                         ExerciseCard(
                             exercise = displayableExercise.exercise,
-                            localizedName = displayableExercise.localizedName, // Pass localized name
+                            localizedName = displayableExercise.localizedName,
                             isFavorite = isFavorite,
                             onToggleFavorite = { exercisesViewModel.toggleFavorite(displayableExercise.exercise.id) },
                             onClick = { exercisesViewModel.navigateToExerciseDetail(displayableExercise.exercise.id) },
                             contentDescription = stringResource(
                                 Res.string.exercise_content_description_card,
-                                displayableExercise.localizedName // Use localized name for content description
+                                displayableExercise.localizedName
                             )
                         )
                     }
@@ -133,25 +161,31 @@ fun ExercisesView(
             }
         }
 
+        // Place FAB and SnackbarHost within the main Box, aligned appropriately
         FloatingActionButton(
             onClick = { exercisesViewModel.navigateToExerciseDetail(null) },
+            containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.primary
+                .padding(16.dp) // Standard padding for FAB
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
                 contentDescription = stringResource(Res.string.exercise_content_description_add)
             )
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter) // Often at the bottom center
+        )
     }
 }
 
 @Composable
 fun ExerciseCard(
     exercise: Exercise,
-    localizedName: String, // Use passed localized name
+    localizedName: String, 
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     onClick: () -> Unit,
@@ -212,7 +246,7 @@ fun ExerciseCard(
                 ) {
                     Column {
                         Text(
-                            text = localizedName, // Use localized name
+                            text = localizedName, 
                             style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(bottom = 8.dp).fillMaxWidth(),

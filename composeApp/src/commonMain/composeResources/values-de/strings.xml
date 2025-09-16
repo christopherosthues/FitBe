@@ -42,13 +42,17 @@
     <string name="workout_overview_past_header">Vergangene Workouts</string>
 
     <!-- Exercise -->
-    <string name="exercise_no_exercises">Keine Übungen gefunden. Füge welche hinzu!</string>
+    <string name="exercise_no_exercises">Keine Übungen vorhanden. Füge welche hinzu!</string>
+    <string name="exercise_no_filtered_exercises">Keine Übungen gefunden.</string>
     <string name="exercise_content_description_card">Details von %1$s anzeigen</string>
     <string name="exercise_content_description_card_add_favorite">Als Favorit markieren</string>
     <string name="exercise_content_description_card_remove_favorite">Favoritenstatus entfernen</string>
     <string name="exercise_content_description_add">Übung hinzufügen</string>
     <string name="exercise_content_description_default_exercise">Standardübung</string>
-    <string name="filter_exercises_label">Übungen filtern</string>
+    <string name="exercises_error_favorites">Laden der Favoriten fehlgeschlagen</string>
+    <string name="exercises_error_loading">Laden der Übungen fehlgeschlagen</string>
+    <string name="exercises_error_toggle_favorite">Favorit konnte nicht geändert werden</string>
+    <string name="exercises_filter_label">Übungen filtern</string>
 
     <!-- Exercise Detail -->
     <string name="exercise_detail_name">Name</string>
@@ -171,7 +175,8 @@
     <string name="default_exercise_supported_hip_lift_guide">Anleitung für Supported Hip Lift...</string>
 
     <!-- Training Equipment -->
-    <string name="training_equipment_no_equipments">Keine Geräte gefunden. Füge welche hinzu!</string>
+    <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
+    <string name="training_equipment_no_filtered_equipments">Keine Geräte gefunden.</string>
     <string name="training_equipment_content_description_card">Details von %1$s anzeigen</string>
     <string name="training_equipment_content_description_add">Gerät hinzufügen</string>
     <string name="training_equipment_content_description_default_equipment">Standardgerät</string>
