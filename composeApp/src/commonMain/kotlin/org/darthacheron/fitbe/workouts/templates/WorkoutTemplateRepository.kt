@@ -75,4 +75,19 @@ class WorkoutTemplateRepository(
             entities.map { it.toWorkoutTemplateSet() }
         }
     }
+
+    // Favorite methods
+    suspend fun addFavorite(profileId: Uuid, workoutTemplateId: Uuid) {
+        workoutTemplateDao.addFavorite(ProfileFavoriteWorkoutTemplateCrossRef(profileId, workoutTemplateId))
+    }
+
+    suspend fun removeFavorite(profileId: Uuid, workoutTemplateId: Uuid) {
+        workoutTemplateDao.removeFavorite(ProfileFavoriteWorkoutTemplateCrossRef(profileId, workoutTemplateId))
+    }
+
+    fun getFavoriteWorkoutTemplateIds(profileId: Uuid): Flow<List<Uuid>> =
+        workoutTemplateDao.getFavoriteWorkoutTemplateIds(profileId)
+
+    fun isFavorite(profileId: Uuid, workoutTemplateId: Uuid): Flow<Boolean> =
+        workoutTemplateDao.isFavorite(profileId, workoutTemplateId)
 }

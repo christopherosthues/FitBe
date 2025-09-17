@@ -461,4 +461,17 @@
     <string name="beverages_chart_thumbnail_title">Trinken</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
+
+    <!-- Workout Templates -->
+    <string name="workout_template_filter_label">Workout-Vorlagen filtern</string>
+    <string name="workout_template_no_filtered_templates">Keine Workout-Vorlagen gefunden.</string>
+    <string name="workout_template_no_templates">Keine Workout-Vorlagen vorhanden. Füge welche hinzu!</string>
+    <string name="workout_template_content_description_add">Workout-Vorlage hinzufügen</string>
+    <string name="workout_template_content_description_card">Details von %1$s anzeigen</string>
+    <string name="workout_template_content_description_default_workout_template">Standard Workout-Vorlage Bild</string>
+    <string name="workout_template_content_description_card_remove_favorite">Workout-Vorlage als Favorit entfernen</string>
+    <string name="workout_template_content_description_card_add_favorite">Workout-Vorlage als Favorit markieren</string>
+    <string name="workout_template_exercises">%1$d Übungen</string>
+    <string name="workout_template_error_favorites">Laden der favorisierten Workout-Vorlagen fehlgeschlagen</string>
+    <string name="workout_template_error_toggle_favorite">Favoritenstatus der Workout-Vorlage konnte nicht geändert werden</string>
 </resources>

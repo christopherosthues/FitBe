@@ -461,4 +461,17 @@
     <string name="beverages_chart_thumbnail_title">Beverages</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
+
+    <!-- Workout Templates -->
+    <string name="workout_template_filter_label">Filter workout templates</string>
+    <string name="workout_template_no_filtered_templates">No workout templates found.</string>
+    <string name="workout_template_no_templates">No workout templates available. Add some!</string>
+    <string name="workout_template_content_description_add">Add workout template</string>
+    <string name="workout_template_content_description_card">View details of %1$s</string>
+    <string name="workout_template_content_description_default_workout_template">Default workout template image</string>
+    <string name="workout_template_content_description_card_remove_favorite">Unmark workout template as favorite</string>
+    <string name="workout_template_content_description_card_add_favorite">Mark workout template as favorite</string>
+    <string name="workout_template_exercises">%1$d exercises</string>
+    <string name="workout_template_error_favorites">Failed to load favorite workout templates</string>
+    <string name="workout_template_error_toggle_favorite">Failed to toggle workout template favorite</string>
 </resources>

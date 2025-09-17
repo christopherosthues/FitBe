@@ -43,6 +43,7 @@ import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
 import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
+import org.darthacheron.fitbe.workouts.templates.ProfileFavoriteWorkoutTemplateCrossRef
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateExerciseEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateSetEntity
@@ -65,7 +66,7 @@ import kotlin.uuid.ExperimentalUuidApi
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
         DefaultExerciseEquipmentCrossRef::class,
         WorkoutTemplateEntity::class, WorkoutTemplateExerciseEntity::class, WorkoutTemplateSetEntity::class,
-        DefaultWorkoutTemplateEntity::class,
+        DefaultWorkoutTemplateEntity::class, ProfileFavoriteWorkoutTemplateCrossRef::class,
         WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
     ],
     version = 1
@@ -74,7 +75,7 @@ import kotlin.uuid.ExperimentalUuidApi
     FluidUnitConverter::class, UuidConverter::class, InstantConverter::class,
     LocalDateTimeConverter::class, GenderConverter::class, LocalTimeConverter::class,
     LocalDateConverter::class, MuscleGroupListConverter::class, RecommendedForListConverter::class,
-    ExerciseTypeConverter::class // Added converter
+    ExerciseTypeConverter::class
 )
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {

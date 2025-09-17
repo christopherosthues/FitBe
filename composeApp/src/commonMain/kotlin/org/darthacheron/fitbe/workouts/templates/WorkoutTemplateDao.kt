@@ -74,4 +74,17 @@ interface WorkoutTemplateDao {
     @Transaction
     @Query("SELECT * FROM workout_templates ORDER BY name ASC")
     fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplateWithExercisesAndSets>>
+
+    // Methods for managing ProfileFavoriteWorkoutTemplateCrossRef
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFavorite(crossRef: ProfileFavoriteWorkoutTemplateCrossRef)
+
+    @Delete
+    suspend fun removeFavorite(crossRef: ProfileFavoriteWorkoutTemplateCrossRef)
+
+    @Query("SELECT workoutTemplateId FROM profile_favorite_workout_template_cross_ref WHERE profileId = :profileId")
+    fun getFavoriteWorkoutTemplateIds(profileId: Uuid): Flow<List<Uuid>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM profile_favorite_workout_template_cross_ref WHERE profileId = :profileId AND workoutTemplateId = :workoutTemplateId)")
+    fun isFavorite(profileId: Uuid, workoutTemplateId: Uuid): Flow<Boolean>
 }

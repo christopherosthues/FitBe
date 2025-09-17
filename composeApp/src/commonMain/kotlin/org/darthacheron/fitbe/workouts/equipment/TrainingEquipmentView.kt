@@ -43,13 +43,13 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
-import fitbe.composeapp.generated.resources.training_equipment_filter_label
 import fitbe.composeapp.generated.resources.training_equipment_content_description_add
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card
-import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
-import fitbe.composeapp.generated.resources.training_equipment_no_equipments
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_add_favorite
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card_remove_favorite
+import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
+import fitbe.composeapp.generated.resources.training_equipment_filter_label
+import fitbe.composeapp.generated.resources.training_equipment_no_equipments
 import fitbe.composeapp.generated.resources.training_equipment_no_filtered_equipments
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.components.ImageWithDefault
@@ -57,9 +57,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-// Helper data class for processing within the Composable
 data class DisplayableTrainingEquipment(
     val equipment: TrainingEquipment,
     val localizedName: String
