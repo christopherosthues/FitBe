@@ -82,9 +82,10 @@ class WorkoutTemplateRepository(
     }
 
     fun getWorkoutTemplateWithExercisesAndSets(templateId: Uuid): Flow<WorkoutTemplate?> {
-        return workoutTemplateDao.getWorkoutTemplateWithExercisesAndSets(templateId).map {
-            it?.toWorkoutTemplate()
-        }
+        return flowOf(_dummyTemplates.firstOrNull() { it.id == templateId })
+//        return workoutTemplateDao.getWorkoutTemplateWithExercisesAndSets(templateId).map {
+//            it?.toWorkoutTemplate()
+//        }
     }
 
     fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplate>> {

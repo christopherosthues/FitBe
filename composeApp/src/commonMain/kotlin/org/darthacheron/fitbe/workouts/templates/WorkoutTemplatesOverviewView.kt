@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -77,7 +76,8 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val currentErrorMessage: StringResource? = uiState.workoutTemplateListError ?: uiState.favoriteStateError
+    val currentErrorMessage: StringResource? =
+        uiState.workoutTemplateListError ?: uiState.favoriteStateError
 
     currentErrorMessage?.let {
         val message = stringResource(it)
@@ -92,24 +92,29 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
     val localizedList: List<DisplayableWorkoutTemplate> = uiState.rawWorkoutTemplateList.map {
         DisplayableWorkoutTemplate(
             workoutTemplate = it,
-            localizedName = getWorkoutName(it.name, it.default) // Composable call
+            localizedName = getWorkoutName(it.name, it.default)
         )
     }
 
-    val processedWorkoutTemplateList: List<DisplayableWorkoutTemplate> = remember(uiState.rawWorkoutTemplateList, filterText, uiState.favoriteWorkoutTemplateIds) {
-        val filtered = if (filterText.isBlank()) {
-            localizedList
-        } else {
-            localizedList.filter {
-                it.localizedName.contains(filterText, ignoreCase = true)
+    val processedWorkoutTemplateList: List<DisplayableWorkoutTemplate> =
+        remember(uiState.rawWorkoutTemplateList, filterText, uiState.favoriteWorkoutTemplateIds) {
+            val filtered = if (filterText.isBlank()) {
+                localizedList
+            } else {
+                localizedList.filter {
+                    it.localizedName.contains(filterText, ignoreCase = true)
+                }
             }
-        }
 
-        filtered.sortedWith(
-            compareByDescending<DisplayableWorkoutTemplate> { uiState.favoriteWorkoutTemplateIds.contains(it.workoutTemplate.id) }
-                .thenBy { it.localizedName }
-        )
-    }
+            filtered.sortedWith(
+                compareByDescending<DisplayableWorkoutTemplate> {
+                    uiState.favoriteWorkoutTemplateIds.contains(
+                        it.workoutTemplate.id
+                    )
+                }
+                    .thenBy { it.localizedName }
+            )
+        }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -141,16 +146,23 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize().padding(bottom = 80.dp) // Add padding for FAB
                 ) {
-                    items(processedWorkoutTemplateList.size, key = { processedWorkoutTemplateList[it].workoutTemplate.id }) { templateIndex ->
+                    items(
+                        processedWorkoutTemplateList.size,
+                        key = { processedWorkoutTemplateList[it].workoutTemplate.id }) { templateIndex ->
                         val displayableTemplate = processedWorkoutTemplateList[templateIndex]
-                        val isFavorite = uiState.favoriteWorkoutTemplateIds.contains(displayableTemplate.workoutTemplate.id)
+                        val isFavorite =
+                            uiState.favoriteWorkoutTemplateIds.contains(displayableTemplate.workoutTemplate.id)
                         WorkoutTemplateCard(
                             workoutTemplate = displayableTemplate.workoutTemplate,
                             localizedName = displayableTemplate.localizedName,
                             isFavorite = isFavorite,
                             onAddFavorite = { viewModel.addFavorite(displayableTemplate.workoutTemplate.id) },
                             onRemoveFavorite = { viewModel.removeFavorite(displayableTemplate.workoutTemplate.id) },
-                            onClick = { viewModel.navigateToWorkoutTemplateDetail(displayableTemplate.workoutTemplate.id) },
+                            onClick = {
+                                viewModel.navigateToWorkoutTemplateDetail(
+                                    displayableTemplate.workoutTemplate.id
+                                )
+                            },
                             modifier = Modifier
                         )
                     }
@@ -212,7 +224,9 @@ fun WorkoutTemplateCard(
                 modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
             ) {
                 Icon(
-                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(Res.drawable.ic_favorite_border),
+                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(
+                        Res.drawable.ic_favorite_border
+                    ),
                     contentDescription = stringResource(if (isFavorite) Res.string.workout_template_content_description_card_remove_favorite else Res.string.workout_template_content_description_card_add_favorite),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -237,7 +251,10 @@ fun WorkoutTemplateCard(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(
                             text = localizedName,
                             style = MaterialTheme.typography.titleLarge,
@@ -247,7 +264,14 @@ fun WorkoutTemplateCard(
                         val chipColors = SuggestionChipDefaults.suggestionChipColors()
                         SuggestionChip(
                             onClick = { }, // Non-interactive, for display only
-                            label = { Text(text = stringResource(Res.string.workout_template_exercises, workoutTemplate.exercises.size)) },
+                            label = {
+                                Text(
+                                    text = stringResource(
+                                        Res.string.workout_template_exercises,
+                                        workoutTemplate.exercises.size
+                                    )
+                                )
+                            },
                             enabled = false, // Visually appears as a chip but not interactive
                             colors = SuggestionChipDefaults.suggestionChipColors(
                                 disabledContainerColor = chipColors.containerColor,

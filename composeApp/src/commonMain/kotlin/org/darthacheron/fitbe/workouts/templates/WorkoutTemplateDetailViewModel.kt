@@ -53,12 +53,10 @@ data class WorkoutTemplateDetailUiState(
 
 @OptIn(ExperimentalUuidApi::class)
 data class WorkoutTemplateExerciseWithDetails(
-    val templateExerciseId: Uuid,
     val exerciseId: Uuid,
     val exerciseName: String,
     val exerciseImageUri: String?,
     val exerciseDefault: Boolean,
-    val exerciseOrder: Int,
     val notes: String? = null,
     val sets: List<WorkoutTemplateSet> = emptyList()
 )
@@ -168,8 +166,7 @@ class WorkoutTemplateDetailViewModel(
                 if (templateWithDetails != null) {
                     val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->
 //                        WorkoutTemplateExerciseWithDetails(
-//                            templateExerciseId = exerciseWithSets.workoutTemplateExercise.id,
-//                            exerciseId = exerciseWithSets.exercise.id,
+//                            exerciseId = exerciseWithSets.exerciseId,
 //                            exerciseName = exerciseWithSets.exercise.name,
 //                            exerciseImageUri = exerciseWithSets.exercise.imageUri,
 //                            exerciseDefault = exerciseWithSets.exercise.default,
