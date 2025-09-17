@@ -43,7 +43,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
-import fitbe.composeapp.generated.resources.filter_equipment_label
+import fitbe.composeapp.generated.resources.training_equipment_filter_label
 import fitbe.composeapp.generated.resources.training_equipment_content_description_add
 import fitbe.composeapp.generated.resources.training_equipment_content_description_card
 import fitbe.composeapp.generated.resources.training_equipment_content_description_default_equipment
@@ -122,7 +122,7 @@ fun TrainingEquipmentView(
             OutlinedTextField(
                 value = filterText,
                 onValueChange = { viewModel.onFilterTextChanged(it) },
-                label = { Text(stringResource(Res.string.filter_equipment_label)) },
+                label = { Text(stringResource(Res.string.training_equipment_filter_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )

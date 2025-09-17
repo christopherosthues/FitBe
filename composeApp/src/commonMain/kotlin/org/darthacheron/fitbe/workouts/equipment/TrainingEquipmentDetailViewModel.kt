@@ -14,8 +14,8 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_error_rese
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_new_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_reset_non_default_equipment
 import fitbe.composeapp.generated.resources.training_equipment_detail_error_saving
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_add_favorite
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_favorite
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_add_favorite
+import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_remove_favorite
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -124,7 +124,7 @@ class TrainingEquipmentDetailViewModel(
 
             val favoriteAction = TopBarAction(
                 icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
-                contentDescription = if (isCurrentlyFavorite) Res.string.exercise_detail_content_description_remove_favorite else Res.string.exercise_detail_content_description_add_favorite, // Placeholder
+                contentDescription = if (isCurrentlyFavorite) Res.string.training_equipment_detail_content_description_remove_favorite else Res.string.training_equipment_detail_content_description_add_favorite,
                 onClick = { toggleFavorite() },
                 isVisible = currentEquipmentId != null && currentProfId != null
             )

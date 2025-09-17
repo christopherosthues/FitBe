@@ -182,7 +182,7 @@
     <string name="training_equipment_content_description_default_equipment">Standardgerät</string>
     <string name="training_equipment_content_description_card_add_favorite">Gerät als Favorit markieren</string>
     <string name="training_equipment_content_description_card_remove_favorite">Gerät als Favorit entfernen</string>
-    <string name="filter_equipment_label">Geräte filtern</string>
+    <string name="training_equipment_filter_label">Geräte filtern</string>
 
     <!-- Training Equipment Detail -->
     <string name="training_equipment_detail_name">Name</string>
@@ -331,7 +331,6 @@
     <string name="fluid_unit_deciliter">dl</string>
     <string name="fluid_unit_liter">l</string>
 
-
     <string name="add_beverage">Getr\u00e4nk hinzuf\u00fcgen</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
@@ -357,7 +356,6 @@
     <string name="beverage_in_centiliter">%1$d cl %2$s</string>
     <string name="beverage_in_deciliter">%1$d dl %2$s</string>
     <string name="beverage_in_liter">%1$d l %2$s</string>
-
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>
