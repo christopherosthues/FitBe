@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 // Import for the relationship data class
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateWithExercisesAndSets
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
@@ -74,6 +73,10 @@ interface WorkoutTemplateDao {
     @Transaction
     @Query("SELECT * FROM workout_templates ORDER BY name ASC")
     fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplateWithExercisesAndSets>>
+
+    @Transaction
+    @Query("SELECT * FROM workout_templates ORDER BY name ASC")
+    fun getAllWorkoutTemplatesWithExercises(): Flow<List<WorkoutTemplateWithExercisesEntity>>
 
     // Methods for managing ProfileFavoriteWorkoutTemplateCrossRef
     @Insert(onConflict = OnConflictStrategy.IGNORE)

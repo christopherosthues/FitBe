@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.workouts.templates
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -9,6 +10,59 @@ import kotlin.uuid.Uuid
 class WorkoutTemplateRepository(
     private val workoutTemplateDao: WorkoutTemplateDao
 ) {
+    private var _dummyTemplates: List<WorkoutTemplate>
+
+    init {
+        _dummyTemplates = dummyTemplates()
+    }
+
+    private fun dummyTemplates(): List<WorkoutTemplate> {
+        val dummyTemplate1Id = Uuid.random()
+        val dummyTemplate2Id = Uuid.random()
+
+        val dummyTemplates = listOf(
+            WorkoutTemplate(
+                id = dummyTemplate1Id,
+                name = "Full Body Blast (Dummy)",
+                description = "A comprehensive workout for all major muscle groups.",
+                imageUri = null,
+                default = true,
+                exercises = listOf(
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate1Id,
+                        exerciseId = Uuid.random(), // Represents a dummy ExerciseEntity ID
+                        exerciseOrder = 0,
+                        sets = emptyList()
+                    ),
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate1Id,
+                        exerciseId = Uuid.random(), // Represents another dummy ExerciseEntity ID
+                        exerciseOrder = 1,
+                        sets = emptyList()
+                    )
+                )
+            ),
+            WorkoutTemplate(
+                id = dummyTemplate2Id,
+                name = "Upper Body Strength (Dummy)",
+                description = "Focuses on building strength in the upper body.",
+                imageUri = null,
+                default = false,
+                exercises = listOf(
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate2Id,
+                        exerciseId = Uuid.random(), // Represents a dummy ExerciseEntity ID
+                        exerciseOrder = 0,
+                        sets = emptyList()
+                    )
+                )
+            )
+        )
+        return dummyTemplates
+    }
 
     // WorkoutTemplate operations
     suspend fun upsertWorkoutTemplate(template: WorkoutTemplate) {
@@ -37,6 +91,16 @@ class WorkoutTemplateRepository(
         return workoutTemplateDao.getAllWorkoutTemplatesWithExercisesAndSets().map { entities ->
             entities.map { it.toWorkoutTemplate() }
         }
+    }
+
+    fun getAllWorkoutTemplatesWithExercises(): Flow<List<WorkoutTemplate>> {
+        // Return dummy data here. Comment productive code out, don't delete it
+        /*
+        return workoutTemplateDao.getAllWorkoutTemplatesWithExercises().map { entities ->
+            entities.map { it.toWorkoutTemplate() }
+        }
+        */
+        return flowOf(_dummyTemplates)
     }
 
     // Simpler fetch for just template headers (e.g., for a list view)

@@ -61,7 +61,7 @@ class WorkoutTemplatesOverviewViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalWorkoutTemplatesFlow: StateFlow<List<WorkoutTemplate>> =
-        workoutTemplateRepository.getAllWorkoutTemplatesWithExercisesAndSets()
+        workoutTemplateRepository.getAllWorkoutTemplatesWithExercises()
             .onStart {
                 _isLoadingWorkoutTemplates.value = true
                 _workoutTemplateListErrorMessage.value = null
