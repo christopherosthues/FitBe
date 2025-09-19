@@ -478,7 +478,193 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         recommendedFor = listOf(RecommendedFor.Workout),
         exerciseType = ExerciseType.WEIGHT_REPS,
         equipmentKeys = listOf("default_training_equipment_ez_curl_bar")
-    )
+    ),
+    // ... (existing exerciseList entries) ...
+
+    // Dip Station / Dip Bars Exercises
+    ExerciseSeedData(
+        key = "default_exercise_triceps_dips_dip_station",
+        muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_dip_station")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_weighted_dips_dip_station",
+        muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dip_station", "default_training_equipment_weight_plates")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_dip_station_leg_raises",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_dip_station")
+    ),
+    // Weight Plates Exercises
+    ExerciseSeedData(
+        key = "default_exercise_plate_halos",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_weight_plates")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_plate_front_raise",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_weight_plates")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_weighted_plank_plate_on_back",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_TIMED,
+        equipmentKeys = listOf("default_training_equipment_weight_plates", "default_training_equipment_bodyweight")
+    ),
+    // Ankle Weights Exercises
+    ExerciseSeedData(
+        key = "default_exercise_ankle_weight_leg_raises",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.QUADS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ankle_weights")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ankle_weight_glute_kickbacks",
+        muscleGroups = listOf(MuscleGroup.GLUTES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ankle_weights")
+    ),
+    // Wrist Weights Exercises
+    ExerciseSeedData(
+        key = "default_exercise_wrist_weight_shadow_boxing",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.BICEPS, MuscleGroup.TRICEPS, MuscleGroup.CARDIO),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.WEIGHT_TIMED,
+        equipmentKeys = listOf("default_training_equipment_wrist_weights")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_wrist_weight_arm_circles",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Warmup),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_wrist_weights")
+    ),
+    // Plyo Box Exercises
+    ExerciseSeedData(
+        key = "default_exercise_box_jumps",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.CALVES, MuscleGroup.CARDIO),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_plyo_box")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_plyo_box_step_ups",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY, // Assuming bodyweight primarily, can be WEIGHT_REPS
+        equipmentKeys = listOf("default_training_equipment_plyo_box")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_decline_push_ups_feet_on_plyo_box",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_plyo_box", "default_training_equipment_bodyweight")
+    ),
+    // Medicine Ball Exercises
+    ExerciseSeedData(
+        key = "default_exercise_medicine_ball_overhead_slams",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.ABS, MuscleGroup.SHOULDERS, MuscleGroup.BACK, MuscleGroup.CARDIO),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_medicine_ball")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_medicine_ball_russian_twists",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_medicine_ball")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_medicine_ball_woodchoppers",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_medicine_ball")
+    ),
+    // Slam Ball Exercises
+    ExerciseSeedData(
+        key = "default_exercise_slam_ball_over_shoulder_toss",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.GLUTES, MuscleGroup.BACK, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_slam_ball")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_slam_ball_ground_to_overhead",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_slam_ball")
+    ),
+    // Wall Ball Exercises
+    ExerciseSeedData(
+        key = "default_exercise_wall_ball_shots",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS, MuscleGroup.CARDIO),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_wall_ball")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_wall_ball_squat_and_press_no_throw",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_wall_ball")
+    ),
+    // Sandbag Exercises
+    ExerciseSeedData(
+        key = "default_exercise_sandbag_bear_hug_squats",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_sandbag")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_sandbag_cleans",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.BACK, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_sandbag")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_sandbag_shoulder_to_shoulder_press",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_sandbag")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_assisted_pull_ups",
+        muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY, // Or WEIGHT_REPS if machine has weight assistance
+        equipmentKeys = listOf("default_training_equipment_pull_up_bar", "default_training_equipment_resistance_bands") // Or a specific assisted pull-up machine key
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_negative_pull_ups",
+        muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_pull_up_bar")
+    ),
 )
 
 internal data class WorkoutTemplateSeedData(

@@ -193,15 +193,34 @@
     <string name="default_exercise_ez_bar_skullcrusher_name">EZ-Bar Skullcrusher</string>
     <string name="default_exercise_ez_bar_close_grip_bench_press_name">EZ-Bar Close-Grip Bench Press</string>
     <string name="default_exercise_ez_bar_upright_row_name">EZ-Bar Upright Row</string>
+    <string name="default_exercise_triceps_dips_dip_station_name">Triceps Dips (Dip Station)</string>
+    <string name="default_exercise_weighted_dips_dip_station_name">Weighted Dips (Dip Station)</string>
+    <string name="default_exercise_dip_station_leg_raises_name">Dip Station Leg Raises</string>
+    <string name="default_exercise_plate_halos_name">Plate Halos</string>
+    <string name="default_exercise_plate_front_raise_name">Plate Front Raise</string>
+    <string name="default_exercise_weighted_plank_plate_on_back_name">Weighted Plank (Plate on Back)</string>
+    <string name="default_exercise_ankle_weight_leg_raises_name">Ankle Weight Leg Raises</string>
+    <string name="default_exercise_ankle_weight_glute_kickbacks_name">Ankle Weight Glute Kickbacks</string>
+    <string name="default_exercise_wrist_weight_shadow_boxing_name">Wrist Weight Shadow Boxing</string>
+    <string name="default_exercise_wrist_weight_arm_circles_name">Wrist Weight Arm Circles</string>
+    <string name="default_exercise_box_jumps_name">Box Jumps</string>
+    <string name="default_exercise_plyo_box_step_ups_name">Plyo Box Step-Ups</string>
+    <string name="default_exercise_decline_push_ups_feet_on_plyo_box_name">Decline Push-ups (Feet on Plyo Box)</string>
+    <string name="default_exercise_medicine_ball_overhead_slams_name">Medicine Ball Overhead Slams</string>
+    <string name="default_exercise_medicine_ball_russian_twists_name">Medicine Ball Russian Twists</string>
+    <string name="default_exercise_medicine_ball_woodchoppers_name">Medicine Ball Woodchoppers</string>
+    <string name="default_exercise_slam_ball_over_shoulder_toss_name">Slam Ball Over-Shoulder Toss</string>
+    <string name="default_exercise_slam_ball_ground_to_overhead_name">Slam Ball Ground-to-Overhead</string>
+    <string name="default_exercise_wall_ball_shots_name">Wall Ball Shots</string>
+    <string name="default_exercise_wall_ball_squat_and_press_no_throw_name">Wall Ball Squat and Press (No Throw)</string>
+    <string name="default_exercise_sandbag_bear_hug_squats_name">Sandbag Bear Hug Squats</string>
+    <string name="default_exercise_sandbag_cleans_name">Sandbag Cleans</string>
+    <string name="default_exercise_sandbag_shoulder_to_shoulder_press_name">Sandbag Shoulder-to-Shoulder Press</string>
+    <string name="default_exercise_assisted_pull_ups_name">Assisted Pull-Ups</string>
+    <string name="default_exercise_negative_pull_ups_name">Negative Pull-Ups</string>
 
     <!-- Default Exercise Guides -->
-    <string name="default_exercise_squat_guide">How to perform a Squat...</string>
-    <string name="default_exercise_deadlift_guide">How to perform a Deadlift...</string>
-    <string name="default_exercise_bench_press_guide">How to perform a Bench Press...</string>
-    <string name="default_exercise_overhead_press_guide">How to perform an Overhead Press...</string>
     <string name="default_exercise_pull_ups_guide">How to perform Pull Ups using a pull-up bar...</string>
-    <string name="default_exercise_push_ups_guide">How to perform Push Ups...</string>
-    <string name="default_exercise_lunges_guide">How to perform Lunges...</string>
     <string name="default_exercise_sit_ups_guide">How to perform Sit Ups (bodyweight)...</string>
     <string name="default_exercise_plank_guide">How to perform a Plank (bodyweight)...</string>
     <string name="default_exercise_jumping_jacks_guide">How to perform Jumping Jacks (bodyweight)...</string>
@@ -257,6 +276,32 @@
     <string name="default_exercise_ez_bar_skullcrusher_guide">Guide for EZ-Bar Skullcrusher...</string>
     <string name="default_exercise_ez_bar_close_grip_bench_press_guide">Guide for EZ-Bar Close-Grip Bench Press...</string>
     <string name="default_exercise_ez_bar_upright_row_guide">Guide for EZ-Bar Upright Row...</string>
+    <string name="default_exercise_weighted_dips_dip_station_guide">Guide for Weighted Dips on a dip station, using additional weight.</string>
+    <string name="default_exercise_dip_station_leg_raises_guide">Guide for Leg Raises using a dip station.</string>
+    <string name="default_exercise_plate_halos_guide">Guide for performing Plate Halos with a weight plate.</string>
+    <string name="default_exercise_plate_front_raise_guide">Guide for performing Plate Front Raises with a weight plate.</string>
+    <string name="default_exercise_weighted_plank_plate_on_back_guide">Guide for performing a Weighted Plank with a plate on your back.</string>
+    <string name="default_exercise_ankle_weight_leg_raises_guide">Guide for Leg Raises using ankle weights.</string>
+    <string name="default_exercise_ankle_weight_glute_kickbacks_guide">Guide for Glute Kickbacks using ankle weights.</string>
+    <string name="default_exercise_wrist_weight_shadow_boxing_guide">Guide for Shadow Boxing using wrist weights.</string>
+    <string name="default_exercise_wrist_weight_arm_circles_guide">Guide for Arm Circles using wrist weights.</string>
+    <string name="default_exercise_box_jumps_guide">Guide for performing Box Jumps onto a plyo box.</string>
+    <string name="default_exercise_plyo_box_step_ups_guide">Guide for performing Step-Ups using a plyo box.</string>
+    <string name="default_exercise_decline_push_ups_feet_on_plyo_box_guide">Guide for performing Decline Push-ups with feet elevated on a plyo box.</string>
+    <string name="default_exercise_medicine_ball_overhead_slams_guide">Guide for performing Medicine Ball Overhead Slams.</string>
+    <string name="default_exercise_medicine_ball_russian_twists_guide">Guide for performing Medicine Ball Russian Twists.</string>
+    <string name="default_exercise_medicine_ball_woodchoppers_guide">Guide for performing Medicine Ball Woodchoppers.</string>
+    <string name="default_exercise_slam_ball_over_shoulder_toss_guide">Guide for performing Slam Ball Over-Shoulder Tosses.</string>
+    <string name="default_exercise_slam_ball_ground_to_overhead_guide">Guide for performing Slam Ball Ground-to-Overhead lifts.</string>
+    <string name="default_exercise_wall_ball_shots_guide">Guide for performing Wall Ball Shots.</string>
+    <string name="default_exercise_wall_ball_squat_and_press_no_throw_guide">Guide for performing Wall Ball Squat and Press without the throw.</string>
+    <string name="default_exercise_sandbag_bear_hug_squats_guide">Guide for performing Sandbag Bear Hug Squats.</string>
+    <string name="default_exercise_sandbag_cleans_guide">Guide for performing Sandbag Cleans.</string>
+    <string name="default_exercise_sandbag_shoulder_to_shoulder_press_guide">Guide for performing Sandbag Shoulder-to-Shoulder Presses.</string>
+    <string name="default_exercise_triceps_dips_dip_station_guide">Guide for Triceps Dips on a dip station.</string>
+    <string name="default_exercise_assisted_pull_ups_guide">How to perform Assisted Pull-Ups. Use a resistance band looped over the pull-up bar and under your feet or knees, or use an assisted pull-up machine. Perform the pull-up motion, focusing on good form. The assistance helps complete the repetitions.</string>
+    <string name="default_exercise_negative_pull_ups_guide">How to perform Negative Pull-Ups. Start at the top position of a pull-up (chin over bar), either by jumping or using a bench. Slowly lower your body down, controlling the descent for as long as possible (aim for 3-5 seconds). Fully extend your arms at the bottom. Repeat.</string>
+
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>

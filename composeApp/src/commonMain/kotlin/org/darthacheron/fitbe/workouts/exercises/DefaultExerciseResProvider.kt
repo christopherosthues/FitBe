@@ -122,6 +122,68 @@ import fitbe.composeapp.generated.resources.default_exercise_ez_bar_close_grip_b
 import fitbe.composeapp.generated.resources.default_exercise_ez_bar_upright_row_name
 import fitbe.composeapp.generated.resources.default_exercise_ez_bar_upright_row_guide
 
+// ... existing imports ...
+// Dip Station / Dip Bars Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_triceps_dips_dip_station_name
+import fitbe.composeapp.generated.resources.default_exercise_triceps_dips_dip_station_guide
+import fitbe.composeapp.generated.resources.default_exercise_weighted_dips_dip_station_name
+import fitbe.composeapp.generated.resources.default_exercise_weighted_dips_dip_station_guide
+import fitbe.composeapp.generated.resources.default_exercise_dip_station_leg_raises_name
+import fitbe.composeapp.generated.resources.default_exercise_dip_station_leg_raises_guide
+// Weight Plates Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_plate_halos_name
+import fitbe.composeapp.generated.resources.default_exercise_plate_halos_guide
+import fitbe.composeapp.generated.resources.default_exercise_plate_front_raise_name
+import fitbe.composeapp.generated.resources.default_exercise_plate_front_raise_guide
+import fitbe.composeapp.generated.resources.default_exercise_weighted_plank_plate_on_back_name
+import fitbe.composeapp.generated.resources.default_exercise_weighted_plank_plate_on_back_guide
+// Ankle Weights Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_leg_raises_name
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_leg_raises_guide
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_glute_kickbacks_name
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_glute_kickbacks_guide
+// Wrist Weights Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_wrist_weight_shadow_boxing_name
+import fitbe.composeapp.generated.resources.default_exercise_wrist_weight_shadow_boxing_guide
+import fitbe.composeapp.generated.resources.default_exercise_wrist_weight_arm_circles_name
+import fitbe.composeapp.generated.resources.default_exercise_wrist_weight_arm_circles_guide
+// Plyo Box Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_box_jumps_name
+import fitbe.composeapp.generated.resources.default_exercise_box_jumps_guide
+import fitbe.composeapp.generated.resources.default_exercise_plyo_box_step_ups_name
+import fitbe.composeapp.generated.resources.default_exercise_plyo_box_step_ups_guide
+import fitbe.composeapp.generated.resources.default_exercise_decline_push_ups_feet_on_plyo_box_name
+import fitbe.composeapp.generated.resources.default_exercise_decline_push_ups_feet_on_plyo_box_guide
+// Medicine Ball Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_overhead_slams_name
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_overhead_slams_guide
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_russian_twists_name
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_russian_twists_guide
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_woodchoppers_name
+import fitbe.composeapp.generated.resources.default_exercise_medicine_ball_woodchoppers_guide
+// Slam Ball Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_slam_ball_over_shoulder_toss_name
+import fitbe.composeapp.generated.resources.default_exercise_slam_ball_over_shoulder_toss_guide
+import fitbe.composeapp.generated.resources.default_exercise_slam_ball_ground_to_overhead_name
+import fitbe.composeapp.generated.resources.default_exercise_slam_ball_ground_to_overhead_guide
+// Wall Ball Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_wall_ball_shots_name
+import fitbe.composeapp.generated.resources.default_exercise_wall_ball_shots_guide
+import fitbe.composeapp.generated.resources.default_exercise_wall_ball_squat_and_press_no_throw_name
+import fitbe.composeapp.generated.resources.default_exercise_wall_ball_squat_and_press_no_throw_guide
+// Sandbag Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_bear_hug_squats_name
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_bear_hug_squats_guide
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_cleans_name
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_cleans_guide
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_shoulder_to_shoulder_press_name
+import fitbe.composeapp.generated.resources.default_exercise_sandbag_shoulder_to_shoulder_press_guide
+import fitbe.composeapp.generated.resources.default_exercise_assisted_pull_ups_name
+import fitbe.composeapp.generated.resources.default_exercise_assisted_pull_ups_guide
+import fitbe.composeapp.generated.resources.default_exercise_negative_pull_ups_name
+import fitbe.composeapp.generated.resources.default_exercise_negative_pull_ups_guide
+
+
 import fitbe.composeapp.generated.resources.ic_launcher // Default image
 //import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_curl // Specific image
 // Add other specific EZ-Curl Bar images if they exist, e.g.:
@@ -200,7 +262,33 @@ object DefaultExerciseResProvider {
         "default_exercise_ez_bar_reverse_curl" to Res.string.default_exercise_ez_bar_reverse_curl_name,
         "default_exercise_ez_bar_skullcrusher" to Res.string.default_exercise_ez_bar_skullcrusher_name,
         "default_exercise_ez_bar_close_grip_bench_press" to Res.string.default_exercise_ez_bar_close_grip_bench_press_name,
-        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_name
+        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_name,
+
+        "default_exercise_triceps_dips_dip_station" to Res.string.default_exercise_triceps_dips_dip_station_name,
+        "default_exercise_weighted_dips_dip_station" to Res.string.default_exercise_weighted_dips_dip_station_name,
+        "default_exercise_dip_station_leg_raises" to Res.string.default_exercise_dip_station_leg_raises_name,
+        "default_exercise_plate_halos" to Res.string.default_exercise_plate_halos_name,
+        "default_exercise_plate_front_raise" to Res.string.default_exercise_plate_front_raise_name,
+        "default_exercise_weighted_plank_plate_on_back" to Res.string.default_exercise_weighted_plank_plate_on_back_name,
+        "default_exercise_ankle_weight_leg_raises" to Res.string.default_exercise_ankle_weight_leg_raises_name,
+        "default_exercise_ankle_weight_glute_kickbacks" to Res.string.default_exercise_ankle_weight_glute_kickbacks_name,
+        "default_exercise_wrist_weight_shadow_boxing" to Res.string.default_exercise_wrist_weight_shadow_boxing_name,
+        "default_exercise_wrist_weight_arm_circles" to Res.string.default_exercise_wrist_weight_arm_circles_name,
+        "default_exercise_box_jumps" to Res.string.default_exercise_box_jumps_name,
+        "default_exercise_plyo_box_step_ups" to Res.string.default_exercise_plyo_box_step_ups_name,
+        "default_exercise_decline_push_ups_feet_on_plyo_box" to Res.string.default_exercise_decline_push_ups_feet_on_plyo_box_name,
+        "default_exercise_medicine_ball_overhead_slams" to Res.string.default_exercise_medicine_ball_overhead_slams_name,
+        "default_exercise_medicine_ball_russian_twists" to Res.string.default_exercise_medicine_ball_russian_twists_name,
+        "default_exercise_medicine_ball_woodchoppers" to Res.string.default_exercise_medicine_ball_woodchoppers_name,
+        "default_exercise_slam_ball_over_shoulder_toss" to Res.string.default_exercise_slam_ball_over_shoulder_toss_name,
+        "default_exercise_slam_ball_ground_to_overhead" to Res.string.default_exercise_slam_ball_ground_to_overhead_name,
+        "default_exercise_wall_ball_shots" to Res.string.default_exercise_wall_ball_shots_name,
+        "default_exercise_wall_ball_squat_and_press_no_throw" to Res.string.default_exercise_wall_ball_squat_and_press_no_throw_name,
+        "default_exercise_sandbag_bear_hug_squats" to Res.string.default_exercise_sandbag_bear_hug_squats_name,
+        "default_exercise_sandbag_cleans" to Res.string.default_exercise_sandbag_cleans_name,
+        "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.string.default_exercise_sandbag_shoulder_to_shoulder_press_name,
+        "default_exercise_assisted_pull_ups" to Res.string.default_exercise_assisted_pull_ups_name,
+        "default_exercise_negative_pull_ups" to Res.string.default_exercise_negative_pull_ups_name,
     )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
@@ -268,7 +356,33 @@ object DefaultExerciseResProvider {
         "default_exercise_ez_bar_reverse_curl" to Res.string.default_exercise_ez_bar_reverse_curl_guide,
         "default_exercise_ez_bar_skullcrusher" to Res.string.default_exercise_ez_bar_skullcrusher_guide,
         "default_exercise_ez_bar_close_grip_bench_press" to Res.string.default_exercise_ez_bar_close_grip_bench_press_guide,
-        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_guide
+        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_guide,
+
+        "default_exercise_triceps_dips_dip_station" to Res.string.default_exercise_triceps_dips_dip_station_guide,
+        "default_exercise_weighted_dips_dip_station" to Res.string.default_exercise_weighted_dips_dip_station_guide,
+        "default_exercise_dip_station_leg_raises" to Res.string.default_exercise_dip_station_leg_raises_guide,
+        "default_exercise_plate_halos" to Res.string.default_exercise_plate_halos_guide,
+        "default_exercise_plate_front_raise" to Res.string.default_exercise_plate_front_raise_guide,
+        "default_exercise_weighted_plank_plate_on_back" to Res.string.default_exercise_weighted_plank_plate_on_back_guide,
+        "default_exercise_ankle_weight_leg_raises" to Res.string.default_exercise_ankle_weight_leg_raises_guide,
+        "default_exercise_ankle_weight_glute_kickbacks" to Res.string.default_exercise_ankle_weight_glute_kickbacks_guide,
+        "default_exercise_wrist_weight_shadow_boxing" to Res.string.default_exercise_wrist_weight_shadow_boxing_guide,
+        "default_exercise_wrist_weight_arm_circles" to Res.string.default_exercise_wrist_weight_arm_circles_guide,
+        "default_exercise_box_jumps" to Res.string.default_exercise_box_jumps_guide,
+        "default_exercise_plyo_box_step_ups" to Res.string.default_exercise_plyo_box_step_ups_guide,
+        "default_exercise_decline_push_ups_feet_on_plyo_box" to Res.string.default_exercise_decline_push_ups_feet_on_plyo_box_guide,
+        "default_exercise_medicine_ball_overhead_slams" to Res.string.default_exercise_medicine_ball_overhead_slams_guide,
+        "default_exercise_medicine_ball_russian_twists" to Res.string.default_exercise_medicine_ball_russian_twists_guide,
+        "default_exercise_medicine_ball_woodchoppers" to Res.string.default_exercise_medicine_ball_woodchoppers_guide,
+        "default_exercise_slam_ball_over_shoulder_toss" to Res.string.default_exercise_slam_ball_over_shoulder_toss_guide,
+        "default_exercise_slam_ball_ground_to_overhead" to Res.string.default_exercise_slam_ball_ground_to_overhead_guide,
+        "default_exercise_wall_ball_shots" to Res.string.default_exercise_wall_ball_shots_guide,
+        "default_exercise_wall_ball_squat_and_press_no_throw" to Res.string.default_exercise_wall_ball_squat_and_press_no_throw_guide,
+        "default_exercise_sandbag_bear_hug_squats" to Res.string.default_exercise_sandbag_bear_hug_squats_guide,
+        "default_exercise_sandbag_cleans" to Res.string.default_exercise_sandbag_cleans_guide,
+        "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.string.default_exercise_sandbag_shoulder_to_shoulder_press_guide,
+        "default_exercise_assisted_pull_ups" to Res.string.default_exercise_assisted_pull_ups_guide,
+        "default_exercise_negative_pull_ups" to Res.string.default_exercise_negative_pull_ups_guide,
     )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
@@ -336,6 +450,31 @@ object DefaultExerciseResProvider {
         "default_exercise_ez_bar_reverse_curl" to Res.drawable.ic_launcher, // Placeholder
         "default_exercise_ez_bar_skullcrusher" to Res.drawable.ic_launcher, // Placeholder
         "default_exercise_ez_bar_close_grip_bench_press" to Res.drawable.ic_launcher, // Placeholder
-        "default_exercise_ez_bar_upright_row" to Res.drawable.ic_launcher // Placeholder
+        "default_exercise_ez_bar_upright_row" to Res.drawable.ic_launcher, // Placeholder
+        "default_exercise_triceps_dips_dip_station" to Res.drawable.ic_launcher,
+        "default_exercise_weighted_dips_dip_station" to Res.drawable.ic_launcher,
+        "default_exercise_dip_station_leg_raises" to Res.drawable.ic_launcher,
+        "default_exercise_plate_halos" to Res.drawable.ic_launcher,
+        "default_exercise_plate_front_raise" to Res.drawable.ic_launcher,
+        "default_exercise_weighted_plank_plate_on_back" to Res.drawable.ic_launcher,
+        "default_exercise_ankle_weight_leg_raises" to Res.drawable.ic_launcher,
+        "default_exercise_ankle_weight_glute_kickbacks" to Res.drawable.ic_launcher,
+        "default_exercise_wrist_weight_shadow_boxing" to Res.drawable.ic_launcher,
+        "default_exercise_wrist_weight_arm_circles" to Res.drawable.ic_launcher,
+        "default_exercise_box_jumps" to Res.drawable.ic_launcher,
+        "default_exercise_plyo_box_step_ups" to Res.drawable.ic_launcher,
+        "default_exercise_decline_push_ups_feet_on_plyo_box" to Res.drawable.ic_launcher,
+        "default_exercise_medicine_ball_overhead_slams" to Res.drawable.ic_launcher,
+        "default_exercise_medicine_ball_russian_twists" to Res.drawable.ic_launcher,
+        "default_exercise_medicine_ball_woodchoppers" to Res.drawable.ic_launcher,
+        "default_exercise_slam_ball_over_shoulder_toss" to Res.drawable.ic_launcher,
+        "default_exercise_slam_ball_ground_to_overhead" to Res.drawable.ic_launcher,
+        "default_exercise_wall_ball_shots" to Res.drawable.ic_launcher,
+        "default_exercise_wall_ball_squat_and_press_no_throw" to Res.drawable.ic_launcher,
+        "default_exercise_sandbag_bear_hug_squats" to Res.drawable.ic_launcher,
+        "default_exercise_sandbag_cleans" to Res.drawable.ic_launcher,
+        "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.drawable.ic_launcher,
+        "default_exercise_assisted_pull_ups" to Res.drawable.ic_launcher,
+        "default_exercise_negative_pull_ups" to Res.drawable.ic_launcher,
     )
 }
