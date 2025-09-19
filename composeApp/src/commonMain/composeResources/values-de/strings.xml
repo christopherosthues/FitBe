@@ -193,12 +193,12 @@
     <string name="default_exercise_kettlebell_farmers_walk_name">Kettlebell Farmer's Walk</string>
     <string name="default_exercise_kettlebell_lunges_name">Kettlebell Ausfallschritte</string>
     <string name="default_exercise_kettlebell_deadlifts_name">Kettlebell Kreuzheben</string>
-    <string name="default_exercise_ez_bar_curl_name">EZ-Hantel Curl</string>
-    <string name="default_exercise_ez_bar_preacher_curl_name">EZ-Hantel Preacher Curl</string>
-    <string name="default_exercise_ez_bar_reverse_curl_name">EZ-Hantel Reverse Curl</string>
-    <string name="default_exercise_ez_bar_skullcrusher_name">EZ-Hantel Skullcrusher</string>
-    <string name="default_exercise_ez_bar_close_grip_bench_press_name">EZ-Hantel Enges Bankdrücken</string>
-    <string name="default_exercise_ez_bar_upright_row_name">EZ-Hantel Aufrechtes Rudern</string>
+    <string name="default_exercise_ez_bar_curl_name">SZ-Hantel Curl</string>
+    <string name="default_exercise_ez_bar_preacher_curl_name">SZ-Hantel Preacher Curl</string>
+    <string name="default_exercise_ez_bar_reverse_curl_name">SZ-Hantel Reverse Curl</string>
+    <string name="default_exercise_ez_bar_skullcrusher_name">SZ-Hantel Skullcrusher</string>
+    <string name="default_exercise_ez_bar_close_grip_bench_press_name">SZ-Hantel Enges Bankdrücken</string>
+    <string name="default_exercise_ez_bar_upright_row_name">SZ-Hantel Aufrechtes Rudern</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">Anleitung für Kniebeugen...</string>
@@ -257,12 +257,12 @@
     <string name="default_exercise_kettlebell_farmers_walk_guide">Anleitung für Kettlebell Farmer's Walk...</string>
     <string name="default_exercise_kettlebell_lunges_guide">Anleitung für Kettlebell Ausfallschritte...</string>
     <string name="default_exercise_kettlebell_deadlifts_guide">Anleitung für Kettlebell Kreuzheben...</string>
-    <string name="default_exercise_ez_bar_curl_guide">Anleitung für EZ-Hantel Curl...</string>
-    <string name="default_exercise_ez_bar_preacher_curl_guide">Anleitung für EZ-Hantel Preacher Curl...</string>
-    <string name="default_exercise_ez_bar_reverse_curl_guide">Anleitung für EZ-Hantel Reverse Curl...</string>
-    <string name="default_exercise_ez_bar_skullcrusher_guide">Anleitung für EZ-Hantel Skullcrusher...</string>
-    <string name="default_exercise_ez_bar_close_grip_bench_press_guide">Anleitung für EZ-Hantel Enges Bankdrücken...</string>
-    <string name="default_exercise_ez_bar_upright_row_guide">Anleitung für EZ-Hantel Aufrechtes Rudern...</string>
+    <string name="default_exercise_ez_bar_curl_guide">Anleitung für SZ-Hantel Curl...</string>
+    <string name="default_exercise_ez_bar_preacher_curl_guide">Anleitung für SZ-Hantel Preacher Curl...</string>
+    <string name="default_exercise_ez_bar_reverse_curl_guide">Anleitung für SZ-Hantel Reverse Curl...</string>
+    <string name="default_exercise_ez_bar_skullcrusher_guide">Anleitung für SZ-Hantel Skullcrusher...</string>
+    <string name="default_exercise_ez_bar_close_grip_bench_press_guide">Anleitung für SZ-Hantel Enges Bankdrücken...</string>
+    <string name="default_exercise_ez_bar_upright_row_guide">Anleitung für SZ-Hantel Aufrechtes Rudern...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
