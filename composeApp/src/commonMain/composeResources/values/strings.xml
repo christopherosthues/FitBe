@@ -156,6 +156,7 @@
     <string name="default_exercise_goblet_squat_kettlebell_name">Kettlebell Goblet Squat</string>
     <string name="default_exercise_deadlift_barbell_name">Barbell Deadlift</string>
     <string name="default_exercise_romanian_deadlift_dumbbell_name">Dumbbell Romanian Deadlift</string>
+    <string name="default_exercise_romanian_deadlift_barbell_name">Barbell Romanian Deadlift</string>
     <string name="default_exercise_bench_press_barbell_name">Barbell Bench Press</string>
     <string name="default_exercise_bench_press_dumbbell_name">Dumbbell Bench Press</string>
     <string name="default_exercise_overhead_press_barbell_name">Barbell Overhead Press</string>
@@ -175,6 +176,12 @@
     <string name="default_exercise_bench_press_smith_machine_name">Smith Machine Bench Press</string>
     <string name="default_exercise_overhead_press_smith_machine_name">Smith Machine Overhead Press</string>
     <string name="default_exercise_chest_press_machine_name">Chest Press (Machine)</string>
+    <string name="default_exercise_air_bike_cardio_name">Air Bike Cardio</string>
+    <string name="default_exercise_treadmill_running_name">Treadmill Running</string>
+    <string name="default_exercise_treadmill_walking_name">Treadmill Walking</string>
+    <string name="default_exercise_seated_row_machine_name">Seated Row (Machine)</string>
+    <string name="default_exercise_rowing_machine_cardio_name">Rowing Machine Cardio</string>
+    <string name="default_exercise_battle_ropes_waves_name">Battle Rope Waves</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">How to perform a Squat...</string>
@@ -196,6 +203,7 @@
     <string name="default_exercise_goblet_squat_kettlebell_guide">Guide for Kettlebell Goblet Squat...</string>
     <string name="default_exercise_deadlift_barbell_guide">Guide for Barbell Deadlift...</string>
     <string name="default_exercise_romanian_deadlift_dumbbell_guide">Guide for Dumbbell Romanian Deadlift...</string>
+    <string name="default_exercise_romanian_deadlift_barbell_guide">Guide for Barbell Romanian Deadlift...</string>
     <string name="default_exercise_bench_press_barbell_guide">Guide for Barbell Bench Press...</string>
     <string name="default_exercise_bench_press_dumbbell_guide">Guide for Dumbbell Bench Press...</string>
     <string name="default_exercise_overhead_press_barbell_guide">Guide for Barbell Overhead Press...</string>
@@ -215,6 +223,12 @@
     <string name="default_exercise_bench_press_smith_machine_guide">Guide for Smith Machine Bench Press...</string>
     <string name="default_exercise_overhead_press_smith_machine_guide">Guide for Smith Machine Overhead Press...</string>
     <string name="default_exercise_chest_press_machine_guide">Guide for Chest Press (Machine)...</string>
+    <string name="default_exercise_air_bike_cardio_guide">Guide for Air Bike Cardio...</string>
+    <string name="default_exercise_treadmill_running_guide">Guide for Treadmill Running...</string>
+    <string name="default_exercise_treadmill_walking_guide">Guide for Treadmill Walking...</string>
+    <string name="default_exercise_seated_row_machine_guide">Guide for Seated Row (Machine)...</string>
+    <string name="default_exercise_rowing_machine_cardio_guide">Guide for Rowing Machine Cardio...</string>
+    <string name="default_exercise_battle_ropes_waves_guide">Guide for Battle Rope Waves...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>

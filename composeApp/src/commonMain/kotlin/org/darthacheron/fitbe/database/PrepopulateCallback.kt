@@ -128,6 +128,13 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         equipmentKeys = listOf("default_training_equipment_dumbbell")
     ),
     ExerciseSeedData(
+        key = "default_exercise_romanian_deadlift_barbell",
+        muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.BACK),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_barbell")
+    ),
+    ExerciseSeedData(
         key = "default_exercise_bench_press_barbell",
         muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS), // SHOULDERS_FRONT -> SHOULDERS
         recommendedFor = listOf(RecommendedFor.Workout),
@@ -304,6 +311,53 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         recommendedFor = listOf(RecommendedFor.Workout),
         exerciseType = ExerciseType.WEIGHT_REPS,
         equipmentKeys = listOf("default_training_equipment_chest_press_machine")
+    ),
+    // Air Bike Exercises
+    ExerciseSeedData(
+        key = "default_exercise_air_bike_cardio",
+        muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.FULL_BODY),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.TIMED, // Can also be DISTANCE_TIMED
+        equipmentKeys = listOf("default_training_equipment_air_bike")
+    ),
+    // Treadmill Exercises
+    ExerciseSeedData(
+        key = "default_exercise_treadmill_running",
+        muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.DISTANCE_TIMED, // Can also be TIMED
+        equipmentKeys = listOf("default_training_equipment_treadmill")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_treadmill_walking",
+        muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.DISTANCE_TIMED, // Can also be TIMED
+        equipmentKeys = listOf("default_training_equipment_treadmill")
+    ),
+    // Seated Row Machine Exercises
+    ExerciseSeedData(
+        key = "default_exercise_seated_row_machine",
+        muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_seated_row_machine")
+    ),
+    // Rowing Machine Exercises
+    ExerciseSeedData(
+        key = "default_exercise_rowing_machine_cardio",
+        muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.FULL_BODY, MuscleGroup.BACK, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.ABS, MuscleGroup.SHOULDERS, MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.DISTANCE_TIMED, // Can also be TIMED
+        equipmentKeys = listOf("default_training_equipment_rowing_machine")
+    ),
+    // Battle Ropes Exercises
+    ExerciseSeedData(
+        key = "default_exercise_battle_ropes_waves",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.BICEPS, MuscleGroup.TRICEPS, MuscleGroup.FOREARMS, MuscleGroup.ABS, MuscleGroup.CARDIO),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.TIMED,
+        equipmentKeys = listOf("default_training_equipment_battle_ropes")
     )
 )
 

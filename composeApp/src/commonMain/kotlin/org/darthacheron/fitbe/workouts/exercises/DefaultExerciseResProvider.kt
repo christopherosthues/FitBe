@@ -13,6 +13,8 @@ import fitbe.composeapp.generated.resources.default_exercise_deadlift_barbell_na
 import fitbe.composeapp.generated.resources.default_exercise_deadlift_barbell_guide
 import fitbe.composeapp.generated.resources.default_exercise_romanian_deadlift_dumbbell_name
 import fitbe.composeapp.generated.resources.default_exercise_romanian_deadlift_dumbbell_guide
+import fitbe.composeapp.generated.resources.default_exercise_romanian_deadlift_barbell_name
+import fitbe.composeapp.generated.resources.default_exercise_romanian_deadlift_barbell_guide
 import fitbe.composeapp.generated.resources.default_exercise_bench_press_barbell_name
 import fitbe.composeapp.generated.resources.default_exercise_bench_press_barbell_guide
 import fitbe.composeapp.generated.resources.default_exercise_bench_press_dumbbell_name
@@ -78,6 +80,7 @@ object DefaultExerciseResProvider {
         "default_exercise_goblet_squat_kettlebell" to Res.string.default_exercise_goblet_squat_kettlebell_name,
         "default_exercise_deadlift_barbell" to Res.string.default_exercise_deadlift_barbell_name,
         "default_exercise_romanian_deadlift_dumbbell" to Res.string.default_exercise_romanian_deadlift_dumbbell_name,
+        "default_exercise_romanian_deadlift_barbell" to Res.string.default_exercise_romanian_deadlift_barbell_name,
         "default_exercise_bench_press_barbell" to Res.string.default_exercise_bench_press_barbell_name,
         "default_exercise_bench_press_dumbbell" to Res.string.default_exercise_bench_press_dumbbell_name,
         "default_exercise_overhead_press_barbell" to Res.string.default_exercise_overhead_press_barbell_name,
@@ -115,6 +118,7 @@ object DefaultExerciseResProvider {
         "default_exercise_goblet_squat_kettlebell" to Res.string.default_exercise_goblet_squat_kettlebell_guide,
         "default_exercise_deadlift_barbell" to Res.string.default_exercise_deadlift_barbell_guide,
         "default_exercise_romanian_deadlift_dumbbell" to Res.string.default_exercise_romanian_deadlift_dumbbell_guide,
+        "default_exercise_romanian_deadlift_barbell" to Res.string.default_exercise_romanian_deadlift_barbell_guide,
         "default_exercise_bench_press_barbell" to Res.string.default_exercise_bench_press_barbell_guide,
         "default_exercise_bench_press_dumbbell" to Res.string.default_exercise_bench_press_dumbbell_guide,
         "default_exercise_overhead_press_barbell" to Res.string.default_exercise_overhead_press_barbell_guide,
@@ -152,6 +156,7 @@ object DefaultExerciseResProvider {
         "default_exercise_goblet_squat_kettlebell" to Res.drawable.ic_launcher,
         "default_exercise_deadlift_barbell" to Res.drawable.ic_launcher,
         "default_exercise_romanian_deadlift_dumbbell" to Res.drawable.ic_launcher,
+        "default_exercise_romanian_deadlift_barbell" to Res.drawable.ic_launcher,
         "default_exercise_bench_press_barbell" to Res.drawable.ic_launcher,
         "default_exercise_bench_press_dumbbell" to Res.drawable.ic_launcher,
         "default_exercise_overhead_press_barbell" to Res.drawable.ic_launcher,

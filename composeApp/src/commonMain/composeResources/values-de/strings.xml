@@ -156,6 +156,7 @@
     <string name="default_exercise_goblet_squat_kettlebell_name">Goblet Squat (Kettlebell)</string>
     <string name="default_exercise_deadlift_barbell_name">Kreuzheben (Langhantel)</string>
     <string name="default_exercise_romanian_deadlift_dumbbell_name">Rumänisches Kreuzheben (Kurzhantel)</string>
+    <string name="default_exercise_romanian_deadlift_barbell_name">Rumänisches Kreuzheben (Langhantel)</string>
     <string name="default_exercise_bench_press_barbell_name">Bankdrücken (Langhantel)</string>
     <string name="default_exercise_bench_press_dumbbell_name">Bankdrücken (Kurzhantel)</string>
     <string name="default_exercise_overhead_press_barbell_name">Überkopfdrücken (Langhantel)</string>
@@ -175,6 +176,12 @@
     <string name="default_exercise_bench_press_smith_machine_name">Bankdrücken (Multipresse)</string>
     <string name="default_exercise_overhead_press_smith_machine_name">Überkopfdrücken (Multipresse)</string>
     <string name="default_exercise_chest_press_machine_name">Brustpresse (Maschine)</string>
+    <string name="default_exercise_air_bike_cardio_name">Air Bike Cardio</string>
+    <string name="default_exercise_treadmill_running_name">Laufband Laufen</string>
+    <string name="default_exercise_treadmill_walking_name">Laufband Gehen</string>
+    <string name="default_exercise_seated_row_machine_name">Rudern sitzend (Maschine)</string>
+    <string name="default_exercise_rowing_machine_cardio_name">Rudergerät Cardio</string>
+    <string name="default_exercise_battle_ropes_waves_name">Battle Rope Wellen</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">Anleitung für Kniebeugen...</string>
@@ -196,6 +203,7 @@
     <string name="default_exercise_goblet_squat_kettlebell_guide">Anleitung für Goblet Squats (Kettlebell)...</string>
     <string name="default_exercise_deadlift_barbell_guide">Anleitung für Kreuzheben (Langhantel)...</string>
     <string name="default_exercise_romanian_deadlift_dumbbell_guide">Anleitung für Rumänisches Kreuzheben (Kurzhantel)...</string>
+    <string name="default_exercise_romanian_deadlift_barbell_guide">Anleitung für Rumänisches Kreuzheben (Langhantel)...</string>
     <string name="default_exercise_bench_press_barbell_guide">Anleitung für Bankdrücken (Langhantel)...</string>
     <string name="default_exercise_bench_press_dumbbell_guide">Anleitung für Bankdrücken (Kurzhantel)...</string>
     <string name="default_exercise_overhead_press_barbell_guide">Anleitung für Überkopfdrücken (Langhantel)...</string>
@@ -215,6 +223,12 @@
     <string name="default_exercise_bench_press_smith_machine_guide">Anleitung für Bankdrücken (Multipresse)...</string>
     <string name="default_exercise_overhead_press_smith_machine_guide">Anleitung für Überkopfdrücken (Multipresse)...</string>
     <string name="default_exercise_chest_press_machine_guide">Anleitung für Brustpresse (Maschine)...</string>
+    <string name="default_exercise_air_bike_cardio_guide">Anleitung für Air Bike Cardio...</string>
+    <string name="default_exercise_treadmill_running_guide">Anleitung für Laufband Laufen...</string>
+    <string name="default_exercise_treadmill_walking_guide">Anleitung für Laufband Gehen...</string>
+    <string name="default_exercise_seated_row_machine_guide">Anleitung für Rudern sitzend (Maschine)...</string>
+    <string name="default_exercise_rowing_machine_cardio_guide">Anleitung für Rudergerät Cardio...</string>
+    <string name="default_exercise_battle_ropes_waves_guide">Anleitung für Battle Rope Wellen...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
