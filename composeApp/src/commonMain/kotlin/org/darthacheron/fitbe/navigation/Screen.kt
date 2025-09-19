@@ -60,4 +60,8 @@ sealed class Screen {
 
     @Serializable
     data class WorkoutTemplateDetail(val id: String?) : Screen()
+
+    @OptIn(ExperimentalUuidApi::class)
+    @Serializable
+    data class ExerciseExecution(val exerciseId: String) : Screen()
 }

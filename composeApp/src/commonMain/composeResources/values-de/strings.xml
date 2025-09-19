@@ -41,6 +41,40 @@
     <string name="workout_overview_scheduled_header">Geplante Workouts</string>
     <string name="workout_overview_past_header">Vergangene Workouts</string>
 
+    <!-- Exercise Execution -->
+    <string name="exercise_execution_back_button_description">Zurück navigieren</string>
+    <string name="exercise_execution_enter_sets_prompt">Wie viele Sätze wirst du machen?</string>
+    <string name="exercise_execution_number_of_sets">Anzahl der Sätze</string>
+    <string name="exercise_execution_confirm_sets_button">Sätze bestätigen</string>
+    <string name="exercise_execution_set_targets_prompt">Lege deine Ziele für diese Übung fest:</string>
+    <string name="exercise_execution_reps">Wdh.</string>
+    <string name="exercise_execution_weight_kg">Gewicht (kg)</string>
+    <string name="exercise_execution_duration_seconds">Dauer (Sekunden)</string>
+    <string name="exercise_execution_distance_km">Distanz (km)</string>
+    <string name="exercise_execution_start_workout_button">Workout starten</string>
+    <string name="exercise_execution_exercise_count">Übung %1$d / %2$d</string>
+    <string name="exercise_execution_set_count">Satz %1$d / %2$d</string>
+    <string name="exercise_execution_target_display">Ziel: %1$s</string>
+    <string name="exercise_execution_previous_set_button">Vorheriger Satz</string>
+    <string name="exercise_execution_next_set_button">Nächster Satz</string>
+    <string name="exercise_execution_complete_set_button">Satz abschließen</string>
+    <string name="exercise_execution_rest_timer_label">PAUSE</string>
+    <string name="exercise_execution_next_set_info">Nächster: Satz %1$d - %2$s</string>
+    <string name="exercise_execution_skip_rest_button">Pause überspringen</string>
+    <string name="exercise_execution_log_actuals_prompt_dialog_title">Ist-Werte für Satz %1$d eintragen</string>
+    <string name="exercise_execution_save_set_button">Satz speichern</string>
+    <string name="exercise_execution_cancel_button">Abbrechen</string>
+    <string name="exercise_execution_workout_completed_message">Workout abgeschlossen!</string>
+    <string name="exercise_execution_finish_button">Beenden</string>
+    <string name="exercise_execution_title_set_sets">Anzahl Sätze festlegen</string>
+    <string name="exercise_execution_title_set_targets">Ziele festlegen</string>
+    <string name="exercise_execution_title_set_progress">Satz läuft</string>
+    <string name="exercise_execution_title_resting">Pause</string>
+    <string name="exercise_execution_title_log_set">Ist-Werte eintragen</string>
+    <string name="exercise_execution_title_completed">Workout beendet</string>
+    <string name="exercise_execution_cancel_workout_action">Workout abbrechen</string>
+    <string name="exercise_execution_loading">Lädt...</string>
+
     <!-- Exercise -->
     <string name="exercise_no_exercises">Keine Übungen vorhanden. Füge welche hinzu!</string>
     <string name="exercise_no_filtered_exercises">Keine Übungen gefunden.</string>

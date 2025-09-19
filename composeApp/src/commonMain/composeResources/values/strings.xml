@@ -41,6 +41,40 @@
     <string name="workout_overview_scheduled_header">Scheduled Workouts</string>
     <string name="workout_overview_past_header">Past Workouts</string>
 
+    <!-- Exercise Execution -->
+    <string name="exercise_execution_back_button_description">Navigate Up</string>
+    <string name="exercise_execution_enter_sets_prompt">How many sets will you do?</string>
+    <string name="exercise_execution_number_of_sets">Number of Sets</string>
+    <string name="exercise_execution_confirm_sets_button">Confirm Sets</string>
+    <string name="exercise_execution_set_targets_prompt">Set your targets for this exercise:</string>
+    <string name="exercise_execution_reps">Reps</string>
+    <string name="exercise_execution_weight_kg">Weight (kg)</string>
+    <string name="exercise_execution_duration_seconds">Duration (seconds)</string>
+    <string name="exercise_execution_distance_km">Distance (km)</string>
+    <string name="exercise_execution_start_workout_button">Start Workout</string>
+    <string name="exercise_execution_exercise_count">Exercise %1$d / %2$d</string>
+    <string name="exercise_execution_set_count">Set %1$d / %2$d</string>
+    <string name="exercise_execution_target_display">Target: %1$s</string>
+    <string name="exercise_execution_previous_set_button">Previous Set</string>
+    <string name="exercise_execution_next_set_button">Next Set</string>
+    <string name="exercise_execution_complete_set_button">Complete Set</string>
+    <string name="exercise_execution_rest_timer_label">REST</string>
+    <string name="exercise_execution_next_set_info">Next: Set %1$d - %2$s</string>
+    <string name="exercise_execution_skip_rest_button">Skip Rest</string>
+    <string name="exercise_execution_log_actuals_prompt_dialog_title">Log Actuals for Set %1$d</string>
+    <string name="exercise_execution_save_set_button">Save Set</string>
+    <string name="exercise_execution_cancel_button">Cancel</string>
+    <string name="exercise_execution_workout_completed_message">Workout Completed!</string>
+    <string name="exercise_execution_finish_button">Finish</string>
+    <string name="exercise_execution_title_set_sets">Set Number of Sets</string>
+    <string name="exercise_execution_title_set_targets">Set Targets</string>
+    <string name="exercise_execution_title_set_progress">Set in Progress</string>
+    <string name="exercise_execution_title_resting">Resting</string>
+    <string name="exercise_execution_title_log_set">Log Set Actuals</string>
+    <string name="exercise_execution_title_completed">Workout Finished</string>
+    <string name="exercise_execution_cancel_workout_action">Cancel Workout</string>
+    <string name="exercise_execution_loading">Loading...</string>
+
     <!-- Exercise -->
     <string name="exercise_no_exercises">No exercises available. Add some!</string>
     <string name="exercise_no_filtered_exercises">No exercises found.</string>
