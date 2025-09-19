@@ -150,29 +150,71 @@
     <string name="default_exercise_side_lunges_name">Seitliche Ausfallschritte</string>
     <string name="default_exercise_burpees_name">Burpees</string>
     <string name="default_exercise_mountain_climbers_name">Mountain Climbers</string>
-    <string name="default_exercise_skull_crushers_name">Skull Crushers</string>
-    <string name="default_exercise_butterfly_patting_name">Butterfly Patting</string>
-    <string name="default_exercise_supine_opening_closing_name">Supine Opening &amp; Closing</string>
-    <string name="default_exercise_supported_hip_lift_name">Supported Hip Lift</string>
+    <string name="default_exercise_squat_bodyweight_name">Kniebeuge (Körpergewicht)</string>
+    <string name="default_exercise_squat_barbell_name">Kniebeuge (Langhantel)</string>
+    <string name="default_exercise_squat_dumbbell_name">Kniebeuge (Kurzhantel)</string>
+    <string name="default_exercise_goblet_squat_kettlebell_name">Goblet Squat (Kettlebell)</string>
+    <string name="default_exercise_deadlift_barbell_name">Kreuzheben (Langhantel)</string>
+    <string name="default_exercise_romanian_deadlift_dumbbell_name">Rumänisches Kreuzheben (Kurzhantel)</string>
+    <string name="default_exercise_bench_press_barbell_name">Bankdrücken (Langhantel)</string>
+    <string name="default_exercise_bench_press_dumbbell_name">Bankdrücken (Kurzhantel)</string>
+    <string name="default_exercise_overhead_press_barbell_name">Überkopfdrücken (Langhantel)</string>
+    <string name="default_exercise_overhead_press_dumbbell_name">Überkopfdrücken (Kurzhantel)</string>
+    <string name="default_exercise_push_ups_bodyweight_name">Liegestütze (Körpergewicht)</string>
+    <string name="default_exercise_push_ups_handles_name">Liegestütze (Griffe)</string>
+    <string name="default_exercise_lunges_bodyweight_name">Ausfallschritte (Körpergewicht)</string>
+    <string name="default_exercise_lunges_dumbbell_name">Ausfallschritte (Kurzhantel)</string>
+    <string name="default_exercise_lunges_barbell_name">Ausfallschritte (Langhantel)</string>
+    <string name="default_exercise_side_lunges_bodyweight_name">Seitliche Ausfallschritte (Körpergewicht)</string>
+    <string name="default_exercise_side_lunges_dumbbell_name">Seitliche Ausfallschritte (Kurzhantel)</string>
+    <string name="default_exercise_rack_pulls_barbell_power_rack_name">Rack Pulls (Langhantel, Power Rack)</string>
+    <string name="default_exercise_squat_barbell_power_rack_name">Kniebeuge (Langhantel, Power Rack)</string>
+    <string name="default_exercise_bench_press_barbell_power_rack_name">Bankdrücken (Langhantel, Power Rack)</string>
+    <string name="default_exercise_overhead_press_barbell_power_rack_name">Überkopfdrücken (Langhantel, Power Rack)</string>
+    <string name="default_exercise_squat_smith_machine_name">Kniebeuge (Multipresse)</string>
+    <string name="default_exercise_bench_press_smith_machine_name">Bankdrücken (Multipresse)</string>
+    <string name="default_exercise_overhead_press_smith_machine_name">Überkopfdrücken (Multipresse)</string>
+    <string name="default_exercise_chest_press_machine_name">Brustpresse (Maschine)</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">Anleitung für Kniebeugen...</string>
     <string name="default_exercise_deadlift_guide">Anleitung für Kreuzheben...</string>
     <string name="default_exercise_bench_press_guide">Anleitung für Bankdrücken...</string>
     <string name="default_exercise_overhead_press_guide">Anleitung für Überkopfdrücken...</string>
-    <string name="default_exercise_pull_ups_guide">Anleitung für Klimmzüge...</string>
+    <string name="default_exercise_pull_ups_guide">Anleitung für Klimmzüge an der Klimmzugstange...</string>
     <string name="default_exercise_push_ups_guide">Anleitung für Liegestütze...</string>
     <string name="default_exercise_lunges_guide">Anleitung für Ausfallschritte...</string>
-    <string name="default_exercise_sit_ups_guide">Anleitung für Sit-ups...</string>
-    <string name="default_exercise_plank_guide">Anleitung für Plank...</string>
-    <string name="default_exercise_jumping_jacks_guide">Anleitung für Hampelmänner...</string>
+    <string name="default_exercise_sit_ups_guide">Anleitung für Sit-ups (Körpergewicht)...</string>
+    <string name="default_exercise_plank_guide">Anleitung für Plank (Körpergewicht)...</string>
+    <string name="default_exercise_jumping_jacks_guide">Anleitung für Hampelmänner (Körpergewicht)...</string>
     <string name="default_exercise_side_lunges_guide">Anleitung für Seitliche Ausfallschritte...</string>
-    <string name="default_exercise_burpees_guide">Anleitung für Burpees...</string>
-    <string name="default_exercise_mountain_climbers_guide">Anleitung für Mountain Climbers...</string>
-    <string name="default_exercise_skull_crushers_guide">Anleitung für Skull Crushers...</string>
-    <string name="default_exercise_butterfly_patting_guide">Anleitung für Butterfly Patting...</string>
-    <string name="default_exercise_supine_opening_closing_guide">Anleitung für Supine Opening &amp; Closing...</string>
-    <string name="default_exercise_supported_hip_lift_guide">Anleitung für Supported Hip Lift...</string>
+    <string name="default_exercise_burpees_guide">Anleitung für Burpees (Körpergewicht)...</string>
+    <string name="default_exercise_mountain_climbers_guide">Anleitung für Mountain Climbers (Körpergewicht)...</string>
+    <string name="default_exercise_squat_bodyweight_guide">Anleitung für Kniebeugen (Körpergewicht)...</string>
+    <string name="default_exercise_squat_barbell_guide">Anleitung für Kniebeugen (Langhantel)...</string>
+    <string name="default_exercise_squat_dumbbell_guide">Anleitung für Kniebeugen (Kurzhantel)...</string>
+    <string name="default_exercise_goblet_squat_kettlebell_guide">Anleitung für Goblet Squats (Kettlebell)...</string>
+    <string name="default_exercise_deadlift_barbell_guide">Anleitung für Kreuzheben (Langhantel)...</string>
+    <string name="default_exercise_romanian_deadlift_dumbbell_guide">Anleitung für Rumänisches Kreuzheben (Kurzhantel)...</string>
+    <string name="default_exercise_bench_press_barbell_guide">Anleitung für Bankdrücken (Langhantel)...</string>
+    <string name="default_exercise_bench_press_dumbbell_guide">Anleitung für Bankdrücken (Kurzhantel)...</string>
+    <string name="default_exercise_overhead_press_barbell_guide">Anleitung für Überkopfdrücken (Langhantel)...</string>
+    <string name="default_exercise_overhead_press_dumbbell_guide">Anleitung für Überkopfdrücken (Kurzhantel)...</string>
+    <string name="default_exercise_push_ups_bodyweight_guide">Anleitung für Liegestütze (Körpergewicht)...</string>
+    <string name="default_exercise_push_ups_handles_guide">Anleitung für Liegestütze (Griffe)...</string>
+    <string name="default_exercise_lunges_bodyweight_guide">Anleitung für Ausfallschritte (Körpergewicht)...</string>
+    <string name="default_exercise_lunges_dumbbell_guide">Anleitung für Ausfallschritte (Kurzhantel)...</string>
+    <string name="default_exercise_lunges_barbell_guide">Anleitung für Ausfallschritte (Langhantel)...</string>
+    <string name="default_exercise_side_lunges_bodyweight_guide">Anleitung für Seitliche Ausfallschritte (Körpergewicht)...</string>
+    <string name="default_exercise_side_lunges_dumbbell_guide">Anleitung für Seitliche Ausfallschritte (Kurzhantel)...</string>
+    <string name="default_exercise_rack_pulls_barbell_power_rack_guide">Anleitung für Rack Pulls (Langhantel, Power Rack)...</string>
+    <string name="default_exercise_squat_barbell_power_rack_guide">Anleitung für Kniebeuge (Langhantel, Power Rack)...</string>
+    <string name="default_exercise_bench_press_barbell_power_rack_guide">Anleitung für Bankdrücken (Langhantel, Power Rack)...</string>
+    <string name="default_exercise_overhead_press_barbell_power_rack_guide">Anleitung für Überkopfdrücken (Langhantel, Power Rack)...</string>
+    <string name="default_exercise_squat_smith_machine_guide">Anleitung für Kniebeuge (Multipresse)...</string>
+    <string name="default_exercise_bench_press_smith_machine_guide">Anleitung für Bankdrücken (Multipresse)...</string>
+    <string name="default_exercise_overhead_press_smith_machine_guide">Anleitung für Überkopfdrücken (Multipresse)...</string>
+    <string name="default_exercise_chest_press_machine_guide">Anleitung für Brustpresse (Maschine)...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
@@ -202,7 +244,7 @@
     <string name="training_equipment_detail_error_loading">Fehler beim Laden des Geräts</string>
     <string name="training_equipment_detail_error_missing_name">Name darf nicht leer sein</string>
     <string name="training_equipment_detail_error_saving">Fehler beim Speichern des Geräts</string>
-    <string name="training_equipment_detail_error_reset_default_equipment">Fehler beim Zurücksetzen des Geräts</string> <!-- Should be training_equipment_detail_error_reset_default_equipment -->
+    <string name="training_equipment_detail_error_reset_default_equipment">Fehler beim Zurücksetzen des Geräts</string>
     <string name="training_equipment_detail_error_reset_new_equipment">Neues Gerät kann nicht zurückgesetzt werden.</string>
     <string name="training_equipment_detail_error_reset_non_default_equipment">Nicht-Standard-Gerät kann nicht zurückgesetzt werden.</string>
     <string name="training_equipment_detail_error_delete_equipment">Fehler beim Löschen des Geräts</string>
@@ -260,6 +302,9 @@
     <string name="default_training_equipment_power_rack">Power Rack</string>
     <string name="default_training_equipment_squat_rack">Squat Rack</string>
     <string name="default_training_equipment_spotter_arms">Sicherheitsablagen</string>
+    <string name="default_training_equipment_yoga_mat">Yogamatte</string>
+    <string name="default_training_equipment_jump_rope">Springseil</string>
+    <string name="default_training_equipment_ab_wheel">Bauchroller</string>
 
     <!-- Date unit -->
     <string name="date_unit_day">Tag</string>
@@ -312,45 +357,45 @@
         <item quantity="other">Tassen</item>
     </plurals>
     <plurals name="fluid_unit_small_glass">
-        <item quantity="zero">kleine Gl\u00e4ser</item>
+        <item quantity="zero">kleine Gläser</item>
         <item quantity="one">kleines Glas</item>
-        <item quantity="other">kleine Gl\u00e4ser</item>
+        <item quantity="other">kleine Gläser</item>
     </plurals>
     <plurals name="fluid_unit_normal_glass">
-        <item quantity="zero">normale Gl\u00e4ser</item>
+        <item quantity="zero">normale Gläser</item>
         <item quantity="one">normales Glas</item>
-        <item quantity="other">normale Gl\u00e4ser</item>
+        <item quantity="other">normale Gläser</item>
     </plurals>
     <plurals name="fluid_unit_large_glass">
-        <item quantity="zero">gro\u00dfe Gl\u00e4ser</item>
-        <item quantity="one">gro\u00dfes Glas</item>
-        <item quantity="other">gro\u00dfe Gl\u00e4ser</item>
+        <item quantity="zero">große Gläser</item>
+        <item quantity="one">großes Glas</item>
+        <item quantity="other">große Gläser</item>
     </plurals>
     <string name="fluid_unit_milliliter">ml</string>
     <string name="fluid_unit_centiliter">cl</string>
     <string name="fluid_unit_deciliter">dl</string>
     <string name="fluid_unit_liter">l</string>
 
-    <string name="add_beverage">Getr\u00e4nk hinzuf\u00fcgen</string>
+    <string name="add_beverage">Getränk hinzufügen</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
         <item quantity="one">%1$d Tasse %2$s</item>
         <item quantity="other">%1$d Tassen %2$s</item>
     </plurals>
     <plurals name="beverage_in_small_glass">
-        <item quantity="zero">%1$d kleine Gl\u00e4ser %2$s</item>
+        <item quantity="zero">%1$d kleine Gläser %2$s</item>
         <item quantity="one">%1$d kleines Glas %2$s</item>
-        <item quantity="other">%1$d kleine Gl\u00e4ser %2$s</item>
+        <item quantity="other">%1$d kleine Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_normal_glass">
-        <item quantity="zero">%1$d normale Gl\u00e4ser %2$s</item>
+        <item quantity="zero">%1$d normale Gläser %2$s</item>
         <item quantity="one">%1$d normales Glas %2$s</item>
-        <item quantity="other">%1$d normale Gl\u00e4ser %2$s</item>
+        <item quantity="other">%1$d normale Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_large_glass">
-        <item quantity="zero">%1$d gro\u00dfe Gl\u00e4ser %2$s</item>
-        <item quantity="one">%1$d gro\u00dfes Glas %2$s</item>
-        <item quantity="other">%1$d gro\u00dfe Gl\u00e4ser %2$s</item>
+        <item quantity="zero">%1$d große Gläser %2$s</item>
+        <item quantity="one">%1$d großes Glas %2$s</item>
+        <item quantity="other">%1$d große Gläser %2$s</item>
     </plurals>
     <string name="beverage_in_milliliter">%1$d ml %2$s</string>
     <string name="beverage_in_centiliter">%1$d cl %2$s</string>

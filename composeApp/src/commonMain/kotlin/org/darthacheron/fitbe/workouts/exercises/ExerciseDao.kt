@@ -9,7 +9,6 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -24,6 +23,9 @@ interface ExerciseDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDefaultExercise(defaultExercise: DefaultExerciseEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertDefaultExerciseEquipmentCrossRefs(crossRefs: List<DefaultExerciseEquipmentCrossRef>)
 
     @Query("SELECT * FROM default_exercises WHERE id = :exerciseId")
     fun getDefaultExerciseById(exerciseId: Uuid): Flow<DefaultExerciseEntity?>
@@ -73,6 +75,9 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM exercises")
     fun getAllExercises(): Flow<List<ExerciseEntity>>
+    
+    @Query("SELECT * FROM default_exercises")
+    suspend fun getAllDefaultExercisesSuspend(): List<DefaultExerciseEntity>
 
     // Methods for managing ProfileFavoriteExerciseCrossRef
     @Insert(onConflict = OnConflictStrategy.IGNORE)

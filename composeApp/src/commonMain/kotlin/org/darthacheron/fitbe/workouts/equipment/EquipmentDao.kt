@@ -29,6 +29,9 @@ interface EquipmentDao {
     @Query("SELECT * FROM default_training_equipment WHERE id = :equipmentId")
     suspend fun getDefaultEquipmentByIdForReset(equipmentId: Uuid): DefaultTrainingEquipmentEntity?
 
+    @Query("SELECT * FROM default_training_equipment")
+    suspend fun getAllDefaultEquipmentSuspend(): List<DefaultTrainingEquipmentEntity>
+
     @Transaction
     suspend fun resetEquipmentToDefault(equipmentId: Uuid) {
         val defaultEquipment = getDefaultEquipmentByIdForReset(equipmentId)

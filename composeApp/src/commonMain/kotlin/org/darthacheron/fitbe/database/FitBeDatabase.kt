@@ -45,10 +45,7 @@ import org.darthacheron.fitbe.profile.ProfileEntity
 import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.ProfileFavoriteWorkoutTemplateCrossRef
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionEntity
-import org.darthacheron.fitbe.workouts.workouts.PerformedSetEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionDao
 import org.darthacheron.fitbe.utils.roundToDecimals
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.hours
@@ -65,8 +62,6 @@ import kotlin.uuid.ExperimentalUuidApi
         DefaultExerciseEquipmentCrossRef::class,
         WorkoutTemplateEntity::class,
         DefaultWorkoutTemplateEntity::class, ProfileFavoriteWorkoutTemplateCrossRef::class,
-        WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
-    // WorkoutTemplateExerciseEntity::class,WorkoutTemplateSetEntity::class,
     ],
     version = 1
 )
@@ -88,7 +83,6 @@ abstract class FitBeDatabase : RoomDatabase() {
 
     // New DAOs for Workouts
     abstract val workoutTemplateDao: WorkoutTemplateDao
-    abstract val workoutExecutionSessionDao: WorkoutExecutionSessionDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

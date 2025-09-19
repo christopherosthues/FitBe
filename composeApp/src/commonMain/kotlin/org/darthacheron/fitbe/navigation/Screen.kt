@@ -56,9 +56,6 @@ sealed class Screen {
     data object Settings : Screen()
 
     @Serializable
-    data object PerformedWorkoutsOverview : Screen()
-
-    @Serializable
     data object WorkoutTemplatesOverview : Screen()
 
     @Serializable

@@ -15,9 +15,7 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository
-import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
@@ -56,7 +54,6 @@ val sharedModule = module {
     singleOf(::BeverageRepository)
     singleOf(::BodyWeightRepository)
     singleOf(::ProfileRepository)
-    singleOf(::WorkoutExecutionRepository)
     singleOf(::WorkoutTemplateRepository)
 
     // Unit Converters
@@ -79,7 +76,6 @@ val sharedModule = module {
     single { get<FitBeDatabase>().exerciseDao }
     single { get<FitBeDatabase>().equipmentDao }
     single { get<FitBeDatabase>().workoutTemplateDao }
-    single { get<FitBeDatabase>().workoutExecutionSessionDao }
 
     // Services and Managers
     singleOf(::StartUpService)
@@ -101,7 +97,6 @@ val sharedModule = module {
     viewModelOf(::NutritionOverviewViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::SettingsViewModel)
-    viewModelOf(::PerformedWorkoutsOverviewViewModel)
     viewModelOf(::WorkoutTemplatesOverviewViewModel)
     viewModelOf(::WorkoutTemplateDetailViewModel)
 }

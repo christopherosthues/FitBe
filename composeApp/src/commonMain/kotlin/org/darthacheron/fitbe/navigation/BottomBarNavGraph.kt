@@ -19,9 +19,6 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailView
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentView
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
-// New imports for WorkoutOverview
-import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewView
-import org.darthacheron.fitbe.workouts.workouts.PerformedWorkoutsOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
@@ -156,12 +153,6 @@ fun BottomBarNavGraph(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )
             WorkoutTemplateDetailView(id, viewModel)
-        }
-        composable<Screen.PerformedWorkoutsOverview> {
-            val viewModel = koinViewModel<PerformedWorkoutsOverviewViewModel>(
-                parameters = { parametersOf(bottomBarNavHostController) }
-            )
-            PerformedWorkoutsOverviewView(viewModel)
         }
     }
 }
