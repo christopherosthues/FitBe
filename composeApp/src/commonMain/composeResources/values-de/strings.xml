@@ -137,13 +137,7 @@
     <string name="training_goal_strength_endurance">Kraftausdauer</string>
 
     <!-- Default Exercise Names -->
-    <string name="default_exercise_squat_name">Kniebeuge</string>
-    <string name="default_exercise_deadlift_name">Kreuzheben</string>
-    <string name="default_exercise_bench_press_name">Bankdrücken</string>
-    <string name="default_exercise_overhead_press_name">Überkopfdrücken</string>
     <string name="default_exercise_pull_ups_name">Klimmzüge</string>
-    <string name="default_exercise_push_ups_name">Liegestütze</string>
-    <string name="default_exercise_lunges_name">Ausfallschritte</string>
     <string name="default_exercise_sit_ups_name">Sit-ups</string>
     <string name="default_exercise_plank_name">Plank</string>
     <string name="default_exercise_jumping_jacks_name">Hampelmänner</string>

@@ -137,13 +137,7 @@
     <string name="training_goal_strength_endurance">Strength Endurance</string>
 
     <!-- Default Exercise Names -->
-    <string name="default_exercise_squat_name">Squat</string>
-    <string name="default_exercise_deadlift_name">Deadlift</string>
-    <string name="default_exercise_bench_press_name">Bench Press</string>
-    <string name="default_exercise_overhead_press_name">Overhead Press</string>
     <string name="default_exercise_pull_ups_name">Pull Ups</string>
-    <string name="default_exercise_push_ups_name">Push Ups</string>
-    <string name="default_exercise_lunges_name">Lunges</string>
     <string name="default_exercise_sit_ups_name">Sit Ups</string>
     <string name="default_exercise_plank_name">Plank</string>
     <string name="default_exercise_jumping_jacks_name">Jumping Jacks</string>
