@@ -193,6 +193,12 @@
     <string name="default_exercise_kettlebell_farmers_walk_name">Kettlebell Farmer's Walk</string>
     <string name="default_exercise_kettlebell_lunges_name">Kettlebell Lunges</string>
     <string name="default_exercise_kettlebell_deadlifts_name">Kettlebell Deadlifts</string>
+    <string name="default_exercise_ez_bar_curl_name">EZ-Bar Curl</string>
+    <string name="default_exercise_ez_bar_preacher_curl_name">EZ-Bar Preacher Curl</string>
+    <string name="default_exercise_ez_bar_reverse_curl_name">EZ-Bar Reverse Curl</string>
+    <string name="default_exercise_ez_bar_skullcrusher_name">EZ-Bar Skullcrusher</string>
+    <string name="default_exercise_ez_bar_close_grip_bench_press_name">EZ-Bar Close-Grip Bench Press</string>
+    <string name="default_exercise_ez_bar_upright_row_name">EZ-Bar Upright Row</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">How to perform a Squat...</string>
@@ -251,6 +257,12 @@
     <string name="default_exercise_kettlebell_farmers_walk_guide">Guide for Kettlebell Farmer's Walk...</string>
     <string name="default_exercise_kettlebell_lunges_guide">Guide for Kettlebell Lunges...</string>
     <string name="default_exercise_kettlebell_deadlifts_guide">Guide for Kettlebell Deadlifts...</string>
+    <string name="default_exercise_ez_bar_curl_guide">Guide for EZ-Bar Curl...</string>
+    <string name="default_exercise_ez_bar_preacher_curl_guide">Guide for EZ-Bar Preacher Curl...</string>
+    <string name="default_exercise_ez_bar_reverse_curl_guide">Guide for EZ-Bar Reverse Curl...</string>
+    <string name="default_exercise_ez_bar_skullcrusher_guide">Guide for EZ-Bar Skullcrusher...</string>
+    <string name="default_exercise_ez_bar_close_grip_bench_press_guide">Guide for EZ-Bar Close-Grip Bench Press...</string>
+    <string name="default_exercise_ez_bar_upright_row_guide">Guide for EZ-Bar Upright Row...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>

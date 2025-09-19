@@ -108,8 +108,29 @@ import fitbe.composeapp.generated.resources.default_exercise_kettlebell_lunges_n
 import fitbe.composeapp.generated.resources.default_exercise_kettlebell_lunges_guide
 import fitbe.composeapp.generated.resources.default_exercise_kettlebell_deadlifts_name
 import fitbe.composeapp.generated.resources.default_exercise_kettlebell_deadlifts_guide
+// EZ-Curl Bar Exercise Imports
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_curl_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_curl_guide
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_preacher_curl_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_preacher_curl_guide
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_reverse_curl_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_reverse_curl_guide
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_skullcrusher_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_skullcrusher_guide
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_close_grip_bench_press_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_close_grip_bench_press_guide
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_upright_row_name
+import fitbe.composeapp.generated.resources.default_exercise_ez_bar_upright_row_guide
 
-import fitbe.composeapp.generated.resources.ic_launcher
+import fitbe.composeapp.generated.resources.ic_launcher // Default image
+//import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_curl // Specific image
+// Add other specific EZ-Curl Bar images if they exist, e.g.:
+// import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_preacher_curl 
+// import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_reverse_curl
+// import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_skullcrusher
+// import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_close_grip_bench_press
+// import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_upright_row
+
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
@@ -172,7 +193,14 @@ object DefaultExerciseResProvider {
         "default_exercise_kettlebell_russian_twists" to Res.string.default_exercise_kettlebell_russian_twists_name,
         "default_exercise_kettlebell_farmers_walk" to Res.string.default_exercise_kettlebell_farmers_walk_name,
         "default_exercise_kettlebell_lunges" to Res.string.default_exercise_kettlebell_lunges_name,
-        "default_exercise_kettlebell_deadlifts" to Res.string.default_exercise_kettlebell_deadlifts_name
+        "default_exercise_kettlebell_deadlifts" to Res.string.default_exercise_kettlebell_deadlifts_name,
+        // EZ-Curl Bar Exercises
+        "default_exercise_ez_bar_curl" to Res.string.default_exercise_ez_bar_curl_name,
+        "default_exercise_ez_bar_preacher_curl" to Res.string.default_exercise_ez_bar_preacher_curl_name,
+        "default_exercise_ez_bar_reverse_curl" to Res.string.default_exercise_ez_bar_reverse_curl_name,
+        "default_exercise_ez_bar_skullcrusher" to Res.string.default_exercise_ez_bar_skullcrusher_name,
+        "default_exercise_ez_bar_close_grip_bench_press" to Res.string.default_exercise_ez_bar_close_grip_bench_press_name,
+        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_name
     )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
@@ -233,7 +261,14 @@ object DefaultExerciseResProvider {
         "default_exercise_kettlebell_russian_twists" to Res.string.default_exercise_kettlebell_russian_twists_guide,
         "default_exercise_kettlebell_farmers_walk" to Res.string.default_exercise_kettlebell_farmers_walk_guide,
         "default_exercise_kettlebell_lunges" to Res.string.default_exercise_kettlebell_lunges_guide,
-        "default_exercise_kettlebell_deadlifts" to Res.string.default_exercise_kettlebell_deadlifts_guide
+        "default_exercise_kettlebell_deadlifts" to Res.string.default_exercise_kettlebell_deadlifts_guide,
+        // EZ-Curl Bar Exercises
+        "default_exercise_ez_bar_curl" to Res.string.default_exercise_ez_bar_curl_guide,
+        "default_exercise_ez_bar_preacher_curl" to Res.string.default_exercise_ez_bar_preacher_curl_guide,
+        "default_exercise_ez_bar_reverse_curl" to Res.string.default_exercise_ez_bar_reverse_curl_guide,
+        "default_exercise_ez_bar_skullcrusher" to Res.string.default_exercise_ez_bar_skullcrusher_guide,
+        "default_exercise_ez_bar_close_grip_bench_press" to Res.string.default_exercise_ez_bar_close_grip_bench_press_guide,
+        "default_exercise_ez_bar_upright_row" to Res.string.default_exercise_ez_bar_upright_row_guide
     )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
@@ -294,6 +329,13 @@ object DefaultExerciseResProvider {
         "default_exercise_kettlebell_russian_twists" to Res.drawable.ic_launcher,
         "default_exercise_kettlebell_farmers_walk" to Res.drawable.ic_launcher,
         "default_exercise_kettlebell_lunges" to Res.drawable.ic_launcher,
-        "default_exercise_kettlebell_deadlifts" to Res.drawable.ic_launcher
+        "default_exercise_kettlebell_deadlifts" to Res.drawable.ic_launcher,
+        // EZ-Curl Bar Exercises
+        "default_exercise_ez_bar_curl" to Res.drawable.ic_launcher, // Res.drawable.ic_default_exercise_ez_bar_curl, // Specific image
+        "default_exercise_ez_bar_preacher_curl" to Res.drawable.ic_launcher, // Placeholder, replace if specific image exists
+        "default_exercise_ez_bar_reverse_curl" to Res.drawable.ic_launcher, // Placeholder
+        "default_exercise_ez_bar_skullcrusher" to Res.drawable.ic_launcher, // Placeholder
+        "default_exercise_ez_bar_close_grip_bench_press" to Res.drawable.ic_launcher, // Placeholder
+        "default_exercise_ez_bar_upright_row" to Res.drawable.ic_launcher // Placeholder
     )
 }

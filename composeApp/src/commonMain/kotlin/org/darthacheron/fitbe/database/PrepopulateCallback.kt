@@ -435,6 +435,49 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         recommendedFor = listOf(RecommendedFor.Workout),
         exerciseType = ExerciseType.WEIGHT_REPS,
         equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    // EZ-Curl Bar Exercises
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_curl",
+        muscleGroups = listOf(MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_preacher_curl",
+        muscleGroups = listOf(MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar", "default_training_equipment_bench") // Assuming preacher curls might use a bench
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_reverse_curl",
+        muscleGroups = listOf(MuscleGroup.FOREARMS, MuscleGroup.BICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_skullcrusher",
+        muscleGroups = listOf(MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_close_grip_bench_press",
+        muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ez_bar_upright_row",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.BICEPS, MuscleGroup.BACK), // Traps are part of back or shoulders depending on specificity
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ez_curl_bar")
     )
 )
 
