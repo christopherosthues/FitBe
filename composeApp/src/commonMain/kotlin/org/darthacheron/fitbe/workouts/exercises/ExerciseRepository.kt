@@ -23,11 +23,11 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
         exerciseDao.getExerciseWithEquipment(exerciseId).map { it?.toExerciseWithEquipment() }
 
     suspend fun upsertExercise(exercise: Exercise) {
-        exerciseDao.upsertExercise(toEntity(exercise))
+        exerciseDao.upsertExercise(exercise.toEntity())
     }
 
     suspend fun deleteExercise(exercise: Exercise) {
-        exerciseDao.deleteExercise(toEntity(exercise))
+        exerciseDao.deleteExercise(exercise.toEntity())
     }
 
     suspend fun resetExerciseToDefault(exerciseId: Uuid) {

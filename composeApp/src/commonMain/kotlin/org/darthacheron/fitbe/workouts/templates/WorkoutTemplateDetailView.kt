@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -102,7 +105,11 @@ fun WorkoutTemplateDetailView(
                     .padding(bottom = 72.dp, start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
                 // Top static info
-                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Box {
                         if (uiState.imageUri != null) {
                             ImageWithDefault(
@@ -176,11 +183,11 @@ fun WorkoutTemplateDetailView(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 var selectedTabIndex by remember { mutableStateOf(0) }
-                val tabs = listOf("Exercises")
+                val tabs = listOf("Warmup", "Exercises")
 
                 PrimaryTabRow(
                     selectedTabIndex = selectedTabIndex,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(horizontal=16.dp)
                 ) {
                     tabs.forEachIndexed { index, title ->
                         Tab(
@@ -191,28 +198,40 @@ fun WorkoutTemplateDetailView(
                     }
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    uiState.exercises.forEach { exerciseDetail ->
-                        // Box for horizontal padding removed, add padding to ExerciseItemCard if needed
-                        ExerciseItemCard(exercise = exerciseDetail, isEditing = uiState.isEditing)
-                    }
+                when (selectedTabIndex) {
+                    0 -> ExercisesTabContent(uiState.warmups, uiState.isEditing, Modifier.fillMaxSize())
+                    1 -> ExercisesTabContent(uiState.workouts, uiState.isEditing, Modifier.fillMaxSize())
+                    else -> ExercisesTabContent(uiState.warmups, uiState.isEditing, Modifier.fillMaxSize())
                 }
             }
 
-            TextButton(
-                onClick = { /* TODO: Implement start workout action, perhaps call viewModel.startWorkout() */ },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-            ) {
-                Text("Start Workout") // TODO: Make string resource
-            }
+//            TextButton(
+//                onClick = { /* TODO: Implement start workout action, perhaps call viewModel.startWorkout() */ },
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 16.dp, vertical = 16.dp)
+//            ) {
+//                Text("Start Workout") // TODO: Make string resource
+//            }
+        }
+    }
+}
+
+@Composable
+private fun ExercisesTabContent(
+    exercises: List<WorkoutTemplateExerciseWithDetails>, isEditing: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        exercises.forEach { exerciseDetail ->
+            // Box for horizontal padding removed, add padding to ExerciseItemCard if needed
+            ExerciseItemCard(exercise = exerciseDetail, isEditing = isEditing)
         }
     }
 }
@@ -221,7 +240,6 @@ fun WorkoutTemplateDetailView(
 @Composable
 private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEditing: Boolean) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), // Added horizontal padding here
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -231,10 +249,10 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
             verticalAlignment = Alignment.CenterVertically
         ) {
             ImageWithDefault(
-                imageUri = exercise.exerciseImageUri,
-                imageResource = getExerciseImage(exercise.exerciseImageUri, exercise.exerciseDefault),
-                default = exercise.exerciseDefault,
-                contentDescription = "${getExerciseName(exercise.exerciseName, exercise.exerciseDefault)} image",
+                imageUri = exercise.exercise.imageUri,
+                imageResource = getExerciseImage(exercise.exercise.imageUri, exercise.exercise.default),
+                default = exercise.exercise.default,
+                contentDescription = "${getExerciseName(exercise.exercise.name, exercise.exercise.default)} image",
                 defaultContentDescription = "Default exercise image",
                 modifier = Modifier.size(56.dp)
             )
@@ -242,7 +260,7 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = getExerciseName(exercise.exerciseName, exercise.exerciseDefault),
+                    text = getExerciseName(exercise.exercise.name, exercise.exercise.default),
                     style = MaterialTheme.typography.titleMedium
                 )
                 if (exercise.notes != null && exercise.notes.isNotBlank()){
@@ -273,7 +291,7 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_arrow_forward),
-                        contentDescription = stringResource(Res.string.exercise_detail_content_description_edit, getExerciseName(exercise.exerciseName, exercise.exerciseDefault)), // TODO: Make specific string resource
+                        contentDescription = stringResource(Res.string.exercise_detail_content_description_edit, getExerciseName(exercise.exercise.name, exercise.exercise.default)), // TODO: Make specific string resource
                     )
                 }
             }

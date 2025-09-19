@@ -40,16 +40,16 @@ data class ExerciseEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(exercise: Exercise): ExerciseEntity {
+fun Exercise.toEntity(): ExerciseEntity {
     return ExerciseEntity(
-        id = exercise.id,
-        name = exercise.name,
-        guide = exercise.guide,
-        targetMuscleGroups = exercise.targetMuscleGroups,
-        imageUri = exercise.imageUri,
-        default = exercise.default,
-        recommendedFor = exercise.recommendedFor,
-        exerciseType = exercise.exerciseType,
-        dateUtc = exercise.dateUtc
+        id = this.id,
+        name = this.name,
+        guide = this.guide,
+        targetMuscleGroups = this.targetMuscleGroups,
+        imageUri = this.imageUri,
+        default = this.default,
+        recommendedFor = this.recommendedFor,
+        exerciseType = this.exerciseType,
+        dateUtc = this.dateUtc
     )
 }

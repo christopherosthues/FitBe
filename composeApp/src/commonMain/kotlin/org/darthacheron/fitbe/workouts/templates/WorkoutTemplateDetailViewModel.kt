@@ -28,6 +28,7 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarAction
+import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -38,7 +39,8 @@ data class WorkoutTemplateDetailUiState(
     val name: String = "",
     val description: String? = null,
     val imageUri: String? = null,
-    val exercises: List<WorkoutTemplateExerciseWithDetails> = emptyList(),
+    val warmups: List<WorkoutTemplateExerciseWithDetails> = emptyList(),
+    val workouts: List<WorkoutTemplateExerciseWithDetails> = emptyList(),
     val default: Boolean = false,
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
@@ -53,10 +55,8 @@ data class WorkoutTemplateDetailUiState(
 
 @OptIn(ExperimentalUuidApi::class)
 data class WorkoutTemplateExerciseWithDetails(
-    val exerciseId: Uuid,
-    val exerciseName: String,
-    val exerciseImageUri: String?,
-    val exerciseDefault: Boolean,
+    val exercise: Exercise,
+    val exerciseOrder: Int,
     val notes: String? = null,
     val sets: List<WorkoutTemplateSet> = emptyList()
 )
@@ -149,7 +149,8 @@ class WorkoutTemplateDetailViewModel(
                     name = "",
                     description = null,
                     imageUri = null,
-                    exercises = emptyList(),
+                    warmups = emptyList(),
+                    workouts = emptyList(),
                     default = false,
                     error = null,
                     isFavorite = false // Reset favorite for new template
@@ -165,23 +166,21 @@ class WorkoutTemplateDetailViewModel(
 
                 if (templateWithDetails != null) {
                     val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->
-//                        WorkoutTemplateExerciseWithDetails(
-//                            exerciseId = exerciseWithSets.exerciseId,
-//                            exerciseName = exerciseWithSets.exercise.name,
-//                            exerciseImageUri = exerciseWithSets.exercise.imageUri,
-//                            exerciseDefault = exerciseWithSets.exercise.default,
-//                            exerciseOrder = exerciseWithSets.workoutTemplateExercise.exerciseOrder,
-//                            notes = exerciseWithSets.workoutTemplateExercise.notes,
+                        WorkoutTemplateExerciseWithDetails(
+                            exercise = exerciseWithSets.exercise,
+                            exerciseOrder = exerciseWithSets.exerciseOrder,
+//                            notes = exerciseWithSets.exercise.notes,
 //                            sets = exerciseWithSets.sets.map { it.toWorkoutTemplateSet() }
-//                        )
+                        )
                     }
                     _uiState.update {
                         it.copy(
-//                            name = templateWithDetails.workoutTemplate.name,
-//                            description = templateWithDetails.workoutTemplate.description,
-//                            imageUri = templateWithDetails.workoutTemplate.imageUri,
-//                            default = templateWithDetails.workoutTemplate.default,
-//                            exercises = detailedExercises,
+                            name = templateWithDetails.name,
+                            description = templateWithDetails.description,
+                            imageUri = templateWithDetails.imageUri,
+                            default = templateWithDetails.default,
+                            warmups = detailedExercises,
+                            workouts = detailedExercises,
                             isLoading = false,
                             isEditing = false
                         )

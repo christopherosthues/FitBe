@@ -3,6 +3,11 @@ package org.darthacheron.fitbe.workouts.templates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.workouts.exercises.Exercise
+import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -31,15 +36,52 @@ class WorkoutTemplateRepository(
                     WorkoutTemplateExercise(
                         id = Uuid.random(),
                         workoutTemplateId = dummyTemplate1Id,
-                        exerciseId = Uuid.random(), // Represents a dummy ExerciseEntity ID
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Bench Press",
+                            guide = "A classic chest exercise.",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.WEIGHT_REPS,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
                         exerciseOrder = 0,
                         sets = emptyList()
                     ),
                     WorkoutTemplateExercise(
                         id = Uuid.random(),
                         workoutTemplateId = dummyTemplate1Id,
-                        exerciseId = Uuid.random(), // Represents another dummy ExerciseEntity ID
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Skull Crushers",
+                            guide = "Guide",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.WEIGHT_REPS,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
                         exerciseOrder = 1,
+                        sets = emptyList()
+                    ),
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate1Id,
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Jumping Jacks",
+                            guide = "Guide",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.REPS_ONLY,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
+                        exerciseOrder = 2,
                         sets = emptyList()
                     )
                 )
@@ -53,9 +95,53 @@ class WorkoutTemplateRepository(
                 exercises = listOf(
                     WorkoutTemplateExercise(
                         id = Uuid.random(),
-                        workoutTemplateId = dummyTemplate2Id,
-                        exerciseId = Uuid.random(), // Represents a dummy ExerciseEntity ID
+                        workoutTemplateId = dummyTemplate1Id,
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Bench Press 2",
+                            guide = "A classic chest exercise.",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.WEIGHT_REPS,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
                         exerciseOrder = 0,
+                        sets = emptyList()
+                    ),
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate1Id,
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Skull Crushers 2",
+                            guide = "Guide",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.WEIGHT_REPS,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
+                        exerciseOrder = 1,
+                        sets = emptyList()
+                    ),
+                    WorkoutTemplateExercise(
+                        id = Uuid.random(),
+                        workoutTemplateId = dummyTemplate1Id,
+                        exercise = Exercise(
+                            id = Uuid.random(),
+                            name = "Jumping Jacks 2",
+                            guide = "Guide",
+                            imageUri = null,
+                            targetMuscleGroups = emptyList(),
+                            default = false,
+                            recommendedFor = emptyList(),
+                            exerciseType = ExerciseType.REPS_ONLY,
+                            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                        ),
+                        exerciseOrder = 2,
                         sets = emptyList()
                     )
                 )
@@ -65,16 +151,16 @@ class WorkoutTemplateRepository(
     }
 
     // WorkoutTemplate operations
-    suspend fun upsertWorkoutTemplate(template: WorkoutTemplate) {
-        workoutTemplateDao.upsertWorkoutTemplate(template.toEntity())
-        // Upsert exercises and their sets if they are part of the domain model
-        template.exercises.forEach { exercise ->
-            workoutTemplateDao.upsertWorkoutTemplateExercise(exercise.toEntity())
-            if (exercise.sets.isNotEmpty()) {
-                workoutTemplateDao.upsertWorkoutTemplateSets(exercise.sets.map { it.toEntity() })
-            }
-        }
-    }
+//    suspend fun upsertWorkoutTemplate(template: WorkoutTemplate) {
+//        workoutTemplateDao.upsertWorkoutTemplate(template.toEntity())
+//        // Upsert exercises and their sets if they are part of the domain model
+//        template.exercises.forEach { exercise ->
+//            workoutTemplateDao.upsertWorkoutTemplateExercise(exercise.toEntity())
+//            if (exercise.sets.isNotEmpty()) {
+//                workoutTemplateDao.upsertWorkoutTemplateSets(exercise.sets.map { it.toEntity() })
+//            }
+//        }
+//    }
 
     suspend fun deleteWorkoutTemplate(template: WorkoutTemplate) {
         // Deleting the template should cascade delete its exercises and sets due to ForeignKey constraints
@@ -88,11 +174,11 @@ class WorkoutTemplateRepository(
 //        }
     }
 
-    fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplate>> {
-        return workoutTemplateDao.getAllWorkoutTemplatesWithExercisesAndSets().map { entities ->
-            entities.map { it.toWorkoutTemplate() }
-        }
-    }
+//    fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplate>> {
+//        return workoutTemplateDao.getAllWorkoutTemplatesWithExercisesAndSets().map { entities ->
+//            entities.map { it.toWorkoutTemplate() }
+//        }
+//    }
 
     fun getAllWorkoutTemplatesWithExercises(): Flow<List<WorkoutTemplate>> {
         // Return dummy data here. Comment productive code out, don't delete it
@@ -112,34 +198,34 @@ class WorkoutTemplateRepository(
     }
 
     // WorkoutTemplateExercise operations (usually managed via the parent WorkoutTemplate)
-    suspend fun upsertWorkoutTemplateExercise(exercise: WorkoutTemplateExercise) {
-        workoutTemplateDao.upsertWorkoutTemplateExercise(exercise.toEntity())
-    }
-
-    suspend fun deleteWorkoutTemplateExercise(exercise: WorkoutTemplateExercise) {
-        workoutTemplateDao.deleteWorkoutTemplateExercise(exercise.toEntity())
-    }
-
-    fun getExercisesForTemplate(templateId: Uuid): Flow<List<WorkoutTemplateExercise>> {
-        return workoutTemplateDao.getExercisesForTemplate(templateId).map { entities ->
-            entities.map { it.toWorkoutTemplateExercise() }
-        }
-    }
+//    suspend fun upsertWorkoutTemplateExercise(exercise: WorkoutTemplateExercise) {
+//        workoutTemplateDao.upsertWorkoutTemplateExercise(exercise.toEntity())
+//    }
+//
+//    suspend fun deleteWorkoutTemplateExercise(exercise: WorkoutTemplateExercise) {
+//        workoutTemplateDao.deleteWorkoutTemplateExercise(exercise.toEntity())
+//    }
+//
+//    fun getExercisesForTemplate(templateId: Uuid): Flow<List<WorkoutTemplateExercise>> {
+//        return workoutTemplateDao.getExercisesForTemplate(templateId).map { entities ->
+//            entities.map { it.toWorkoutTemplateExercise() }
+//        }
+//    }
 
     // WorkoutTemplateSet operations (usually managed via the parent WorkoutTemplateExercise)
-    suspend fun upsertWorkoutTemplateSet(set: WorkoutTemplateSet) {
-        workoutTemplateDao.upsertWorkoutTemplateSet(set.toEntity())
-    }
-
-    suspend fun deleteWorkoutTemplateSet(set: WorkoutTemplateSet) {
-        workoutTemplateDao.deleteWorkoutTemplateSet(set.toEntity())
-    }
-
-    fun getSetsForTemplateExercise(templateExerciseId: Uuid): Flow<List<WorkoutTemplateSet>> {
-        return workoutTemplateDao.getSetsForTemplateExercise(templateExerciseId).map { entities ->
-            entities.map { it.toWorkoutTemplateSet() }
-        }
-    }
+//    suspend fun upsertWorkoutTemplateSet(set: WorkoutTemplateSet) {
+//        workoutTemplateDao.upsertWorkoutTemplateSet(set.toEntity())
+//    }
+//
+//    suspend fun deleteWorkoutTemplateSet(set: WorkoutTemplateSet) {
+//        workoutTemplateDao.deleteWorkoutTemplateSet(set.toEntity())
+//    }
+//
+//    fun getSetsForTemplateExercise(templateExerciseId: Uuid): Flow<List<WorkoutTemplateSet>> {
+//        return workoutTemplateDao.getSetsForTemplateExercise(templateExerciseId).map { entities ->
+//            entities.map { it.toWorkoutTemplateSet() }
+//        }
+//    }
 
     // Favorite methods
     suspend fun addFavorite(profileId: Uuid, workoutTemplateId: Uuid) {

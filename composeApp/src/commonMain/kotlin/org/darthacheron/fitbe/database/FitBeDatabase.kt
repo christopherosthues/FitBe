@@ -45,8 +45,6 @@ import org.darthacheron.fitbe.profile.ProfileEntity
 import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.ProfileFavoriteWorkoutTemplateCrossRef
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateExerciseEntity
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateSetEntity
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionSessionEntity
 import org.darthacheron.fitbe.workouts.workouts.PerformedSetEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
@@ -65,9 +63,10 @@ import kotlin.uuid.ExperimentalUuidApi
         ProfileFavoriteEquipmentCrossRef::class,
         DefaultTrainingEquipmentEntity::class, DefaultExerciseEntity::class,
         DefaultExerciseEquipmentCrossRef::class,
-        WorkoutTemplateEntity::class, WorkoutTemplateExerciseEntity::class, WorkoutTemplateSetEntity::class,
+        WorkoutTemplateEntity::class,
         DefaultWorkoutTemplateEntity::class, ProfileFavoriteWorkoutTemplateCrossRef::class,
         WorkoutExecutionSessionEntity::class, PerformedSetEntity::class
+    // WorkoutTemplateExerciseEntity::class,WorkoutTemplateSetEntity::class,
     ],
     version = 1
 )

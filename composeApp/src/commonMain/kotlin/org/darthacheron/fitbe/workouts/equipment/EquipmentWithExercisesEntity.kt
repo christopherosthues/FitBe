@@ -44,7 +44,7 @@ fun toEntity(equipmentWithExercises: EquipmentWithExercises): EquipmentWithExerc
             default = equipmentWithExercises.default,
             dateUtc = equipmentWithExercises.dateUtc
         ),
-        exercises = equipmentWithExercises.exercises.map { toEntity(it) }
+        exercises = equipmentWithExercises.exercises.map { it.toEntity() }
     )
 }
 

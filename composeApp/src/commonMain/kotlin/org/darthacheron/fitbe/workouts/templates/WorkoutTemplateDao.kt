@@ -40,43 +40,43 @@ interface WorkoutTemplateDao {
     fun getAllDefaultWorkoutTemplates(): Flow<List<DefaultWorkoutTemplateEntity>>
 
     // WorkoutTemplateExerciseEntity operations
-    @Upsert
-    suspend fun upsertWorkoutTemplateExercise(exercise: WorkoutTemplateExerciseEntity)
-
-    @Upsert
-    suspend fun upsertWorkoutTemplateExercises(exercises: List<WorkoutTemplateExerciseEntity>)
-
-    @Delete
-    suspend fun deleteWorkoutTemplateExercise(exercise: WorkoutTemplateExerciseEntity)
-
-    @Query("SELECT * FROM workout_template_exercises WHERE workoutTemplateId = :workoutTemplateId ORDER BY exerciseOrder ASC")
-    fun getExercisesForTemplate(workoutTemplateId: Uuid): Flow<List<WorkoutTemplateExerciseEntity>>
+//    @Upsert
+//    suspend fun upsertWorkoutTemplateExercise(exercise: WorkoutTemplateExerciseEntity)
+//
+//    @Upsert
+//    suspend fun upsertWorkoutTemplateExercises(exercises: List<WorkoutTemplateExerciseEntity>)
+//
+//    @Delete
+//    suspend fun deleteWorkoutTemplateExercise(exercise: WorkoutTemplateExerciseEntity)
+//
+//    @Query("SELECT * FROM workout_template_exercises WHERE workoutTemplateId = :workoutTemplateId ORDER BY exerciseOrder ASC")
+//    fun getExercisesForTemplate(workoutTemplateId: Uuid): Flow<List<WorkoutTemplateExerciseEntity>>
 
     // WorkoutTemplateSetEntity operations
-    @Upsert
-    suspend fun upsertWorkoutTemplateSet(set: WorkoutTemplateSetEntity)
-
-    @Upsert
-    suspend fun upsertWorkoutTemplateSets(sets: List<WorkoutTemplateSetEntity>)
-
-    @Delete
-    suspend fun deleteWorkoutTemplateSet(set: WorkoutTemplateSetEntity)
-
-    @Query("SELECT * FROM workout_template_sets WHERE workoutTemplateExerciseId = :workoutTemplateExerciseId ORDER BY setOrder ASC")
-    fun getSetsForTemplateExercise(workoutTemplateExerciseId: Uuid): Flow<List<WorkoutTemplateSetEntity>>
+//    @Upsert
+//    suspend fun upsertWorkoutTemplateSet(set: WorkoutTemplateSetEntity)
+//
+//    @Upsert
+//    suspend fun upsertWorkoutTemplateSets(sets: List<WorkoutTemplateSetEntity>)
+//
+//    @Delete
+//    suspend fun deleteWorkoutTemplateSet(set: WorkoutTemplateSetEntity)
+//
+//    @Query("SELECT * FROM workout_template_sets WHERE workoutTemplateExerciseId = :workoutTemplateExerciseId ORDER BY setOrder ASC")
+//    fun getSetsForTemplateExercise(workoutTemplateExerciseId: Uuid): Flow<List<WorkoutTemplateSetEntity>>
 
     // Transaction methods to get full template details
-    @Transaction
-    @Query("SELECT * FROM workout_templates WHERE id = :templateId")
-    fun getWorkoutTemplateWithExercisesAndSets(templateId: Uuid): Flow<WorkoutTemplateWithExercisesAndSets?>
+//    @Transaction
+//    @Query("SELECT * FROM workout_templates WHERE id = :templateId")
+//    fun getWorkoutTemplateWithExercisesAndSets(templateId: Uuid): Flow<WorkoutTemplateWithExercisesAndSets?>
 
-    @Transaction
-    @Query("SELECT * FROM workout_templates ORDER BY name ASC")
-    fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplateWithExercisesAndSets>>
+//    @Transaction
+//    @Query("SELECT * FROM workout_templates ORDER BY name ASC")
+//    fun getAllWorkoutTemplatesWithExercisesAndSets(): Flow<List<WorkoutTemplateWithExercisesAndSets>>
 
-    @Transaction
-    @Query("SELECT * FROM workout_templates ORDER BY name ASC")
-    fun getAllWorkoutTemplatesWithExercises(): Flow<List<WorkoutTemplateWithExercisesEntity>>
+//    @Transaction
+//    @Query("SELECT * FROM workout_templates ORDER BY name ASC")
+//    fun getAllWorkoutTemplatesWithExercises(): Flow<List<WorkoutTemplateWithExercisesEntity>>
 
     // Methods for managing ProfileFavoriteWorkoutTemplateCrossRef
     @Insert(onConflict = OnConflictStrategy.IGNORE)
