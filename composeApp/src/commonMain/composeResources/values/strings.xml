@@ -182,6 +182,17 @@
     <string name="default_exercise_seated_row_machine_name">Seated Row (Machine)</string>
     <string name="default_exercise_rowing_machine_cardio_name">Rowing Machine Cardio</string>
     <string name="default_exercise_battle_ropes_waves_name">Battle Rope Waves</string>
+    <string name="default_exercise_kettlebell_swings_name">Kettlebell Swings</string>
+    <string name="default_exercise_kettlebell_single_arm_rows_name">Kettlebell Single-Arm Rows</string>
+    <string name="default_exercise_kettlebell_turkish_get_up_name">Kettlebell Turkish Get-Up</string>
+    <string name="default_exercise_kettlebell_halo_name">Kettlebell Halo</string>
+    <string name="default_exercise_kettlebell_windmill_name">Kettlebell Windmill</string>
+    <string name="default_exercise_kettlebell_clean_and_press_name">Kettlebell Clean and Press</string>
+    <string name="default_exercise_kettlebell_snatch_name">Kettlebell Snatch</string>
+    <string name="default_exercise_kettlebell_russian_twists_name">Kettlebell Russian Twists</string>
+    <string name="default_exercise_kettlebell_farmers_walk_name">Kettlebell Farmer's Walk</string>
+    <string name="default_exercise_kettlebell_lunges_name">Kettlebell Lunges</string>
+    <string name="default_exercise_kettlebell_deadlifts_name">Kettlebell Deadlifts</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_guide">How to perform a Squat...</string>
@@ -229,6 +240,17 @@
     <string name="default_exercise_seated_row_machine_guide">Guide for Seated Row (Machine)...</string>
     <string name="default_exercise_rowing_machine_cardio_guide">Guide for Rowing Machine Cardio...</string>
     <string name="default_exercise_battle_ropes_waves_guide">Guide for Battle Rope Waves...</string>
+    <string name="default_exercise_kettlebell_swings_guide">Guide for Kettlebell Swings...</string>
+    <string name="default_exercise_kettlebell_single_arm_rows_guide">Guide for Kettlebell Single-Arm Rows...</string>
+    <string name="default_exercise_kettlebell_turkish_get_up_guide">Guide for Kettlebell Turkish Get-Up...</string>
+    <string name="default_exercise_kettlebell_halo_guide">Guide for Kettlebell Halo...</string>
+    <string name="default_exercise_kettlebell_windmill_guide">Guide for Kettlebell Windmill...</string>
+    <string name="default_exercise_kettlebell_clean_and_press_guide">Guide for Kettlebell Clean and Press...</string>
+    <string name="default_exercise_kettlebell_snatch_guide">Guide for Kettlebell Snatch...</string>
+    <string name="default_exercise_kettlebell_russian_twists_guide">Guide for Kettlebell Russian Twists...</string>
+    <string name="default_exercise_kettlebell_farmers_walk_guide">Guide for Kettlebell Farmer's Walk...</string>
+    <string name="default_exercise_kettlebell_lunges_guide">Guide for Kettlebell Lunges...</string>
+    <string name="default_exercise_kettlebell_deadlifts_guide">Guide for Kettlebell Deadlifts...</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>

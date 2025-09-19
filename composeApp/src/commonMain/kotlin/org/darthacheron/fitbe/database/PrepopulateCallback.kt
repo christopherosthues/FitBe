@@ -358,6 +358,83 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         recommendedFor = listOf(RecommendedFor.Workout),
         exerciseType = ExerciseType.TIMED,
         equipmentKeys = listOf("default_training_equipment_battle_ropes")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_swings",
+        muscleGroups = listOf(MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.BACK, MuscleGroup.ABS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_single_arm_rows",
+        muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_turkish_get_up",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.SHOULDERS, MuscleGroup.ABS, MuscleGroup.QUADS, MuscleGroup.GLUTES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_halo",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS, MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_windmill",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_clean_and_press",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_snatch",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.SHOULDERS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.BACK, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_russian_twists",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_farmers_walk",
+        muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.FOREARMS, MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS, MuscleGroup.QUADS, MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_TIMED,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_lunges",
+        muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_kettlebell_deadlifts",
+        muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.BACK, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
     )
 )
 
