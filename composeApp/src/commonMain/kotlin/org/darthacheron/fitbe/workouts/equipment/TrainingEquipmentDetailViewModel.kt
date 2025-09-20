@@ -18,11 +18,14 @@ import fitbe.composeapp.generated.resources.training_equipment_detail_content_de
 import fitbe.composeapp.generated.resources.training_equipment_detail_content_description_remove_favorite
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
+import fitbe.composeapp.generated.resources.exercises_error_favorites // Assuming similar error for equipment
+import fitbe.composeapp.generated.resources.exercises_error_toggle_favorite // Assuming similar error for equipment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
@@ -68,7 +71,7 @@ data class AddEditTrainingEquipmentUiState(
     val persistedDefaultImageUri: String? = null,
     val isModifiedFromPersistedDefault: Boolean = false,
     val exercises: List<Exercise> = emptyList(),
-    val isFavorite: Boolean = false // Added isFavorite
+    val isFavorite: Boolean = false
 )
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
@@ -105,13 +108,26 @@ class TrainingEquipmentDetailViewModel(
                 flowOf(false)
             }
         }.flatMapLatest { it }
+            .catch { e ->
+                _uiState.update {
+                    it.copy(error = it.error.copy(hasGeneralError = true, generalError = Res.string.exercises_error_favorites))
+                }
+                emit(false) 
+            }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         viewModelScope.launch {
             isFavoriteFlow.collect { isFav ->
-                _uiState.update { it.copy(isFavorite = isFav) }
-                updateTopBarConfig() // Update top bar when favorite status changes
+                _uiState.update { currentState ->
+                    val newErrorState = if (currentState.error.generalError == Res.string.exercises_error_favorites) {
+                        currentState.error.copy(hasGeneralError = false, generalError = null)
+                    } else {
+                        currentState.error
+                    }
+                    currentState.copy(isFavorite = isFav, error = newErrorState)
+                }
+                updateTopBarConfig()
             }
         }
     }
@@ -137,12 +153,18 @@ class TrainingEquipmentDetailViewModel(
 
         if (equipmentId != null && profileId != null) {
             viewModelScope.launch {
-                if (_uiState.value.isFavorite) {
-                    equipmentRepository.removeFavorite(profileId, equipmentId)
-                } else {
-                    equipmentRepository.addFavorite(profileId, equipmentId)
+                try {
+                    if (_uiState.value.isFavorite) {
+                        equipmentRepository.removeFavorite(profileId, equipmentId)
+                    } else {
+                        equipmentRepository.addFavorite(profileId, equipmentId)
+                    }
+                    // isFavorite state will be updated by isFavoriteFlow collection
+                } catch (e: Exception) {
+                    _uiState.update {
+                        it.copy(error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.exercises_error_toggle_favorite))
+                    }
                 }
-                // isFavorite state will be updated by isFavoriteFlow collection
             }
         }
     }
@@ -157,30 +179,33 @@ class TrainingEquipmentDetailViewModel(
                     equipmentId = null,
                     name = "",
                     imageUri = null,
-                    error = TrainingEquipmentError(),
+                    error = TrainingEquipmentError(), // Clear errors for new equipment
                     persistedDefaultName = null,
                     persistedDefaultImageUri = null,
                     isModifiedFromPersistedDefault = false,
                     exercises = emptyList(),
-                    isFavorite = false // Reset favorite for new equipment
+                    isFavorite = false
                 )
             }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true, equipmentId = Uuid.parse(equipmentIdString)) }
+        _uiState.update { it.copy(isLoading = true, equipmentId = Uuid.parse(equipmentIdString), error = TrainingEquipmentError()) } // Clear errors on load start
         viewModelScope.launch {
             try {
                 val parsedEquipmentId = Uuid.parse(equipmentIdString)
-                // isFavorite will be updated by the isFavoriteFlow collector
                 val currentEquipment =
-                    equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId)
-                        .firstOrNull()
+                    equipmentRepository.getEquipmentWithExercisesById(parsedEquipmentId).firstOrNull()
+
                 if (currentEquipment != null) {
+                    val errorState = if (_uiState.value.error.generalError == Res.string.exercises_error_favorites) {
+                        _uiState.value.error // Preserve favorites error if it occurred during initial load
+                    } else {
+                        TrainingEquipmentError() // Clear other errors
+                    }
                     if (currentEquipment.default) {
                         val originalDefaultEquipment =
-                            equipmentRepository.getDefaultEquipmentById(currentEquipment.id)
-                                .firstOrNull()
+                            equipmentRepository.getDefaultEquipmentById(currentEquipment.id).firstOrNull()
                         _uiState.update {
                             it.copy(
                                 name = currentEquipment.name,
@@ -188,15 +213,11 @@ class TrainingEquipmentDetailViewModel(
                                 default = true,
                                 isLoading = false,
                                 isEditing = false,
-                                // equipmentId is already set
-                                error = TrainingEquipmentError(),
+                                error = errorState,
                                 persistedDefaultName = originalDefaultEquipment?.name,
                                 persistedDefaultImageUri = originalDefaultEquipment?.imageUri,
-                                isModifiedFromPersistedDefault = if (originalDefaultEquipment != null) {
-                                    (currentEquipment.name != originalDefaultEquipment.name || currentEquipment.imageUri != originalDefaultEquipment.imageUri)
-                                } else {
-                                    false
-                                },
+                                isModifiedFromPersistedDefault = (originalDefaultEquipment != null) &&
+                                        (currentEquipment.name != originalDefaultEquipment.name || currentEquipment.imageUri != originalDefaultEquipment.imageUri),
                                 exercises = currentEquipment.exercises
                             )
                         }
@@ -208,8 +229,7 @@ class TrainingEquipmentDetailViewModel(
                                 default = false,
                                 isLoading = false,
                                 isEditing = false,
-                                // equipmentId is already set
-                                error = TrainingEquipmentError(),
+                                error = errorState,
                                 persistedDefaultName = null,
                                 persistedDefaultImageUri = null,
                                 isModifiedFromPersistedDefault = false,
@@ -221,10 +241,7 @@ class TrainingEquipmentDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = TrainingEquipmentError(
-                                hasGeneralError = true,
-                                generalError = Res.string.training_equipment_detail_error_not_found
-                            ),
+                            error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.training_equipment_detail_error_not_found),
                             isEditing = false,
                             persistedDefaultName = null,
                             persistedDefaultImageUri = null,
@@ -237,10 +254,7 @@ class TrainingEquipmentDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = TrainingEquipmentError(
-                            hasGeneralError = true,
-                            generalError = Res.string.training_equipment_detail_error_loading
-                        ),
+                        error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.training_equipment_detail_error_loading),
                         isEditing = false,
                         persistedDefaultName = null,
                         persistedDefaultImageUri = null,
@@ -257,20 +271,19 @@ class TrainingEquipmentDetailViewModel(
     }
 
     fun onNameChange(name: String) {
+        val nameErrorRes = if (name.isBlank()) Res.string.training_equipment_detail_error_missing_name else null
         _uiState.update { currentState ->
             val modified = if (currentState.default && currentState.persistedDefaultName != null) {
                 (name != currentState.persistedDefaultName || currentState.imageUri != currentState.persistedDefaultImageUri)
             } else {
                 false
             }
-            val nameError =
-                if (name.isBlank()) Res.string.training_equipment_detail_error_missing_name else null
             currentState.copy(
                 name = name,
                 error = currentState.error.copy(
-                    hasNameError = nameError != null,
-                    nameError = nameError,
-                    hasGeneralError = false,
+                    hasNameError = nameErrorRes != null,
+                    nameError = nameErrorRes,
+                    hasGeneralError = false, // Clear general error when name is changed
                     generalError = null
                 ),
                 isModifiedFromPersistedDefault = modified
@@ -280,14 +293,16 @@ class TrainingEquipmentDetailViewModel(
 
     fun onImageUriChange(imageUri: String?) {
         _uiState.update { currentState ->
-            val modified = if (currentState.default && currentState.persistedDefaultName != null) {
+            val modified = if (currentState.default && currentState.persistedDefaultImageUri != null) {
                 (currentState.name != currentState.persistedDefaultName || imageUri != currentState.persistedDefaultImageUri)
+            } else if (currentState.default && currentState.persistedDefaultImageUri == null && imageUri != null){
+                true
             } else {
                 false
             }
             currentState.copy(
                 imageUri = imageUri,
-                error = currentState.error.copy(hasGeneralError = false, generalError = null),
+                error = currentState.error.copy(hasGeneralError = false, generalError = null), // Clear general error on image change
                 isModifiedFromPersistedDefault = modified
             )
         }
@@ -295,11 +310,23 @@ class TrainingEquipmentDetailViewModel(
 
     fun saveEquipment() {
         val currentState = _uiState.value
-        if (currentState.error.hasError) {
+        val nameIsEmpty = currentState.name.isBlank()
+
+        if (nameIsEmpty) {
+            _uiState.update {
+                it.copy(
+                    error = it.error.copy(
+                        hasNameError = true,
+                        nameError = Res.string.training_equipment_detail_error_missing_name,
+                        hasGeneralError = false, // Ensure general error is clear if only specific field error exists
+                        generalError = null
+                    )
+                )
+            }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, error = TrainingEquipmentError()) } // Clear errors before saving
 
         viewModelScope.launch {
             val equipmentToSave = TrainingEquipment(
@@ -312,25 +339,15 @@ class TrainingEquipmentDetailViewModel(
 
             try {
                 equipmentRepository.upsertEquipment(equipmentToSave)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isEditing = false,
-                        equipmentId = equipmentToSave.id,
-                        name = equipmentToSave.name,
-                        imageUri = equipmentToSave.imageUri,
-                        error = TrainingEquipmentError(),
-                        isModifiedFromPersistedDefault = false // Reset modified status after save
-                    )
-                }
+                // After successful save, reload to get fresh data and reset isModified/isEditing
+                loadEquipment(equipmentToSave.id.toString()) // This will reset error state on success
+                _uiState.update { it.copy(isEditing = false) }
+
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = TrainingEquipmentError(
-                            hasGeneralError = true,
-                            generalError = Res.string.training_equipment_detail_error_saving
-                        )
+                        error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.training_equipment_detail_error_saving)
                     )
                 }
             }
@@ -342,41 +359,33 @@ class TrainingEquipmentDetailViewModel(
         val errorRes = when {
             currentState.equipmentId == null -> Res.string.training_equipment_detail_error_reset_new_equipment
             !currentState.default -> Res.string.training_equipment_detail_error_reset_non_default_equipment
-            else -> null // No error, proceed with reset
+            !currentState.isModifiedFromPersistedDefault -> null // No error if not modified
+            else -> null
         }
 
         if (errorRes != null) {
             _uiState.update {
-                it.copy(
-                    error = TrainingEquipmentError(
-                        hasGeneralError = true,
-                        generalError = errorRes
-                    )
-                )
+                it.copy(error = TrainingEquipmentError(hasGeneralError = true, generalError = errorRes))
             }
             return
         }
+        if (!currentState.isModifiedFromPersistedDefault && currentState.default) return // Do nothing if not modified and is default
 
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, error = TrainingEquipmentError()) } // Clear errors before reset
         viewModelScope.launch {
             try {
                 currentState.equipmentId?.let { equipmentId ->
                     equipmentRepository.resetEquipmentToDefault(equipmentId)
-                    // Re-call loadEquipment to refresh all data, including persisted default values and isFavorite
-                    loadEquipment(equipmentId.toString())
+                    loadEquipment(equipmentId.toString()) // Reload to get fresh state
+                    _uiState.update { it.copy(isEditing = false) } 
                 }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = TrainingEquipmentError(
-                            hasGeneralError = true,
-                            generalError = Res.string.training_equipment_detail_error_reset_default_equipment
-                        )
+                        error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.training_equipment_detail_error_reset_default_equipment)
                     )
                 }
-            } finally {
-                 _uiState.update { it.copy(isLoading = false) } // Ensure loading is stopped
             }
         }
     }
@@ -386,22 +395,17 @@ class TrainingEquipmentDetailViewModel(
         val errorRes = when {
             currentState.equipmentId == null -> Res.string.training_equipment_detail_error_delete_new_equipment
             currentState.default -> Res.string.training_equipment_detail_error_delete_default_equipment
-            else -> null // No error, proceed with delete
+            else -> null
         }
 
         if (errorRes != null) {
             _uiState.update {
-                it.copy(
-                    error = TrainingEquipmentError(
-                        hasGeneralError = true,
-                        generalError = errorRes
-                    )
-                )
+                it.copy(error = TrainingEquipmentError(hasGeneralError = true, generalError = errorRes))
             }
             return
         }
 
-        _uiState.update { it.copy(isLoading = true) }
+        _uiState.update { it.copy(isLoading = true, error = TrainingEquipmentError()) } // Clear errors before delete
         viewModelScope.launch {
             try {
                 currentState.equipmentId?.let { equipmentId ->
@@ -409,7 +413,7 @@ class TrainingEquipmentDetailViewModel(
                         id = equipmentId,
                         name = currentState.name,
                         imageUri = currentState.imageUri,
-                        default = currentState.default, // Should be false here based on prior checks
+                        default = currentState.default,
                         dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                     )
                     equipmentRepository.deleteEquipment(equipmentToDelete)
@@ -419,14 +423,11 @@ class TrainingEquipmentDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = TrainingEquipmentError(
-                            hasGeneralError = true,
-                            generalError = Res.string.training_equipment_detail_error_delete_equipment
-                        )
+                        error = TrainingEquipmentError(hasGeneralError = true, generalError = Res.string.training_equipment_detail_error_delete_equipment)
                     )
                 }
             } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                if (currentState.equipmentId != null) _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
