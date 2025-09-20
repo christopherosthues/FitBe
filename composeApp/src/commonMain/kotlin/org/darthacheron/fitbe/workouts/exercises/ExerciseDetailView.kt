@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button // Added Button import
@@ -240,7 +239,7 @@ fun ExerciseDetailView(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             OutlinedTextField(
-                                value = stringResource(uiState.exerciseType.localizedString()),
+                                value = stringResource(uiState.exerciseType.toStringResource()),
                                 onValueChange = {},
                                 label = { Text(stringResource(Res.string.exercise_type_label)) },
                                 readOnly = true,
@@ -261,7 +260,7 @@ fun ExerciseDetailView(
                             ) {
                                 ExerciseType.entries.filter { it != ExerciseType.UNKNOWN }.forEach { type ->
                                     DropdownMenuItem(
-                                        text = { Text(stringResource(type.localizedString())) },
+                                        text = { Text(stringResource(type.toStringResource())) },
                                         onClick = {
                                             viewModel.onExerciseTypeChange(type)
                                             exerciseTypeDropdownExpanded = false
@@ -296,7 +295,7 @@ fun ExerciseDetailView(
                                 InputChip(
                                     selected = false,
                                     onClick = { },
-                                    label = { Text(text = stringResource(muscleGroup.localizedString())) },
+                                    label = { Text(text = stringResource(muscleGroup.toStringResource())) },
                                     trailingIcon = {
                                         if (uiState.isEditing) {
                                             IconButton(onClick = { viewModel.removeMuscleGroup(muscleGroup) }, modifier = Modifier.size(18.dp)) {
@@ -337,7 +336,7 @@ fun ExerciseDetailView(
                                     ) {
                                         availableMuscleGroups.forEach { muscleGroup ->
                                             DropdownMenuItem(
-                                                text = { Text(text = stringResource(muscleGroup.localizedString())) },
+                                                text = { Text(text = stringResource(muscleGroup.toStringResource())) },
                                                 onClick = {
                                                     viewModel.addMuscleGroup(muscleGroup)
                                                     muscleGroupDropdownExpanded = false
@@ -374,7 +373,7 @@ fun ExerciseDetailView(
                                 InputChip(
                                     selected = false,
                                     onClick = { },
-                                    label = { Text(text = stringResource(recommendedFor.localizedString())) },
+                                    label = { Text(text = stringResource(recommendedFor.toStringResource())) },
                                     trailingIcon = {
                                         if (uiState.isEditing) {
                                             IconButton(onClick = { viewModel.removeRecommendedFor(recommendedFor) }, modifier = Modifier.size(18.dp)) {
@@ -415,7 +414,7 @@ fun ExerciseDetailView(
                                     ) {
                                         availableRecommendedForItems.forEach { recommendedFor ->
                                             DropdownMenuItem(
-                                                text = { Text(text = stringResource(recommendedFor.localizedString())) },
+                                                text = { Text(text = stringResource(recommendedFor.toStringResource())) },
                                                 onClick = {
                                                     viewModel.addRecommendedFor(recommendedFor)
                                                     recommendedForDropdownExpanded = false

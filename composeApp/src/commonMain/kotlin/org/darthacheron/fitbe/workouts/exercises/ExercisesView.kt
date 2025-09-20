@@ -260,7 +260,7 @@ fun ExerciseCard(
                             exercise.targetMuscleGroups.take(2).forEach {
                                 SuggestionChip(
                                     onClick = { },
-                                    label = { Text(text = stringResource(it.localizedString())) },
+                                    label = { Text(text = stringResource(it.toStringResource())) },
                                     enabled = false,
                                     colors = SuggestionChipDefaults.suggestionChipColors(
                                         disabledContainerColor = chipColors.containerColor,

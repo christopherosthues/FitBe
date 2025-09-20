@@ -207,11 +207,11 @@ fun ProfileView(
                     isEnabled = isEditing,
                     itemContent = { gender, onClick ->
                         DropdownMenuItem(
-                            text = { Text(text = stringResource(gender.localizedString())) },
+                            text = { Text(text = stringResource(gender.toStringResource())) },
                             onClick = onClick
                         )
                     },
-                    itemToString = { stringResource(it.localizedString()) },
+                    itemToString = { stringResource(it.toStringResource()) },
                     onItemSelected = { index ->
                         if (isEditing) newGender = genders[index]
                     }
@@ -294,7 +294,7 @@ fun ProfileView(
                         Text(
                             stringResource(
                                 Res.string.profile_target_weight,
-                                stringResource(settings.weightUnit.localizedString())
+                                stringResource(settings.weightUnit.toStringResource())
                             )
                         )
                     },
@@ -372,7 +372,7 @@ fun ProfileView(
                         Text(
                             stringResource(
                                 Res.string.profile_body_height,
-                                stringResource(settings.bodyMeasurementUnit.localizedString())
+                                stringResource(settings.bodyMeasurementUnit.toStringResource())
                             )
                         )
                     },

@@ -32,11 +32,23 @@ import org.darthacheron.fitbe.ui.state.TopBarConfig
 import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
+import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 enum class ExecutionPhase {
-    SET_COUNT_INPUT, TARGET_INPUT, EXECUTING, RESTING, SET_COMPLETED_DIALOG, WORKOUT_COMPLETED
+    SET_COUNT_INPUT, TARGET_INPUT, EXECUTING, RESTING, SET_COMPLETED_DIALOG, WORKOUT_COMPLETED;
+
+    fun toStringResource(): StringResource {
+        return when (this) {
+            SET_COUNT_INPUT -> Res.string.exercise_execution_title_set_sets
+            TARGET_INPUT -> Res.string.exercise_execution_title_set_targets
+            EXECUTING -> Res.string.exercise_execution_title_set_progress
+            RESTING -> Res.string.exercise_execution_title_resting
+            SET_COMPLETED_DIALOG -> Res.string.exercise_execution_title_log_set
+            WORKOUT_COMPLETED -> Res.string.exercise_execution_title_completed
+        }
+    }
 }
 
 private const val DEFAULT_REST_DURATION_SECONDS = 60
@@ -126,15 +138,7 @@ class ExerciseExecutionViewModel(
     }
 
     private fun updateTopBarConfiguration(phase: ExecutionPhase, currentSetVal: Int, totalSetsVal: Int?) {
-        val titleRes = when (phase) {
-            ExecutionPhase.SET_COUNT_INPUT -> Res.string.exercise_execution_title_set_sets
-            ExecutionPhase.TARGET_INPUT -> Res.string.exercise_execution_title_set_targets
-            ExecutionPhase.EXECUTING -> Res.string.exercise_execution_title_set_progress
-            ExecutionPhase.RESTING -> Res.string.exercise_execution_title_resting
-            ExecutionPhase.SET_COMPLETED_DIALOG -> Res.string.exercise_execution_title_log_set
-            ExecutionPhase.WORKOUT_COMPLETED -> Res.string.exercise_execution_title_completed
-        }
-
+        val titleRes = phase.toStringResource()
         val actions = mutableListOf<TopBarAction>()
         val backNavVisible = phase != ExecutionPhase.WORKOUT_COMPLETED
 

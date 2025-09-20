@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.workouts.exercises
 
-import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.muscle_group_abs
 import fitbe.composeapp.generated.resources.muscle_group_adductors
@@ -36,8 +35,7 @@ enum class MuscleGroup {
     GLUTES,
     OTHER;
 
-    @Composable
-    fun localizedString(): StringResource {
+    fun toStringResource(): StringResource {
         return when (this) {
             CHEST -> Res.string.muscle_group_chest
             BACK -> Res.string.muscle_group_back

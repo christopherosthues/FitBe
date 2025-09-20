@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.profile
 
-import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.profile_gender_female
 import fitbe.composeapp.generated.resources.profile_gender_male
@@ -11,8 +10,7 @@ import org.jetbrains.compose.resources.StringResource
 enum class Gender {
     UNKNOWN, MALE, FEMALE, OTHER;
 
-    @Composable
-    fun localizedString(): StringResource {
+    fun toStringResource(): StringResource {
         return when (this) {
             UNKNOWN -> Res.string.profile_gender_unknown
             MALE -> Res.string.profile_gender_male

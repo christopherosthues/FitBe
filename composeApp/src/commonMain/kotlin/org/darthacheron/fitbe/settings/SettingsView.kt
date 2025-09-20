@@ -8,7 +8,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.*
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -68,7 +67,7 @@ fun SettingsView(
                             selected = settings.weightUnit == unit,
                             onClick = { viewModel.setWeightUnit(unit) }
                         )
-                        Text(text = stringResource(unit.localizedString()))
+                        Text(text = stringResource(unit.toStringResource()))
                     }
                 }
             }
@@ -84,7 +83,7 @@ fun SettingsView(
                             selected = settings.distanceUnit == unit,
                             onClick = { viewModel.setDistanceUnit(unit) }
                         )
-                        Text(stringResource(unit.localizedString()))
+                        Text(stringResource(unit.toResourceString()))
                     }
                 }
             }
@@ -100,7 +99,7 @@ fun SettingsView(
                             selected = settings.bodyMeasurementUnit == unit,
                             onClick = { viewModel.setBodyMeasurementUnit(unit) }
                         )
-                        Text(stringResource(unit.localizedString()))
+                        Text(stringResource(unit.toStringResource()))
                     }
                 }
             }
@@ -117,7 +116,7 @@ fun SettingsView(
                             onClick = { viewModel.setThemeMode(mode) }
                         )
                         Text(
-                            text = stringResource(mode.localizedString())
+                            text = stringResource(mode.toStringResource())
                         )
                     }
                 }

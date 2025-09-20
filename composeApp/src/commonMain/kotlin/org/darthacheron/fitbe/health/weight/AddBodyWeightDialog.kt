@@ -130,7 +130,7 @@ fun AddBodyWeightDialog(
                         Text(
                             stringResource(
                                 Res.string.body_weight_add_body_weight_total_weight,
-                                stringResource(settings.weightUnit.localizedString())
+                                stringResource(settings.weightUnit.toStringResource())
                             )
                         )
                     },
@@ -168,7 +168,7 @@ fun AddBodyWeightDialog(
                         Text(
                             stringResource(
                                 Res.string.body_weight_add_body_weight_muscle_mass,
-                                stringResource(settings.weightUnit.localizedString())
+                                stringResource(settings.weightUnit.toStringResource())
                             )
                         )
                     },
@@ -193,7 +193,7 @@ fun AddBodyWeightDialog(
                         Text(
                             stringResource(
                                 Res.string.body_weight_add_body_weight_bone_mass,
-                                stringResource(settings.weightUnit.localizedString())
+                                stringResource(settings.weightUnit.toStringResource())
                             )
                         )
                     },

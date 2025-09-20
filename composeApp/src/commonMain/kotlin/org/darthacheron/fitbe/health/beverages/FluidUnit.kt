@@ -56,7 +56,6 @@ enum class FluidUnit(private val conversionFactorToMilliliter: UInt) {
         }
     }
 
-    @Composable
     fun iconResource(): DrawableResource {
         return when (this) {
             Cup -> Res.drawable.ic_cup

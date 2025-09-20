@@ -14,7 +14,7 @@ private const val MILES_TO_KM = 1.60934
 enum class DistanceUnit {
     KM, MILES;
 
-    fun localizedString(): StringResource {
+    fun toResourceString(): StringResource {
         return when(this) {
             KM -> Res.string.settings_km
             MILES -> Res.string.settings_miles

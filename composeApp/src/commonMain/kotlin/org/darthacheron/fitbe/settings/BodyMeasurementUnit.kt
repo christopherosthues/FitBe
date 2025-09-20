@@ -12,7 +12,7 @@ enum class BodyMeasurementUnit {
     CM,
     INCH;
 
-    fun localizedString(): StringResource {
+    fun toStringResource(): StringResource {
         return when(this) {
             CM -> Res.string.settings_cm
             INCH -> Res.string.settings_inch

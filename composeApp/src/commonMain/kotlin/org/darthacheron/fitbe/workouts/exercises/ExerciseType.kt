@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.workouts.exercises
 
-import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.exercise_type_completion_only
 import fitbe.composeapp.generated.resources.exercise_type_distance
@@ -8,7 +7,7 @@ import fitbe.composeapp.generated.resources.exercise_type_distance_timed
 import fitbe.composeapp.generated.resources.exercise_type_other
 import fitbe.composeapp.generated.resources.exercise_type_reps_only
 import fitbe.composeapp.generated.resources.exercise_type_timed
-import fitbe.composeapp.generated.resources.exercise_type_unknown // Added import
+import fitbe.composeapp.generated.resources.exercise_type_unknown
 import fitbe.composeapp.generated.resources.exercise_type_weight_reps
 import fitbe.composeapp.generated.resources.exercise_type_weight_reps_timed
 import fitbe.composeapp.generated.resources.exercise_type_weight_timed
@@ -42,21 +41,21 @@ enum class ExerciseType {
     COMPLETION_ONLY,
 
     /** For any other type of exercise or for exercises where tracking metrics are not predefined. */
-    OTHER
-}
+    OTHER;
 
-@Composable
-fun ExerciseType.localizedString(): StringResource {
-    return when (this) {
-        ExerciseType.UNKNOWN -> Res.string.exercise_type_unknown // Added case for UNKNOWN
-        ExerciseType.WEIGHT_REPS -> Res.string.exercise_type_weight_reps
-        ExerciseType.REPS_ONLY -> Res.string.exercise_type_reps_only
-        ExerciseType.TIMED -> Res.string.exercise_type_timed
-        ExerciseType.DISTANCE -> Res.string.exercise_type_distance
-        ExerciseType.WEIGHT_TIMED -> Res.string.exercise_type_weight_timed
-        ExerciseType.WEIGHT_REPS_TIMED -> Res.string.exercise_type_weight_reps_timed
-        ExerciseType.DISTANCE_TIMED -> Res.string.exercise_type_distance_timed
-        ExerciseType.COMPLETION_ONLY -> Res.string.exercise_type_completion_only
-        ExerciseType.OTHER -> Res.string.exercise_type_other
+    fun toStringResource(): StringResource {
+        return when (this) {
+            UNKNOWN -> Res.string.exercise_type_unknown // Added case for UNKNOWN
+            WEIGHT_REPS -> Res.string.exercise_type_weight_reps
+            REPS_ONLY -> Res.string.exercise_type_reps_only
+            TIMED -> Res.string.exercise_type_timed
+            DISTANCE -> Res.string.exercise_type_distance
+            WEIGHT_TIMED -> Res.string.exercise_type_weight_timed
+            WEIGHT_REPS_TIMED -> Res.string.exercise_type_weight_reps_timed
+            DISTANCE_TIMED -> Res.string.exercise_type_distance_timed
+            COMPLETION_ONLY -> Res.string.exercise_type_completion_only
+            OTHER -> Res.string.exercise_type_other
+        }
     }
 }
+

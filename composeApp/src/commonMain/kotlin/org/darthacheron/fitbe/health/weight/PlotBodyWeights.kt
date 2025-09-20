@@ -171,7 +171,7 @@ fun PlotBodyWeights(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = stringResource(settings.weightUnit.localizedString()),
+                            text = stringResource(settings.weightUnit.toStringResource()),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -219,13 +219,13 @@ fun PlotBodyWeights(
                                                 0 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_bone_mass_value,
                                                     bodyWeight.boneMassInKg!!,
-                                                    stringResource(settings.weightUnit.localizedString())
+                                                    stringResource(settings.weightUnit.toStringResource())
                                                 )
 
                                                 1 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_muscle_mass_value,
                                                     bodyWeight.muscleMassInKg!!,
-                                                    stringResource(settings.weightUnit.localizedString())
+                                                    stringResource(settings.weightUnit.toStringResource())
                                                 )
 
                                                 2 -> stringResource(
@@ -241,7 +241,7 @@ fun PlotBodyWeights(
                                                 else -> stringResource(
                                                     Res.string.body_weight_chart_annotation_total_weight_value,
                                                     bodyWeight.weightInKg,
-                                                    stringResource(settings.weightUnit.localizedString())
+                                                    stringResource(settings.weightUnit.toStringResource())
                                                 )
                                             }
                                         Text(text = bodyWeightAnnotation)
