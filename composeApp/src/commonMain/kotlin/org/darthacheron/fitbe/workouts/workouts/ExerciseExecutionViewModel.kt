@@ -1,8 +1,8 @@
 package org.darthacheron.fitbe.workouts.workouts
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.exercise_execution_cancel_button
 import fitbe.composeapp.generated.resources.exercise_execution_title_completed
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarAction
@@ -44,16 +43,12 @@ private const val DEFAULT_REST_DURATION_SECONDS = 60
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class ExerciseExecutionViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val navHostController: NavHostController,
     private val exerciseRepository: ExerciseRepository,
     private val workoutExecutionRepository: WorkoutExecutionRepository,
-    private val settingsRepository: SettingsRepository, // Added
-    private val topBarManager: TopBarManager,
-    private val onNavigateBack: () -> Unit
+    private val settingsRepository: SettingsRepository,
+    private val topBarManager: TopBarManager
 ) : ViewModel() {
-
-    private val exerciseIdString: String = savedStateHandle.get<String>(Screen.ExerciseExecution::exerciseId.name) ?: ""
-    private val exerciseId: Uuid? = try { Uuid.parse(exerciseIdString) } catch (e: Exception) { null }
 
     private val _exercise = MutableStateFlow<Exercise?>(null)
     val exercise: StateFlow<Exercise?> = _exercise.asStateFlow()
@@ -61,7 +56,6 @@ class ExerciseExecutionViewModel(
     private val _currentProfileId = MutableStateFlow<Uuid?>(null)
 
     private val _currentWorkoutExecutionId = MutableStateFlow<Uuid?>(null)
-    // val currentWorkoutExecutionId: StateFlow<Uuid?> = _currentWorkoutExecutionId.asStateFlow() // Expose if needed elsewhere
 
     private val _currentPhase = MutableStateFlow(ExecutionPhase.SET_COUNT_INPUT)
     val currentPhase: StateFlow<ExecutionPhase> = _currentPhase.asStateFlow()
@@ -112,12 +106,6 @@ class ExerciseExecutionViewModel(
     val showDistanceField: StateFlow<Boolean> = exercise.flatMapLatest { ex -> flowOf(ex?.exerciseType in listOf(ExerciseType.DISTANCE, ExerciseType.DISTANCE_TIMED)) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
-        if (exerciseId != null) {
-            viewModelScope.launch {
-                _exercise.value = exerciseRepository.getExerciseById(exerciseId).firstOrNull()
-            }
-        } // TODO: Else handle error: exerciseId is null
-
         viewModelScope.launch {
             settingsRepository.getSettingsFlow().collect {
                 _currentProfileId.value = it.selectedProfileId
@@ -128,6 +116,12 @@ class ExerciseExecutionViewModel(
             combine(_currentPhase, _currentSet, _totalSets) { phase, set, totalS ->
                 updateTopBarConfiguration(phase, set, totalS)
             }.collect {}
+        }
+    }
+
+    fun loadExercise(id: Uuid) {
+        viewModelScope.launch {
+            _exercise.value = exerciseRepository.getExerciseById(id).firstOrNull()
         }
     }
 
@@ -155,7 +149,7 @@ class ExerciseExecutionViewModel(
                         contentDescription = Res.string.exercise_execution_cancel_button,
                         onClick = {
                             cancelWorkout()
-                            onNavigateBack()
+                            navigateBack()
                         }
                     )
                 )
@@ -403,5 +397,9 @@ class ExerciseExecutionViewModel(
             }
         }
         topBarManager.setConfig(TopBarConfig()) // Reset to default when leaving screen
+    }
+
+    fun navigateBack() {
+        navHostController.navigateUp()
     }
 }

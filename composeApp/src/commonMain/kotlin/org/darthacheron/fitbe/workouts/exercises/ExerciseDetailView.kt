@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button // Added Button import
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +44,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.exercise_detail_add_equipment
@@ -76,6 +80,8 @@ import fitbe.composeapp.generated.resources.exercise_detail_content_description_
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_equipment
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_image
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_start_workout
+import fitbe.composeapp.generated.resources.exercise_detail_start_workout
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -142,7 +148,7 @@ fun ExerciseDetailView(
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .fillMaxSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 128.dp) // Increased bottom padding for FABs and Button
         ) {
             if (uiState.isLoading && uiState.exerciseId != null && !uiState.isEditing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -504,11 +510,11 @@ fun ExerciseDetailView(
                             )
                         }
                     }
+                    Spacer(modifier = Modifier.height(56.dp)) // Add spacer for the FABs
                 }
             }
         }
 
-        // FABs ... (rest of the code remains the same)
         // FAB for Reset to Default (Top End)
         AnimatedVisibility(
             visible = uiState.isEditing && uiState.exerciseId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
@@ -526,7 +532,7 @@ fun ExerciseDetailView(
             }
         }
 
-        // FABs for Delete, Cancel, Save/Edit (Bottom)
+        // FABs for Delete, Cancel, Save, and Edit (Bottom)
         Row(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -574,7 +580,7 @@ fun ExerciseDetailView(
                 }
             }
 
-            // Save FAB (if in edit mode)
+            // Save or Edit FAB
             AnimatedVisibility(visible = uiState.isEditing) {
                 FloatingActionButton(
                     onClick = {
@@ -606,9 +612,29 @@ fun ExerciseDetailView(
                 }
             }
         }
+
+        // Start Workout Button (Centered Bottom)
+        AnimatedVisibility(
+            visible = !uiState.isEditing && uiState.exerciseId != null,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp) // Added padding for the button
+        ) {
+            val exerciseDisplayName = getExerciseName(uiState.name, uiState.default)
+            val startWorkoutContentDescription = stringResource(Res.string.exercise_detail_content_description_start_workout, exerciseDisplayName)
+            Button(
+                onClick = { viewModel.navigateToExerciseExecution() },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f) // Max width for the button
+                    .semantics {
+                        this.contentDescription = startWorkoutContentDescription
+                    },
+            ) {
+                Text(stringResource(Res.string.exercise_detail_start_workout))
+            }
+        }
+
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 80.dp) // Adjusted padding if Start Workout button is visible
         )
     }
 }

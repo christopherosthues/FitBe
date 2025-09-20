@@ -101,6 +101,7 @@ class ExerciseDetailViewModel(
     private val exerciseRepository: ExerciseRepository,
     equipmentRepository: EquipmentRepository,
     settingsRepository: SettingsRepository,
+    private val mainNavHostController: NavHostController,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
@@ -173,6 +174,13 @@ class ExerciseDetailViewModel(
                 }
                 // No need to update _uiState.isFavorite here, as it's collected from isFavoriteFlow
             }
+        }
+    }
+
+    fun navigateToExerciseExecution() {
+        val currentExerciseId = _uiState.value.exerciseId
+        if (currentExerciseId != null) {
+            mainNavHostController.navigate(Screen.ExerciseExecution(id = currentExerciseId.toString()))
         }
     }
 

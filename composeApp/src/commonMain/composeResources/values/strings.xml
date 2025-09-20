@@ -98,6 +98,8 @@
     <string name="exercise_detail_recommended_for">Recommended For</string>
     <string name="exercise_detail_add_recommended_for">Add recommendation</string>
     <string name="exercise_type_label">Exercise Type</string>
+    <string name="exercise_detail_start_workout">Start Workout</string>
+    <string name="exercise_detail_content_description_start_workout">Start Workout %1$s</string>
     <string name="exercise_detail_content_description_add_favorite">Add exercise to favorites</string>
     <string name="exercise_detail_content_description_remove_favorite">Remove exercise from favorites</string>
     <string name="exercise_detail_content_description_select_image">Select Image</string>

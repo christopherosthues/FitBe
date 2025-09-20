@@ -19,16 +19,23 @@ import org.darthacheron.fitbe.ui.state.TopBarConfig
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ExerciseExecutionView(
+    exerciseId: Uuid,
     viewModel: ExerciseExecutionViewModel,
     topBarManager: TopBarManager,
     onNavigateBack: () -> Unit
 ) {
     val currentPhase by viewModel.currentPhase.collectAsState()
     val topBarConfig by topBarManager.topBarConfigFlow.collectAsState(initial = TopBarConfig())
+
+    LaunchedEffect(exerciseId) {
+        viewModel.loadExercise(exerciseId)
+    }
 
     Scaffold(
         topBar = {

@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import org.darthacheron.fitbe.RootScreen
 import org.darthacheron.fitbe.settings.SettingsView
 import org.darthacheron.fitbe.settings.SettingsViewModel
@@ -13,7 +14,10 @@ import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionView
 import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 fun RootNavGraph(
@@ -37,9 +41,17 @@ fun RootNavGraph(
             val viewModel = koinViewModel<SettingsViewModel>()
             SettingsView(navHostController, viewModel)
         }
-        composable<Screen.ExerciseExecution> { 
-            val viewModel = koinViewModel<ExerciseExecutionViewModel>()
+        composable<Screen.ExerciseExecution> { backStackEntry ->
+            val workoutTemplateRoute: Screen.ExerciseExecution = backStackEntry.toRoute()
+            val id = workoutTemplateRoute.id.toUuidOrNull()
+            val viewModel = koinViewModel<ExerciseExecutionViewModel>(
+                parameters = { parametersOf(navHostController) }
+            )
+            if (id == null) {
+                return@composable
+            }
             ExerciseExecutionView(
+                id,
                 viewModel = viewModel,
                 topBarManager = topBarManager, // Added
                 onNavigateBack = { navHostController.navigateUp() } // Changed from onCancel

@@ -100,7 +100,7 @@ fun BottomBarNavGraph(
         composable<Screen.ExerciseDetail> { backStackEntry ->
             val exerciseDetailRoute: Screen.ExerciseDetail = backStackEntry.toRoute()
             val viewModel = koinViewModel<ExerciseDetailViewModel>(
-                parameters = { parametersOf(bottomBarNavHostController) }
+                parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
             )
             val id = exerciseDetailRoute.id.toUuidOrNull()
             ExerciseDetailView(id, viewModel)
