@@ -13,7 +13,7 @@ enum class TrainingGoal {
     STRENGTH_ENDURANCE;
 
     @Composable
-    fun localizedString(): StringResource {
+    fun toStringResource(): StringResource {
         return when (this) {
             MAXIMUM_STRENGTH -> Res.string.training_goal_maximum_strength
             MUSCLE_BUILDING -> Res.string.training_goal_muscle_building
@@ -21,11 +21,19 @@ enum class TrainingGoal {
         }
     }
 
-    fun getDefaultBreakInSeconds(): Int {
+    fun getDefaultBreakInSeconds(): IntRange {
         return when (this) {
-            MAXIMUM_STRENGTH -> 120 // (up to 300)
-            MUSCLE_BUILDING -> 60 // up to 180)
-            STRENGTH_ENDURANCE -> 30 // (up to 120)
+            MAXIMUM_STRENGTH -> IntRange(120, 300)
+            MUSCLE_BUILDING -> IntRange(60, 180)
+            STRENGTH_ENDURANCE -> IntRange(30, 120)
+        }
+    }
+
+    fun getDefaultNumberOfSets(): IntRange {
+        return when (this) {
+            MAXIMUM_STRENGTH -> IntRange(1, 5)
+            MUSCLE_BUILDING -> IntRange(3, 5)
+            STRENGTH_ENDURANCE -> IntRange(2, 4)
         }
     }
 }
