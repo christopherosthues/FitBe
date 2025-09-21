@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -223,7 +224,8 @@ fun ExercisesView(
                     columns = GridCells.Adaptive(minSize = 200.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize().padding(bottom = 80.dp) // Add padding for FAB
+                    modifier = Modifier.fillMaxSize(), // Removed bottom padding from here
+                    contentPadding = PaddingValues(bottom = 80.dp) // Added contentPadding for FAB
                 ) {
                     items(processedExercises.size, key = { processedExercises[it].exercise.id.toString() }) { index ->
                         val displayableExercise = processedExercises[index]
