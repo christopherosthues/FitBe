@@ -13,7 +13,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import fitbe.composeapp.generated.resources.* 
+import fitbe.composeapp.generated.resources.*
+import org.darthacheron.fitbe.ui.AppTheme
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarConfig
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
@@ -44,6 +45,7 @@ fun ExerciseExecutionView(
                     val title = topBarConfig.title?.let { stringResource(it) } ?: ""
                     Text(text = title)
                 },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                 navigationIcon = {
                     AnimatedVisibility(visible = topBarConfig.backNavigationIconVisible ?: false) {
                         IconButton(onClick = onNavigateBack) {

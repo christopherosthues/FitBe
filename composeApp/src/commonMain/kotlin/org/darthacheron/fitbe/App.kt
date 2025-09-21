@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import io.github.vinceglb.filekit.coil.addPlatformFileSupport
-import org.darthacheron.fitbe.components.AppTheme
+import org.darthacheron.fitbe.ui.AppTheme
 import org.darthacheron.fitbe.navigation.RootNavGraph
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
