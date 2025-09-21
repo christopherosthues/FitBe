@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.workouts.templates
 
 import androidx.compose.runtime.Composable
-import org.darthacheron.fitbe.database.workoutList // Will be created later
+//import org.darthacheron.fitbe.database.workoutList // Will be created later
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -20,7 +20,7 @@ data class WorkoutTemplate(
 
 @Composable
 internal fun getWorkoutName(name: String, default: Boolean): String {
-    return if (default && workoutList.any { it.key == name }) {
+    return if (default) { // TODO: check workoutList when added
         DefaultWorkoutResProvider.workoutNameMap[name]?.let {
             stringResource(it)
         } ?: name

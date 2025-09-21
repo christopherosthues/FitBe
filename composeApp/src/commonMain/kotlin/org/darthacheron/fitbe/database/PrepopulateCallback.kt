@@ -73,6 +73,7 @@ internal val equipmentList = listOf(
     "default_training_equipment_yoga_mat",
     "default_training_equipment_jump_rope",
     "default_training_equipment_ab_wheel",
+    "default_training_equipment_landmine_attachment",
 )
 
 internal data class ExerciseSeedData(
@@ -665,21 +666,221 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         exerciseType = ExerciseType.REPS_ONLY,
         equipmentKeys = listOf("default_training_equipment_pull_up_bar")
     ),
-)
+    // --- Crunches ---
+    ExerciseSeedData(
+        key = "default_exercise_crunches_bodyweight",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_crunches_weighted_plate", // Variation
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_weight_plates", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_decline_crunches", // Variation
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY, // Can be weighted too
+        equipmentKeys = listOf("default_training_equipment_bench") // Assuming an adjustable decline bench
+    ),
 
-internal data class WorkoutTemplateSeedData(
-    val key: String,
-    val description: String? = null,
-    val imageKey: String? = null
-)
+    // --- Leg Raises (Lying) ---
+    ExerciseSeedData(
+        key = "default_exercise_lying_leg_raises_bodyweight",
+        muscleGroups = listOf(MuscleGroup.ABS), // Emphasizes lower abs
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_lying_leg_raises_dumbbell_between_feet", // Variation
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_yoga_mat")
+    ),
 
-internal val workoutList: List<WorkoutTemplateSeedData> = listOf(
-    // Example:
-    // WorkoutTemplateSeedData(
-    //     key = "default_workout_template_full_body_strength",
-    //     description = "A full body strength workout.",
-    //     imageKey = "default_workout_template_full_body_strength_image"
-    // )
+    // --- Flutter Kicks ---
+    ExerciseSeedData(
+        key = "default_exercise_flutter_kicks",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.TIMED, // Can also be REPS_ONLY
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+
+    // --- Bicycle Crunches ---
+    ExerciseSeedData(
+        key = "default_exercise_bicycle_crunches",
+        muscleGroups = listOf(MuscleGroup.ABS), // Good for obliques
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY, // Can also be timed
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+
+    // --- Heel Touches (Penguin Crunches) ---
+    ExerciseSeedData(
+        key = "default_exercise_heel_touches",
+        muscleGroups = listOf(MuscleGroup.ABS), // Targets obliques
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+
+    // --- Reverse Crunches ---
+    ExerciseSeedData(
+        key = "default_exercise_reverse_crunches",
+        muscleGroups = listOf(MuscleGroup.ABS), // Emphasizes lower abs
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_incline_reverse_crunches", // Variation
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bench", "default_training_equipment_bodyweight") // Bench set to incline
+    ),
+
+
+    // --- Hanging Leg Raises & Variations ---
+    ExerciseSeedData(
+        key = "default_exercise_hanging_leg_raises",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.FOREARMS), // Forearms for grip
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_pull_up_bar")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_hanging_knee_raises", // Easier variation
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.FOREARMS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_pull_up_bar")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_captains_chair_leg_raises", // Uses dip station with back/arm pads
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        // You already have "default_exercise_dip_station_leg_raises", this is an alternative naming or if the equipment is slightly different
+        // Re-using "default_training_equipment_dip_station" assuming it's suitable
+        equipmentKeys = listOf("default_training_equipment_dip_station")
+    ),
+
+    // --- Cable Crunches ---
+    ExerciseSeedData(
+        key = "default_exercise_cable_crunches_kneeling",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_cable_machine", "default_training_equipment_yoga_mat") // Mat for knees
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_cable_crunches_standing", // Variation
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_cable_machine")
+    ),
+
+    // --- Dumbbell Side Bends ---
+    ExerciseSeedData(
+        key = "default_exercise_dumbbell_side_bends",
+        muscleGroups = listOf(MuscleGroup.ABS), // Specifically obliques
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell")
+    ),
+
+    // --- Weighted Sit-ups ---
+    ExerciseSeedData(
+        key = "default_exercise_sit_ups_weighted_plate",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_weight_plates", "default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_sit_ups_weighted_dumbbell",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_bodyweight", "default_training_equipment_yoga_mat")
+    ),
+    // You already have default_exercise_sit_ups (bodyweight)
+
+    // --- Woodchoppers (Variations, as you have medicine ball version) ---
+    ExerciseSeedData(
+        key = "default_exercise_woodchoppers_dumbbell_high_to_low",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS), // Obliques heavily involved
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_woodchoppers_cable_high_to_low",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_cable_machine")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_woodchoppers_kettlebell_high_to_low",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_kettlebell")
+    ),
+    // Low to high variations can also be added similarly if desired.
+
+    // --- Landmine Twists ---
+    ExerciseSeedData(
+        key = "default_exercise_landmine_twists_attachment",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS), // Obliques and shoulders
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS, // Weight is from the barbell plates
+        equipmentKeys = listOf("default_training_equipment_barbell", "default_training_equipment_landmine_attachment", "default_training_equipment_weight_plates")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_landmine_twists_corner", // Variation without attachment
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_barbell", "default_training_equipment_weight_plates") // Barbell placed in a sturdy corner
+    ),
+
+    // --- Ab Wheel Rollouts (if you have "default_training_equipment_ab_wheel" in equipmentList) ---
+    ExerciseSeedData(
+        key = "default_exercise_ab_wheel_rollouts_knees",
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY, // Can be WEIGHT_REPS if a vest is used
+        equipmentKeys = listOf("default_training_equipment_ab_wheel", "default_training_equipment_yoga_mat")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_ab_wheel_rollouts_standing", // Advanced Variation
+        muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS, MuscleGroup.FULL_BODY),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_ab_wheel")
+    ),
+
+    // --- Ankle Weights Exercises (You have some, adding a common ab one) ---
+    ExerciseSeedData(
+        key = "default_exercise_ankle_weight_reverse_crunches",
+        muscleGroups = listOf(MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_ankle_weights", "default_training_equipment_yoga_mat")
+    ),
+
 )
 
 @OptIn(ExperimentalUuidApi::class)
@@ -704,7 +905,6 @@ class PrepopulateCallback(
             val equipmentMap = allDefaultEquipment.associateBy({ it.name }, { it.id })
 
             populateDefaultExercises(exerciseDao, equipmentMap)
-            populateDefaultWorkoutTemplates(workoutTemplateDao)
         }
     }
 
@@ -757,23 +957,6 @@ class PrepopulateCallback(
                 // Also insert into the user-editable cross-ref table
                 exerciseDao.insertCrossRefs(crossRefs.map { ExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = it.equipmentId) })
             }
-        }
-    }
-
-    private suspend fun populateDefaultWorkoutTemplates(workoutTemplateDao: WorkoutTemplateDao) {
-        workoutList.forEach { workoutData ->
-            val workoutTemplateId = Uuid.random()
-            val workoutTemplate = WorkoutTemplateEntity(
-                id = workoutTemplateId,
-                name = workoutData.key,
-                description = workoutData.description,
-                imageUri = workoutData.imageKey,
-                default = true
-            )
-            workoutTemplateDao.upsertWorkoutTemplate(workoutTemplate)
-            workoutTemplateDao.insertDefaultWorkoutTemplate(
-                fromWorkoutTemplateEntity(workoutTemplate)
-            )
         }
     }
 }

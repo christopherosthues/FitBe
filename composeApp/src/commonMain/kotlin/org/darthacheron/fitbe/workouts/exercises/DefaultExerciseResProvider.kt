@@ -182,7 +182,71 @@ import fitbe.composeapp.generated.resources.default_exercise_assisted_pull_ups_n
 import fitbe.composeapp.generated.resources.default_exercise_assisted_pull_ups_guide
 import fitbe.composeapp.generated.resources.default_exercise_negative_pull_ups_name
 import fitbe.composeapp.generated.resources.default_exercise_negative_pull_ups_guide
-
+import fitbe.composeapp.generated.resources.default_exercise_crunches_bodyweight_name
+import fitbe.composeapp.generated.resources.default_exercise_crunches_bodyweight_guide
+import fitbe.composeapp.generated.resources.default_exercise_crunches_weighted_plate_name
+import fitbe.composeapp.generated.resources.default_exercise_crunches_weighted_plate_guide
+import fitbe.composeapp.generated.resources.default_exercise_decline_crunches_name
+import fitbe.composeapp.generated.resources.default_exercise_decline_crunches_guide
+// --- Leg Raises (Lying) ---
+import fitbe.composeapp.generated.resources.default_exercise_lying_leg_raises_bodyweight_name
+import fitbe.composeapp.generated.resources.default_exercise_lying_leg_raises_bodyweight_guide
+import fitbe.composeapp.generated.resources.default_exercise_lying_leg_raises_dumbbell_between_feet_name
+import fitbe.composeapp.generated.resources.default_exercise_lying_leg_raises_dumbbell_between_feet_guide
+// --- Flutter Kicks ---
+import fitbe.composeapp.generated.resources.default_exercise_flutter_kicks_name
+import fitbe.composeapp.generated.resources.default_exercise_flutter_kicks_guide
+// --- Bicycle Crunches ---
+import fitbe.composeapp.generated.resources.default_exercise_bicycle_crunches_name
+import fitbe.composeapp.generated.resources.default_exercise_bicycle_crunches_guide
+// --- Heel Touches (Penguin Crunches) ---
+import fitbe.composeapp.generated.resources.default_exercise_heel_touches_name
+import fitbe.composeapp.generated.resources.default_exercise_heel_touches_guide
+// --- Reverse Crunches ---
+import fitbe.composeapp.generated.resources.default_exercise_reverse_crunches_name
+import fitbe.composeapp.generated.resources.default_exercise_reverse_crunches_guide
+import fitbe.composeapp.generated.resources.default_exercise_incline_reverse_crunches_name
+import fitbe.composeapp.generated.resources.default_exercise_incline_reverse_crunches_guide
+// --- Hanging Leg Raises & Variations ---
+import fitbe.composeapp.generated.resources.default_exercise_hanging_leg_raises_name
+import fitbe.composeapp.generated.resources.default_exercise_hanging_leg_raises_guide
+import fitbe.composeapp.generated.resources.default_exercise_hanging_knee_raises_name
+import fitbe.composeapp.generated.resources.default_exercise_hanging_knee_raises_guide
+import fitbe.composeapp.generated.resources.default_exercise_captains_chair_leg_raises_name
+import fitbe.composeapp.generated.resources.default_exercise_captains_chair_leg_raises_guide
+// --- Cable Crunches ---
+import fitbe.composeapp.generated.resources.default_exercise_cable_crunches_kneeling_name
+import fitbe.composeapp.generated.resources.default_exercise_cable_crunches_kneeling_guide
+import fitbe.composeapp.generated.resources.default_exercise_cable_crunches_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_cable_crunches_standing_guide
+// --- Dumbbell Side Bends ---
+import fitbe.composeapp.generated.resources.default_exercise_dumbbell_side_bends_name
+import fitbe.composeapp.generated.resources.default_exercise_dumbbell_side_bends_guide
+// --- Weighted Sit-ups ---
+import fitbe.composeapp.generated.resources.default_exercise_sit_ups_weighted_plate_name
+import fitbe.composeapp.generated.resources.default_exercise_sit_ups_weighted_plate_guide
+import fitbe.composeapp.generated.resources.default_exercise_sit_ups_weighted_dumbbell_name
+import fitbe.composeapp.generated.resources.default_exercise_sit_ups_weighted_dumbbell_guide
+// --- Woodchoppers ---
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_dumbbell_high_to_low_name
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_dumbbell_high_to_low_guide
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_cable_high_to_low_name
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_cable_high_to_low_guide
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_kettlebell_high_to_low_name
+import fitbe.composeapp.generated.resources.default_exercise_woodchoppers_kettlebell_high_to_low_guide
+// --- Landmine Twists ---
+import fitbe.composeapp.generated.resources.default_exercise_landmine_twists_attachment_name
+import fitbe.composeapp.generated.resources.default_exercise_landmine_twists_attachment_guide
+import fitbe.composeapp.generated.resources.default_exercise_landmine_twists_corner_name
+import fitbe.composeapp.generated.resources.default_exercise_landmine_twists_corner_guide
+// --- Ab Wheel Rollouts ---
+import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_knees_name
+import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_knees_guide
+import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_standing_guide
+// --- Ankle Weights Exercises ---
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_name
+import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_guide
 
 import fitbe.composeapp.generated.resources.ic_launcher // Default image
 //import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_curl // Specific image
@@ -289,7 +353,33 @@ object DefaultExerciseResProvider {
         "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.string.default_exercise_sandbag_shoulder_to_shoulder_press_name,
         "default_exercise_assisted_pull_ups" to Res.string.default_exercise_assisted_pull_ups_name,
         "default_exercise_negative_pull_ups" to Res.string.default_exercise_negative_pull_ups_name,
-    )
+        "default_exercise_crunches_bodyweight" to Res.string.default_exercise_crunches_bodyweight_name,
+        "default_exercise_crunches_weighted_plate" to Res.string.default_exercise_crunches_weighted_plate_name,
+        "default_exercise_decline_crunches" to Res.string.default_exercise_decline_crunches_name,
+        "default_exercise_lying_leg_raises_bodyweight" to Res.string.default_exercise_lying_leg_raises_bodyweight_name,
+        "default_exercise_lying_leg_raises_dumbbell_between_feet" to Res.string.default_exercise_lying_leg_raises_dumbbell_between_feet_name,
+        "default_exercise_flutter_kicks" to Res.string.default_exercise_flutter_kicks_name,
+        "default_exercise_bicycle_crunches" to Res.string.default_exercise_bicycle_crunches_name,
+        "default_exercise_heel_touches" to Res.string.default_exercise_heel_touches_name,
+        "default_exercise_reverse_crunches" to Res.string.default_exercise_reverse_crunches_name,
+        "default_exercise_incline_reverse_crunches" to Res.string.default_exercise_incline_reverse_crunches_name,
+        "default_exercise_hanging_leg_raises" to Res.string.default_exercise_hanging_leg_raises_name,
+        "default_exercise_hanging_knee_raises" to Res.string.default_exercise_hanging_knee_raises_name,
+        "default_exercise_captains_chair_leg_raises" to Res.string.default_exercise_captains_chair_leg_raises_name,
+        "default_exercise_cable_crunches_kneeling" to Res.string.default_exercise_cable_crunches_kneeling_name,
+        "default_exercise_cable_crunches_standing" to Res.string.default_exercise_cable_crunches_standing_name,
+        "default_exercise_dumbbell_side_bends" to Res.string.default_exercise_dumbbell_side_bends_name,
+        "default_exercise_sit_ups_weighted_plate" to Res.string.default_exercise_sit_ups_weighted_plate_name,
+        "default_exercise_sit_ups_weighted_dumbbell" to Res.string.default_exercise_sit_ups_weighted_dumbbell_name,
+        "default_exercise_woodchoppers_dumbbell_high_to_low" to Res.string.default_exercise_woodchoppers_dumbbell_high_to_low_name,
+        "default_exercise_woodchoppers_cable_high_to_low" to Res.string.default_exercise_woodchoppers_cable_high_to_low_name,
+        "default_exercise_woodchoppers_kettlebell_high_to_low" to Res.string.default_exercise_woodchoppers_kettlebell_high_to_low_name,
+        "default_exercise_landmine_twists_attachment" to Res.string.default_exercise_landmine_twists_attachment_name,
+        "default_exercise_landmine_twists_corner" to Res.string.default_exercise_landmine_twists_corner_name,
+        "default_exercise_ab_wheel_rollouts_knees" to Res.string.default_exercise_ab_wheel_rollouts_knees_name,
+        "default_exercise_ab_wheel_rollouts_standing" to Res.string.default_exercise_ab_wheel_rollouts_standing_name,
+        "default_exercise_ankle_weight_reverse_crunches" to Res.string.default_exercise_ankle_weight_reverse_crunches_name,
+        )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
         "default_exercise_squat_bodyweight" to Res.string.default_exercise_squat_bodyweight_guide,
@@ -383,6 +473,32 @@ object DefaultExerciseResProvider {
         "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.string.default_exercise_sandbag_shoulder_to_shoulder_press_guide,
         "default_exercise_assisted_pull_ups" to Res.string.default_exercise_assisted_pull_ups_guide,
         "default_exercise_negative_pull_ups" to Res.string.default_exercise_negative_pull_ups_guide,
+        "default_exercise_crunches_bodyweight" to Res.string.default_exercise_crunches_bodyweight_guide,
+        "default_exercise_crunches_weighted_plate" to Res.string.default_exercise_crunches_weighted_plate_guide,
+        "default_exercise_decline_crunches" to Res.string.default_exercise_decline_crunches_guide,
+        "default_exercise_lying_leg_raises_bodyweight" to Res.string.default_exercise_lying_leg_raises_bodyweight_guide,
+        "default_exercise_lying_leg_raises_dumbbell_between_feet" to Res.string.default_exercise_lying_leg_raises_dumbbell_between_feet_guide,
+        "default_exercise_flutter_kicks" to Res.string.default_exercise_flutter_kicks_guide,
+        "default_exercise_bicycle_crunches" to Res.string.default_exercise_bicycle_crunches_guide,
+        "default_exercise_heel_touches" to Res.string.default_exercise_heel_touches_guide,
+        "default_exercise_reverse_crunches" to Res.string.default_exercise_reverse_crunches_guide,
+        "default_exercise_incline_reverse_crunches" to Res.string.default_exercise_incline_reverse_crunches_guide,
+        "default_exercise_hanging_leg_raises" to Res.string.default_exercise_hanging_leg_raises_guide,
+        "default_exercise_hanging_knee_raises" to Res.string.default_exercise_hanging_knee_raises_guide,
+        "default_exercise_captains_chair_leg_raises" to Res.string.default_exercise_captains_chair_leg_raises_guide,
+        "default_exercise_cable_crunches_kneeling" to Res.string.default_exercise_cable_crunches_kneeling_guide,
+        "default_exercise_cable_crunches_standing" to Res.string.default_exercise_cable_crunches_standing_guide,
+        "default_exercise_dumbbell_side_bends" to Res.string.default_exercise_dumbbell_side_bends_guide,
+        "default_exercise_sit_ups_weighted_plate" to Res.string.default_exercise_sit_ups_weighted_plate_guide,
+        "default_exercise_sit_ups_weighted_dumbbell" to Res.string.default_exercise_sit_ups_weighted_dumbbell_guide,
+        "default_exercise_woodchoppers_dumbbell_high_to_low" to Res.string.default_exercise_woodchoppers_dumbbell_high_to_low_guide,
+        "default_exercise_woodchoppers_cable_high_to_low" to Res.string.default_exercise_woodchoppers_cable_high_to_low_guide,
+        "default_exercise_woodchoppers_kettlebell_high_to_low" to Res.string.default_exercise_woodchoppers_kettlebell_high_to_low_guide,
+        "default_exercise_landmine_twists_attachment" to Res.string.default_exercise_landmine_twists_attachment_guide,
+        "default_exercise_landmine_twists_corner" to Res.string.default_exercise_landmine_twists_corner_guide,
+        "default_exercise_ab_wheel_rollouts_knees" to Res.string.default_exercise_ab_wheel_rollouts_knees_guide,
+        "default_exercise_ab_wheel_rollouts_standing" to Res.string.default_exercise_ab_wheel_rollouts_standing_guide,
+        "default_exercise_ankle_weight_reverse_crunches" to Res.string.default_exercise_ankle_weight_reverse_crunches_guide,
     )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
@@ -476,5 +592,31 @@ object DefaultExerciseResProvider {
         "default_exercise_sandbag_shoulder_to_shoulder_press" to Res.drawable.ic_launcher,
         "default_exercise_assisted_pull_ups" to Res.drawable.ic_launcher,
         "default_exercise_negative_pull_ups" to Res.drawable.ic_launcher,
+        "default_exercise_crunches_bodyweight" to Res.drawable.ic_launcher,
+        "default_exercise_crunches_weighted_plate" to Res.drawable.ic_launcher,
+        "default_exercise_decline_crunches" to Res.drawable.ic_launcher,
+        "default_exercise_lying_leg_raises_bodyweight" to Res.drawable.ic_launcher,
+        "default_exercise_lying_leg_raises_dumbbell_between_feet" to Res.drawable.ic_launcher,
+        "default_exercise_flutter_kicks" to Res.drawable.ic_launcher,
+        "default_exercise_bicycle_crunches" to Res.drawable.ic_launcher,
+        "default_exercise_heel_touches" to Res.drawable.ic_launcher,
+        "default_exercise_reverse_crunches" to Res.drawable.ic_launcher,
+        "default_exercise_incline_reverse_crunches" to Res.drawable.ic_launcher,
+        "default_exercise_hanging_leg_raises" to Res.drawable.ic_launcher,
+        "default_exercise_hanging_knee_raises" to Res.drawable.ic_launcher,
+        "default_exercise_captains_chair_leg_raises" to Res.drawable.ic_launcher,
+        "default_exercise_cable_crunches_kneeling" to Res.drawable.ic_launcher,
+        "default_exercise_cable_crunches_standing" to Res.drawable.ic_launcher,
+        "default_exercise_dumbbell_side_bends" to Res.drawable.ic_launcher,
+        "default_exercise_sit_ups_weighted_plate" to Res.drawable.ic_launcher,
+        "default_exercise_sit_ups_weighted_dumbbell" to Res.drawable.ic_launcher,
+        "default_exercise_woodchoppers_dumbbell_high_to_low" to Res.drawable.ic_launcher,
+        "default_exercise_woodchoppers_cable_high_to_low" to Res.drawable.ic_launcher,
+        "default_exercise_woodchoppers_kettlebell_high_to_low" to Res.drawable.ic_launcher,
+        "default_exercise_landmine_twists_attachment" to Res.drawable.ic_launcher,
+        "default_exercise_landmine_twists_corner" to Res.drawable.ic_launcher,
+        "default_exercise_ab_wheel_rollouts_knees" to Res.drawable.ic_launcher,
+        "default_exercise_ab_wheel_rollouts_standing" to Res.drawable.ic_launcher,
+        "default_exercise_ankle_weight_reverse_crunches" to Res.drawable.ic_launcher,
     )
 }

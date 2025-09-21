@@ -22,6 +22,7 @@ import fitbe.composeapp.generated.resources.default_training_equipment_foam_roll
 import fitbe.composeapp.generated.resources.default_training_equipment_gymnastic_rings
 import fitbe.composeapp.generated.resources.default_training_equipment_jump_rope // Added
 import fitbe.composeapp.generated.resources.default_training_equipment_kettlebell
+import fitbe.composeapp.generated.resources.default_training_equipment_landmine_attachment
 import fitbe.composeapp.generated.resources.default_training_equipment_lat_pulldown_machine
 import fitbe.composeapp.generated.resources.default_training_equipment_leg_curl_machine
 import fitbe.composeapp.generated.resources.default_training_equipment_leg_extension_machine
@@ -117,7 +118,8 @@ object DefaultEquipmentResProvider {
         "default_training_equipment_spotter_arms" to Res.string.default_training_equipment_spotter_arms,
         "default_training_equipment_yoga_mat" to Res.string.default_training_equipment_yoga_mat,
         "default_training_equipment_jump_rope" to Res.string.default_training_equipment_jump_rope,
-        "default_training_equipment_ab_wheel" to Res.string.default_training_equipment_ab_wheel
+        "default_training_equipment_ab_wheel" to Res.string.default_training_equipment_ab_wheel,
+        "default_training_equipment_landmine_attachment" to Res.string.default_training_equipment_landmine_attachment,
     )
 
     val equipmentImageMap: Map<String, DrawableResource?> = mapOf(
@@ -168,6 +170,7 @@ object DefaultEquipmentResProvider {
         "default_training_equipment_wrist_weights" to Res.drawable.ic_launcher, // Res.drawable.ic_default_training_equipment_wrist_weights,
         "default_training_equipment_yoga_mat" to Res.drawable.ic_launcher,
         "default_training_equipment_jump_rope" to Res.drawable.ic_launcher,
-        "default_training_equipment_ab_wheel" to Res.drawable.ic_launcher
+        "default_training_equipment_ab_wheel" to Res.drawable.ic_launcher,
+        "default_training_equipment_landmine_attachment" to Res.drawable.ic_launcher,
     )
 }
