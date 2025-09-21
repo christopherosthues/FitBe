@@ -282,6 +282,16 @@
     <string name="default_exercise_ab_wheel_rollouts_knees_name">Ab Wheel Rollouts (Knees)</string>
     <string name="default_exercise_ab_wheel_rollouts_standing_name">Ab Wheel Rollouts (Standing)</string>
     <string name="default_exercise_ankle_weight_reverse_crunches_name">Ankle Weight Reverse Crunches</string>
+    <string name="default_exercise_calf_raises_bodyweight_standing_name">Standing Calf Raises (Bodyweight)</string>
+    <string name="default_exercise_calf_raises_dumbbell_standing_name">Standing Dumbbell Calf Raises</string>
+    <string name="default_exercise_calf_raises_barbell_standing_name">Standing Barbell Calf Raises</string>
+    <string name="default_exercise_calf_raises_smith_machine_standing_name">Standing Smith Machine Calf Raises</string>
+    <string name="default_exercise_calf_raises_bodyweight_seated_name">Seated Calf Raises (Bodyweight)</string>
+    <string name="default_exercise_calf_raises_dumbbell_seated_name">Seated Dumbbell Calf Raises</string>
+    <string name="default_exercise_calf_raises_single_leg_bodyweight_name">Single-Leg Calf Raise (Bodyweight)</string>
+    <string name="default_exercise_calf_raises_single_leg_dumbbell_name">Single-Leg Dumbbell Calf Raise</string>
+    <string name="default_exercise_box_jumps_calf_focus_name">Box Jumps (Calf Focus)</string>
+    <string name="default_exercise_jump_rope_name">Jump Rope</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_bodyweight_guide">Stand with feet shoulder-width apart, chest up, core engaged. Lower your hips back and down as if sitting in a chair, keeping knees behind toes. Go as low as comfortable, ideally thighs parallel to the floor. Push through heels to return to start.</string>
@@ -396,6 +406,16 @@
     <string name="default_exercise_wall_ball_squat_and_press_no_throw_guide">Hold a wall ball (or medicine ball) at chest height. Stand with feet shoulder-width apart. Perform a full squat, keeping your chest up and core engaged. As you stand up from the squat, press the ball overhead, fully extending your arms. Lower the ball back to chest height as you descend into the next squat. The ball is not thrown against a wall in this variation.</string>
     <string name="default_exercise_sandbag_cleans_guide">Stand with feet hip-width apart, sandbag on the floor in front of you (or lengthwise between your feet). Grip the sandbag firmly. In one explosive movement, drive with your hips and legs, shrug your shoulders, and pull the sandbag up towards your shoulders. Quickly rotate your elbows under the bag to catch it in a front rack position (on your shoulders/chest). Stand tall. Lower the bag back to the floor with control. Repeat.</string>
     <string name="default_exercise_sandbag_shoulder_to_shoulder_press_guide">Clean the sandbag to one shoulder. Brace your core. Press the sandbag directly overhead, fully extending your arm. Lower the sandbag with control to the opposite shoulder. Press it overhead from that shoulder. Continue alternating shoulders for each press. Maintain stability throughout.</string>
+    <string name="default_exercise_calf_raises_bodyweight_standing_guide">Stand with feet hip-width apart, toes pointing forward. You can place the balls of your feet on an elevated surface (like a step or plate) for a greater range of motion. Slowly rise up onto the balls of your feet, lifting your heels as high as possible. Squeeze your calves at the top. Slowly lower your heels back down. Repeat.</string>
+    <string name="default_exercise_calf_raises_dumbbell_standing_guide">Hold a dumbbell in each hand by your sides. Stand with feet hip-width apart. Rise up onto the balls of your feet, lifting heels high. Squeeze calves. Slowly lower heels. For more range, stand with balls of feet on an elevated surface.</string>
+    <string name="default_exercise_calf_raises_barbell_standing_guide">Place a barbell across your upper back/traps (like a squat). Stand with feet hip-width apart, balls of feet potentially on an elevated surface. Rise up onto the balls of your feet, lifting heels. Squeeze calves. Slowly lower heels. Maintain balance and control.</string>
+    <string name="default_exercise_calf_raises_smith_machine_standing_guide">Position yourself under the Smith machine bar, bar across upper back. Feet hip-width apart, balls of feet optionally on an elevated block. Unrack the bar. Rise up onto the balls of your feet, pushing through your toes. Squeeze calves at the top. Slowly lower heels. The machine provides stability.</string>
+    <string name="default_exercise_calf_raises_bodyweight_seated_guide">Sit on a bench or chair with your knees bent at a 90-degree angle and feet flat on the floor. Place your hands on your thighs for slight resistance if desired, or let them rest. Lift your heels off the floor as high as possible by pressing through the balls of your feet. Squeeze your calves. Slowly lower your heels. This targets the soleus muscle more.</string>
+    <string name="default_exercise_calf_raises_dumbbell_seated_guide">Sit on a bench, knees bent at 90 degrees, feet flat. Place a dumbbell vertically on each thigh, near the knee, holding them in place. Press up through the balls of your feet, lifting heels high. Squeeze calves. Slowly lower heels. This emphasizes the soleus.</string>
+    <string name="default_exercise_calf_raises_single_leg_bodyweight_guide">Stand on one leg, holding onto a wall or sturdy object for balance if needed. You can place the ball of your working foot on an elevated surface. Lift the heel of your working leg as high as possible, rising onto the ball of your foot. Squeeze your calf. Slowly lower your heel. Complete reps for one leg, then switch.</string>
+    <string name="default_exercise_calf_raises_single_leg_dumbbell_guide">Stand on one leg, holding a dumbbell in the hand on the same side as your working leg (other hand can be used for balance). Ball of working foot can be on an elevated surface. Rise up onto the ball of your foot, lifting heel. Squeeze calf. Slowly lower. Complete reps, then switch leg and dumbbell hand.</string>
+    <string name="default_exercise_box_jumps_calf_focus_guide">Perform box jumps as usual, but with a conscious effort to maximize the push-off from your calves during the jump. Focus on explosive plantar flexion (pointing toes down) as you leave the ground. Land softly.</string>
+    <string name="default_exercise_jump_rope_guide">Hold jump rope handles with a relaxed grip, elbows close to your body. Swing the rope using your wrists, not your whole arms. Jump just high enough for the rope to clear under your feet. Land softly on the balls of your feet. Maintain a steady rhythm.</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>
@@ -487,6 +507,7 @@
     <string name="default_training_equipment_jump_rope">Jump Rope</string>
     <string name="default_training_equipment_ab_wheel">Ab Wheel</string>
     <string name="default_training_equipment_landmine_attachment">Landmine Attachment</string>
+    <string name="default_training_equipment_back_extension_machine">Back Extension Machine</string>
 
     <!-- Date unit -->
     <string name="date_unit_day">Day</string>

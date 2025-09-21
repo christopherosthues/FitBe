@@ -74,6 +74,7 @@ internal val equipmentList = listOf(
     "default_training_equipment_jump_rope",
     "default_training_equipment_ab_wheel",
     "default_training_equipment_landmine_attachment",
+    "default_training_equipment_back_press_machine",
 )
 
 internal data class ExerciseSeedData(
@@ -880,7 +881,77 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         exerciseType = ExerciseType.WEIGHT_REPS,
         equipmentKeys = listOf("default_training_equipment_ankle_weights", "default_training_equipment_yoga_mat")
     ),
-
+    // --- Calf Exercises ---
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_bodyweight_standing",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_dumbbell_standing",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_barbell_standing",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_barbell") // Potentially with squat rack for setup
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_smith_machine_standing",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_smith_machine")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_bodyweight_seated",
+        muscleGroups = listOf(MuscleGroup.CALVES), // Emphasizes soleus
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight", "default_training_equipment_bench") // Bench or chair needed
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_dumbbell_seated",
+        muscleGroups = listOf(MuscleGroup.CALVES), // Emphasizes soleus
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_single_leg_bodyweight",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_bodyweight") // Use wall/support for balance if needed
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_calf_raises_single_leg_dumbbell",
+        muscleGroups = listOf(MuscleGroup.CALVES),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_bodyweight") // Dumbbell in one hand
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_box_jumps_calf_focus", // Variation of existing box jump
+        muscleGroups = listOf(MuscleGroup.CALVES, MuscleGroup.GLUTES, MuscleGroup.QUADS), // Calves get more focus with intent
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.REPS_ONLY,
+        equipmentKeys = listOf("default_training_equipment_plyo_box")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_jump_rope",
+        muscleGroups = listOf(MuscleGroup.CALVES, MuscleGroup.CARDIO, MuscleGroup.FULL_BODY),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.TIMED, // Can also be REPS_ONLY
+        equipmentKeys = listOf("default_training_equipment_jump_rope") // Ensure "jump_rope" is in your equipmentList
+    ),
 )
 
 @OptIn(ExperimentalUuidApi::class)

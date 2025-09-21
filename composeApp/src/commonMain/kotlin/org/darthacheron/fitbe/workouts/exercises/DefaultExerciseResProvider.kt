@@ -247,6 +247,26 @@ import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_s
 // --- Ankle Weights Exercises ---
 import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_name
 import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_guide
+import fitbe.composeapp.generated.resources.default_exercise_box_jumps_calf_focus_guide
+import fitbe.composeapp.generated.resources.default_exercise_box_jumps_calf_focus_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_barbell_standing_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_barbell_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_bodyweight_seated_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_bodyweight_seated_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_bodyweight_standing_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_bodyweight_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_dumbbell_seated_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_dumbbell_seated_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_dumbbell_standing_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_dumbbell_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_leg_bodyweight_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_leg_bodyweight_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_leg_dumbbell_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_leg_dumbbell_name
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_smith_machine_standing_guide
+import fitbe.composeapp.generated.resources.default_exercise_calf_raises_smith_machine_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_jump_rope_guide
+import fitbe.composeapp.generated.resources.default_exercise_jump_rope_name
 
 import fitbe.composeapp.generated.resources.ic_launcher // Default image
 //import fitbe.composeapp.generated.resources.ic_default_exercise_ez_bar_curl // Specific image
@@ -379,6 +399,16 @@ object DefaultExerciseResProvider {
         "default_exercise_ab_wheel_rollouts_knees" to Res.string.default_exercise_ab_wheel_rollouts_knees_name,
         "default_exercise_ab_wheel_rollouts_standing" to Res.string.default_exercise_ab_wheel_rollouts_standing_name,
         "default_exercise_ankle_weight_reverse_crunches" to Res.string.default_exercise_ankle_weight_reverse_crunches_name,
+        "default_exercise_calf_raises_bodyweight_standing" to Res.string.default_exercise_calf_raises_bodyweight_standing_name,
+        "default_exercise_calf_raises_dumbbell_standing" to Res.string.default_exercise_calf_raises_dumbbell_standing_name,
+        "default_exercise_calf_raises_barbell_standing" to Res.string.default_exercise_calf_raises_barbell_standing_name,
+        "default_exercise_calf_raises_smith_machine_standing" to Res.string.default_exercise_calf_raises_smith_machine_standing_name,
+        "default_exercise_calf_raises_bodyweight_seated" to Res.string.default_exercise_calf_raises_bodyweight_seated_name,
+        "default_exercise_calf_raises_dumbbell_seated" to Res.string.default_exercise_calf_raises_dumbbell_seated_name,
+        "default_exercise_calf_raises_single_leg_bodyweight" to Res.string.default_exercise_calf_raises_single_leg_bodyweight_name,
+        "default_exercise_calf_raises_single_leg_dumbbell" to Res.string.default_exercise_calf_raises_single_leg_dumbbell_name,
+        "default_exercise_box_jumps_calf_focus" to Res.string.default_exercise_box_jumps_calf_focus_name,
+        "default_exercise_jump_rope" to Res.string.default_exercise_jump_rope_name,
         )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
@@ -499,7 +529,18 @@ object DefaultExerciseResProvider {
         "default_exercise_ab_wheel_rollouts_knees" to Res.string.default_exercise_ab_wheel_rollouts_knees_guide,
         "default_exercise_ab_wheel_rollouts_standing" to Res.string.default_exercise_ab_wheel_rollouts_standing_guide,
         "default_exercise_ankle_weight_reverse_crunches" to Res.string.default_exercise_ankle_weight_reverse_crunches_guide,
-    )
+        "default_exercise_calf_raises_bodyweight_standing" to Res.string.default_exercise_calf_raises_bodyweight_standing_guide,
+        "default_exercise_calf_raises_dumbbell_standing" to Res.string.default_exercise_calf_raises_dumbbell_standing_guide,
+        "default_exercise_calf_raises_barbell_standing" to Res.string.default_exercise_calf_raises_barbell_standing_guide,
+        "default_exercise_calf_raises_smith_machine_standing" to Res.string.default_exercise_calf_raises_smith_machine_standing_guide,
+        "default_exercise_calf_raises_bodyweight_seated" to Res.string.default_exercise_calf_raises_bodyweight_seated_guide,
+        "default_exercise_calf_raises_dumbbell_seated" to Res.string.default_exercise_calf_raises_dumbbell_seated_guide,
+        "default_exercise_calf_raises_single_leg_bodyweight" to Res.string.default_exercise_calf_raises_single_leg_bodyweight_guide,
+        "default_exercise_calf_raises_single_leg_dumbbell" to Res.string.default_exercise_calf_raises_single_leg_dumbbell_guide,
+        "default_exercise_box_jumps_calf_focus" to Res.string.default_exercise_box_jumps_calf_focus_guide,
+        "default_exercise_jump_rope" to Res.string.default_exercise_jump_rope_guide,
+
+        )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
         "default_exercise_squat_bodyweight" to Res.drawable.ic_launcher,
@@ -618,5 +659,16 @@ object DefaultExerciseResProvider {
         "default_exercise_ab_wheel_rollouts_knees" to Res.drawable.ic_launcher,
         "default_exercise_ab_wheel_rollouts_standing" to Res.drawable.ic_launcher,
         "default_exercise_ankle_weight_reverse_crunches" to Res.drawable.ic_launcher,
-    )
+        "default_exercise_calf_raises_bodyweight_standing" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_dumbbell_standing" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_barbell_standing" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_smith_machine_standing" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_bodyweight_seated" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_dumbbell_seated" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_single_leg_bodyweight" to Res.drawable.ic_launcher,
+        "default_exercise_calf_raises_single_leg_dumbbell" to Res.drawable.ic_launcher,
+        "default_exercise_box_jumps_calf_focus" to Res.drawable.ic_launcher,
+        "default_exercise_jump_rope" to Res.drawable.ic_launcher,
+
+        )
 }

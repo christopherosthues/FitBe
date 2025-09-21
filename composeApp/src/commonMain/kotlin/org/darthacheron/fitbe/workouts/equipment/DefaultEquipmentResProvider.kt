@@ -4,6 +4,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.default_training_equipment_ab_wheel // Added
 import fitbe.composeapp.generated.resources.default_training_equipment_air_bike
 import fitbe.composeapp.generated.resources.default_training_equipment_ankle_weights
+import fitbe.composeapp.generated.resources.default_training_equipment_back_press_machine
 import fitbe.composeapp.generated.resources.default_training_equipment_balance_pad
 import fitbe.composeapp.generated.resources.default_training_equipment_barbell
 import fitbe.composeapp.generated.resources.default_training_equipment_battle_ropes
@@ -120,6 +121,7 @@ object DefaultEquipmentResProvider {
         "default_training_equipment_jump_rope" to Res.string.default_training_equipment_jump_rope,
         "default_training_equipment_ab_wheel" to Res.string.default_training_equipment_ab_wheel,
         "default_training_equipment_landmine_attachment" to Res.string.default_training_equipment_landmine_attachment,
+        "default_training_equipment_back_extension_machine" to Res.string.default_training_equipment_back_press_machine,
     )
 
     val equipmentImageMap: Map<String, DrawableResource?> = mapOf(
@@ -172,5 +174,6 @@ object DefaultEquipmentResProvider {
         "default_training_equipment_jump_rope" to Res.drawable.ic_launcher,
         "default_training_equipment_ab_wheel" to Res.drawable.ic_launcher,
         "default_training_equipment_landmine_attachment" to Res.drawable.ic_launcher,
+        "default_training_equipment_back_extension_machine" to Res.drawable.ic_launcher,
     )
 }

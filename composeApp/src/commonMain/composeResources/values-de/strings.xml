@@ -282,6 +282,16 @@
     <string name="default_exercise_ab_wheel_rollouts_knees_name">Ab-Roller Ausrollen (Knie)</string>
     <string name="default_exercise_ab_wheel_rollouts_standing_name">Ab-Roller Ausrollen (Stehend)</string>
     <string name="default_exercise_ankle_weight_reverse_crunches_name">Umgekehrte Crunches mit Fußgewichten</string>
+    <string name="default_exercise_calf_raises_bodyweight_standing_name">Wadenheben stehend (Körpergewicht)</string>
+    <string name="default_exercise_calf_raises_dumbbell_standing_name">Wadenheben stehend mit Kurzhanteln</string>
+    <string name="default_exercise_calf_raises_barbell_standing_name">Wadenheben stehend mit Langhantel</string>
+    <string name="default_exercise_calf_raises_smith_machine_standing_name">Wadenheben stehend an der Smith-Maschine</string>
+    <string name="default_exercise_calf_raises_bodyweight_seated_name">Wadenheben sitzend (Körpergewicht)</string>
+    <string name="default_exercise_calf_raises_dumbbell_seated_name">Wadenheben sitzend mit Kurzhanteln</string>
+    <string name="default_exercise_calf_raises_single_leg_bodyweight_name">Einbeiniges Wadenheben (Körpergewicht)</string>
+    <string name="default_exercise_calf_raises_single_leg_dumbbell_name">Einbeiniges Wadenheben mit Kurzhantel</string>
+    <string name="default_exercise_box_jumps_calf_focus_name">Box Jumps (Wadenfokus)</string>
+    <string name="default_exercise_jump_rope_name">Seilspringen</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_bodyweight_guide">Stelle dich schulterbreit hin, Brust raus, Rumpf angespannt. Senke deine Hüften nach hinten und unten, als ob du dich auf einen Stuhl setzt, Knie hinter den Zehen. So tief wie angenehm, idealerweise Oberschenkel parallel zum Boden. Drücke dich durch die Fersen hoch.</string>
@@ -396,6 +406,16 @@
     <string name="default_exercise_wall_ball_squat_and_press_no_throw_guide">Halte einen Wall-Ball (oder Medizinball) auf Brusthöhe. Stehe schulterbreit. Führe eine volle Kniebeuge aus, halte dabei die Brust oben und den Rumpf angespannt. Während du dich aus der Kniebeuge aufrichtest, drücke den Ball über den Kopf und strecke die Arme vollständig aus. Senke den Ball zurück auf Brusthöhe, während du in die nächste Kniebeuge gehst. Der Ball wird bei dieser Variante nicht gegen eine Wand geworfen.</string>
     <string name="default_exercise_sandbag_cleans_guide">Stehe hüftbreit, der Sandbag liegt vor dir auf dem Boden (oder längs zwischen deinen Füßen). Greife den Sandbag fest. In einer explosiven Bewegung treibe mit Hüften und Beinen an, zucke mit den Schultern und ziehe den Sandbag zu deinen Schultern hoch. Rotiere schnell deine Ellbogen unter den Sack, um ihn in einer vorderen Rack-Position (auf Schultern/Brust) zu fangen. Stehe aufrecht. Senke den Sack kontrolliert zurück zum Boden. Wiederholen.</string>
     <string name="default_exercise_sandbag_shoulder_to_shoulder_press_guide">Hebe (cleane) den Sandbag auf eine Schulter. Spanne deinen Rumpf an. Drücke den Sandbag direkt über den Kopf und strecke den Arm vollständig aus. Senke den Sandbag kontrolliert zur gegenüberliegenden Schulter. Drücke ihn von dieser Schulter über den Kopf. Wechsle bei jedem Drücken die Schultern ab. Behalte durchgehend die Stabilität bei.</string>
+    <string name="default_exercise_calf_raises_bodyweight_standing_guide">Stehe hüftbreit, Zehen zeigen nach vorne. Du kannst die Fußballen auf eine erhöhte Oberfläche (wie eine Stufe oder Scheibe) stellen für einen größeren Bewegungsumfang. Hebe dich langsam auf die Fußballen und drücke die Fersen so hoch wie möglich. Spanne die Waden oben an. Senke die Fersen langsam wieder ab. Wiederholen.</string>
+    <string name="default_exercise_calf_raises_dumbbell_standing_guide">Halte eine Kurzhantel in jeder Hand seitlich am Körper. Stehe hüftbreit. Hebe dich auf die Fußballen und drücke die Fersen hoch. Waden anspannen. Fersen langsam senken. Für mehr Bewegungsumfang, stelle dich mit den Fußballen auf eine erhöhte Oberfläche.</string>
+    <string name="default_exercise_calf_raises_barbell_standing_guide">Lege eine Langhantel auf deinen oberen Rücken/Trapezmuskel (wie bei Kniebeugen). Stehe hüftbreit, Fußballen optional auf einer erhöhten Oberfläche. Hebe dich auf die Fußballen und drücke die Fersen hoch. Waden anspannen. Fersen langsam senken. Gleichgewicht und Kontrolle halten.</string>
+    <string name="default_exercise_calf_raises_smith_machine_standing_guide">Positioniere dich unter der Stange der Smith-Maschine, Stange auf dem oberen Rücken. Füße hüftbreit, Fußballen optional auf einem erhöhten Block. Hake die Stange aus. Hebe dich auf die Fußballen und drücke dich durch die Zehen hoch. Waden oben anspannen. Fersen langsam senken. Die Maschine sorgt für Stabilität.</string>
+    <string name="default_exercise_calf_raises_bodyweight_seated_guide">Setze dich auf eine Bank oder einen Stuhl, Knie im 90-Grad-Winkel gebeugt, Füße flach auf dem Boden. Lege die Hände auf die Oberschenkel für leichten Widerstand, falls gewünscht, oder lasse sie ruhen. Hebe die Fersen so hoch wie möglich vom Boden, indem du dich durch die Fußballen drückst. Spanne die Waden an. Senke die Fersen langsam. Dies zielt mehr auf den Soleus-Muskel ab.</string>
+    <string name="default_exercise_calf_raises_dumbbell_seated_guide">Setze dich auf eine Bank, Knie 90 Grad gebeugt, Füße flach. Lege je eine Kurzhantel senkrecht auf jeden Oberschenkel nahe am Knie und halte sie fest. Drücke dich durch die Fußballen hoch, Fersen hoch. Waden anspannen. Fersen langsam senken. Dies betont den Soleus.</string>
+    <string name="default_exercise_calf_raises_single_leg_bodyweight_guide">Stehe auf einem Bein und halte dich bei Bedarf an einer Wand oder einem stabilen Gegenstand fest, um das Gleichgewicht zu halten. Du kannst den Fußballen des arbeitenden Fußes auf eine erhöhte Oberfläche stellen. Hebe die Ferse des arbeitenden Beins so hoch wie möglich und stelle dich auf den Fußballen. Spanne deine Wade an. Senke die Ferse langsam. Absolviere die Wiederholungen für ein Bein, dann wechsle.</string>
+    <string name="default_exercise_calf_raises_single_leg_dumbbell_guide">Stehe auf einem Bein und halte eine Kurzhantel in der Hand auf der gleichen Seite wie dein arbeitendes Bein (die andere Hand kann zum Balancieren verwendet werden). Der Fußballen des arbeitenden Fußes kann auf einer erhöhten Oberfläche stehen. Hebe dich auf den Fußballen und drücke die Ferse hoch. Wade anspannen. Langsam senken. Wiederholungen ausführen, dann Bein und Hantelhand wechseln.</string>
+    <string name="default_exercise_box_jumps_calf_focus_guide">Führe Box Jumps wie gewohnt aus, aber mit bewusster Anstrengung, den Abdruck von deinen Waden während des Sprungs zu maximieren. Konzentriere dich auf eine explosive Plantarflexion (Zehen nach unten strecken), während du den Boden verlässt. Lande weich.</string>
+    <string name="default_exercise_jump_rope_guide">Halte die Griffe des Springseils locker, Ellbogen nah am Körper. Schwinge das Seil mit den Handgelenken, nicht mit den ganzen Armen. Springe gerade hoch genug, damit das Seil unter deinen Füßen hindurchpasst. Lande weich auf den Fußballen. Halte einen gleichmäßigen Rhythmus bei.</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
@@ -487,6 +507,7 @@
     <string name="default_training_equipment_jump_rope">Springseil</string>
     <string name="default_training_equipment_ab_wheel">Bauchroller</string>
     <string name="default_training_equipment_landmine_attachment">Landmine-Halterung</string>
+    <string name="default_training_equipment_back_extension_machine">Rückenstreckermaschine</string>
 
     <!-- Date unit -->
     <string name="date_unit_day">Tag</string>
