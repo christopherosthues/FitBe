@@ -8,8 +8,8 @@
     <!-- Top Bar -->
     <string name="top_bar_title_home">Home</string>
     <string name="top_bar_title_exercises_dashboard">Exercises</string>
+    <string name="top_bar_title_program_overview">Program Overview</string>
     <string name="top_bar_title_workout_overview">Workout Overview</string>
-    <string name="top_bar_title_workout_templates">Workout Templates</string>
     <string name="top_bar_title_workout_template_detail">Workout Template detail</string>
     <string name="top_bar_title_exercises">Exercises</string>
     <string name="top_bar_title_add_edit_exercise">Add/Edit Exercises</string>
@@ -25,9 +25,11 @@
     <string name="top_bar_title_settings">Settings</string>
 
     <!-- Exercise dashboard -->
+    <string name="card_title_programs_overview">Programs Overview</string>
     <string name="card_title_workouts_overview">Workouts Overview</string>
     <string name="card_title_exercises_overview">Exercises Overview</string>
     <string name="card_title_training_equipment_overview">Training equipment Overview</string>
+    <string name="card_title_content_description_programs_overview">Navigate to Programs Overview</string>
     <string name="card_title_content_description_workouts_overview">Navigate to Workouts Overview</string>
     <string name="card_title_content_description_exercises_overview">Navigate to Exercises Overview</string>
     <string name="card_title_content_description_training_equipment_overview">Navigate to Training Equipment Overview</string>

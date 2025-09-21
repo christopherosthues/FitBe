@@ -29,9 +29,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.card_title_content_description_exercises_overview
+import fitbe.composeapp.generated.resources.card_title_content_description_programs_overview
 import fitbe.composeapp.generated.resources.card_title_content_description_training_equipment_overview
 import fitbe.composeapp.generated.resources.card_title_content_description_workouts_overview
 import fitbe.composeapp.generated.resources.card_title_exercises_overview
+import fitbe.composeapp.generated.resources.card_title_programs_overview
 import fitbe.composeapp.generated.resources.card_title_training_equipment_overview
 import fitbe.composeapp.generated.resources.card_title_workouts_overview
 import fitbe.composeapp.generated.resources.ic_exercises
@@ -57,9 +59,18 @@ fun ExercisesDashboardView(
         item {
             // TODO
             DashboardCard(
+                title = stringResource(Res.string.card_title_programs_overview),
+                imagePainter = painterResource(Res.drawable.ic_exercises),
+                onClick = { exercisesDashboardViewModel.navigateToPrograms() },
+                contentDescription = stringResource(Res.string.card_title_content_description_programs_overview)
+            )
+        }
+        item {
+            // TODO
+            DashboardCard(
                 title = stringResource(Res.string.card_title_workouts_overview),
                 imagePainter = painterResource(Res.drawable.ic_exercises),
-                onClick = { exercisesDashboardViewModel.navigateToWorkoutTemplatesOverview() },
+                onClick = { exercisesDashboardViewModel.navigateToWorkoutsOverview() },
                 contentDescription = stringResource(Res.string.card_title_content_description_workouts_overview)
             )
         }

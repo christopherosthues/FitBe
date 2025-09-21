@@ -3,7 +3,7 @@ package org.darthacheron.fitbe.workouts.templates
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.top_bar_title_workout_templates
+import fitbe.composeapp.generated.resources.top_bar_title_workout_overview
 import fitbe.composeapp.generated.resources.workout_template_error_favorites
 import fitbe.composeapp.generated.resources.workout_template_error_toggle_favorite
 import fitbe.composeapp.generated.resources.workout_overview_error_loading_workouts
@@ -45,7 +45,7 @@ class WorkoutTemplatesOverviewViewModel(
 ) : FilterableViewModel(topBarManager) {
 
     override val title: StringResource
-        get() = Res.string.top_bar_title_workout_templates
+        get() = Res.string.top_bar_title_workout_overview
     override val bottomBarSelected: Screen?
         get() = Screen.ExercisesDashboard // Or Screen.WorkoutsDashboard if that exists
     override val backNavigationIconVisible: Boolean?

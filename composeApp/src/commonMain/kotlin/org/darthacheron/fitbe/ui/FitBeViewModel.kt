@@ -13,8 +13,6 @@ abstract class FitBeViewModel(private val topBarManager: TopBarManager) : ViewMo
     open val actions: List<TopBarAction> =  emptyList()
     open val backNavigationIconVisible: Boolean? = null
 
-    // Removed updateTopBarConfig() from init block
-
     fun updateTopBarConfig() {
         topBarManager.setConfig(
             TopBarConfig(

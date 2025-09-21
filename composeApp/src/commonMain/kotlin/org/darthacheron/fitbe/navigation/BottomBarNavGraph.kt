@@ -36,6 +36,8 @@ import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.workouts.programs.ProgramOverviewView
+import org.darthacheron.fitbe.workouts.programs.ProgramOverviewViewModel
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailView
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailViewModel
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewView
@@ -90,6 +92,10 @@ fun BottomBarNavGraph(
                 ProfileView(viewModel)
             }
         }
+        composable<Screen.ProgramOverview> {
+            val viewModel = koinViewModel<ProgramOverviewViewModel>()
+            ProgramOverviewView(viewModel)
+        }
         composable<Screen.ExercisesOverview> {
             val viewModel = koinViewModel<ExercisesViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
@@ -139,7 +145,7 @@ fun BottomBarNavGraph(
             val settingsRepository = getKoin().get<SettingsRepository>()
             WeightOverviewView(viewModel, settingsRepository)
         }
-        composable<Screen.WorkoutTemplatesOverview> {
+        composable<Screen.WorkoutsOverview> {
             val viewModel = koinViewModel<WorkoutTemplatesOverviewViewModel>(
                 parameters = { parametersOf(bottomBarNavHostController) }
             )

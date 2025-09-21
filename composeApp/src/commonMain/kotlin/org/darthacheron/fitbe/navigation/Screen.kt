@@ -53,7 +53,10 @@ sealed class Screen {
     data object Settings : Screen()
 
     @Serializable
-    data object WorkoutTemplatesOverview : Screen()
+    data object ProgramOverview : Screen()
+
+    @Serializable
+    data object WorkoutsOverview : Screen()
 
     @Serializable
     data class WorkoutTemplateDetail(val id: String?) : Screen()
