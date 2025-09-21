@@ -74,7 +74,7 @@ internal val equipmentList = listOf(
     "default_training_equipment_jump_rope",
     "default_training_equipment_ab_wheel",
     "default_training_equipment_landmine_attachment",
-    "default_training_equipment_back_press_machine",
+    "default_training_equipment_back_extension_machine",
 )
 
 internal data class ExerciseSeedData(
