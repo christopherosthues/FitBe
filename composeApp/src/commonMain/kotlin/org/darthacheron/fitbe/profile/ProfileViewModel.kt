@@ -361,6 +361,18 @@ class ProfileViewModel(
                 )
 
                 profileRepository.upsertProfile(profileToSave)
+                val savedProfileCheck = profileRepository.getProfileById(profileToSave.id)
+
+                if (savedProfileCheck == null || savedProfileCheck != profileToSave) {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving)
+                            // Do not reset isEditing or editingProfileId, as save failed
+                        )
+                    }
+                    return@launch
+                }
 
                 if (isAddingNew || settings.selectedProfileId == null || settings.selectedProfileId != profileToSave.id) {
                     settingsRepository.saveSettings(settings.copy(selectedProfileId = profileToSave.id))
@@ -374,11 +386,11 @@ class ProfileViewModel(
                     )
                 }
             } catch (e: Exception) {
-                // This will catch other errors during upsert, not related to name constraint if pre-check is done.
                 _uiState.update { 
                     it.copy(
                         isLoading = false, 
                         error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving)
+                        // Do not reset isEditing or editingProfileId, as save failed due to unexpected exception
                     )
                 }
             }
@@ -416,6 +428,19 @@ class ProfileViewModel(
                         }
                         try {
                             profileRepository.upsertProfile(newDefaultProfile)
+                            val savedDefaultCheck = profileRepository.getProfileById(newDefaultProfile.id)
+                            if (savedDefaultCheck == null || savedDefaultCheck != newDefaultProfile) {
+                                _uiState.update { 
+                                    it.copy(
+                                        isLoading = false, 
+                                        error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving),
+                                        currentProfile = null, 
+                                        currentProfileDisplay = null, 
+                                        allProfilesDisplay = emptyList()
+                                    )
+                                }
+                                return@launch
+                            }
                             settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = newDefaultProfile.id))
                             _uiState.update { it.copy(isLoading = false) } // Rely on init flow to repopulate
                         } catch (e: Exception) {
