@@ -6,15 +6,39 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.settings_error_loading
+import fitbe.composeapp.generated.resources.settings_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_settings
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import kotlin.uuid.ExperimentalUuidApi
+
+data class SettingsError(
+    val hasError: Boolean = false,
+    val errorResId: StringResource? = null
+)
+
+@OptIn(ExperimentalUuidApi::class)
+data class SettingsUiState(
+    val isLoading: Boolean = false,
+    // currentSettings fields are now flattened:
+    val currentWeightUnit: WeightUnit = WeightUnit.KG,
+    val currentDistanceUnit: DistanceUnit = DistanceUnit.KM,
+    val currentBodyMeasurementUnit: BodyMeasurementUnit = BodyMeasurementUnit.CM,
+    val currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
+    val persistedSettings: Settings = Settings(), // Keep persisted settings as a single object
+    val error: SettingsError = SettingsError()
+)
 
 @OptIn(ExperimentalUuidApi::class)
 class SettingsViewModel(
@@ -30,49 +54,113 @@ class SettingsViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_settings
 
-    // Persistent settings
-    private var persistedSettings by mutableStateOf(Settings())
-
-    // Temporary settings for editing
-    var currentSettings by mutableStateOf(Settings())
-        private set
+    private val _uiState = MutableStateFlow(SettingsUiState(isLoading = true))
+    val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            repository.getSettingsFlow().collect {
-                persistedSettings = it
-                currentSettings = it
+            repository.getSettingsFlow()
+                .catch { e ->
+                    // Log error e
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = SettingsError(hasError = true, errorResId = Res.string.settings_error_loading)
+                        )
+                    }
+                }
+                .collect { loadedSettings ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            currentWeightUnit = loadedSettings.weightUnit,
+                            currentDistanceUnit = loadedSettings.distanceUnit,
+                            currentBodyMeasurementUnit = loadedSettings.bodyMeasurementUnit,
+                            currentThemeMode = loadedSettings.themeMode,
+                            persistedSettings = loadedSettings,
+                            error = SettingsError() // Clear error on successful load
+                        )
+                    }
+                }
+        }
+    }
+
+    fun onWeightUnitChanged(unit: WeightUnit) {
+        _uiState.update { it.copy(currentWeightUnit = unit) }
+    }
+
+    fun onDistanceUnitChanged(unit: DistanceUnit) {
+        _uiState.update { it.copy(currentDistanceUnit = unit) }
+    }
+
+    fun onBodyMeasurementUnitChanged(unit: BodyMeasurementUnit) {
+        _uiState.update { it.copy(currentBodyMeasurementUnit = unit) }
+    }
+
+    fun onThemeModeChanged(mode: ThemeMode) {
+        _uiState.update { it.copy(currentThemeMode = mode) }
+    }
+
+    fun saveSettings(onSuccess: () -> Unit = {}) {
+        _uiState.update { it.copy(isLoading = true, error = SettingsError()) }
+        viewModelScope.launch {
+            try {
+                val currentState = _uiState.value
+                val settingsToSave = Settings(
+                    weightUnit = currentState.currentWeightUnit,
+                    distanceUnit = currentState.currentDistanceUnit,
+                    bodyMeasurementUnit = currentState.currentBodyMeasurementUnit,
+                    themeMode = currentState.currentThemeMode,
+                    selectedProfileId = currentState.persistedSettings.selectedProfileId // Preserve selectedProfileId
+                )
+                repository.saveSettings(settingsToSave)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        persistedSettings = settingsToSave
+                    )
+                }
+                onSuccess()
+            } catch (e: Exception) {
+                // Log error e
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = SettingsError(hasError = true, errorResId = Res.string.settings_error_saving)
+                    )
+                }
             }
         }
     }
 
-    fun setWeightUnit(unit: WeightUnit) {
-        currentSettings = currentSettings.copy(weightUnit = unit)
-    }
-
-    fun setDistanceUnit(unit: DistanceUnit) {
-        currentSettings = currentSettings.copy(distanceUnit = unit)
-    }
-
-    fun setBodyMeasurementUnit(unit: BodyMeasurementUnit) {
-        currentSettings = currentSettings.copy(bodyMeasurementUnit = unit)
-    }
-
-    fun setThemeMode(mode: ThemeMode) {
-        currentSettings = currentSettings.copy(themeMode = mode)
-    }
-
-    fun saveSettings() {
-        viewModelScope.launch {
-            repository.saveSettings(currentSettings)
+    fun resetToDefaults() {
+        val defaultSettings = Settings() // Creates a settings object with default values
+        _uiState.update {
+            it.copy(
+                currentWeightUnit = defaultSettings.weightUnit,
+                currentDistanceUnit = defaultSettings.distanceUnit,
+                currentBodyMeasurementUnit = defaultSettings.bodyMeasurementUnit,
+                currentThemeMode = defaultSettings.themeMode
+                // persistedSettings.selectedProfileId remains unchanged on client,
+                // but if defaults also imply null profile, that needs to be handled
+                // if resetToDefaults should also reset selectedProfileId in backend.
+                // For now, only resetting the displayed fields.
+            )
         }
     }
 
-    fun resetToDefaults() {
-        currentSettings = Settings() // Uses default values from data class
+    fun revertChanges() {
+        _uiState.update {
+            it.copy(
+                currentWeightUnit = it.persistedSettings.weightUnit,
+                currentDistanceUnit = it.persistedSettings.distanceUnit,
+                currentBodyMeasurementUnit = it.persistedSettings.bodyMeasurementUnit,
+                currentThemeMode = it.persistedSettings.themeMode
+            )
+        }
     }
 
-    fun revertChanges() {
-        currentSettings = persistedSettings
+    fun clearError() {
+        _uiState.update { it.copy(error = SettingsError()) }
     }
 }

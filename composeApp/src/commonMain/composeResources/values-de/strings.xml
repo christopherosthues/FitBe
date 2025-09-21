@@ -540,6 +540,9 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Auf Standard zurücksetzen</string>
     <string name="settings_content_description_title">Einstellungen öffnen</string>
+    <string name="settings_error_loading">Fehler beim Laden der Einstellungen. Bitte versuche es erneut.</string>
+    <string name="settings_error_saving">Fehler beim Speichern der Einstellungen. Bitte versuche es erneut.</string>
+    <string name="settings_content_description_back">Zurück navigieren</string>
 
     <!-- Profile -->
     <string name="profile_add">Profil hinzufügen</string>

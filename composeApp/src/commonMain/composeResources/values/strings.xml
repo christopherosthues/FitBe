@@ -541,6 +541,9 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Reset to Defaults</string>
     <string name="settings_content_description_title">Open settings</string>
+    <string name="settings_error_loading">Failed to load settings. Please try again.</string>
+    <string name="settings_error_saving">Failed to save settings. Please try again.</string>
+    <string name="settings_content_description_back">Navigate back</string>
 
     <!-- Profile -->
     <string name="profile_add">Add Profile</string>

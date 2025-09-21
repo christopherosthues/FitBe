@@ -3,6 +3,7 @@ package org.darthacheron.fitbe
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
@@ -24,6 +25,7 @@ fun App() {
         val settingsViewModel = remember { koin.get<SettingsViewModel>() }
         val startUpService = remember { koin.get<StartUpService>() }
         val topBarManager = remember { koin.get<TopBarManager>() }
+        val settings = settingsViewModel.uiState.collectAsState()
 
         LaunchedEffect(Unit) {
             startUpService.initialize()
@@ -37,7 +39,7 @@ fun App() {
         }
 
         // Apply theme at the root of the app
-        AppTheme(themeMode = settingsViewModel.currentSettings.themeMode) {
+        AppTheme(themeMode = settings.value.persistedSettings.themeMode) {
             MaterialTheme {
                 val navHostController = rememberNavController()
                 RootNavGraph(
