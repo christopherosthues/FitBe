@@ -20,6 +20,9 @@ class ProfileRepository(private val profileDao: ProfileDao) {
     suspend fun getProfileFlowById(id: Uuid): Flow<Profile?> =
         profileDao.getProfileFlowById(id).map { it?.toProfile() }
 
+    suspend fun getProfileByName(name: String): Profile? =
+        profileDao.getProfileByName(name)?.toProfile()
+
     suspend fun upsertProfile(profile: Profile) {
         profileDao.upsertProfile(toEntity(profile))
     }

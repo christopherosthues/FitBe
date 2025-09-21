@@ -87,8 +87,7 @@ fun BottomBarNavGraph(
                 val viewModel = koinViewModel<ProfileViewModel>(
                     parameters = { parametersOf(topNavHostController, bottomBarNavHostController) }
                 )
-                val settingsRepository = getKoin().get<SettingsRepository>()
-                ProfileView(viewModel, settingsRepository)
+                ProfileView(viewModel)
             }
         }
         composable<Screen.ExercisesOverview> {

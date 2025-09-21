@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.profile
 
 import androidx.room.Entity
+import androidx.room.Index // Added import
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -8,7 +9,10 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-@Entity(tableName = "profiles")
+@Entity(
+    tableName = "profiles",
+    indices = [Index(value = ["name"], unique = true)] // Added unique index for name
+)
 data class ProfileEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val name: String,
