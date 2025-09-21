@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -34,7 +35,10 @@ data class ExercisesScreenUiState(
     val rawExercises: List<Exercise> = emptyList(),
     val favoriteExerciseIds: Set<Uuid> = emptySet(),
     val exerciseListError: StringResource? = null,
-    val favoriteStateError: StringResource? = null
+    val favoriteStateError: StringResource? = null,
+    val selectedMuscleGroups: Set<MuscleGroup> = emptySet(),
+    val selectedRecommendedForItems: Set<RecommendedFor> = emptySet(),
+    val selectedExerciseTypes: Set<ExerciseType> = emptySet()
 )
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
@@ -58,13 +62,22 @@ class ExercisesViewModel(
     private val _exerciseListErrorMessage = MutableStateFlow<StringResource?>(null)
     private val _favoriteStateErrorMessage = MutableStateFlow<StringResource?>(null)
 
+    private val _selectedMuscleGroups = MutableStateFlow<Set<MuscleGroup>>(emptySet())
+    val selectedMuscleGroups: StateFlow<Set<MuscleGroup>> = _selectedMuscleGroups.asStateFlow()
+
+    private val _selectedRecommendedForItems = MutableStateFlow<Set<RecommendedFor>>(emptySet())
+    val selectedRecommendedForItems: StateFlow<Set<RecommendedFor>> = _selectedRecommendedForItems.asStateFlow()
+
+    private val _selectedExerciseTypes = MutableStateFlow<Set<ExerciseType>>(emptySet())
+    val selectedExerciseTypes: StateFlow<Set<ExerciseType>> = _selectedExerciseTypes.asStateFlow()
+
     private val currentProfileIdFlow: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
         .map { it.selectedProfileId }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalExercisesFlow: StateFlow<List<Exercise>> =
         exerciseRepository.getAllExercises()
-            .onStart { 
+            .onStart {
                 _isLoadingExercises.value = true
                 _exerciseListErrorMessage.value = null
             }
@@ -114,38 +127,44 @@ class ExercisesViewModel(
             initialValue = emptySet()
         )
 
-    // Combine the first 5 flows
-    private val combinedFiveFlows: Flow<Pair<Pair<List<Exercise>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>> = combine(
+    // Combine the first 5 flows into a temporary data structure
+    private val baseUiDataFlow: Flow<BaseUiData> = combine(
         internalExercisesFlow,      // Flow 1: List<Exercise>
         internalFavoritesFlow,       // Flow 2: Set<Uuid>
         _isLoadingExercises,         // Flow 3: Boolean
         _isLoadingFavorites,         // Flow 4: Boolean
         _exerciseListErrorMessage    // Flow 5: StringResource?
-    ) { exercises: List<Exercise>, favorites: Set<Uuid>, isLoadingEx: Boolean, isLoadingFav: Boolean, exerciseError: StringResource? ->
-        // Temporary data holder for the first 5 values
-        Pair(
-            Pair<List<Exercise>, Set<Uuid>>(exercises, favorites),
-            Triple<Boolean, Boolean, StringResource?>(isLoadingEx, isLoadingFav, exerciseError)
-        )
+    ) { exercises, favorites, isLoadingEx, isLoadingFav, exerciseError ->
+        BaseUiData(exercises, favorites, isLoadingEx, isLoadingFav, exerciseError)
     }
 
-    val uiState: StateFlow<ExercisesScreenUiState> = combinedFiveFlows.combine(
-        _favoriteStateErrorMessage   // Flow 6: StringResource?
-    ) { intermediateData: Pair<Pair<List<Exercise>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>, 
-        favError: StringResource? ->
-        val (pair1: Pair<List<Exercise>, Set<Uuid>>, triple1: Triple<Boolean, Boolean, StringResource?>) = intermediateData
-        val (exercises: List<Exercise>, favorites: Set<Uuid>) = pair1
-        val (isLoadingEx: Boolean, isLoadingFav: Boolean, exerciseError: StringResource?) = triple1
-        
+    val uiState: StateFlow<ExercisesScreenUiState> = combine(
+        baseUiDataFlow,             // Combined Flow 1
+        _favoriteStateErrorMessage,  // Flow 2
+        _selectedMuscleGroups,        // Flow 3
+        _selectedRecommendedForItems,     // Flow 4
+        _selectedExerciseTypes        // Flow 5
+    ) { baseData, favError, muscleGroups, recommendedForItems, exerciseTypes ->
         ExercisesScreenUiState(
-            isLoading = isLoadingEx || isLoadingFav,
-            rawExercises = exercises,
-            favoriteExerciseIds = favorites,
-            exerciseListError = exerciseError,
-            favoriteStateError = favError
+            isLoading = baseData.isLoadingExercises || baseData.isLoadingFavorites,
+            rawExercises = baseData.exercises,
+            favoriteExerciseIds = baseData.favorites,
+            exerciseListError = baseData.exerciseListError,
+            favoriteStateError = favError,
+            selectedMuscleGroups = muscleGroups,
+            selectedRecommendedForItems = recommendedForItems,
+            selectedExerciseTypes = exerciseTypes
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExercisesScreenUiState(isLoading = true))
 
+    // Helper data class for the first combine operation
+    private data class BaseUiData(
+        val exercises: List<Exercise>,
+        val favorites: Set<Uuid>,
+        val isLoadingExercises: Boolean,
+        val isLoadingFavorites: Boolean,
+        val exerciseListError: StringResource?
+    )
 
     fun navigateToExerciseDetail(id: Uuid?) {
         navHostController.navigate(Screen.ExerciseDetail(id?.toString()))
@@ -169,6 +188,34 @@ class ExercisesViewModel(
                 }
             }
         }
+    }
+
+    fun applyFilters(
+        muscleGroups: Set<MuscleGroup>,
+        recommendedForItems: Set<RecommendedFor>,
+        exerciseTypes: Set<ExerciseType>
+    ) {
+        _selectedMuscleGroups.value = muscleGroups
+        _selectedRecommendedForItems.value = recommendedForItems
+        _selectedExerciseTypes.value = exerciseTypes
+    }
+
+    fun removeMuscleGroupFilter(muscleGroup: MuscleGroup) {
+        _selectedMuscleGroups.value = _selectedMuscleGroups.value - muscleGroup
+    }
+
+    fun removeRecommendedForFilter(recommendedFor: RecommendedFor) {
+        _selectedRecommendedForItems.value = _selectedRecommendedForItems.value - recommendedFor
+    }
+
+    fun removeExerciseTypeFilter(exerciseType: ExerciseType) {
+        _selectedExerciseTypes.value = _selectedExerciseTypes.value - exerciseType
+    }
+    
+    fun clearAllFilters() {
+        _selectedMuscleGroups.value = emptySet()
+        _selectedRecommendedForItems.value = emptySet()
+        _selectedExerciseTypes.value = emptySet()
     }
 
     fun clearErrorMessage() {
