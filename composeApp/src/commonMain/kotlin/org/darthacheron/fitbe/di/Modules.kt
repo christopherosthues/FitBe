@@ -38,6 +38,7 @@ import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 import org.darthacheron.fitbe.ui.ActualTopBarManager
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.workouts.programs.ProgramOverviewViewModel
+import org.darthacheron.fitbe.workouts.programs.ProgramRepository
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailViewModel
 import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionViewModel
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
@@ -59,6 +60,7 @@ val sharedModule = module {
     singleOf(::ProfileRepository)
     singleOf(::WorkoutTemplateRepository)
     singleOf(::WorkoutExecutionRepository)
+    singleOf(::ProgramRepository)
 
     // Unit Converters
     singleOf(::BodyMeasurementUnitConverter)
@@ -81,6 +83,7 @@ val sharedModule = module {
     single { get<FitBeDatabase>().equipmentDao }
     single { get<FitBeDatabase>().workoutTemplateDao }
     single { get<FitBeDatabase>().workoutExecutionDao }
+    single { get<FitBeDatabase>().programDao }
 
     // Services and Managers
     singleOf(::StartUpService)

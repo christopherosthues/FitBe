@@ -49,6 +49,7 @@ import org.darthacheron.fitbe.workouts.templates.ProfileFavoriteWorkoutTemplateC
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
 import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.workouts.programs.ProgramDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionEntity
 import org.darthacheron.fitbe.workouts.workouts.WorkoutSetExecutionEntity
@@ -103,10 +104,9 @@ abstract class FitBeDatabase : RoomDatabase() {
     abstract val stepsDao: StepsDao
     abstract val exerciseDao: ExerciseDao
     abstract val equipmentDao: EquipmentDao
-
-    // New DAOs for Workouts
     abstract val workoutTemplateDao: WorkoutTemplateDao
     abstract val workoutExecutionDao: WorkoutExecutionDao
+    abstract val programDao: ProgramDao
 
     companion object {
         const val DB_NAME = "fitbe.db"

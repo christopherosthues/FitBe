@@ -34,6 +34,20 @@
     <string name="card_title_content_description_exercises_overview">Navigiere zur Übungsübersicht</string>
     <string name="card_title_content_description_training_equipment_overview">Navigiere zur Geräteübersicht</string>
 
+    <!-- Program overview -->
+    <string name="program_overview_filter_label">Programme filtern</string>
+    <string name="program_overview_no_filtered_programs">Keine Programme gefunden.</string>
+    <string name="program_overview_no_programs">Keine Programme vorhanden. Füge welche hinzu!</string>
+    <string name="program_overview_content_description_add">Program hinzufügen</string>
+    <string name="program_overview_content_description_card">Details von %1$s anzeigen</string>
+    <string name="program_overview_content_description_default_program">Standardprogramm Bild</string>
+    <string name="program_overview_content_description_card_remove_favorite">Programm als Favorit entfernen</string>
+    <string name="program_overview_content_description_card_add_favorite">Programm als Favorit markieren</string>
+    <string name="program_overview_workouts">%1$d Workouts</string>
+    <string name="program_overview_error_favorites">Laden der favorisierten Programme fehlgeschlagen</string>
+    <string name="program_overview_error_toggle_favorite">Favoritenstatus des Programms konnte nicht geändert werden</string>
+    <string name="program_overview_error_loading_programs">Programme konnten nicht geladen werden. Bitte versuche es erneut.</string>
+
     <!-- Workout Overview -->
     <string name="workout_overview_empty">Keine Workouts gefunden. Füge welche hinzu!</string>
     <string name="workout_overview_content_description_start_new_workout_fab">Füge ein neues Workout hinzu</string>

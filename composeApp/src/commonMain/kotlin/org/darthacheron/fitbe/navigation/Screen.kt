@@ -56,6 +56,9 @@ sealed class Screen {
     data object ProgramOverview : Screen()
 
     @Serializable
+    data class ProgramDetail(val id: String?) : Screen()
+
+    @Serializable
     data object WorkoutsOverview : Screen()
 
     @Serializable

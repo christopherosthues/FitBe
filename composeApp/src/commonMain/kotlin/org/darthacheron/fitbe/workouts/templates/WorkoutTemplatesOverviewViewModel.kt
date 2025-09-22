@@ -47,7 +47,7 @@ class WorkoutTemplatesOverviewViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_workout_overview
     override val bottomBarSelected: Screen?
-        get() = Screen.ExercisesDashboard // Or Screen.WorkoutsDashboard if that exists
+        get() = Screen.ExercisesDashboard
     override val backNavigationIconVisible: Boolean?
         get() = true
 
