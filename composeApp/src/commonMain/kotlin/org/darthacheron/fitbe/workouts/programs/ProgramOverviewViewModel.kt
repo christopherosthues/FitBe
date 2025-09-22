@@ -140,7 +140,7 @@ class ProgramOverviewViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = WorkoutTemplatesUiState(isLoading = true)
+        initialValue = ProgramsUiState(isLoading = true)
     )
 
     fun navigateToProgramDetail(programId: Uuid?) {
