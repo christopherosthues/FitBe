@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +52,7 @@ import io.github.koalaplot.core.xygraph.CategoryAxisModel
 import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -60,12 +63,15 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.date.DatePickerModal
+import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.components.date.TimePickerDialog
+import org.darthacheron.fitbe.health.beverages.DateRangeControl
+import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.ceil
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -79,109 +85,74 @@ fun SleepOverviewView(
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
-    val sleeps by viewModel.sleeps.collectAsState()
-    var selectedViewTypeIndex by remember { mutableStateOf(0) }
-    val startDate by viewModel.startDate.collectAsState()
-    val endDate by viewModel.endDate.collectAsState()
-    var showDateRangeDialog by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
-    val viewTypes = DateUnit.entries
 
-    Column {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            TextButton(
-                onClick = { showDateRangeDialog = true },
-            ) {
-                Row {
-                    Column {
-                        Text(
-                            text =
-                                startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                        )
-                        Text(
-                            text =
-                                endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                        )
-                    }
-                    Icon(
-                        painterResource(Res.drawable.ic_date_range),
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                            .align(Alignment.CenterVertically)
-                    )
-                }
-            }
-            DropdownSelection(
-                initialState = false,
-                selectedIndex = selectedViewTypeIndex,
-                items = DateUnit.entries,
-                title = "Choose an option",
-                itemContent = { item, onClick ->
-                    DropdownMenuItem(
-                        text = { Text(item.localizedString()) },
-                        onClick = onClick
-                    )
-                },
-                itemToString = {
-                    it.localizedString()
-                },
-                onItemSelected = {
-                    selectedViewTypeIndex = it
-                    viewModel.setViewType(viewTypes[it])
-                }
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (!sleeps.isEmpty()) {
-                Plot(sleeps)
-            }
-            IconButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_back),
-                    contentDescription = null
-                )
-            }
-            IconButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_forward),
-                    contentDescription = null
-                )
-            }
-            FilledIconButton(
-                onClick = { showAddDialog = true },
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    uiState.errorMessage?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) {
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.clearErrorMessage()
             }
         }
     }
 
-    if (showDateRangeDialog) {
-        DateRangePickerModal(
-            dateUnit = DateUnit.DAY, // TODO: adjust to new DateRange
-            onDateRangeSelected = { dateRange, dateUnit ->
-                if (dateRange.first != null) {
-                    viewModel.setStartDate(
-                        Instant.fromEpochMilliseconds(dateRange.first!!)
-                    )
-                }
-                if (dateRange.second != null) {
-                    viewModel.setEndDate(
-                        Instant.fromEpochMilliseconds(dateRange.second!!)
-                    )
-                }
-                showDateRangeDialog = false
-            },
-            onDismiss = { showDateRangeDialog = false }
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            PlotSleeps(
+                Modifier.padding(bottom = 64.dp),
+                uiState.sleeps,
+                dateRange,
+                uiState.dates, // Changed here
+                maxSleeps,
+                false,
+                targetSleeps,
+            )
+        }
+
+        IconButton(
+            onClick = { viewModel.movePast() },
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_arrow_back),
+                contentDescription = null
+            )
+        }
+
+        IconButton(
+            onClick = { viewModel.moveFuture() },
+            modifier = Modifier.align(Alignment.CenterEnd)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_arrow_forward),
+                contentDescription = null
+            )
+        }
+
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            DateRangeControl(
+                uiState.dateRange,
+                viewModel
+            )
+        }
+
+        FilledIconButton(
+            onClick = { showAddDialog = true },
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+        }
     }
 
     if (showAddDialog) {
@@ -197,7 +168,7 @@ fun SleepOverviewView(
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-fun Plot(sleeps: List<Point<LocalDate, Double>>) {
+fun PlotSleeps(sleeps: List<Point<LocalDate, Double>>) {
     ChartLayout(
     ) {
         val dates = sleeps.map { it.x }
@@ -242,6 +213,53 @@ fun Plot(sleeps: List<Point<LocalDate, Double>>) {
         }
     }
 }
+
+// TODO: This is a common control. Extract from all health overviews
+@Composable
+private fun DateRangeControl(
+    dateRange: DateRange,
+    sleepsViewModel: SleepViewModel,
+) {
+    var showDateRangeDialog by remember { mutableStateOf(false) }
+
+    TextButton(
+        modifier = Modifier.padding(16.dp),
+        onClick = { showDateRangeDialog = true },
+    ) {
+        Row {
+            Column {
+                Text(
+                    text = dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
+                )
+                Text(
+                    text = dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
+                )
+            }
+            Icon(
+                painterResource(Res.drawable.ic_date_range),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 8.dp)
+            )
+        }
+    }
+
+    if (showDateRangeDialog) {
+        DateRangePickerModal(
+            onDateRangeSelected = { newDateRange, selectedDateUnit ->
+                if (newDateRange.first != null && newDateRange.second != null) {
+                    sleepsViewModel.setRange(
+                        Instant.fromEpochMilliseconds(newDateRange.first!!),
+                        Instant.fromEpochMilliseconds(newDateRange.second!!),
+                        selectedDateUnit
+                    )
+                }
+                showDateRangeDialog = false
+            },
+            onDismiss = { showDateRangeDialog = false }
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable

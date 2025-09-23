@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.health.sleep
 
 import kotlin.time.ExperimentalTime
-import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -11,6 +11,5 @@ data class Sleep(
     val profileId: Uuid,
     val hours: UInt,
     val minutes: UInt,
-    val dateUtc: Instant,
-    val dateLocal: Instant,
+    val dateUtc: LocalDate,
 )

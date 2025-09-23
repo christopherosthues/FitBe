@@ -16,20 +16,8 @@ class SleepRepository(private val dao: SleepDao) {
     fun getSleepsBetween(start: Instant, end: Instant, profileId: Uuid): Flow<List<Sleep>> {
         val dateSpan = toDateSpan(start, end)
         return dao.getSleepsBetween(dateSpan.first.toString(), dateSpan.second.toString(), profileId)
-            .map { sleepEntities -> sleepEntities.map { it.toDomain() } }
+            .map { sleepEntities -> sleepEntities.map { it.toSleep() } }
     }
 
-    suspend fun addSleep(sleep: SleepEntity) = dao.upsertSleep(sleep)
-}
-
-@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
-fun SleepEntity.toDomain(): Sleep {
-    return Sleep(
-        id = id,
-        profileId = profileId,
-        dateUtc = dateUtc,
-        dateLocal = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
-        minutes = minutes.toUInt(),
-        hours = hours.toUInt(),
-    )
+    suspend fun addSleep(sleep: Sleep) = dao.upsertSleep(toEntity(sleep))
 }

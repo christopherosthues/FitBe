@@ -3,38 +3,45 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_sleeps
-import io.github.koalaplot.core.xygraph.Point
+import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.OverviewViewModel
+import org.darthacheron.fitbe.health.weight.WeightOverviewUiState
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.profile.ProfileRepository
+import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
-import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
+import org.darthacheron.fitbe.utils.firstDayOfMonth
+import org.darthacheron.fitbe.utils.firstDayOfYear
+import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
-import kotlin.time.Duration.Companion.days
+import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
 class SleepViewModel(
-    private val repository: SleepRepository,
-    private val settingsRepository: SettingsRepository,
+    private val sleepRepository: SleepRepository,
+    settingsRepository: SettingsRepository,
+    profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : FitBeViewModel(topBarManager) {
+) : OverviewViewModel<Sleep>(settingsRepository, profileRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_sleeps
 
@@ -44,48 +51,144 @@ class SleepViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    private val _viewType = MutableStateFlow(DateUnit.WEEK)
-    private val _startDate = MutableStateFlow(Clock.System.now().minus(6.days))
-    private val _endDate = MutableStateFlow(Clock.System.now())
-
-    val viewType: StateFlow<DateUnit> = _viewType
-    val startDate: StateFlow<Instant> = _startDate
-    val endDate: StateFlow<Instant> = _endDate
+    private val _isLoading = MutableStateFlow(true)
+    private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
-    val sleeps: StateFlow<List<Point<LocalDate, Double>>> =
-        combine(_startDate, _endDate, settingsRepository.getSettingsFlow()) { start, end, settings ->
-            repository.getSleepsBetween(start, end, settings.selectedProfileId!!)
-        }.flatMapLatest { it }
-            .map { s ->
-                s.map { value ->
-                    Point(
-                        value.dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).date,
-                        (value.hours.toDouble() + value.minutes.toDouble() / 60).roundToDecimals(2)
-                    )
+//    val sleeps: StateFlow<List<Point<LocalDate, Double>>> =
+    private val sleepsDataFlow: StateFlow<List<Sleep>> =
+        combine(dateRange, settingsRepository.getSettingsFlow()) { range, settings ->
+            settings.selectedProfileId?.let {
+                Pair(settings, range.dateUnit) to sleepRepository.getSleepsBetween(
+                    range.startDate,
+                    range.endDate,
+                    it
+                )
+            } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
+        }.flatMapLatest { (settingsDateUnit, sleepsFlow) ->
+            sleepsFlow.map { sleeps ->
+                when (settingsDateUnit.second) {
+                    DateUnit.DAY -> mapDay(sleeps, settingsDateUnit.first)
+                    DateUnit.WEEK -> mapWeek(sleeps, settingsDateUnit.first)
+                    DateUnit.MONTH -> mapMonth(sleeps, settingsDateUnit.first)
+                    DateUnit.YEAR -> mapYear(sleeps, settingsDateUnit.first)
                 }
             }
-            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-    // TODO: return List<Point<X, Y>> -> X = date, y = sleep
+        }
+            .onStart {
+                _isLoading.value = true
+                _errorMessage.value = null
+            }
+            .catch {
+                _isLoading.value = false
+                _errorMessage.value = Res.string.weight_overview_error_loading
+                emit(emptyList())
+            }
+            .map {
+                _isLoading.value = false
+                it
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+//        }.flatMapLatest { it }
+//            .map { s ->
+//                s.map { value ->
+//                    Point(
+//                        value.dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).date,
+//                        (value.hours.toDouble() + value.minutes.toDouble() / 60).roundToDecimals(2)
+//                    )
+//                }
+//            }
 
-    fun setViewType(type: DateUnit) {
-        _viewType.value = type
+    val uiState: StateFlow<SleepOverviewUiState> = combine(
+        sleepsDataFlow,
+        _isLoading,
+        _errorMessage
+    ) { sleeps, isLoading, errorMessage ->
+        SleepOverviewUiState(
+            isLoading = isLoading,
+            sleeps = sleeps,
+            dates = sleeps.map { it.dateUtc },
+            errorMessage = errorMessage
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = SleepOverviewUiState(isLoading = true)
+    )
+
+    private fun mapDay(sleeps: List<Sleep>, settings: Settings): List<Sleep> {
+        return sleeps
     }
-    fun setStartDate(date: Instant) { _startDate.value = date }
-    fun setEndDate(date: Instant) { _endDate.value = date }
+
+    private fun <K> aggregateSleepsByPeriod(
+        sleeps: List<Sleep>,
+        settings: Settings,
+        groupKeySelector: (Sleep) -> K,
+        representativeDateSelector: (List<Sleep>) -> LocalDate
+    ): List<Sleep> {
+        if (sleeps.isEmpty()) return emptyList()
+
+        return sleeps.groupBy(groupKeySelector)
+            .mapNotNull { (_, group) ->
+                if (group.isEmpty()) return@mapNotNull null
+
+                val groupSize = group.size
+                val avgSleepingMinutes = group.sumOf { it.hours.toInt() * 60 + it.minutes.toInt() } / groupSize
+
+                Sleep(
+                    id = Uuid.random(),
+                    profileId = group.first().profileId,
+                    dateUtc = representativeDateSelector(group),
+                    hours = avgSleepingMinutes.toUInt() / 60u,
+                    minutes = avgSleepingMinutes.toUInt() % 60u
+                )
+            }
+    }
+
+    private fun mapWeek(sleeps: List<Sleep>, settings: Settings): List<Sleep> {
+        return aggregateSleepsByPeriod(
+            sleeps = sleeps,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
+        )
+    }
+
+    private fun mapMonth(sleeps: List<Sleep>, settings: Settings): List<Sleep> {
+        return aggregateSleepsByPeriod(
+            sleeps = sleeps,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
+        )
+    }
+
+    private fun mapYear(sleeps: List<Sleep>, settings: Settings): List<Sleep> {
+        return aggregateSleepsByPeriod(
+            sleeps = sleeps,
+            settings = settings,
+            groupKeySelector = { it.dateUtc.year },
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
+        )
+    }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addSleep(hours: UInt, minutes: UInt, date: Instant) {
+    fun addSleep(hours: UInt, minutes: UInt, date: LocalDate) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
-            repository.addSleep(
-                SleepEntity(
+            sleepRepository.addSleep(
+                Sleep(
+                    id = Uuid.random(),
                     profileId = settings.selectedProfileId!!,
-                    hours = hours.toInt(),
-                    minutes = minutes.toInt(),
+                    hours = hours,
+                    minutes = minutes,
                     dateUtc = date
                 )
             )
         }
+    }
+
+    fun clearErrorMessage() {
+        _errorMessage.value = null
     }
 }
