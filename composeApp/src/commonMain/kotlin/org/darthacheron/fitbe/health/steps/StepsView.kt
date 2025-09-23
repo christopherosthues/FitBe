@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,24 +21,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import fitbe.composeapp.generated.resources.ic_date_range
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun StepsView(
@@ -45,61 +47,76 @@ fun StepsView(
     LaunchedEffect(Unit) {
         stepsViewModel.updateTopBarConfig()
     }
-    val steps by stepsViewModel.steps.collectAsState()
+    val uiState by stepsViewModel.uiState.collectAsState()
     val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
     val targetSteps by stepsViewModel.targetSteps.collectAsState()
     val maxSteps by stepsViewModel.maxSteps.collectAsState()
 
-    val dates = stepsViewModel.dates(steps)
     var showAddDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    uiState.errorMessage?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) {
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                stepsViewModel.clearErrorMessage()
+            }
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        PlotSteps(
-            Modifier.padding(bottom = 64.dp),
-            steps,
-            dateRange,
-            dates,
-            maxSteps,
-            false,
-            targetSteps,
-        )
-
-        IconButton(
-            onClick = { stepsViewModel.movePast() },
-            modifier = Modifier.align(Alignment.CenterStart)
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_arrow_back),
-                contentDescription = null
-            )
-        }
-
-        IconButton(
-            onClick = { stepsViewModel.moveFuture() },
-            modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_arrow_forward),
-                contentDescription = null
-            )
-        }
-
-        Row(
-            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            DateRangeControl(
+        if (uiState.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            PlotSteps(
+                Modifier.padding(bottom = 64.dp),
+                uiState.steps,
                 dateRange,
-                stepsViewModel
+                uiState.dates,
+                maxSteps,
+                false,
+                targetSteps,
             )
 
-            FloatingActionButton(
-                onClick = { showAddDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(16.dp),
+            IconButton(
+                onClick = { stepsViewModel.movePast() },
+                modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+
+            IconButton(
+                onClick = { stepsViewModel.moveFuture() },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_arrow_forward),
+                    contentDescription = null
+                )
+            }
+
+            Row(
+                modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                DateRangeControl(
+                    dateRange,
+                    stepsViewModel
+                )
+
+                FloatingActionButton(
+                    onClick = { showAddDialog = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(16.dp),
+                ) {
+                    Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                }
             }
         }
     }
@@ -145,11 +162,11 @@ private fun DateRangeControl(
 
     if (showDateRangeDialog) {
         DateRangePickerModal(
-            onDateRangeSelected = { dateRange, selectedDateUnit ->
-                if (dateRange.first != null && dateRange.second != null) {
+            onDateRangeSelected = { newDateRange, selectedDateUnit ->
+                if (newDateRange.first != null && newDateRange.second != null) {
                     stepsViewModel.setRange(
-                        Instant.fromEpochMilliseconds(dateRange.first!!),
-                        Instant.fromEpochMilliseconds(dateRange.second!!),
+                        Instant.fromEpochMilliseconds(newDateRange.first!!),
+                        Instant.fromEpochMilliseconds(newDateRange.second!!),
                         selectedDateUnit
                     )
                 }

@@ -42,8 +42,6 @@ abstract class OverviewViewModel<E>(
         setRange(range)
     }
 
-    abstract fun dates(list: List<E>): List<LocalDate>;
-
     fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
         dateRange.value = DateRange(startDate, endDate, dateUnit)
     }

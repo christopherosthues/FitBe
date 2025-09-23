@@ -711,6 +711,7 @@
     <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
     <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
     <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
+    <string name="weight_overview_error_loading">Fehler beim Laden der Gewichtsdaten.</string>
 
     <string name="month_january">Januar</string>
     <string name="month_february">Februar</string>
@@ -733,10 +734,12 @@
     <string name="steps_save">Speichern</string>
     <string name="steps_cancel">Abbrechen</string>
     <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 100.000 ein.</string>
+    <string name="steps_overview_error_loading">Fehler beim Laden der Schrittdaten.</string>
 
     <string name="beverages_chart_thumbnail_title">Trinken</string>
     <string name="beverages_chart_y_axis_title">ml</string>
     <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
+    <string name="beverages_overview_error_loading">Fehler beim Laden der Getränkedaten.</string>
 
     <!-- Workout Templates -->
     <string name="workout_template_filter_label">Workout-Vorlagen filtern</string>

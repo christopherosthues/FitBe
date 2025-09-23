@@ -3,13 +3,17 @@ package org.darthacheron.fitbe.health.weight
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
+import fitbe.composeapp.generated.resources.weight_overview_error_loading // Added
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch // Added
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart // Added
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -50,6 +54,9 @@ class WeightOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
+    private val _isLoading = MutableStateFlow(true)
+    private val _errorMessage = MutableStateFlow<StringResource?>(null)
+
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -62,16 +69,17 @@ class WeightOverviewViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val bodyWeights: StateFlow<List<BodyWeight>> = combine(
+    private val bodyWeightsDataFlow: StateFlow<List<BodyWeight>> = combine(
         dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
-        Pair(settings, range.dateUnit) to bodyWeightRepository.getEntries(
-            range.startDate,
-            range.endDate,
-            settings.selectedProfileId!!
-        )
+        settings.selectedProfileId?.let {
+            Pair(settings, range.dateUnit) to bodyWeightRepository.getEntries(
+                range.startDate,
+                range.endDate,
+                it
+            )
+        } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
     }.flatMapLatest { (settingsDateUnit, bodyWeightFlow) ->
         bodyWeightFlow.map { bodyWeights ->
             when (settingsDateUnit.second) {
@@ -81,13 +89,45 @@ class WeightOverviewViewModel(
                 DateUnit.YEAR -> mapYear(bodyWeights, settingsDateUnit.first)
             }
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
+    }
+    .onStart {
+        _isLoading.value = true
+        _errorMessage.value = null
+    }
+    .catch {
+        _isLoading.value = false
+        _errorMessage.value = Res.string.weight_overview_error_loading
+        emit(emptyList())
+    }
+    .map {
+        _isLoading.value = false
+        it
+    }
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val maxWeight: StateFlow<Double> = bodyWeights.map { bodyWeights ->
-                bodyWeights.maxOfOrNull { it.weightInKg }
-                    ?.roundUpToNextTen()
-                    ?.roundToDecimals(2) ?: ProfileDefaults.MAX_BODY_WEIGHT
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
+    val uiState: StateFlow<WeightOverviewUiState> = combine(
+        bodyWeightsDataFlow,
+        _isLoading,
+        _errorMessage
+    ) { bodyWeights, isLoading, errorMessage ->
+        WeightOverviewUiState(
+            isLoading = isLoading,
+            bodyWeights = bodyWeights,
+            dates = bodyWeights.map { it.dateUtc },
+            errorMessage = errorMessage
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = WeightOverviewUiState(isLoading = true)
+    )
+
+    val maxWeight: StateFlow<Double> = uiState.map { it.bodyWeights }
+        .map { bodyWeights ->
+            bodyWeights.maxOfOrNull { it.weightInKg }
+                ?.roundUpToNextTen()
+                ?.roundToDecimals(2) ?: ProfileDefaults.MAX_BODY_WEIGHT
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
     private fun mapDay(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
         return bodyWeights.map {
@@ -186,10 +226,6 @@ class WeightOverviewViewModel(
         )
     }
 
-   override fun dates(list: List<BodyWeight>): List<LocalDate> {
-        return list.map { it.dateUtc }
-    }
-
     fun addBodyWeight(
         date: LocalDate,
         weightInKg: Double,
@@ -200,15 +236,21 @@ class WeightOverviewViewModel(
     ) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
-            bodyWeightRepository.addBodyWeight(
-                profileId = settings.selectedProfileId!!,
-                date = date,
-                weightInKg = weightInKg,
-                bodyFatPercentage = bodyFatPercentage,
-                muscleMassInKg = muscleMassInKg,
-                boneMassInKg = boneMassInKg,
-                bodyWaterInPercentage = bodyWaterInPercentage
-            )
+            settings.selectedProfileId?.let {
+                bodyWeightRepository.addBodyWeight(
+                    profileId = it,
+                    date = date,
+                    weightInKg = weightInKg,
+                    bodyFatPercentage = bodyFatPercentage,
+                    muscleMassInKg = muscleMassInKg,
+                    boneMassInKg = boneMassInKg,
+                    bodyWaterInPercentage = bodyWaterInPercentage
+                )
+            }
         }
+    }
+
+    fun clearErrorMessage() {
+        _errorMessage.value = null
     }
 }

@@ -17,17 +17,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.PlotBeverages
 import org.darthacheron.fitbe.health.steps.PlotSteps
 import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.PlotBodyWeights
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
-import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -100,15 +97,14 @@ private fun Thumbnail(onClick: () -> Unit, content: @Composable () -> Unit) {
 
 @Composable
 private fun BeveragesOverview(beverageOverviewViewModel: BeverageOverviewViewModel) {
-    val beveragesOverview by beverageOverviewViewModel.beverages.collectAsState()
+    val uiState by beverageOverviewViewModel.uiState.collectAsState()
     val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
     val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
-    val dates = beverageOverviewViewModel.dates(beveragesOverview)
 
     PlotBeverages(
-        beverages = beveragesOverview,
+        beverages = uiState.beverages,
         dateRange = dateRange,
-        dates = dates,
+        dates = uiState.dates,
         maxBeverages = maxBeverages,
         thumbnail = true,
     )
@@ -118,16 +114,15 @@ private fun BeveragesOverview(beverageOverviewViewModel: BeverageOverviewViewMod
 private fun StepsOverview(
     stepsViewModel: StepsViewModel,
 ) {
-    val steps by stepsViewModel.steps.collectAsState()
-    val maxBodyWeight by stepsViewModel.maxSteps.collectAsState()
+    val uiState by stepsViewModel.uiState.collectAsState()
+    val maxSteps by stepsViewModel.maxSteps.collectAsState()
     val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
-    val dates = stepsViewModel.dates(steps)
 
     PlotSteps(
-        stepsData = steps,
+        stepsData = uiState.steps,
         dateRange = dateRange,
-        dates = dates,
-        maxSteps = maxBodyWeight,
+        dates = uiState.dates,
+        maxSteps = maxSteps,
         thumbnail = true,
     )
 }
@@ -137,15 +132,14 @@ private fun BodyWeightOverView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
     settings: Settings,
 ) {
-    val bodyWeights by bodyWeightOverviewViewModel.bodyWeights.collectAsState()
+    val uiState by bodyWeightOverviewViewModel.uiState.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
     val dateRange by bodyWeightOverviewViewModel.dateRangeFlow.collectAsState()
-    val dates = bodyWeightOverviewViewModel.dates(bodyWeights)
 
     PlotBodyWeights(
-        bodyWeights = bodyWeights,
+        bodyWeights = uiState.bodyWeights,
         dateRange = dateRange,
-        dates = dates,
+        dates = uiState.dates,
         settings = settings,
         maxWeight = maxBodyWeight,
         thumbnail = true,

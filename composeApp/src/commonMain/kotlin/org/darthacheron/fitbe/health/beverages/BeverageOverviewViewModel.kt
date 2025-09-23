@@ -1,23 +1,21 @@
 package org.darthacheron.fitbe.health.beverages
 
-
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -29,13 +27,8 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
-import org.darthacheron.fitbe.utils.minusOne
-import org.darthacheron.fitbe.utils.plusOne
 import org.jetbrains.compose.resources.StringResource
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
@@ -54,6 +47,9 @@ class BeverageOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
+    private val _isLoading = MutableStateFlow(true)
+    private val _errorMessage = MutableStateFlow<StringResource?>(null)
+
     val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
@@ -66,18 +62,19 @@ class BeverageOverviewViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val beverages: StateFlow<List<BeverageOverview>> = combine(
+    private val beveragesFlow: StateFlow<List<BeverageOverview>> = combine(
         dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
-        Pair(settings, range.dateUnit) to beverageRepository.getBeveragesOverview(
-            range.startDate,
-            range.endDate,
-            settings.selectedProfileId!!
-        )
-    }.flatMapLatest { (settingsDateUnit, stepsFlow) ->
-        stepsFlow.map { beverages ->
+        settings.selectedProfileId?.let { profileId ->
+            Pair(settings, range.dateUnit) to beverageRepository.getBeveragesOverview(
+                range.startDate,
+                range.endDate,
+                profileId
+            )
+        } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
+    }.flatMapLatest { (settingsDateUnit, beveragesSource) ->
+        beveragesSource.map { beverages ->
             when (settingsDateUnit.second) {
                 DateUnit.DAY -> mapDay(beverages)
                 DateUnit.WEEK -> mapWeek(beverages)
@@ -85,11 +82,43 @@ class BeverageOverviewViewModel(
                 DateUnit.YEAR -> mapYear(beverages)
             }
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, listOf())
+    }
+    .onStart {
+        _isLoading.value = true
+        _errorMessage.value = null
+    }
+    .catch {
+        _isLoading.value = false
+        _errorMessage.value = Res.string.beverages_overview_error_loading
+        emit(emptyList())
+    }
+    .map { beverages ->
+        _isLoading.value = false
+        beverages
+    }
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val maxBeverages: StateFlow<UInt> = beverages
+    val uiState: StateFlow<BeverageOverviewUiState> = combine(
+        beveragesFlow,
+        _isLoading,
+        _errorMessage
+    ) { beverages, isLoading, errorMessage ->
+        BeverageOverviewUiState(
+            isLoading = isLoading,
+            beverages = beverages,
+            dates = beverages.map { it.dateUtc },
+            errorMessage = errorMessage
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = BeverageOverviewUiState(isLoading = true)
+    )
+
+    val maxBeverages: StateFlow<UInt> = uiState
+        .map { it.beverages }
         .map { beverages ->
-            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOf { it.amount }
+            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOfOrNull { it.amount } ?: ProfileDefaults.BEVERAGE
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
@@ -109,11 +138,11 @@ class BeverageOverviewViewModel(
                 if (group.isEmpty()) return@mapNotNull null
 
                 val groupSize = group.size
-                val avgSteps = group.sumOf { it.amount }.toDouble() / groupSize
+                val avgAmount = group.sumOf { it.amount.toDouble() } / groupSize
 
                 BeverageOverview(
                     dateUtc = representativeDateSelector(group),
-                    amount = avgSteps.roundToInt().toUInt(),
+                    amount = avgAmount.roundToInt().toUInt(),
                 )
             }
     }
@@ -144,7 +173,7 @@ class BeverageOverviewViewModel(
         )
     }
 
-    override fun dates(list: List<BeverageOverview>): List<LocalDate> {
-        return list.map { it.dateUtc }
+    fun clearErrorMessage() {
+        _errorMessage.value = null
     }
 }
