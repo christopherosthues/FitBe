@@ -37,6 +37,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
+import org.darthacheron.fitbe.health.componenets.DateRangeControl
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -128,51 +129,6 @@ fun StepsView(
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
-        )
-    }
-}
-
-@Composable
-private fun DateRangeControl(
-    dateRange: DateRange,
-    stepsViewModel: StepsViewModel,
-) {
-    var showDateRangeDialog by remember { mutableStateOf(false) }
-
-    TextButton(
-        modifier = Modifier.padding(16.dp),
-        onClick = { showDateRangeDialog = true },
-    ) {
-        Row {
-            Column {
-                Text(
-                    text = dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
-                )
-                Text(
-                    text = dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
-                )
-            }
-            Icon(
-                painterResource(Res.drawable.ic_date_range),
-                contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 8.dp)
-            )
-        }
-    }
-
-    if (showDateRangeDialog) {
-        DateRangePickerModal(
-            onDateRangeSelected = { newDateRange, selectedDateUnit ->
-                if (newDateRange.first != null && newDateRange.second != null) {
-                    stepsViewModel.setRange(
-                        Instant.fromEpochMilliseconds(newDateRange.first!!),
-                        Instant.fromEpochMilliseconds(newDateRange.second!!),
-                        selectedDateUnit
-                    )
-                }
-                showDateRangeDialog = false
-            },
-            onDismiss = { showDateRangeDialog = false }
         )
     }
 }
