@@ -16,7 +16,7 @@ data class Profile(
     val targetKcal: UInt? = ProfileDefaults.KCAL,
     val targetBeverageInMilliliter: UInt? = ProfileDefaults.BEVERAGE,
     val targetWeight: Double? = ProfileDefaults.WEIGHT_IN_KG,
-    val targetSleepDuration: LocalTime? = ProfileDefaults.SLEEP_DURATION,
+    val targetSleepDuration: UInt? = ProfileDefaults.SLEEP_DURATION,
     val targetSteps: UInt? = ProfileDefaults.STEPS,
     var bodyHeight: Double? = ProfileDefaults.BODY_HEIGHT_IN_CM,
     val dateOfBirth: LocalDate? = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,

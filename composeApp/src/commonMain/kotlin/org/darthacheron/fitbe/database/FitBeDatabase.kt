@@ -131,7 +131,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
             dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
                 i - 1,
                 DateTimeUnit.DAY
-            ).atStartOfDayIn(TimeZone.UTC),
+            ),
             hours = Random.nextInt(0, 12),
             minutes = Random.nextInt(0, 59),
             profileId = profile.id

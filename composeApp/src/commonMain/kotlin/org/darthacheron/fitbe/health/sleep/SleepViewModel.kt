@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
-import org.darthacheron.fitbe.health.weight.WeightOverviewUiState
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -29,13 +29,17 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.collections.map
+import kotlin.collections.maxOfOrNull
+import kotlin.let
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class SleepViewModel(
     private val sleepRepository: SleepRepository,
     settingsRepository: SettingsRepository,
@@ -54,8 +58,19 @@ class SleepViewModel(
     private val _isLoading = MutableStateFlow(true)
     private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
+    val targetSleeps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
+        .flatMapLatest { settings ->
+            val profileId = settings.selectedProfileId
+            if (profileId != null) {
+                profileRepository.getProfileFlowById(profileId)
+                    .map { profile -> profile?.targetSleepDuration }
+            } else {
+                flowOf(null)
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
-//    val sleeps: StateFlow<List<Point<LocalDate, Double>>> =
     private val sleepsDataFlow: StateFlow<List<Sleep>> =
         combine(dateRange, settingsRepository.getSettingsFlow()) { range, settings ->
             settings.selectedProfileId?.let {
@@ -115,6 +130,11 @@ class SleepViewModel(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = SleepOverviewUiState(isLoading = true)
     )
+
+    val maxSleeps: StateFlow<UInt> = uiState.map { it.sleeps }
+        .map { sleeps ->
+            sleeps.maxOfOrNull { it.hours * 60u + it.minutes } ?: ProfileDefaults.SLEEP_DURATION
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
     private fun mapDay(sleeps: List<Sleep>, settings: Settings): List<Sleep> {
         return sleeps

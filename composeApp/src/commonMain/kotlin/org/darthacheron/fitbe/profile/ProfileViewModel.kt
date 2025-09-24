@@ -83,7 +83,7 @@ data class ProfileUiState(
     val inputTargetKcal: String = "",
     val inputTargetBeverage: String = "",
     val inputTargetWeight: String = "",
-    val inputTargetSleepDuration: LocalTime? = null,
+    val inputTargetSleepDuration: UInt? = null,
     val inputTargetSteps: String = "",
     val inputBodyHeight: String = "",
     val currentSettings: Settings = Settings() // Keep a copy of current settings for conversions
@@ -216,7 +216,7 @@ class ProfileViewModel(
         it.copy(inputTargetWeight = weight, error = error)
     }
 
-    fun onTargetSleepDurationChanged(duration: LocalTime?) = _uiState.update { it.copy(inputTargetSleepDuration = duration) }
+    fun onTargetSleepDurationChanged(duration: UInt?) = _uiState.update { it.copy(inputTargetSleepDuration = duration) }
 
     fun onTargetStepsChanged(steps: String) = _uiState.update {
         val parsedSteps = steps.toUIntOrNull()

@@ -753,4 +753,8 @@
     <string name="workout_template_exercises">%1$d Übungen</string>
     <string name="workout_template_error_favorites">Laden der favorisierten Workout-Vorlagen fehlgeschlagen</string>
     <string name="workout_template_error_toggle_favorite">Favoritenstatus der Workout-Vorlage konnte nicht geändert werden</string>
+
+    <!-- Sleep overview -->
+    <string name="sleeps_chart_thumbnail_title">Schlaf</string>
+    <string name="sleeps_chart_y_axis_title">Schlafdauer (Minuten)</string>
 </resources>

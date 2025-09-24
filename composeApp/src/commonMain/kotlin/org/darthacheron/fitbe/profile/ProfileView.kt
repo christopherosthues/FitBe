@@ -437,10 +437,10 @@ fun ProfileView(
         if (showSleepDurationTimePicker) {
             val initialTime = uiState.inputTargetSleepDuration ?: ProfileDefaults.SLEEP_DURATION
             TimeInputDialog(
-                initialHour = initialTime.hour,
-                initialMinute = initialTime.minute,
+                initialHour = initialTime.toInt() / 60,
+                initialMinute = initialTime.toInt() % 60,
                 onTimeSelected = { hour, minute ->
-                    profileViewModel.onTargetSleepDurationChanged(LocalTime(hour, minute))
+                    profileViewModel.onTargetSleepDurationChanged((hour * 60 + minute).toUInt())
                     showSleepDurationTimePicker = false
                 },
                 onDismiss = { showSleepDurationTimePicker = false }
@@ -453,6 +453,6 @@ fun ProfileView(
     }
 }
 
-private fun sleepDurationText(sleepDuration: LocalTime?): String = "${
-    sleepDuration?.hour?.toString()?.padStart(2, '0') ?: "--"
-}:${sleepDuration?.minute?.toString()?.padStart(2, '0') ?: "--"}"
+private fun sleepDurationText(sleepDuration: UInt?): String = "${
+    sleepDuration?.div(60u)?.toString()?.padStart(2, '0') ?: "--"
+}:${sleepDuration?.mod(60u)?.toString()?.padStart(2, '0') ?: "--"}"

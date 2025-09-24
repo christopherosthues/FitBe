@@ -38,7 +38,21 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import fitbe.composeapp.generated.resources.ic_date_range
-import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
+import fitbe.composeapp.generated.resources.month_april
+import fitbe.composeapp.generated.resources.month_august
+import fitbe.composeapp.generated.resources.month_december
+import fitbe.composeapp.generated.resources.month_february
+import fitbe.composeapp.generated.resources.month_january
+import fitbe.composeapp.generated.resources.month_july
+import fitbe.composeapp.generated.resources.month_june
+import fitbe.composeapp.generated.resources.month_march
+import fitbe.composeapp.generated.resources.month_may
+import fitbe.composeapp.generated.resources.month_november
+import fitbe.composeapp.generated.resources.month_october
+import fitbe.composeapp.generated.resources.month_september
+import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
+import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
+import io.github.koalaplot.core.bar.VerticalBarPlotEntry
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -46,14 +60,15 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
-import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.darthacheron.fitbe.health.componenets.DateRangeControl
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
@@ -70,6 +85,8 @@ fun SleepOverviewView(
     }
     val uiState by viewModel.uiState.collectAsState()
     val dateRange by viewModel.dateRangeFlow.collectAsState()
+    val targetSleeps by viewModel.targetSleeps.collectAsState()
+    val maxSleeps by viewModel.maxSleeps.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -149,63 +166,6 @@ fun SleepOverviewView(
             onDismiss = { showAddDialog = false }
         )
     }
-}
-
-@OptIn(ExperimentalKoalaPlotApi::class)
-@Composable
-fun PlotSleeps(
-//    sleeps: List<Point<LocalDate, Double>>
-    modifier: Modifier = Modifier,
-    sleeps: List<Sleep>,
-    dateRange: DateRange,
-    dates: List<LocalDate>,
-    maxSteps: UInt,
-    thumbnail: Boolean = false,
-    targetSteps: UInt? = null,
-) {
-//    ChartLayout(
-//    ) {
-//        val dates = sleeps.map { it.x }
-//        XYGraph(
-//            xAxisModel = CategoryAxisModel(dates),
-//            yAxisModel = DoubleLinearAxisModel(
-//                range = 0.0..sleeps.maxOf { ceil(it.y) },
-//                minorTickCount = 1
-//            ),
-//            xAxisLabels = {
-//                Text(
-//                    it.toString(),
-//                    color = MaterialTheme.colorScheme.onBackground,
-//                    style = MaterialTheme.typography.bodySmall,
-//                    modifier = Modifier.padding(top = 2.dp).graphicsLayer {
-//                        rotationZ = -75f
-//                    },
-//                    overflow = TextOverflow.Ellipsis,
-//                    maxLines = 1,
-//                )
-//            },
-//            xAxisTitle = { null },
-//            gestureConfig = GestureConfig(zoomXEnabled = true, zoomYEnabled = true),
-//            yAxisLabels = {
-//                Text(
-//                    "${it.toInt()}h",
-//                    color = MaterialTheme.colorScheme.onBackground,
-//                    style = MaterialTheme.typography.bodySmall,
-//                    modifier = Modifier.absolutePadding(right = 2.dp),
-//                    overflow = TextOverflow.Ellipsis,
-//                    maxLines = 1,
-//                )
-//            },
-//        ) {
-//            StairstepPlot(
-//                data = sleeps,
-//                lineStyle = LineStyle(
-//                    brush = SolidColor(Color.Black),
-//                    strokeWidth = 2.dp
-//                )
-//            )
-//        }
-//    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)

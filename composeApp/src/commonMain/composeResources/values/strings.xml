@@ -753,4 +753,8 @@
     <string name="workout_template_exercises">%1$d exercises</string>
     <string name="workout_template_error_favorites">Failed to load favorite workout templates</string>
     <string name="workout_template_error_toggle_favorite">Failed to toggle workout template favorite</string>
+
+    <!-- Sleep overview -->
+    <string name="sleeps_chart_thumbnail_title">Sleep</string>
+    <string name="sleeps_chart_y_axis_title">Sleep Duration (minutes)</string>
 </resources>
