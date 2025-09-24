@@ -17,10 +17,8 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
 import org.darthacheron.fitbe.workouts.exercises.RecommendedFor
-import org.darthacheron.fitbe.workouts.exercises.fromExerciseEntity // Needed for DefaultExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.toDefaultExerciseEntity // Needed for DefaultExerciseEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
-import org.darthacheron.fitbe.workouts.templates.fromWorkoutTemplateEntity // Needed for DefaultWorkoutTemplateEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -1014,7 +1012,7 @@ class PrepopulateCallback(
             exerciseDao.upsertExercise(exercise)
             // Then insert into default_exercises table for reference
             exerciseDao.insertDefaultExercise(
-                fromExerciseEntity(exercise)
+                toDefaultExerciseEntity(exercise)
             )
 
             // Prepare and insert cross-references for default exercise and its required equipment

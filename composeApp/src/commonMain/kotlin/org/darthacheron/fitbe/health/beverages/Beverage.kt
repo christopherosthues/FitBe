@@ -10,6 +10,7 @@ import fitbe.composeapp.generated.resources.beverage_in_liter
 import fitbe.composeapp.generated.resources.beverage_in_milliliter
 import fitbe.composeapp.generated.resources.beverage_in_normal_glass
 import fitbe.composeapp.generated.resources.beverage_in_small_glass
+import kotlinx.datetime.Clock
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Centiliter
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Cup
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Deciliter
@@ -22,14 +23,17 @@ import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Beverage(
-    val id: Uuid,
+    val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val dateUtc: Instant,
+    val dateUtc: Instant =Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
     val amount: UInt,
     val beverage: String,
     val unit: FluidUnit

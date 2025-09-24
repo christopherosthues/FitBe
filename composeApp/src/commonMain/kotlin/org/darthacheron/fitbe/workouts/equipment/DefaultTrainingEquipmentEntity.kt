@@ -41,11 +41,11 @@ data class DefaultTrainingEquipmentEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun fromTrainingEquipmentEntity(entity: TrainingEquipmentEntity): DefaultTrainingEquipmentEntity {
+fun TrainingEquipmentEntity.fromTrainingEquipmentEntity(): DefaultTrainingEquipmentEntity {
     return DefaultTrainingEquipmentEntity(
-        id = entity.id,
-        name = entity.name,
-        imageUri = entity.imageUri,
-        dateUtc = entity.dateUtc
+        id = this.id,
+        name = this.name,
+        imageUri = this.imageUri,
+        dateUtc = this.dateUtc
     )
 }

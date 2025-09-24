@@ -39,15 +39,14 @@ data class StepsEntity(
             dateUtc = dateUtc,
         )
     }
-
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(steps: Steps): StepsEntity {
+fun Steps.toStepsEntity(): StepsEntity {
     return StepsEntity(
-        id = steps.id,
-        profileId = steps.profileId,
-        steps = steps.steps.toInt(),
-        dateUtc = steps.dateUtc,
+        id = this.id,
+        profileId = this.profileId,
+        steps = this.steps.toInt(),
+        dateUtc = this.dateUtc,
     )
 }

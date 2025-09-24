@@ -8,8 +8,6 @@ import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.darthacheron.fitbe.health.steps.StepsViewModel
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
-import org.darthacheron.fitbe.profile.ProfileRepository
-import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.BottomNavigationBarViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
@@ -17,8 +15,6 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 class HealthOverviewViewModel(
-    private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository,
     val bodyWeightOverviewViewModel: WeightOverviewViewModel,
     val stepsViewModel: StepsViewModel,
     val beverageOverviewViewModel: BeverageOverviewViewModel,

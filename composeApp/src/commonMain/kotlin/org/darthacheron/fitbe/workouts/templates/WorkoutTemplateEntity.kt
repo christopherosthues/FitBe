@@ -11,7 +11,7 @@ data class WorkoutTemplateEntity(
     @PrimaryKey val id: Uuid,
     val name: String,
     val description: String? = null,
-    val imageUri: String? = null, // Added imageUri field
+    val imageUri: String? = null,
     val default: Boolean = false
 ) {
     fun toWorkoutTemplate(): WorkoutTemplate {
@@ -19,20 +19,19 @@ data class WorkoutTemplateEntity(
             id = this.id,
             name = this.name,
             description = this.description,
-            imageUri = this.imageUri, // Added imageUri
+            imageUri = this.imageUri,
             default = this.default
-            // exercises will be loaded separately
         )
     }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun WorkoutTemplate.toEntity(): WorkoutTemplateEntity {
+fun WorkoutTemplate.toWorkoutTemplateEntity(): WorkoutTemplateEntity {
     return WorkoutTemplateEntity(
         id = this.id,
         name = this.name,
         description = this.description,
-        imageUri = this.imageUri, // Added imageUri
+        imageUri = this.imageUri,
         default = this.default
     )
 }

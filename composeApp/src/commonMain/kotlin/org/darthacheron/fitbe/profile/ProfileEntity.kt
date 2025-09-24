@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.Index // Added import
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -40,18 +39,18 @@ data class ProfileEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(profile: Profile): ProfileEntity {
+fun Profile.toProfileEntity(): ProfileEntity {
     return ProfileEntity(
-        id = profile.id,
-        name = profile.name,
-        gender = profile.gender,
-        targetKcal = profile.targetKcal?.toInt(),
-        targetBeverageInMilliliter = profile.targetBeverageInMilliliter?.toInt(),
-        targetWeight = profile.targetWeight,
-        targetSleepDuration = profile.targetSleepDuration?.toInt(),
-        targetSteps = profile.targetSteps?.toInt(),
-        bodyHeightInCm = profile.bodyHeight,
-        dateOfBirth = profile.dateOfBirth,
+        id = this.id,
+        name = this.name,
+        gender = this.gender,
+        targetKcal = this.targetKcal?.toInt(),
+        targetBeverageInMilliliter = this.targetBeverageInMilliliter?.toInt(),
+        targetWeight = this.targetWeight,
+        targetSleepDuration = this.targetSleepDuration?.toInt(),
+        targetSteps = this.targetSteps?.toInt(),
+        bodyHeightInCm = this.bodyHeight,
+        dateOfBirth = this.dateOfBirth,
     )
 }
 

@@ -32,12 +32,12 @@ data class TrainingEquipmentEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(equipment: TrainingEquipment): TrainingEquipmentEntity {
+fun TrainingEquipment.toTrainingEquipmentEntity(): TrainingEquipmentEntity {
     return TrainingEquipmentEntity(
-        id = equipment.id,
-        name = equipment.name,
-        imageUri = equipment.imageUri,
-        default = equipment.default,
-        dateUtc = equipment.dateUtc
+        id = this.id,
+        name = this.name,
+        imageUri = this.imageUri,
+        default = this.default,
+        dateUtc = this.dateUtc
     )
 }

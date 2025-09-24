@@ -6,7 +6,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class BodyWeight(
-    val id: Uuid,
+    val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val weightInKg: Double,
     val bodyFatPercentage: Double?,

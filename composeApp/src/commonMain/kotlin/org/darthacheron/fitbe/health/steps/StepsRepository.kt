@@ -17,9 +17,11 @@ class StepsRepository(private val stepsDao: StepsDao) {
                  endDate: Instant,
                  profileId: Uuid): Flow<List<Steps>> {
         val dateSpan = toDateSpan(startDate, endDate)
-        return stepsDao.getStepsBetweenDates(dateSpan.first.toString(),
-            dateSpan.second.toString(), profileId).map {
-                list -> list.map { it.toSteps() }
+        return stepsDao.getStepsBetweenDates(
+            dateSpan.first.toString(),
+            dateSpan.second.toString(),
+            profileId)
+            .map { list -> list.map { it.toSteps() }
         }
     }
 
@@ -32,21 +34,15 @@ class StepsRepository(private val stepsDao: StepsDao) {
         }
     }
 
-    suspend fun addSteps(profileId: Uuid, date: LocalDate, steps: UInt) {
-        stepsDao.upsertSteps(
-            StepsEntity(
-                profileId = profileId,
-                dateUtc = date,
-                steps = steps.toInt()
-            )
-        )
+    suspend fun addSteps(steps: Steps) {
+        stepsDao.upsertSteps(steps.toStepsEntity())
     }
 
     suspend fun updateSteps(steps: Steps) {
-        stepsDao.upsertSteps(toEntity(steps))
+        stepsDao.upsertSteps(steps.toStepsEntity())
     }
 
     suspend fun deleteSteps(steps: Steps) {
-        stepsDao.deleteSteps(toEntity(steps))
+        stepsDao.deleteSteps(steps.toStepsEntity())
     }
 }

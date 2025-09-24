@@ -177,14 +177,16 @@ class StepsViewModel(
         )
     }
 
-    fun addSteps(date: LocalDate, steps: UInt) {
+    fun addSteps(dateUtc: LocalDate, steps: UInt) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
-            settings.selectedProfileId?.let { profileId -> // Ensure profileId is not null
+            settings.selectedProfileId?.let { profileId ->
                 stepsRepository.addSteps(
-                    profileId = profileId,
-                    date = date,
-                    steps = steps,
+                    Steps(
+                        profileId = profileId,
+                        dateUtc = dateUtc,
+                        steps = steps
+                    )
                 )
             }
         }

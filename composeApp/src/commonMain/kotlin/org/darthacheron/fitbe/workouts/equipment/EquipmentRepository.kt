@@ -21,11 +21,11 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
         equipmentDao.getEquipmentWithExercises(equipmentId).map { it?.toEquipmentWithExercises() }
 
     suspend fun upsertEquipment(equipment: TrainingEquipment) {
-        equipmentDao.upsertEquipment(toEntity(equipment))
+        equipmentDao.upsertEquipment(equipment.toTrainingEquipmentEntity())
     }
 
     suspend fun deleteEquipment(equipment: TrainingEquipment) {
-        equipmentDao.deleteEquipment(toEntity(equipment))
+        equipmentDao.deleteEquipment(equipment.toTrainingEquipmentEntity())
     }
 
     suspend fun resetEquipmentToDefault(equipmentId: Uuid) {

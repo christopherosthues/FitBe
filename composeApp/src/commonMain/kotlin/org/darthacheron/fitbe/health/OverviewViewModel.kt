@@ -19,7 +19,6 @@ import kotlin.time.Duration.Companion.days
 
 abstract class OverviewViewModel<E>(
     protected val settingsRepository: SettingsRepository,
-    protected val profileRepository: ProfileRepository,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
     protected val dateRange = MutableStateFlow(

@@ -48,16 +48,16 @@ data class BodyWeightEntity(
         profileId = profileId
     )
 
-    companion object {
-        fun fromBodyWeight(bodyWeight: BodyWeight): BodyWeightEntity = BodyWeightEntity(
-            id = bodyWeight.id,
-            weightInKg = bodyWeight.weightInKg,
-            bodyFatPercentage = bodyWeight.bodyFatPercentage,
-            muscleMassInKg = bodyWeight.muscleMassInKg,
-            boneMassInKg = bodyWeight.boneMassInKg,
-            bodyWaterInPercentage = bodyWeight.bodyWaterInPercentage,
-            dateUtc = bodyWeight.dateUtc.atStartOfDayIn(TimeZone.UTC).plus(12.hours),
-            profileId = bodyWeight.profileId
-        )
-    }
 }
+
+@OptIn(ExperimentalUuidApi::class)
+fun BodyWeight.toBodyWeightEntity(): BodyWeightEntity = BodyWeightEntity(
+    id = this.id,
+    weightInKg = this.weightInKg,
+    bodyFatPercentage = this.bodyFatPercentage,
+    muscleMassInKg = this.muscleMassInKg,
+    boneMassInKg = this.boneMassInKg,
+    bodyWaterInPercentage = this.bodyWaterInPercentage,
+    dateUtc = this.dateUtc.atStartOfDayIn(TimeZone.UTC).plus(12.hours),
+    profileId = this.profileId
+)

@@ -40,7 +40,7 @@ data class ExerciseEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun Exercise.toEntity(): ExerciseEntity {
+fun Exercise.toExerciseEntity(): ExerciseEntity {
     return ExerciseEntity(
         id = this.id,
         name = this.name,

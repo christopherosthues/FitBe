@@ -53,15 +53,15 @@ data class DefaultExerciseEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun fromExerciseEntity(entity: ExerciseEntity): DefaultExerciseEntity {
+fun ExerciseEntity.toDefaultExerciseEntity(): DefaultExerciseEntity {
     return DefaultExerciseEntity(
-        id = entity.id,
-        name = entity.name,
-        guide = entity.guide,
-        targetMuscleGroups = entity.targetMuscleGroups,
-        imageUri = entity.imageUri,
-        recommendedFor = entity.recommendedFor,
-        exerciseType = entity.exerciseType, // Added field
-        dateUtc = entity.dateUtc
+        id = this.id,
+        name = this.name,
+        guide = this.guide,
+        targetMuscleGroups = this.targetMuscleGroups,
+        imageUri = this.imageUri,
+        recommendedFor = this.recommendedFor,
+        exerciseType = this.exerciseType, // Added field
+        dateUtc = this.dateUtc
     )
 }

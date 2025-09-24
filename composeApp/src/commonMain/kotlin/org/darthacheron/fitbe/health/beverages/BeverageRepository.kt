@@ -7,9 +7,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.health.steps.Steps
 import org.darthacheron.fitbe.utils.toDateSpan
-import kotlin.collections.map
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -26,7 +24,7 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
             dateSpan.first.toString(),
             dateSpan.second.toString(), profileId
         ).map { list ->
-            list.map { it.toDomain() }.groupBy { beverage ->
+            list.map { it.toBeverage() }.groupBy { beverage ->
                 beverage.dateUtc.toLocalDateTime(
                     TimeZone.UTC
                 ).date
@@ -49,7 +47,7 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
             start = dateSpan.first.toString(),
             end = dateSpan.second.toString(),
             profileId = profileId
-        ).map { entities -> entities.map { it.toDomain() } }
+        ).map { entities -> entities.map { it.toBeverage() } }
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -67,30 +65,9 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
             )
         )
     }
-}
 
-@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
-fun BeverageEntity.toDomain(): Beverage {
-    return Beverage(
-        id = id,
-        profileId = profileId,
-        dateUtc = dateUtc,
-        amount = amount.toUInt(),
-        beverage = beverage,
-        unit = unit
-    )
-}
-
-@OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
-fun BeverageEntity?.toDomainOrNull(): Beverage? {
-    return this?.let {
-        Beverage(
-            id = id,
-            profileId = profileId,
-            dateUtc = dateUtc,
-            amount = it.amount.toUInt(),
-            beverage = beverage,
-            unit = unit
-        )
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun addBeverage(beverage: Beverage) {
+        beverageDao.upsertBeverage(toBeverageEntity(beverage))
     }
 }

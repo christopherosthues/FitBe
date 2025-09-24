@@ -24,11 +24,11 @@ class ProfileRepository(private val profileDao: ProfileDao) {
         profileDao.getProfileByName(name)?.toProfile()
 
     suspend fun upsertProfile(profile: Profile) {
-        profileDao.upsertProfile(toEntity(profile))
+        profileDao.upsertProfile(profile.toProfileEntity())
     }
 
     suspend fun deleteProfile(profile: Profile) {
-        profileDao.deleteProfile(toEntity(profile))
+        profileDao.deleteProfile(profile.toProfileEntity())
     }
 }
 

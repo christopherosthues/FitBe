@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.equipment.toEntity // Assuming this is for TrainingEquipment
+import org.darthacheron.fitbe.workouts.equipment.toTrainingEquipmentEntity // Assuming this is for TrainingEquipment
 import kotlin.uuid.ExperimentalUuidApi
 
 data class ExerciseWithEquipmentEntity(
@@ -30,7 +30,7 @@ data class ExerciseWithEquipmentEntity(
             imageUri = exercise.imageUri,
             default = exercise.default,
             recommendedFor = exercise.recommendedFor,
-            exerciseType = exercise.exerciseType, // Added field from embedded exercise
+            exerciseType = exercise.exerciseType,
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
@@ -38,7 +38,7 @@ data class ExerciseWithEquipmentEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity {
+fun toExerciseWithEquipmentEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity {
     return ExerciseWithEquipmentEntity(
         exercise = ExerciseEntity(
             id = exerciseWithEquipment.id,
@@ -48,9 +48,9 @@ fun toEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmen
             imageUri = exerciseWithEquipment.imageUri,
             default = exerciseWithEquipment.default,
             recommendedFor = exerciseWithEquipment.recommendedFor,
-            exerciseType = exerciseWithEquipment.exerciseType, // Added field to embedded exercise
+            exerciseType = exerciseWithEquipment.exerciseType,
             dateUtc = exerciseWithEquipment.dateUtc
         ),
-        equipmentList = exerciseWithEquipment.equipmentList.map { toEntity(it) } // This toEntity is for TrainingEquipment
+        equipmentList = exerciseWithEquipment.equipmentList.map { it.toTrainingEquipmentEntity() }
     )
 }

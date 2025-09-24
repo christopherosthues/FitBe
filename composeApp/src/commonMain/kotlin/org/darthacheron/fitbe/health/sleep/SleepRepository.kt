@@ -3,9 +3,6 @@ package org.darthacheron.fitbe.health.sleep
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -20,5 +17,5 @@ class SleepRepository(private val dao: SleepDao) {
             .map { sleepEntities -> sleepEntities.map { it.toSleep() } }
     }
 
-    suspend fun addSleep(sleep: Sleep) = dao.upsertSleep(toEntity(sleep))
+    suspend fun addSleep(sleep: Sleep) = dao.upsertSleep(sleep.toSleepEntity())
 }

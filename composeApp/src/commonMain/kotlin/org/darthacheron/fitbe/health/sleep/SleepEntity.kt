@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlin.time.ExperimentalTime
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -43,12 +42,12 @@ data class SleepEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(sleep: Sleep): SleepEntity {
+fun Sleep.toSleepEntity(): SleepEntity {
     return SleepEntity(
-        id = sleep.id,
-        profileId = sleep.profileId,
-        hours = sleep.hours.toInt(),
-        minutes = sleep.minutes.toInt(),
-        dateUtc = sleep.dateUtc
+        id = this.id,
+        profileId = this.profileId,
+        hours = this.hours.toInt(),
+        minutes = this.minutes.toInt(),
+        dateUtc = this.dateUtc
     )
 }

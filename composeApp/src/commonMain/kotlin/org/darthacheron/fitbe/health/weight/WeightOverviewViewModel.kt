@@ -238,13 +238,15 @@ class WeightOverviewViewModel(
             val settings = settingsRepository.getSettings()
             settings.selectedProfileId?.let {
                 bodyWeightRepository.addBodyWeight(
-                    profileId = it,
-                    date = date,
-                    weightInKg = weightInKg,
-                    bodyFatPercentage = bodyFatPercentage,
-                    muscleMassInKg = muscleMassInKg,
-                    boneMassInKg = boneMassInKg,
-                    bodyWaterInPercentage = bodyWaterInPercentage
+                    BodyWeight(
+                        profileId = it,
+                        dateUtc = date,
+                        weightInKg = weightInKg,
+                        bodyFatPercentage = bodyFatPercentage,
+                        muscleMassInKg = muscleMassInKg,
+                        boneMassInKg = boneMassInKg,
+                        bodyWaterInPercentage = bodyWaterInPercentage
+                    )
                 )
             }
         }

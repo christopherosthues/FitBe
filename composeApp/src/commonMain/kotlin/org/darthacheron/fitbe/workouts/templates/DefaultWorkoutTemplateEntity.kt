@@ -38,7 +38,7 @@ data class DefaultWorkoutTemplateEntity(
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun fromWorkoutTemplateEntity(entity: WorkoutTemplateEntity): DefaultWorkoutTemplateEntity {
+fun WorkoutTemplateEntity.toDefaultWorkoutTemplateEntity(entity: WorkoutTemplateEntity): DefaultWorkoutTemplateEntity {
     require(entity.default) { "Cannot convert a non-default WorkoutTemplateEntity to DefaultWorkoutTemplateEntity" }
     return DefaultWorkoutTemplateEntity(
         id = entity.id,

@@ -2,7 +2,7 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index // Added import
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -34,4 +34,28 @@ data class BeverageEntity(
     val amount: Int,
     val beverage: String,
     val unit: FluidUnit
-)
+) {
+    @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
+    fun toBeverage(): Beverage {
+        return Beverage(
+            id = id,
+            profileId = profileId,
+            dateUtc = dateUtc,
+            amount = amount.toUInt(),
+            beverage = beverage,
+            unit = unit
+        )
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun Beverage.toBeverageEntity(): BeverageEntity {
+    return BeverageEntity(
+        id = this.id,
+        profileId = this.profileId,
+        dateUtc = this.dateUtc,
+        amount = this.amount.toInt(),
+        beverage = this.beverage,
+        unit = this.unit
+    )
+}

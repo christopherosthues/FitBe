@@ -17,17 +17,17 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
         exerciseDao.getDefaultExerciseById(exerciseId).map { it?.toExercise() }
 
     fun getDefaultExerciseWithEquipment(exerciseId: Uuid): Flow<ExerciseWithEquipment?> =
-        exerciseDao.getDefaultExerciseWithEquipment(exerciseId).map { it?.toDefaultExerciseWithEquipment() }
+        exerciseDao.getDefaultExerciseWithEquipment(exerciseId).map { it?.toExerciseWithEquipment() }
 
     fun getExerciseWithExercisesById(exerciseId: Uuid): Flow<ExerciseWithEquipment?> =
         exerciseDao.getExerciseWithEquipment(exerciseId).map { it?.toExerciseWithEquipment() }
 
     suspend fun upsertExercise(exercise: Exercise) {
-        exerciseDao.upsertExercise(exercise.toEntity())
+        exerciseDao.upsertExercise(exercise.toExerciseEntity())
     }
 
     suspend fun deleteExercise(exercise: Exercise) {
-        exerciseDao.deleteExercise(exercise.toEntity())
+        exerciseDao.deleteExercise(exercise.toExerciseEntity())
     }
 
     suspend fun resetExerciseToDefault(exerciseId: Uuid) {

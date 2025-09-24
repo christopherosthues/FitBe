@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -66,10 +70,12 @@ class BeverageViewModel(
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             repository.addBeverage(
-                amount = amount,
-                beverage = beverage,
-                unit = unit,
-                profileId = settings.selectedProfileId!!
+                Beverage(
+                    amount = amount,
+                    beverage = beverage,
+                    unit = unit,
+                    profileId = settings.selectedProfileId!!
+                )
             )
         }
     }

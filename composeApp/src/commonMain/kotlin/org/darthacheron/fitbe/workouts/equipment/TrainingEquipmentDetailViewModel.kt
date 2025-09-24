@@ -369,7 +369,9 @@ class TrainingEquipmentDetailViewModel(
             }
             return
         }
-        if (!currentState.isModifiedFromPersistedDefault && currentState.default) return // Do nothing if not modified and is default
+        if (!currentState.isModifiedFromPersistedDefault && currentState.default) {
+            return // Do nothing if not modified and is default
+        }
 
         _uiState.update { it.copy(isLoading = true, error = TrainingEquipmentError()) } // Clear errors before reset
         viewModelScope.launch {

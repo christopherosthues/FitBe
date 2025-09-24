@@ -5,7 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
-import org.darthacheron.fitbe.workouts.exercises.toEntity
+import org.darthacheron.fitbe.workouts.exercises.toExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi
 
 data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, but the @Relation is different
@@ -35,16 +35,16 @@ data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, b
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toEntity(equipmentWithExercises: EquipmentWithExercises): EquipmentWithExercisesEntity {
+fun EquipmentWithExercises.toEquipmentWithExercisesEntity(): EquipmentWithExercisesEntity {
     return EquipmentWithExercisesEntity(
         equipment = TrainingEquipmentEntity(
-            id = equipmentWithExercises.id,
-            name = equipmentWithExercises.name,
-            imageUri = equipmentWithExercises.imageUri,
-            default = equipmentWithExercises.default,
-            dateUtc = equipmentWithExercises.dateUtc
+            id = this.id,
+            name = this.name,
+            imageUri = this.imageUri,
+            default = this.default,
+            dateUtc = this.dateUtc
         ),
-        exercises = equipmentWithExercises.exercises.map { it.toEntity() }
+        exercises = this.exercises.map { it.toExerciseEntity() }
     )
 }
 

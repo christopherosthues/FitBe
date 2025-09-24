@@ -30,22 +30,8 @@ class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
     }
 
     suspend fun addBodyWeight(
-        profileId: Uuid,
-        date: LocalDate,
-        weightInKg: Double,
-        bodyFatPercentage: Double?,
-        muscleMassInKg: Double?,
-        boneMassInKg: Double?,
-        bodyWaterInPercentage: Double?,
+        bodyWeight: BodyWeight
     ) {
-        bodyWeightDao.upsertBodyWeight(BodyWeightEntity(
-            profileId = profileId,
-            dateUtc = date.atStartOfDayIn(TimeZone.UTC).plus(12.hours),
-            weightInKg = weightInKg,
-            bodyFatPercentage = bodyFatPercentage,
-            muscleMassInKg = muscleMassInKg,
-            boneMassInKg = boneMassInKg,
-            bodyWaterInPercentage = bodyWaterInPercentage,
-        ))
+        bodyWeightDao.upsertBodyWeight(bodyWeight.toBodyWeightEntity())
     }
 }

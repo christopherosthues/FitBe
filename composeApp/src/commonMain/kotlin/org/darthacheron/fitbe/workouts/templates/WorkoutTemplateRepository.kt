@@ -164,7 +164,7 @@ class WorkoutTemplateRepository(
 
     suspend fun deleteWorkoutTemplate(template: WorkoutTemplate) {
         // Deleting the template should cascade delete its exercises and sets due to ForeignKey constraints
-        workoutTemplateDao.deleteWorkoutTemplate(template.toEntity())
+        workoutTemplateDao.deleteWorkoutTemplate(template.toWorkoutTemplateEntity())
     }
 
     fun getWorkoutTemplateWithExercisesAndSets(templateId: Uuid): Flow<WorkoutTemplate?> {
