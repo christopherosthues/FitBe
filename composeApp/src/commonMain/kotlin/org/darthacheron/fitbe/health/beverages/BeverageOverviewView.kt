@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
@@ -20,9 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.componenets.DateRangeControl
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -51,6 +55,21 @@ fun BeverageOverviewView(
                 beverageOverviewViewModel.clearErrorMessage()
             }
         }
+    }
+
+    if (uiState.showAddBeverageDialog) {
+        AddBeverageDialog(
+            date = uiState.selectedDateForDialog,
+            amount = uiState.dialogAmount,
+            beverageName = uiState.dialogBeverageName,
+            selectedUnit = uiState.dialogSelectedUnit,
+            allUnits = beverageOverviewViewModel.allFluidUnits,
+            onAmountChange = beverageOverviewViewModel::onDialogAmountChange,
+            onBeverageNameChange = beverageOverviewViewModel::onDialogBeverageNameChange,
+            onUnitChange = beverageOverviewViewModel::onDialogUnitChange,
+            onDismissRequest = beverageOverviewViewModel::dismissAddBeverageDialog,
+            onSaveRequest = beverageOverviewViewModel::saveBeverage
+        )
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -96,6 +115,15 @@ fun BeverageOverviewView(
                     dateRange,
                     beverageOverviewViewModel
                 )
+            }
+
+            FloatingActionButton(
+                onClick = { beverageOverviewViewModel.showAddBeverageDialog(dateRange.startDate.toLocalDateTime(
+                    TimeZone.UTC
+                ).date) },
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+            ) {
+                Icon(painterResource(Res.drawable.ic_add), contentDescription = "Add Beverage")
             }
         }
     }

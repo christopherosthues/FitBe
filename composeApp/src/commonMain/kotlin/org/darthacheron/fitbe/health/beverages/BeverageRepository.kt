@@ -51,13 +51,10 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    suspend fun addBeverage(amount: UInt, beverage: String, unit: FluidUnit, profileId: Uuid) {
-        val today: Instant = Clock.System.now()
-            .toLocalDateTime(TimeZone.UTC)
-            .date.atStartOfDayIn(TimeZone.UTC)
+    suspend fun addBeverage(date: Instant, amount: UInt, beverage: String, unit: FluidUnit, profileId: Uuid) {
         beverageDao.upsertBeverage(
             BeverageEntity(
-                dateUtc = today,
+                dateUtc = date,
                 amount = amount.toInt(),
                 beverage = beverage,
                 unit = unit,

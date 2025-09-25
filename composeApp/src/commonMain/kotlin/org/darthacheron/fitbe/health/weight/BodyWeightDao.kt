@@ -13,8 +13,8 @@ import kotlin.uuid.Uuid
 interface BodyWeightDao {
     @Query("""
         SELECT * FROM body_weights 
-        WHERE dateUtc BETWEEN :startDate AND :endDate 
-        AND profileId = :profileId
+        WHERE profileId = :profileId
+        AND dateUtc BETWEEN :startDate AND :endDate
         ORDER BY dateUtc ASC
     """)
     fun getBodyWeightsBetweenDates(

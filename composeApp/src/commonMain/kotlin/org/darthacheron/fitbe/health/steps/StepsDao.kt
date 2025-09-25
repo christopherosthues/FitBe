@@ -13,8 +13,8 @@ import kotlin.uuid.Uuid
 interface StepsDao {
     @Query("""
         SELECT * FROM steps 
-        WHERE dateUtc BETWEEN :startDate AND :endDate 
-        AND profileId = :profileId
+        WHERE profileId = :profileId
+        AND dateUtc BETWEEN SUBSTR(:startDate, 1, 10) AND SUBSTR(:endDate, 1, 10)
         ORDER BY dateUtc ASC
     """)
     fun getStepsBetweenDates(
