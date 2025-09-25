@@ -3,20 +3,21 @@ package org.darthacheron.fitbe.profile
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.profile_error_beverage_invalid
+import fitbe.composeapp.generated.resources.profile_error_beverage
 import fitbe.composeapp.generated.resources.profile_error_deleting
-import fitbe.composeapp.generated.resources.profile_error_height_invalid
-import fitbe.composeapp.generated.resources.profile_error_kcal_invalid
+import fitbe.composeapp.generated.resources.profile_error_height_cm
+import fitbe.composeapp.generated.resources.profile_error_height_inch
+import fitbe.composeapp.generated.resources.profile_error_kcal
 import fitbe.composeapp.generated.resources.profile_error_loading
 import fitbe.composeapp.generated.resources.profile_error_name_blank
 import fitbe.composeapp.generated.resources.profile_error_name_exists
 import fitbe.composeapp.generated.resources.profile_error_saving
-import fitbe.composeapp.generated.resources.profile_error_steps_invalid
+import fitbe.composeapp.generated.resources.profile_error_steps
 import fitbe.composeapp.generated.resources.profile_error_switching
-import fitbe.composeapp.generated.resources.profile_error_weight_invalid
+import fitbe.composeapp.generated.resources.profile_error_weight_kg
+import fitbe.composeapp.generated.resources.profile_error_weight_lb
 import fitbe.composeapp.generated.resources.top_bar_title_profile
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,9 +29,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.BodyHeightValidator
+import org.darthacheron.fitbe.components.validators.BodyWeightValidator
+import org.darthacheron.fitbe.components.validators.KcalValidator
+import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
+import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
+import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.BodyMeasurementUnit
 import org.darthacheron.fitbe.settings.Settings
@@ -121,21 +128,42 @@ class ProfileViewModel(
             profileRepository.profiles, // Flow<List<Profile>> - domain units
             settingsRepository.getSettingsFlow() // Flow<Settings>
         ) { domainProfiles, settings ->
-            val currentDomainProfile = settings.selectedProfileId?.let {
-                id -> domainProfiles.find { it.id == id }
+            val currentDomainProfile = settings.selectedProfileId?.let { id ->
+                domainProfiles.find { it.id == id }
             } ?: domainProfiles.firstOrNull()
 
             val displayProfiles = domainProfiles.map { profile ->
                 profile.copy(
-                    targetWeight = weightUnitConverter.convert(profile.targetWeight, WeightUnit.KG, settings.weightUnit),
-                    bodyHeight = bodyMeasurementUnitConverter.convert(profile.bodyHeight, BodyMeasurementUnit.CM, settings.bodyMeasurementUnit)
+                    targetWeight = weightUnitConverter.convert(
+                        profile.targetWeight,
+                        WeightUnit.KG,
+                        settings.weightUnit
+                    ),
+                    bodyHeight = bodyMeasurementUnitConverter.convert(
+                        profile.bodyHeight,
+                        BodyMeasurementUnit.CM,
+                        settings.bodyMeasurementUnit
+                    )
                 )
             }
             val displayCurrentProfile = currentDomainProfile?.copy(
-                targetWeight = weightUnitConverter.convert(currentDomainProfile.targetWeight, WeightUnit.KG, settings.weightUnit),
-                bodyHeight = bodyMeasurementUnitConverter.convert(currentDomainProfile.bodyHeight, BodyMeasurementUnit.CM, settings.bodyMeasurementUnit)
+                targetWeight = weightUnitConverter.convert(
+                    currentDomainProfile.targetWeight,
+                    WeightUnit.KG,
+                    settings.weightUnit
+                ),
+                bodyHeight = bodyMeasurementUnitConverter.convert(
+                    currentDomainProfile.bodyHeight,
+                    BodyMeasurementUnit.CM,
+                    settings.bodyMeasurementUnit
+                )
             )
-            ProfileCombinedInitData(currentDomainProfile, displayCurrentProfile, displayProfiles, settings)
+            ProfileCombinedInitData(
+                currentDomainProfile,
+                displayCurrentProfile,
+                displayProfiles,
+                settings
+            )
         }.onEach { initData ->
             _uiState.update {
                 val baseState = it.copy(
@@ -144,9 +172,15 @@ class ProfileViewModel(
                     currentProfileDisplay = initData.displayCurrent,
                     allProfilesDisplay = initData.displayAll,
                     error = if (initData.settings.selectedProfileId != null && initData.domainCurrent == null && initData.displayAll.isNotEmpty()) {
-                        it.error.copy(hasGeneralError = true, generalError = Res.string.profile_error_loading)
+                        it.error.copy(
+                            hasGeneralError = true,
+                            generalError = Res.string.profile_error_loading
+                        )
                     } else if (initData.domainCurrent == null && initData.displayAll.isEmpty() && !it.isEditing) {
-                        it.error.copy(hasGeneralError = it.error.hasGeneralError, generalError = it.error.generalError)
+                        it.error.copy(
+                            hasGeneralError = it.error.hasGeneralError,
+                            generalError = it.error.generalError
+                        )
                     } else {
                         it.error.copy(hasGeneralError = false, generalError = null)
                     },
@@ -155,12 +189,14 @@ class ProfileViewModel(
                 if (!it.isEditing) {
                     baseState.copy(
                         inputName = initData.displayCurrent?.name ?: ProfileDefaults.NAME,
-                        inputDateOfBirth = initData.displayCurrent?.dateOfBirth ?: Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+                        inputDateOfBirth = initData.displayCurrent?.dateOfBirth
+                            ?: Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
                         inputGender = initData.displayCurrent?.gender ?: ProfileDefaults.gender,
                         inputTargetKcal = initData.displayCurrent?.targetKcal.toUintString(),
                         inputTargetBeverage = initData.displayCurrent?.targetBeverageInMilliliter.toUintString(),
                         inputTargetWeight = initData.displayCurrent?.targetWeight.toDoubleString(),
-                        inputTargetSleepDuration = initData.displayCurrent?.targetSleepDuration ?: ProfileDefaults.SLEEP_DURATION,
+                        inputTargetSleepDuration = initData.displayCurrent?.targetSleepDuration
+                            ?: ProfileDefaults.SLEEP_DURATION,
                         inputTargetSteps = initData.displayCurrent?.targetSteps.toUintString(),
                         inputBodyHeight = initData.displayCurrent?.bodyHeight.toDoubleString()
                     )
@@ -169,37 +205,68 @@ class ProfileViewModel(
                 }
             }
         }.catch { e ->
-            _uiState.update { it.copy(isLoading = false, error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_loading)) }
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    error = ProfileError(
+                        hasGeneralError = true,
+                        generalError = Res.string.profile_error_loading
+                    )
+                )
+            }
         }.launchIn(viewModelScope)
     }
 
     // --- Input Field Handlers ---
-    fun onNameChanged(name: String) = _uiState.update {
-        val error = if (name.trim().isBlank()) {
-            it.error.copy(hasNameError = true, nameError = Res.string.profile_error_name_blank)
-        } else {
-            it.error.copy(hasNameError = false, nameError = null)
+    fun onNameChanged(name: String) {
+        viewModelScope.launch {
+            _uiState.update {
+                val validatedStateAfterFieldChecks = _uiState.value
+                val profileId = validatedStateAfterFieldChecks.editingProfileId ?: Uuid.random()
+                val trimmedName = it.inputName.trim()
+                val existingProfileByName = profileRepository.getProfileByName(trimmedName)
+
+                val error = if (name.trim().isBlank()) {
+                    it.error.copy(
+                        hasNameError = true,
+                        nameError = Res.string.profile_error_name_blank
+                    )
+                } else if (existingProfileByName != null && existingProfileByName.id != profileId) {
+                    it.error.copy(
+                        hasNameError = true,
+                        nameError = Res.string.profile_error_name_exists
+                    )
+                } else {
+                    it.error.copy(hasNameError = false, nameError = null)
+                }
+                it.copy(inputName = name, error = error)
+            }
         }
-        it.copy(inputName = name, error = error)
     }
 
-    fun onDateOfBirthChanged(date: LocalDate?) = _uiState.update { it.copy(inputDateOfBirth = date) }
+    fun onDateOfBirthChanged(date: LocalDate?) =
+        _uiState.update { it.copy(inputDateOfBirth = date) }
+
     fun onGenderChanged(gender: Gender) = _uiState.update { it.copy(inputGender = gender) }
 
     fun onTargetKcalChanged(kcal: String) = _uiState.update {
-        val parsedKcal = kcal.toUIntOrNull()
-        val error = if (kcal.isNotEmpty() && (parsedKcal == null || parsedKcal == 0u)) {
-            it.error.copy(hasKcalError = true, kcalError = Res.string.profile_error_kcal_invalid)
-        } else {
-            it.error.copy(hasKcalError = false, kcalError = null)
-        }
+        val error =
+            if (!PositiveNumberValidator().validate(kcal) || !KcalValidator().validate(kcal.toUIntOrNull())) {
+                it.error.copy(hasKcalError = true, kcalError = Res.string.profile_error_kcal)
+            } else {
+                it.error.copy(hasKcalError = false, kcalError = null)
+            }
         it.copy(inputTargetKcal = kcal, error = error)
     }
 
     fun onTargetBeverageChanged(beverage: String) = _uiState.update {
-        val parsedBeverage = beverage.toUIntOrNull()
-        val error = if (beverage.isNotEmpty() && (parsedBeverage == null || parsedBeverage == 0u)) {
-            it.error.copy(hasBeverageError = true, beverageError = Res.string.profile_error_beverage_invalid)
+        val error = if (!PositiveNumberValidator().validate(beverage) || !BeverageValidator().validate(
+                beverage.toUIntOrNull()
+            )) {
+            it.error.copy(
+                hasBeverageError = true,
+                beverageError = Res.string.profile_error_beverage
+            )
         } else {
             it.error.copy(hasBeverageError = false, beverageError = null)
         }
@@ -207,21 +274,34 @@ class ProfileViewModel(
     }
 
     fun onTargetWeightChanged(weight: String) = _uiState.update {
-        val parsedWeight = weight.replace(",", ".").toDoubleOrNull()
-        val error = if (weight.isNotEmpty() && (parsedWeight == null || parsedWeight <= 0)) {
-            it.error.copy(hasWeightError = true, weightError = Res.string.profile_error_weight_invalid)
+        val settings = it.currentSettings
+        val error = if (!PositiveDecimalValidator().validate(weight) ||
+            !BodyWeightValidator().validate(
+                weight.toDoubleOrNull(),
+                settings.weightUnit
+            )
+        ) {
+            it.error.copy(
+                hasWeightError = true,
+                weightError = when(settings.weightUnit){
+                    WeightUnit.KG -> Res.string.profile_error_weight_kg
+                    WeightUnit.POUND -> Res.string.profile_error_weight_lb
+                }
+            )
         } else {
             it.error.copy(hasWeightError = false, weightError = null)
         }
         it.copy(inputTargetWeight = weight, error = error)
     }
 
-    fun onTargetSleepDurationChanged(duration: UInt?) = _uiState.update { it.copy(inputTargetSleepDuration = duration) }
+    fun onTargetSleepDurationChanged(duration: UInt?) =
+        _uiState.update { it.copy(inputTargetSleepDuration = duration) }
 
     fun onTargetStepsChanged(steps: String) = _uiState.update {
-        val parsedSteps = steps.toUIntOrNull()
-        val error = if (steps.isNotEmpty() && (parsedSteps == null || parsedSteps == 0u)) {
-            it.error.copy(hasStepsError = true, stepsError = Res.string.profile_error_steps_invalid)
+        val error = if (!PositiveNumberValidator().validate(steps) || !StepsValidator().validate(
+                steps.toUIntOrNull()
+            )) {
+            it.error.copy(hasStepsError = true, stepsError = Res.string.profile_error_steps)
         } else {
             it.error.copy(hasStepsError = false, stepsError = null)
         }
@@ -229,9 +309,17 @@ class ProfileViewModel(
     }
 
     fun onBodyHeightChanged(height: String) = _uiState.update {
-        val parsedHeight = height.replace(",", ".").toDoubleOrNull()
-        val error = if (height.isNotEmpty() && (parsedHeight == null || parsedHeight <= 0)) {
-            it.error.copy(hasHeightError = true, heightError = Res.string.profile_error_height_invalid)
+        val settings = it.currentSettings
+        val error = if (!PositiveDecimalValidator().validate(height) || !BodyHeightValidator().validate(
+                height.toDoubleOrNull()
+            )) {
+            it.error.copy(
+                hasHeightError = true,
+                heightError = when(settings.bodyMeasurementUnit){
+                    BodyMeasurementUnit.CM -> Res.string.profile_error_height_cm
+                    BodyMeasurementUnit.INCH -> Res.string.profile_error_height_inch
+                }
+            )
         } else {
             it.error.copy(hasHeightError = false, heightError = null)
         }
@@ -245,7 +333,7 @@ class ProfileViewModel(
                 it.copy(
                     isEditing = true,
                     editingProfileId = current.id,
-                    error = ProfileError(), // Clear all errors
+                    error = ProfileError(),
                     inputName = current.name,
                     inputDateOfBirth = current.dateOfBirth,
                     inputGender = current.gender,
@@ -264,8 +352,8 @@ class ProfileViewModel(
         _uiState.update {
             it.copy(
                 isEditing = true,
-                editingProfileId = null, // Indicates adding
-                error = ProfileError(), // Clear all errors
+                editingProfileId = null,
+                error = ProfileError(),
                 inputName = ProfileDefaults.NAME,
                 inputDateOfBirth = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
                 inputGender = ProfileDefaults.gender,
@@ -285,7 +373,7 @@ class ProfileViewModel(
             it.copy(
                 isEditing = false,
                 editingProfileId = null,
-                error = it.error.copy( // Clear only field errors, preserve general error if any from loading
+                error = it.error.copy(
                     hasNameError = false, nameError = null,
                     hasKcalError = false, kcalError = null,
                     hasBeverageError = false, beverageError = null,
@@ -294,12 +382,14 @@ class ProfileViewModel(
                     hasHeightError = false, heightError = null
                 ),
                 inputName = currentDisplay?.name ?: ProfileDefaults.NAME,
-                inputDateOfBirth = currentDisplay?.dateOfBirth ?: Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+                inputDateOfBirth = currentDisplay?.dateOfBirth ?: Clock.System.now()
+                    .toLocalDateTime(TimeZone.UTC).date,
                 inputGender = currentDisplay?.gender ?: ProfileDefaults.gender,
                 inputTargetKcal = currentDisplay?.targetKcal.toUintString(),
                 inputTargetBeverage = currentDisplay?.targetBeverageInMilliliter.toUintString(),
                 inputTargetWeight = currentDisplay?.targetWeight.toDoubleString(),
-                inputTargetSleepDuration = currentDisplay?.targetSleepDuration ?: ProfileDefaults.SLEEP_DURATION,
+                inputTargetSleepDuration = currentDisplay?.targetSleepDuration
+                    ?: ProfileDefaults.SLEEP_DURATION,
                 inputTargetSteps = currentDisplay?.targetSteps.toUintString(),
                 inputBodyHeight = currentDisplay?.bodyHeight.toDoubleString()
             )
@@ -308,55 +398,47 @@ class ProfileViewModel(
 
     fun saveProfile() {
         val currentState = _uiState.value
-        val trimmedName = currentState.inputName.trim()
 
-        onNameChanged(trimmedName) // Use trimmed name for validation first
-        onTargetKcalChanged(currentState.inputTargetKcal)
-        onTargetBeverageChanged(currentState.inputTargetBeverage)
-        onTargetWeightChanged(currentState.inputTargetWeight)
-        onTargetStepsChanged(currentState.inputTargetSteps)
-        onBodyHeightChanged(currentState.inputBodyHeight)
-        
-        val validatedStateAfterFieldChecks = _uiState.value // Re-fetch state after individual field validations
-
-        if (validatedStateAfterFieldChecks.error.hasAnyFieldError) {
+        if (currentState.error.hasAnyFieldError) {
             return
         }
 
-        _uiState.update { it.copy(isLoading = true, error = it.error.copy(hasGeneralError = false, generalError = null)) }
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                error = it.error.copy(hasGeneralError = false, generalError = null)
+            )
+        }
 
         viewModelScope.launch {
-            val profileId = validatedStateAfterFieldChecks.editingProfileId ?: Uuid.random()
-            val existingProfileByName = profileRepository.getProfileByName(trimmedName)
-
-            if (existingProfileByName != null && existingProfileByName.id != profileId) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = it.error.copy(hasNameError = true, nameError = Res.string.profile_error_name_exists)
-                    )
-                }
-                return@launch
-            }
+            val profileId = currentState.editingProfileId ?: Uuid.random()
 
             try {
-                val settings = validatedStateAfterFieldChecks.currentSettings
-                val isAddingNew = validatedStateAfterFieldChecks.editingProfileId == null
+                val settings = currentState.currentSettings
+                val isAddingNew = currentState.editingProfileId == null
 
                 val profileToSave = Profile(
-                    id = profileId, // Use determined profileId
-                    name = trimmedName, // Use trimmed name that was validated and checked
-                    gender = validatedStateAfterFieldChecks.inputGender,
-                    dateOfBirth = validatedStateAfterFieldChecks.inputDateOfBirth,
-                    targetKcal = validatedStateAfterFieldChecks.inputTargetKcal.toUIntOrNull(),
-                    targetBeverageInMilliliter = validatedStateAfterFieldChecks.inputTargetBeverage.toUIntOrNull(),
-                    targetWeight = validatedStateAfterFieldChecks.inputTargetWeight.replace(",",".")?.toDoubleOrNull()?.let {
+                    id = profileId,
+                    name = currentState.inputName.trim(),
+                    gender = currentState.inputGender,
+                    dateOfBirth = currentState.inputDateOfBirth,
+                    targetKcal = currentState.inputTargetKcal.toUIntOrNull(),
+                    targetBeverageInMilliliter = currentState.inputTargetBeverage.toUIntOrNull(),
+                    targetWeight = currentState.inputTargetWeight.replace(
+                        ",",
+                        "."
+                    )?.toDoubleOrNull()?.let {
                         weightUnitConverter.convert(it, settings.weightUnit, WeightUnit.KG)
                     },
-                    targetSleepDuration = validatedStateAfterFieldChecks.inputTargetSleepDuration,
-                    targetSteps = validatedStateAfterFieldChecks.inputTargetSteps.toUIntOrNull(),
-                    bodyHeight = validatedStateAfterFieldChecks.inputBodyHeight.replace(",",".")?.toDoubleOrNull()?.let {
-                        bodyMeasurementUnitConverter.convert(it, settings.bodyMeasurementUnit, BodyMeasurementUnit.CM)
+                    targetSleepDuration = currentState.inputTargetSleepDuration,
+                    targetSteps = currentState.inputTargetSteps.toUIntOrNull(),
+                    bodyHeight = currentState.inputBodyHeight.replace(",", ".")
+                        ?.toDoubleOrNull()?.let {
+                        bodyMeasurementUnitConverter.convert(
+                            it,
+                            settings.bodyMeasurementUnit,
+                            BodyMeasurementUnit.CM
+                        )
                     }
                 )
 
@@ -367,7 +449,10 @@ class ProfileViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving)
+                            error = ProfileError(
+                                hasGeneralError = true,
+                                generalError = Res.string.profile_error_saving
+                            )
                             // Do not reset isEditing or editingProfileId, as save failed
                         )
                     }
@@ -386,10 +471,13 @@ class ProfileViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { 
+                _uiState.update {
                     it.copy(
-                        isLoading = false, 
-                        error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving)
+                        isLoading = false,
+                        error = ProfileError(
+                            hasGeneralError = true,
+                            generalError = Res.string.profile_error_saving
+                        )
                         // Do not reset isEditing or editingProfileId, as save failed due to unexpected exception
                     )
                 }
@@ -409,18 +497,22 @@ class ProfileViewModel(
                     val currentSettings = settingsRepository.getSettings()
 
                     if (allProfilesAfterDeletion.isEmpty()) {
-                        val newDefaultProfile = Profile(id = Uuid.random()) // Uses ProfileDefaults.NAME
-                        val conflictingProfile = profileRepository.getProfileByName(newDefaultProfile.name)
+                        val newDefaultProfile =
+                            Profile(id = Uuid.random()) // Uses ProfileDefaults.NAME
+                        val conflictingProfile =
+                            profileRepository.getProfileByName(newDefaultProfile.name)
                         if (conflictingProfile != null) {
                             _uiState.update {
                                 it.copy(
                                     isLoading = false,
                                     error = ProfileError(
-                                        hasGeneralError = true, generalError = Res.string.profile_error_saving,
-                                        hasNameError = true, nameError = Res.string.profile_error_name_exists
+                                        hasGeneralError = true,
+                                        generalError = Res.string.profile_error_saving,
+                                        hasNameError = true,
+                                        nameError = Res.string.profile_error_name_exists
                                     ),
-                                    currentProfile = null, 
-                                    currentProfileDisplay = null, 
+                                    currentProfile = null,
+                                    currentProfileDisplay = null,
                                     allProfilesDisplay = emptyList()
                                 )
                             }
@@ -428,14 +520,18 @@ class ProfileViewModel(
                         }
                         try {
                             profileRepository.upsertProfile(newDefaultProfile)
-                            val savedDefaultCheck = profileRepository.getProfileById(newDefaultProfile.id)
+                            val savedDefaultCheck =
+                                profileRepository.getProfileById(newDefaultProfile.id)
                             if (savedDefaultCheck == null || savedDefaultCheck != newDefaultProfile) {
-                                _uiState.update { 
+                                _uiState.update {
                                     it.copy(
-                                        isLoading = false, 
-                                        error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_saving),
-                                        currentProfile = null, 
-                                        currentProfileDisplay = null, 
+                                        isLoading = false,
+                                        error = ProfileError(
+                                            hasGeneralError = true,
+                                            generalError = Res.string.profile_error_saving
+                                        ),
+                                        currentProfile = null,
+                                        currentProfileDisplay = null,
                                         allProfilesDisplay = emptyList()
                                     )
                                 }
@@ -444,32 +540,53 @@ class ProfileViewModel(
                             settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = newDefaultProfile.id))
                             _uiState.update { it.copy(isLoading = false) } // Rely on init flow to repopulate
                         } catch (e: Exception) {
-                             _uiState.update { 
-                                 it.copy(
-                                     isLoading = false, 
-                                     error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_deleting),
-                                     currentProfile = null, 
-                                     currentProfileDisplay = null, 
-                                     allProfilesDisplay = emptyList()
+                            _uiState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    error = ProfileError(
+                                        hasGeneralError = true,
+                                        generalError = Res.string.profile_error_deleting
+                                    ),
+                                    currentProfile = null,
+                                    currentProfileDisplay = null,
+                                    allProfilesDisplay = emptyList()
                                 )
-                             }
+                            }
                         }
                     } else {
-                        val newSelectedProfileId = if (currentSettings.selectedProfileId == profileId ||
-                                                      currentSettings.selectedProfileId == null ||
-                                                      allProfilesAfterDeletion.none { it.id == currentSettings.selectedProfileId }) {
-                            allProfilesAfterDeletion.first().id
-                        } else {
-                            currentSettings.selectedProfileId
-                        }
+                        val newSelectedProfileId =
+                            if (currentSettings.selectedProfileId == profileId ||
+                                currentSettings.selectedProfileId == null ||
+                                allProfilesAfterDeletion.none { it.id == currentSettings.selectedProfileId }
+                            ) {
+                                allProfilesAfterDeletion.first().id
+                            } else {
+                                currentSettings.selectedProfileId
+                            }
                         settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = newSelectedProfileId))
                         _uiState.update { it.copy(isLoading = false) } // Rely on init flow
                     }
                 } else { // profileToDelete == null
-                    _uiState.update { it.copy(isLoading = false, error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_deleting)) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = ProfileError(
+                                hasGeneralError = true,
+                                generalError = Res.string.profile_error_deleting
+                            )
+                        )
+                    }
                 }
             } catch (e: Exception) { // Catch other exceptions during the process
-                _uiState.update { it.copy(isLoading = false, error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_deleting)) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = ProfileError(
+                            hasGeneralError = true,
+                            generalError = Res.string.profile_error_deleting
+                        )
+                    )
+                }
             }
         }
     }
@@ -478,21 +595,51 @@ class ProfileViewModel(
         _uiState.update { it.copy(isLoading = true, error = ProfileError()) }
         viewModelScope.launch {
             try {
-                val targetProfileExists = profileRepository.profiles.first().any { it.id == profileId }
+                val targetProfileExists =
+                    profileRepository.profiles.first().any { it.id == profileId }
                 if (targetProfileExists) {
                     val currentSettings = settingsRepository.getSettings()
                     settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = profileId))
-                    _uiState.update { it.copy(isLoading = false, isEditing = false, editingProfileId = null) } 
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isEditing = false,
+                            editingProfileId = null
+                        )
+                    }
                 } else {
-                     _uiState.update { it.copy(isLoading = false, error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_switching)) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = ProfileError(
+                                hasGeneralError = true,
+                                generalError = Res.string.profile_error_switching
+                            )
+                        )
+                    }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = ProfileError(hasGeneralError = true, generalError = Res.string.profile_error_switching)) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = ProfileError(
+                            hasGeneralError = true,
+                            generalError = Res.string.profile_error_switching
+                        )
+                    )
+                }
             }
         }
     }
 
     fun clearGeneralError() {
-        _uiState.update { it.copy(error = it.error.copy(hasGeneralError = false, generalError = null)) }
+        _uiState.update {
+            it.copy(
+                error = it.error.copy(
+                    hasGeneralError = false,
+                    generalError = null
+                )
+            )
+        }
     }
 }

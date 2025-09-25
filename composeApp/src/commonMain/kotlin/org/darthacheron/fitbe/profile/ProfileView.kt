@@ -227,7 +227,7 @@ fun ProfileView(
                         isError = uiState.error.hasBeverageError,
                         supportingText = {
                             if (uiState.error.hasBeverageError) {
-                                uiState.error.beverageError?.let { Text(stringResource(it)) }
+                                uiState.error.beverageError?.let { Text(text = stringResource(it)) }
                             }
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

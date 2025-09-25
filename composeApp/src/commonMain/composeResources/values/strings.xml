@@ -676,25 +676,19 @@
     <string name="profile_body_height">Body height (%1$s)</string>
     <string name="profile_save">Save</string>
     <string name="profile_cancel">Cancel</string>
-    <string name="profile_error_name">Name must be unique and not blank.</string>
     <string name="profile_error_kcal">Enter a value between 0 and 10,000.</string>
-    <string name="profile_error_beverage">Enter a value between 0 and 5,000 %1$s.</string>
+    <string name="profile_error_beverage">Enter a value between 0 and 5,000 ml.</string>
     <string name="profile_error_weight_kg">Enter a value between 0.0 and 600.0 kg.</string>
     <string name="profile_error_weight_lb">Enter a value between 0.0 and 1322.77 lb.</string>
     <string name="profile_error_steps">Enter a value between 0 and 500,000.</string>
     <string name="profile_error_height_cm">Enter a value between 0.0 and 300.0 cm.</string>
     <string name="profile_error_height_inch">Enter a value between 0.0 and 118.11 inches.</string>
-    <string name="profile_error_beverage_invalid">Invalid beverage amount entered.</string>
     <string name="profile_error_deleting">Error deleting profile. Please try again.</string>
-    <string name="profile_error_height_invalid">Invalid height entered. Please enter a positive number.</string>
-    <string name="profile_error_kcal_invalid">Invalid kcal amount entered. Please enter a positive number.</string>
     <string name="profile_error_loading">Error loading profile data. Please try again.</string>
     <string name="profile_error_name_blank">Profile name cannot be blank.</string>
     <string name="profile_error_name_exists">A profile with this name already exists.</string>
     <string name="profile_error_saving">Error saving profile. Please try again.</string>
-    <string name="profile_error_steps_invalid">Invalid steps amount entered. Please enter a positive number.</string>
     <string name="profile_error_switching">Error switching profile. Please try again.</string>
-    <string name="profile_error_weight_invalid">Invalid weight entered. Please enter a positive number.</string>
     <string name="profile_no_profiles_prompt_add">No profiles found. Click \'+\' to add one.</string>
 
     <string name="body_weight_total_weight_error_kg">Enter a value between 0.0 and 600.0 kg.</string>
