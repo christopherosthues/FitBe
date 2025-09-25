@@ -96,6 +96,8 @@ data class ProfileUiState(
     val currentSettings: Settings = Settings() // Keep a copy of current settings for conversions
 )
 
+// TODO: . validation for height and weight does not work correctly yet. All number without . are excepted
+
 @OptIn(ExperimentalUuidApi::class)
 private data class ProfileCombinedInitData(
     val domainCurrent: Profile?,
