@@ -2,21 +2,20 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,13 +30,15 @@ import fitbe.composeapp.generated.resources.beverages_overview_beverage_amount
 import fitbe.composeapp.generated.resources.beverages_overview_beverage_name
 import fitbe.composeapp.generated.resources.beverages_overview_beverage_unit
 import fitbe.composeapp.generated.resources.beverages_overview_cancel
-import fitbe.composeapp.generated.resources.beverages_overview_ok
 import fitbe.composeapp.generated.resources.beverages_overview_save
+import fitbe.composeapp.generated.resources.ic_access_time
+import fitbe.composeapp.generated.resources.ic_date_range
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.components.date.DatePickerModal
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,31 +64,27 @@ fun AddBeverageDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 TextButton(onClick = { showDatePicker = true }) {
-                    Text("$date")
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(text = "$date")
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_date_range),
+                            contentDescription = null
+                        )
+                    }
                 }
 
                 if (showDatePicker) {
-                    val datePickerState = rememberDatePickerState(
-                        initialSelectedDateMillis = date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
-                    )
-                    DatePickerDialog(
-                        onDismissRequest = { showDatePicker = false },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                showDatePicker = false
-                                datePickerState.selectedDateMillis?.let {
-                                    val selectedDate =
-                                        Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
-                                    onDateChange(selectedDate)
-                                }
-                            }) { Text(stringResource(Res.string.beverages_overview_ok)) }
+                    DatePickerModal(
+                        onDateSelected = { millis ->
+                            millis?.let {
+                                val selectedDate =
+                                    Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
+                                onDateChange(selectedDate)
+                            }
+                            showDatePicker = false
                         },
-                        dismissButton = {
-                            TextButton(onClick = { showDatePicker = false }) { Text(stringResource(Res.string.beverages_overview_cancel)) }
-                        }
-                    ) {
-                        DatePicker(state = datePickerState)
-                    }
+                        onDismiss = { showDatePicker = false }
+                    )
                 }
 
                 TextField(

@@ -607,7 +607,6 @@
     <string name="beverages_overview_beverage_unit">Einheit</string>
     <string name="beverages_overview_cancel">Abbrechen</string>
     <string name="beverages_overview_save">Speichern</string>
-    <string name="beverages_overview_ok">OK</string>
 
     <string name="add_beverage">Getränk hinzufügen</string>
     <plurals name="beverage_in_cup">
