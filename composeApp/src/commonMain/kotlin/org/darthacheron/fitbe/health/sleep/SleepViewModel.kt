@@ -45,7 +45,7 @@ class SleepViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<Sleep>(settingsRepository, profileRepository, topBarManager) {
+) : OverviewViewModel<Sleep>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_sleeps
 

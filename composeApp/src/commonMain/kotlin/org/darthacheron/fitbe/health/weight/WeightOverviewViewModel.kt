@@ -44,7 +44,7 @@ class WeightOverviewViewModel(
     profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
     topBarManager: TopBarManager
-) : OverviewViewModel<BodyWeight>(settingsRepository, profileRepository, topBarManager) {
+) : OverviewViewModel<BodyWeight>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_body_weights
 

@@ -68,6 +68,6 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun addBeverage(beverage: Beverage) {
-        beverageDao.upsertBeverage(toBeverageEntity(beverage))
+        beverageDao.upsertBeverage(beverage.toBeverageEntity())
     }
 }

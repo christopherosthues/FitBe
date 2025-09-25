@@ -37,7 +37,7 @@ class BeverageOverviewViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<BeverageOverview>(settingsRepository, profileRepository, topBarManager) {
+) : OverviewViewModel<BeverageOverview>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_beverages_overview
 

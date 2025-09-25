@@ -10,14 +10,14 @@ import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.equipment.fromTrainingEquipmentEntity // Needed for DefaultTrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef // Correct import
+import org.darthacheron.fitbe.workouts.equipment.toDefaultTrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
 import org.darthacheron.fitbe.workouts.exercises.RecommendedFor
-import org.darthacheron.fitbe.workouts.exercises.toDefaultExerciseEntity // Needed for DefaultExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.toDefaultExerciseEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -990,7 +990,7 @@ class PrepopulateCallback(
             )
             equipmentDao.upsertEquipment(equipment) // Upsert to user-editable table
             equipmentDao.insertDefaultEquipment( // Insert into default table for reference
-                fromTrainingEquipmentEntity(equipment)
+                equipment.toDefaultTrainingEquipmentEntity()
             )
         }
     }
@@ -1012,7 +1012,7 @@ class PrepopulateCallback(
             exerciseDao.upsertExercise(exercise)
             // Then insert into default_exercises table for reference
             exerciseDao.insertDefaultExercise(
-                toDefaultExerciseEntity(exercise)
+                exercise.toDefaultExerciseEntity()
             )
 
             // Prepare and insert cross-references for default exercise and its required equipment

@@ -39,7 +39,7 @@ class StepsViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<Steps>(settingsRepository, profileRepository, topBarManager) {
+) : OverviewViewModel<Steps>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_steps
 
