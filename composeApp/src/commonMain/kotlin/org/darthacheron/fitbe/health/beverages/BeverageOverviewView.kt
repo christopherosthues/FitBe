@@ -26,8 +26,6 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.componenets.DateRangeControl
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -108,9 +106,7 @@ fun BeverageOverviewView(
             }
 
             FloatingActionButton(
-                onClick = {
-                    beverageOverviewViewModel.showAddBeverageDialog()
-                },
+                onClick = { beverageOverviewViewModel.showAddBeverageDialog() },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
                 Icon(
