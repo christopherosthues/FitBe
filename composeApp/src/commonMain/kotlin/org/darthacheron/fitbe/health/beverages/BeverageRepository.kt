@@ -18,28 +18,19 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
         startDate: Instant,
         endDate: Instant,
         profileId: Uuid
-    ): Flow<List<BeverageOverview>> {
+    ): Flow<List<Beverage>> {
         val dateSpan = toDateSpan(startDate, endDate)
         return beverageDao.getBeverages(
             dateSpan.first.toString(),
             dateSpan.second.toString(), profileId
         ).map { list ->
-            list.map { it.toBeverage() }.groupBy { beverage ->
-                beverage.dateUtc.toLocalDateTime(
-                    TimeZone.UTC
-                ).date
-            }.map { (date, beverages) ->
-                BeverageOverview(
-                    date,
-                    beverages.sumOf { it.amount.toInt() }.toUInt()
-                )
-            }
+            list.map { it.toBeverage() }
         }
     }
 
     fun getTodayBeverages(profileId: Uuid): Flow<List<Beverage>> {
         val today: Instant = Clock.System.now()
-        .toLocalDateTime(TimeZone.UTC)
+            .toLocalDateTime(TimeZone.UTC)
             .date.atStartOfDayIn(TimeZone.UTC)
         val dateSpan = toDateSpan(today, today)
 
