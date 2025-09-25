@@ -218,6 +218,10 @@ class BeverageOverviewViewModel(
         _dialogState.update { it.copy(dialogSelectedUnit = unit) }
     }
 
+    fun onDialogDateChange(date: LocalDate) {
+        _dialogState.update { it.copy(selectedDateForDialog = date) }
+    }
+
     val allFluidUnits: List<FluidUnit> = FluidUnit.entries
 
     fun saveBeverage() {

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_content_description_add_beverage
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
@@ -67,6 +68,7 @@ fun BeverageOverviewView(
             onAmountChange = beverageOverviewViewModel::onDialogAmountChange,
             onBeverageNameChange = beverageOverviewViewModel::onDialogBeverageNameChange,
             onUnitChange = beverageOverviewViewModel::onDialogUnitChange,
+            onDateChange = beverageOverviewViewModel::onDialogDateChange,
             onDismissRequest = beverageOverviewViewModel::dismissAddBeverageDialog,
             onSaveRequest = beverageOverviewViewModel::saveBeverage
         )
@@ -118,12 +120,19 @@ fun BeverageOverviewView(
             }
 
             FloatingActionButton(
-                onClick = { beverageOverviewViewModel.showAddBeverageDialog(dateRange.startDate.toLocalDateTime(
-                    TimeZone.UTC
-                ).date) },
+                onClick = {
+                    beverageOverviewViewModel.showAddBeverageDialog(
+                        dateRange.startDate.toLocalDateTime(
+                            TimeZone.UTC
+                        ).date
+                    )
+                },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
-                Icon(painterResource(Res.drawable.ic_add), contentDescription = "Add Beverage")
+                Icon(
+                    painter = painterResource(Res.drawable.ic_add),
+                    contentDescription = stringResource(Res.string.beverages_overview_content_description_add_beverage)
+                )
             }
         }
     }

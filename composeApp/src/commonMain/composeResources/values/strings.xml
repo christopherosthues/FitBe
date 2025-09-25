@@ -593,6 +593,22 @@
     <string name="fluid_unit_deciliter">dl</string>
     <string name="fluid_unit_liter">l</string>
 
+    <!-- Beverage Chart -->
+    <string name="beverages_chart_thumbnail_title">Beverages</string>
+    <string name="beverages_chart_y_axis_title">ml</string>
+    <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
+
+    <!-- Beverage Overview -->
+    <string name="beverages_overview_error_loading">Error loading beverage data.</string>
+    <string name="beverages_overview_content_description_add_beverage">Add Beverage</string>
+    <string name="beverages_overview_add_beverage_title">Add Beverage</string>
+    <string name="beverages_overview_beverage_amount">Amount</string>
+    <string name="beverages_overview_beverage_name">Beverage Name</string>
+    <string name="beverages_overview_beverage_unit">Unit</string>
+    <string name="beverages_overview_cancel">Cancel</string>
+    <string name="beverages_overview_save">Save</string>
+    <string name="beverages_overview_ok">OK</string>
+
     <string name="add_beverage">Add beverage</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d cups %2$s</item>
@@ -735,11 +751,6 @@
     <string name="steps_cancel">Cancel</string>
     <string name="steps_error_count">Enter a value between 0 and 100,000.</string>
     <string name="steps_overview_error_loading">Error loading steps data.</string>
-
-    <string name="beverages_chart_thumbnail_title">Beverages</string>
-    <string name="beverages_chart_y_axis_title">ml</string>
-    <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
-    <string name="beverages_overview_error_loading">Error loading beverage data.</string>
 
     <!-- Workout Templates -->
     <string name="workout_template_filter_label">Filter workout templates</string>
