@@ -59,19 +59,7 @@ fun BeverageOverviewView(
     }
 
     if (uiState.showAddBeverageDialog) {
-        AddBeverageDialog(
-            date = uiState.selectedDateForDialog,
-            amount = uiState.dialogAmount,
-            beverageName = uiState.dialogBeverageName,
-            selectedUnit = uiState.dialogSelectedUnit,
-            allUnits = beverageOverviewViewModel.allFluidUnits,
-            onAmountChange = beverageOverviewViewModel::onDialogAmountChange,
-            onBeverageNameChange = beverageOverviewViewModel::onDialogBeverageNameChange,
-            onUnitChange = beverageOverviewViewModel::onDialogUnitChange,
-            onDateChange = beverageOverviewViewModel::onDialogDateChange,
-            onDismissRequest = beverageOverviewViewModel::dismissAddBeverageDialog,
-            onSaveRequest = beverageOverviewViewModel::saveBeverage
-        )
+        AddBeverageDialog(beverageOverviewViewModel)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -121,11 +109,7 @@ fun BeverageOverviewView(
 
             FloatingActionButton(
                 onClick = {
-                    beverageOverviewViewModel.showAddBeverageDialog(
-                        dateRange.startDate.toLocalDateTime(
-                            TimeZone.UTC
-                        ).date
-                    )
+                    beverageOverviewViewModel.showAddBeverageDialog()
                 },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {

@@ -198,8 +198,8 @@ class BeverageOverviewViewModel(
     }
 
     // --- Dialog Management ---
-    fun showAddBeverageDialog(date: LocalDate) {
-        _dialogState.update { it.copy(showAddBeverageDialog = true, selectedDateForDialog = date) }
+    fun showAddBeverageDialog() {
+        _dialogState.update { it.copy(showAddBeverageDialog = true) }
     }
 
     fun dismissAddBeverageDialog() {

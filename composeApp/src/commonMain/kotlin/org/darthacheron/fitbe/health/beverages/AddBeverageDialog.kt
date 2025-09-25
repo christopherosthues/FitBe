@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,10 +32,8 @@ import fitbe.composeapp.generated.resources.beverages_overview_beverage_name
 import fitbe.composeapp.generated.resources.beverages_overview_beverage_unit
 import fitbe.composeapp.generated.resources.beverages_overview_cancel
 import fitbe.composeapp.generated.resources.beverages_overview_save
-import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
@@ -44,28 +43,19 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBeverageDialog(
-    date: LocalDate,
-    amount: String,
-    beverageName: String,
-    selectedUnit: FluidUnit,
-    allUnits: List<FluidUnit>,
-    onAmountChange: (String) -> Unit,
-    onBeverageNameChange: (String) -> Unit,
-    onUnitChange: (FluidUnit) -> Unit,
-    onDateChange: (LocalDate) -> Unit,
-    onDismissRequest: () -> Unit,
-    onSaveRequest: () -> Unit
+    viewModel: BeverageOverviewViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
 
     AlertDialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = viewModel::dismissAddBeverageDialog,
         title = { Text(stringResource(Res.string.beverages_overview_add_beverage_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 TextButton(onClick = { showDatePicker = true }) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(text = "$date")
+                        Text(text = "${uiState.selectedDateForDialog}")
                         Icon(
                             painter = painterResource(Res.drawable.ic_date_range),
                             contentDescription = null
@@ -79,7 +69,7 @@ fun AddBeverageDialog(
                             millis?.let {
                                 val selectedDate =
                                     Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
-                                onDateChange(selectedDate)
+                                viewModel.onDialogDateChange(selectedDate)
                             }
                             showDatePicker = false
                         },
@@ -88,15 +78,15 @@ fun AddBeverageDialog(
                 }
 
                 TextField(
-                    value = amount,
-                    onValueChange = onAmountChange,
+                    value = uiState.dialogAmount,
+                    onValueChange = viewModel::onDialogAmountChange,
                     label = { Text(stringResource(Res.string.beverages_overview_beverage_amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
                 TextField(
-                    value = beverageName,
-                    onValueChange = onBeverageNameChange,
+                    value = uiState.dialogBeverageName,
+                    onValueChange = viewModel::onDialogBeverageNameChange,
                     label = { Text(stringResource(Res.string.beverages_overview_beverage_name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -108,7 +98,7 @@ fun AddBeverageDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextField(
-                        value = selectedUnit.name, // Consider localizing unit names if needed
+                        value = uiState.dialogSelectedUnit.name, // Consider localizing unit names if needed
                         onValueChange = {},
                         readOnly = true,
                         label = { Text(stringResource(Res.string.beverages_overview_beverage_unit)) },
@@ -119,11 +109,11 @@ fun AddBeverageDialog(
                         expanded = unitDropdownExpanded,
                         onDismissRequest = { unitDropdownExpanded = false }
                     ) {
-                        allUnits.forEach { unit ->
+                        viewModel.allFluidUnits.forEach { unit ->
                             DropdownMenuItem(
                                 text = { Text(unit.name) }, // Consider localizing
                                 onClick = {
-                                    onUnitChange(unit)
+                                    viewModel.onDialogUnitChange(unit)
                                     unitDropdownExpanded = false
                                 }
                             )
@@ -133,12 +123,12 @@ fun AddBeverageDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onSaveRequest) {
+            Button(onClick = viewModel::saveBeverage) {
                 Text(stringResource(Res.string.beverages_overview_save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(onClick = viewModel::dismissAddBeverageDialog) {
                 Text(stringResource(Res.string.beverages_overview_cancel))
             }
         }
