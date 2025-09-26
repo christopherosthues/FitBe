@@ -2,7 +2,10 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_amount
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
+import fitbe.composeapp.generated.resources.beverages_overview_error_name_empty
+import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +26,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
@@ -41,6 +46,8 @@ import kotlin.uuid.ExperimentalUuidApi
 class BeverageOverviewViewModel(
     private val beverageRepository: BeverageRepository,
     settingsRepository: SettingsRepository,
+    private val beverageValidator: BeverageValidator,
+    private val positiveNumberValidator: PositiveNumberValidator,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
 ) : OverviewViewModel<BeverageOverview>(settingsRepository, topBarManager) {
@@ -122,7 +129,9 @@ class BeverageOverviewViewModel(
             selectedDateForDialog = dialogState.selectedDateForDialog,
             dialogAmount = dialogState.dialogAmount,
             dialogBeverageName = dialogState.dialogBeverageName,
-            dialogSelectedUnit = dialogState.dialogSelectedUnit
+            dialogSelectedUnit = dialogState.dialogSelectedUnit,
+            dialogAmountError = dialogState.dialogAmountError,
+            dialogBeverageNameError = dialogState.dialogBeverageNameError
         )
     }.stateIn(
         scope = viewModelScope,
@@ -204,21 +213,38 @@ class BeverageOverviewViewModel(
     }
 
     fun dismissAddBeverageDialog() {
-        _dialogState.update { it.copy(
-            showAddBeverageDialog = false,
-            dialogAmount = "",
-            dialogBeverageName = "",
-            dialogSelectedUnit = FluidUnit.Milliliter,
-            selectedDateForDialog = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-        ) }
+        _dialogState.update {
+            it.copy(
+                showAddBeverageDialog = false,
+                dialogAmount = "",
+                dialogBeverageName = "",
+                dialogSelectedUnit = FluidUnit.Milliliter,
+                selectedDateForDialog = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+                dialogAmountError = null,
+                dialogBeverageNameError = null
+            )
+        }
     }
 
     fun onDialogAmountChange(amount: String) {
-        _dialogState.update { it.copy(dialogAmount = amount) }
+        val error = if (!positiveNumberValidator.validate(amount) || !beverageValidator.validate(
+                amount.toUIntOrNull()
+            )) {
+            Res.string.beverages_overview_error_invalid_amount
+        } else {
+            null
+        }
+        _dialogState.update { it.copy(dialogAmount = amount, dialogAmountError = error) }
     }
 
     fun onDialogBeverageNameChange(name: String) {
-        _dialogState.update { it.copy(dialogBeverageName = name) }
+
+        val error = if (name.isBlank()) {
+            Res.string.beverages_overview_error_name_empty
+        } else {
+            null
+        }
+        _dialogState.update { it.copy(dialogBeverageName = name, dialogBeverageNameError = error) }
     }
 
     fun onDialogUnitChange(unit: FluidUnit) {
@@ -238,17 +264,25 @@ class BeverageOverviewViewModel(
             val profileId = settingsRepository.getSettings().selectedProfileId
 
             if (amount != null && amount > 0u && currentState.dialogBeverageName.isNotBlank() && profileId != null) {
-                beverageRepository.addBeverage(
-                    date = currentState.selectedDateForDialog.atStartOfDayIn(TimeZone.UTC),
-                    amount = amount,
-                    beverage = currentState.dialogBeverageName,
-                    unit = currentState.dialogSelectedUnit,
-                    profileId = profileId
-                )
-                dismissAddBeverageDialog()
+                try {
+                    beverageRepository.addBeverage(
+                        date = currentState.selectedDateForDialog.atStartOfDayIn(TimeZone.UTC),
+                        amount = amount,
+                        beverage = currentState.dialogBeverageName,
+                        unit = currentState.dialogSelectedUnit,
+                        profileId = profileId
+                    )
+                    dismissAddBeverageDialog()
+                } catch (e: Exception) {
+                    _errorMessage.value = Res.string.beverages_overview_error_saving
+                }
             } else {
-                // Handle error (e.g., show a snackbar)
-                _errorMessage.value = Res.string.beverages_overview_error_loading // Replace with a more specific error
+                if (amount == null || amount == 0u) {
+                    _dialogState.update { it.copy(dialogAmountError = Res.string.beverages_overview_error_invalid_amount) }
+                }
+                if (currentState.dialogBeverageName.isBlank()) {
+                    _dialogState.update { it.copy(dialogBeverageNameError = Res.string.beverages_overview_error_name_empty) }
+                }
             }
         }
     }

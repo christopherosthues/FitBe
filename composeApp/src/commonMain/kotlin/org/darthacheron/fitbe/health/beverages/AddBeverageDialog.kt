@@ -68,7 +68,8 @@ fun AddBeverageDialog(
                         onDateSelected = { millis ->
                             millis?.let {
                                 val selectedDate =
-                                    Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
+                                    Instant.fromEpochMilliseconds(it)
+                                        .toLocalDateTime(TimeZone.UTC).date
                                 viewModel.onDialogDateChange(selectedDate)
                             }
                             showDatePicker = false
@@ -82,13 +83,21 @@ fun AddBeverageDialog(
                     onValueChange = viewModel::onDialogAmountChange,
                     label = { Text(stringResource(Res.string.beverages_overview_beverage_amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = uiState.dialogAmountError != null,
+                    supportingText = {
+                        uiState.dialogAmountError?.let { Text(stringResource(it)) }
+                    }
                 )
                 TextField(
                     value = uiState.dialogBeverageName,
                     onValueChange = viewModel::onDialogBeverageNameChange,
                     label = { Text(stringResource(Res.string.beverages_overview_beverage_name)) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = uiState.dialogBeverageNameError != null,
+                    supportingText = {
+                        uiState.dialogBeverageNameError?.let { Text(stringResource(it)) }
+                    }
                 )
 
                 var unitDropdownExpanded by remember { mutableStateOf(false) }
@@ -103,7 +112,8 @@ fun AddBeverageDialog(
                         readOnly = true,
                         label = { Text(stringResource(Res.string.beverages_overview_beverage_unit)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = unitDropdownExpanded) },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                            .fillMaxWidth()
                     )
                     ExposedDropdownMenu(
                         expanded = unitDropdownExpanded,
@@ -123,7 +133,10 @@ fun AddBeverageDialog(
             }
         },
         confirmButton = {
-            Button(onClick = viewModel::saveBeverage) {
+            Button(
+                onClick = viewModel::saveBeverage,
+                enabled = uiState.dialogAmountError == null && uiState.dialogBeverageNameError == null && uiState.dialogAmount.isNotBlank() && uiState.dialogBeverageName.isNotBlank()
+            ) {
                 Text(stringResource(Res.string.beverages_overview_save))
             }
         },

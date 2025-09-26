@@ -607,6 +607,10 @@
     <string name="beverages_overview_beverage_unit">Unit</string>
     <string name="beverages_overview_cancel">Cancel</string>
     <string name="beverages_overview_save">Save</string>
+    <string name="beverages_overview_error_invalid_amount">Enter a value between 0 and 5,000 ml.</string>
+    <string name="beverages_overview_error_invalid_total_amount">The daily intake of 5,000 ml should not be exceeded.</string>
+    <string name="beverages_overview_error_name_empty">Beverage name cannot be empty.</string>
+    <string name="beverages_overview_error_saving">Error saving beverage. Please try again.</string>
 
     <string name="add_beverage">Add beverage</string>
     <plurals name="beverage_in_cup">

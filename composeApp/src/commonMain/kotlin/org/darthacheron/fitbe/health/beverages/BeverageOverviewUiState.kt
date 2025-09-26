@@ -16,5 +16,7 @@ data class BeverageOverviewUiState(
     val selectedDateForDialog: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
     val dialogAmount: String = "",
     val dialogBeverageName: String = "",
-    val dialogSelectedUnit: FluidUnit = FluidUnit.Milliliter // Default unit
+    val dialogSelectedUnit: FluidUnit = FluidUnit.Milliliter, // Default unit
+    val dialogAmountError: StringResource? = null,
+    val dialogBeverageNameError: StringResource? = null
 )
