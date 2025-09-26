@@ -77,12 +77,12 @@ data class ProfileError(
 @OptIn(ExperimentalUuidApi::class)
 data class ProfileUiState(
     val isLoading: Boolean = false,
-    val currentProfile: Profile? = null, // Domain model for current
-    val currentProfileDisplay: Profile? = null, // Specifically for display with units applied
-    val allProfilesDisplay: List<Profile> = emptyList(), // Specifically for display with units applied
+    val currentProfile: Profile? = null,
+    val currentProfileDisplay: Profile? = null,
+    val allProfilesDisplay: List<Profile> = emptyList(),
     val error: ProfileError = ProfileError(),
     val isEditing: Boolean = false,
-    val editingProfileId: Uuid? = null, // Null if adding a new profile, non-null if editing an existing one
+    val editingProfileId: Uuid? = null,
 
     val inputName: String = "",
     val inputDateOfBirth: LocalDate? = null,
@@ -93,10 +93,8 @@ data class ProfileUiState(
     val inputTargetSleepDuration: UInt? = null,
     val inputTargetSteps: String = "",
     val inputBodyHeight: String = "",
-    val currentSettings: Settings = Settings() // Keep a copy of current settings for conversions
+    val currentSettings: Settings = Settings()
 )
-
-// TODO: . validation for height and weight does not work correctly yet. All number without . are excepted
 
 @OptIn(ExperimentalUuidApi::class)
 private data class ProfileCombinedInitData(
@@ -114,7 +112,14 @@ class ProfileViewModel(
     private val weightUnitConverter: WeightUnitConverter,
     topNavHostController: NavHostController,
     navHostController: NavHostController,
-    topBarManager: TopBarManager
+    topBarManager: TopBarManager,
+    private val beverageValidator: BeverageValidator,
+    private val bodyHeightValidator: BodyHeightValidator,
+    private val bodyWeightValidator: BodyWeightValidator,
+    private val kcalValidator: KcalValidator,
+    private val positiveDecimalValidator: PositiveDecimalValidator,
+    private val positiveNumberValidator: PositiveNumberValidator,
+    private val stepsValidator: StepsValidator,
 ) : BottomNavigationBarViewModel(topNavHostController, navHostController, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_profile
@@ -127,8 +132,8 @@ class ProfileViewModel(
 
     init {
         combine(
-            profileRepository.profiles, // Flow<List<Profile>> - domain units
-            settingsRepository.getSettingsFlow() // Flow<Settings>
+            profileRepository.profiles,
+            settingsRepository.getSettingsFlow()
         ) { domainProfiles, settings ->
             val currentDomainProfile = settings.selectedProfileId?.let { id ->
                 domainProfiles.find { it.id == id }
@@ -253,7 +258,7 @@ class ProfileViewModel(
 
     fun onTargetKcalChanged(kcal: String) = _uiState.update {
         val error =
-            if (!PositiveNumberValidator().validate(kcal) || !KcalValidator().validate(kcal.toUIntOrNull())) {
+            if (!positiveNumberValidator.validate(kcal) || !kcalValidator.validate(kcal.toUIntOrNull())) {
                 it.error.copy(hasKcalError = true, kcalError = Res.string.profile_error_kcal)
             } else {
                 it.error.copy(hasKcalError = false, kcalError = null)
@@ -262,7 +267,7 @@ class ProfileViewModel(
     }
 
     fun onTargetBeverageChanged(beverage: String) = _uiState.update {
-        val error = if (!PositiveNumberValidator().validate(beverage) || !BeverageValidator().validate(
+        val error = if (!positiveNumberValidator.validate(beverage) || !beverageValidator.validate(
                 beverage.toUIntOrNull()
             )) {
             it.error.copy(
@@ -277,8 +282,8 @@ class ProfileViewModel(
 
     fun onTargetWeightChanged(weight: String) = _uiState.update {
         val settings = it.currentSettings
-        val error = if (!PositiveDecimalValidator().validate(weight) ||
-            !BodyWeightValidator().validate(
+        val error = if (!positiveDecimalValidator.validate(weight) ||
+            !bodyWeightValidator.validate(
                 weight.toDoubleOrNull(),
                 settings.weightUnit
             )
@@ -300,7 +305,7 @@ class ProfileViewModel(
         _uiState.update { it.copy(inputTargetSleepDuration = duration) }
 
     fun onTargetStepsChanged(steps: String) = _uiState.update {
-        val error = if (!PositiveNumberValidator().validate(steps) || !StepsValidator().validate(
+        val error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(
                 steps.toUIntOrNull()
             )) {
             it.error.copy(hasStepsError = true, stepsError = Res.string.profile_error_steps)
@@ -312,7 +317,7 @@ class ProfileViewModel(
 
     fun onBodyHeightChanged(height: String) = _uiState.update {
         val settings = it.currentSettings
-        val error = if (!PositiveDecimalValidator().validate(height) || !BodyHeightValidator().validate(
+        val error = if (!positiveDecimalValidator.validate(height) || !bodyHeightValidator.validate(
                 height.toDoubleOrNull()
             )) {
             it.error.copy(
@@ -469,7 +474,7 @@ class ProfileViewModel(
                         isLoading = false,
                         isEditing = false,
                         editingProfileId = null,
-                        error = ProfileError() // Clear all errors on successful save
+                        error = ProfileError()
                     )
                 }
             } catch (e: Exception) {
@@ -500,7 +505,7 @@ class ProfileViewModel(
 
                     if (allProfilesAfterDeletion.isEmpty()) {
                         val newDefaultProfile =
-                            Profile(id = Uuid.random()) // Uses ProfileDefaults.NAME
+                            Profile(id = Uuid.random())
                         val conflictingProfile =
                             profileRepository.getProfileByName(newDefaultProfile.name)
                         if (conflictingProfile != null) {
@@ -518,7 +523,7 @@ class ProfileViewModel(
                                     allProfilesDisplay = emptyList()
                                 )
                             }
-                            return@launch // Stop if default name conflicts
+                            return@launch
                         }
                         try {
                             profileRepository.upsertProfile(newDefaultProfile)
@@ -568,7 +573,7 @@ class ProfileViewModel(
                         settingsRepository.saveSettings(currentSettings.copy(selectedProfileId = newSelectedProfileId))
                         _uiState.update { it.copy(isLoading = false) } // Rely on init flow
                     }
-                } else { // profileToDelete == null
+                } else {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -579,7 +584,7 @@ class ProfileViewModel(
                         )
                     }
                 }
-            } catch (e: Exception) { // Catch other exceptions during the process
+            } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,

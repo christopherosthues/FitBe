@@ -2,26 +2,21 @@ package org.darthacheron.fitbe.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.darthacheron.fitbe.StartUpService
+import org.darthacheron.fitbe.components.validators.BeverageValidator
+import org.darthacheron.fitbe.components.validators.BodyHeightValidator
+import org.darthacheron.fitbe.components.validators.BodyWeightValidator
+import org.darthacheron.fitbe.components.validators.KcalValidator
+import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
+import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
+import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
-import org.darthacheron.fitbe.workouts.ExercisesDashboardViewModel
-import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
-import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailViewModel
-import org.darthacheron.fitbe.workouts.equipment.EquipmentRepository
-import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
-import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
-import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
-import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
-import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewModel
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
-import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
+import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.darthacheron.fitbe.health.steps.StepsRepository
@@ -37,12 +32,25 @@ import org.darthacheron.fitbe.settings.converters.DistanceUnitConverter
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 import org.darthacheron.fitbe.ui.ActualTopBarManager
 import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.workouts.ExercisesDashboardViewModel
+import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
+import org.darthacheron.fitbe.workouts.equipment.EquipmentRepository
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailViewModel
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
+import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
+import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
+import org.darthacheron.fitbe.workouts.exercises.ExerciseRepository
+import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
 import org.darthacheron.fitbe.workouts.programs.ProgramOverviewViewModel
 import org.darthacheron.fitbe.workouts.programs.ProgramRepository
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailViewModel
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateRepository
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewModel
 import org.darthacheron.fitbe.workouts.workouts.ExerciseExecutionViewModel
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionRepository
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -51,21 +59,30 @@ expect val platformModule: Module
 
 val sharedModule = module {
     // Repositories
-    singleOf(::ExerciseRepository)
-    singleOf(::EquipmentRepository)
-    singleOf(::StepsRepository)
-    singleOf(::SleepRepository)
-    singleOf(::BeverageRepository)
-    singleOf(::BodyWeightRepository)
-    singleOf(::ProfileRepository)
-    singleOf(::WorkoutTemplateRepository)
-    singleOf(::WorkoutExecutionRepository)
-    singleOf(::ProgramRepository)
+    factoryOf(::ExerciseRepository)
+    factoryOf(::EquipmentRepository)
+    factoryOf(::StepsRepository)
+    factoryOf(::SleepRepository)
+    factoryOf(::BeverageRepository)
+    factoryOf(::BodyWeightRepository)
+    factoryOf(::ProfileRepository)
+    factoryOf(::WorkoutTemplateRepository)
+    factoryOf(::WorkoutExecutionRepository)
+    factoryOf(::ProgramRepository)
 
     // Unit Converters
-    singleOf(::BodyMeasurementUnitConverter)
-    singleOf(::DistanceUnitConverter)
-    singleOf(::WeightUnitConverter)
+    factoryOf(::BodyMeasurementUnitConverter)
+    factoryOf(::DistanceUnitConverter)
+    factoryOf(::WeightUnitConverter)
+
+    // Validators
+    factoryOf(::BeverageValidator)
+    factoryOf(::BodyHeightValidator)
+    factoryOf(::BodyWeightValidator)
+    factoryOf(::KcalValidator)
+    factoryOf(::PositiveDecimalValidator)
+    factoryOf(::PositiveNumberValidator)
+    factoryOf(::StepsValidator)
 
     // Database and DAOs
     single {
@@ -110,4 +127,3 @@ val sharedModule = module {
     viewModelOf(::ExerciseExecutionViewModel)
     viewModelOf(::ProgramOverviewViewModel)
 }
-
