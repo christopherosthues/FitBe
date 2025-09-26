@@ -6,8 +6,8 @@ class BodyWeightValidator {
     fun validate(value: Double?, weightUnit: WeightUnit): Boolean {
         return value == null ||
                 when (weightUnit) {
-                    WeightUnit.KG -> (value >= 0.0 || value <= 600.0)
-                    WeightUnit.POUND -> (value >= 0.0 || value <= 1322.77)
+                    WeightUnit.KG -> (value >= 0.0 && value <= 600.0)
+                    WeightUnit.POUND -> (value >= 0.0 && value <= 1322.77)
                 }
     }
 }
