@@ -31,7 +31,7 @@ data class BeverageEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val dateUtc: Instant = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
-    val amount: Int,
+    val amount: Double,
     val beverage: String,
     val unit: FluidUnit
 ) {
@@ -41,7 +41,7 @@ data class BeverageEntity(
             id = id,
             profileId = profileId,
             dateUtc = dateUtc,
-            amount = amount.toUInt(),
+            amount = amount,
             beverage = beverage,
             unit = unit
         )
@@ -54,7 +54,7 @@ fun Beverage.toBeverageEntity(): BeverageEntity {
         id = this.id,
         profileId = this.profileId,
         dateUtc = this.dateUtc,
-        amount = this.amount.toInt(),
+        amount = this.amount,
         beverage = this.beverage,
         unit = this.unit
     )

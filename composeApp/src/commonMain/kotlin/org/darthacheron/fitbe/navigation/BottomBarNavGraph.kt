@@ -21,6 +21,7 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentView
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
+import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
@@ -134,7 +135,8 @@ fun BottomBarNavGraph(
         }
         composable<Screen.BeveragesOverview> {
             val viewModel = koinViewModel<BeverageOverviewViewModel>()
-            BeverageOverviewView(viewModel)
+            val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
+            BeverageOverviewView(viewModel, dialogViewModel)
         }
         composable<Screen.Beverages> {
             val viewModel = koinViewModel<BeverageViewModel>()

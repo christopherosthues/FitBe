@@ -11,12 +11,17 @@ data class BeverageOverviewUiState(
     val beverages: List<BeverageOverview> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
     val errorMessage: StringResource? = null,
-    // New properties for the dialog
-    val showAddBeverageDialog: Boolean = false,
-    val selectedDateForDialog: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-    val dialogAmount: String = "",
-    val dialogBeverageName: String = "",
-    val dialogSelectedUnit: FluidUnit = FluidUnit.Milliliter, // Default unit
-    val dialogAmountError: StringResource? = null,
-    val dialogBeverageNameError: StringResource? = null
 )
+
+data class BeverageDialogUiState(
+    val selectedDateForDialog: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val amount: String = "",
+    val beverageName: String = "",
+    val selectedUnit: FluidUnit = FluidUnit.Milliliter,
+    val amountError: StringResource? = null,
+    val beverageNameError: StringResource? = null,
+) {
+    val canSave: Boolean
+        get() = amountError == null && beverageNameError == null && amount.isNotBlank() && beverageName.isNotBlank()
+
+}

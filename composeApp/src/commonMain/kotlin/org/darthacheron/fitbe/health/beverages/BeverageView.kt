@@ -98,7 +98,7 @@ fun BeverageView(
 
     if (showDialog) {
         AddBeverageDialog(
-            initialAmount = 0u,
+            initialAmount = 0.0,
             onSet = { amount, unit, beverage ->
                 beverageViewModel.addBeverage(amount, unit, beverage)
                 showDialog = false
@@ -110,8 +110,8 @@ fun BeverageView(
 
 @Composable
 fun AddBeverageDialog(
-    initialAmount: UInt?,
-    onSet: (UInt, FluidUnit, String) -> Unit,
+    initialAmount: Double?,
+    onSet: (Double, FluidUnit, String) -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectedUnit by remember { mutableStateOf(FluidUnit.Milliliter) }
@@ -142,14 +142,14 @@ fun AddBeverageDialog(
                     itemContent = { item, onClick ->
                         DropdownMenuItem(
                             text = {
-                                Text(item.localizedString(amountText.toUIntOrNull() ?: 0u))
+                                Text(item.localizedString(amountText.toDoubleOrNull() ?: 0.0))
                             },
                             leadingIcon = { Icon(painterResource(item.iconResource()), contentDescription = null) },
                             onClick = onClick
                         )
                     },
                     itemToString = {
-                        it.localizedString(amountText.toUIntOrNull() ?: 0u)
+                        it.localizedString(amountText.toDoubleOrNull() ?: 0.0)
                     },
                     onItemSelected = {
                         selectedUnit = unitOptions[it]
@@ -159,7 +159,7 @@ fun AddBeverageDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                onSet(amountText.toUInt(), selectedUnit, beverage)
+                onSet(amountText.toDouble(), selectedUnit, beverage)
             }) {
                 Text("Save")
             }

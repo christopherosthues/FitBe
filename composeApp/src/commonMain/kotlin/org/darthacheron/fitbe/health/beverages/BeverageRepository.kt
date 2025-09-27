@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -41,17 +42,15 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
         ).map { entities -> entities.map { it.toBeverage() } }
     }
 
-    @OptIn(ExperimentalUuidApi::class)
-    suspend fun addBeverage(date: Instant, amount: UInt, beverage: String, unit: FluidUnit, profileId: Uuid) {
-        beverageDao.upsertBeverage(
-            BeverageEntity(
-                dateUtc = date,
-                amount = amount.toInt(),
-                beverage = beverage,
-                unit = unit,
-                profileId = profileId
-            )
-        )
+    fun getBeveragesForDate(date: LocalDate, profileId: Uuid): Flow<List<Beverage>> {
+        val startOfDay = date.atStartOfDayIn(TimeZone.UTC)
+        val dateSpan = toDateSpan(startOfDay, startOfDay)
+
+        return beverageDao.getBeverages(
+            start = dateSpan.first.toString(),
+            end = dateSpan.second.toString(),
+            profileId = profileId
+        ).map { entities -> entities.map { it.toBeverage() } }
     }
 
     @OptIn(ExperimentalUuidApi::class)

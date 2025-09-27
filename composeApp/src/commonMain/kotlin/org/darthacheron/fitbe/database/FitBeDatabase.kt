@@ -147,7 +147,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                     DateTimeUnit.DAY
                 ).atStartOfDayIn(TimeZone.UTC),
                 beverage = "",
-                amount = Random.nextInt(200, 1500),
+                amount = Random.nextInt(200, 1500).toDouble(),
                 unit = FluidUnit.Milliliter,
                 profileId = profile.id
             )

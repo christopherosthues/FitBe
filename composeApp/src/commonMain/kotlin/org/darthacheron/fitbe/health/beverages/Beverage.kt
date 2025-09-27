@@ -34,7 +34,7 @@ data class Beverage(
     val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val dateUtc: Instant =Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
-    val amount: UInt,
+    val amount: Double,
     val beverage: String,
     val unit: FluidUnit
 ) {

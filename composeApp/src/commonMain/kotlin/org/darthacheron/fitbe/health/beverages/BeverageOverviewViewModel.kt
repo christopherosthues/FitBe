@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.health.beverages
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_amount
+import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_total_amount
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.beverages_overview_error_name_empty
 import fitbe.composeapp.generated.resources.beverages_overview_error_saving
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -41,13 +44,13 @@ import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 class BeverageOverviewViewModel(
     private val beverageRepository: BeverageRepository,
     settingsRepository: SettingsRepository,
-    private val beverageValidator: BeverageValidator,
-    private val positiveNumberValidator: PositiveNumberValidator,
+
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
 ) : OverviewViewModel<BeverageOverview>(settingsRepository, topBarManager) {
@@ -62,8 +65,6 @@ class BeverageOverviewViewModel(
 
     private val _isLoading = MutableStateFlow(true)
     private val _errorMessage = MutableStateFlow<StringResource?>(null)
-
-    private val _dialogState = MutableStateFlow(BeverageOverviewUiState()) // Holds all dialog related states
 
     val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
@@ -118,20 +119,12 @@ class BeverageOverviewViewModel(
         beveragesFlow,
         _isLoading,
         _errorMessage,
-        _dialogState // Combine dialog state
-    ) { beverages, isLoading, errorMessage, dialogState ->
+    ) { beverages, isLoading, errorMessage ->
         BeverageOverviewUiState(
             isLoading = isLoading,
             beverages = beverages,
             dates = beverages.map { it.dateUtc },
             errorMessage = errorMessage,
-            showAddBeverageDialog = dialogState.showAddBeverageDialog,
-            selectedDateForDialog = dialogState.selectedDateForDialog,
-            dialogAmount = dialogState.dialogAmount,
-            dialogBeverageName = dialogState.dialogBeverageName,
-            dialogSelectedUnit = dialogState.dialogSelectedUnit,
-            dialogAmountError = dialogState.dialogAmountError,
-            dialogBeverageNameError = dialogState.dialogBeverageNameError
         )
     }.stateIn(
         scope = viewModelScope,
@@ -142,7 +135,7 @@ class BeverageOverviewViewModel(
     val maxBeverages: StateFlow<UInt> = uiState
         .map { it.beverages }
         .map { beverages ->
-            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOfOrNull { it.amount }
+            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOfOrNull { it.amountMl }
                 ?: ProfileDefaults.BEVERAGE
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
@@ -172,7 +165,7 @@ class BeverageOverviewViewModel(
 
                 BeverageOverview(
                     dateUtc = representativeDateSelector(group),
-                    amount = avgAmount.roundToInt().toUInt(),
+                    amountMl = avgAmount.roundToInt().toUInt(),
                 )
             }
     }
@@ -207,82 +200,28 @@ class BeverageOverviewViewModel(
         _errorMessage.value = null
     }
 
-    // --- Dialog Management ---
-    fun showAddBeverageDialog() {
-        _dialogState.update { it.copy(showAddBeverageDialog = true) }
-    }
-
-    fun dismissAddBeverageDialog() {
-        _dialogState.update {
-            it.copy(
-                showAddBeverageDialog = false,
-                dialogAmount = "",
-                dialogBeverageName = "",
-                dialogSelectedUnit = FluidUnit.Milliliter,
-                selectedDateForDialog = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-                dialogAmountError = null,
-                dialogBeverageNameError = null
-            )
-        }
-    }
-
-    fun onDialogAmountChange(amount: String) {
-        val error = if (!positiveNumberValidator.validate(amount) || !beverageValidator.validate(
-                amount.toUIntOrNull()
-            )) {
-            Res.string.beverages_overview_error_invalid_amount
-        } else {
-            null
-        }
-        _dialogState.update { it.copy(dialogAmount = amount, dialogAmountError = error) }
-    }
-
-    fun onDialogBeverageNameChange(name: String) {
-
-        val error = if (name.isBlank()) {
-            Res.string.beverages_overview_error_name_empty
-        } else {
-            null
-        }
-        _dialogState.update { it.copy(dialogBeverageName = name, dialogBeverageNameError = error) }
-    }
-
-    fun onDialogUnitChange(unit: FluidUnit) {
-        _dialogState.update { it.copy(dialogSelectedUnit = unit) }
-    }
-
-    fun onDialogDateChange(date: LocalDate) {
-        _dialogState.update { it.copy(selectedDateForDialog = date) }
-    }
-
-    val allFluidUnits: List<FluidUnit> = FluidUnit.entries
-
-    fun saveBeverage() {
+    fun saveBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
         viewModelScope.launch {
-            val currentState = uiState.value
-            val amount = currentState.dialogAmount.toUIntOrNull()
-            val profileId = settingsRepository.getSettings().selectedProfileId
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
 
-            if (amount != null && amount > 0u && currentState.dialogBeverageName.isNotBlank() && profileId != null) {
-                try {
-                    beverageRepository.addBeverage(
-                        date = currentState.selectedDateForDialog.atStartOfDayIn(TimeZone.UTC),
+                if (profileId == null) {
+                    _errorMessage.value = Res.string.beverages_overview_error_saving
+                    return@launch
+                }
+
+                beverageRepository.addBeverage(
+                    Beverage(
+                        id = Uuid.random(),
                         amount = amount,
-                        beverage = currentState.dialogBeverageName,
-                        unit = currentState.dialogSelectedUnit,
+                        beverage = name,
+                        unit = unit,
+                        dateUtc = date,
                         profileId = profileId
                     )
-                    dismissAddBeverageDialog()
-                } catch (e: Exception) {
-                    _errorMessage.value = Res.string.beverages_overview_error_saving
-                }
-            } else {
-                if (amount == null || amount == 0u) {
-                    _dialogState.update { it.copy(dialogAmountError = Res.string.beverages_overview_error_invalid_amount) }
-                }
-                if (currentState.dialogBeverageName.isBlank()) {
-                    _dialogState.update { it.copy(dialogBeverageNameError = Res.string.beverages_overview_error_name_empty) }
-                }
+                )
+            } catch (e: Exception) {
+                _errorMessage.value = Res.string.beverages_overview_error_saving
             }
         }
     }

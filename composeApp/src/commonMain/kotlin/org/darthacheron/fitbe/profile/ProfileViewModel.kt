@@ -226,14 +226,16 @@ class ProfileViewModel(
 
     // --- Input Field Handlers ---
     fun onNameChanged(name: String) {
+        _uiState.update { it.copy(inputName = name) }
+
         viewModelScope.launch {
             _uiState.update {
                 val validatedStateAfterFieldChecks = _uiState.value
                 val profileId = validatedStateAfterFieldChecks.editingProfileId ?: Uuid.random()
-                val trimmedName = it.inputName.trim()
+                val trimmedName = name.trim()
                 val existingProfileByName = profileRepository.getProfileByName(trimmedName)
 
-                val error = if (name.trim().isBlank()) {
+                val error = if (trimmedName.isBlank()) {
                     it.error.copy(
                         hasNameError = true,
                         nameError = Res.string.profile_error_name_blank
@@ -246,7 +248,7 @@ class ProfileViewModel(
                 } else {
                     it.error.copy(hasNameError = false, nameError = null)
                 }
-                it.copy(inputName = name, error = error)
+                it.copy(error = error)
             }
         }
     }
@@ -267,8 +269,8 @@ class ProfileViewModel(
     }
 
     fun onTargetBeverageChanged(beverage: String) = _uiState.update {
-        val error = if (!positiveNumberValidator.validate(beverage) || !beverageValidator.validate(
-                beverage.toUIntOrNull()
+        val error = if (!positiveDecimalValidator.validate(beverage) || !beverageValidator.validate(
+                beverage.toDoubleOrNull()
             )) {
             it.error.copy(
                 hasBeverageError = true,

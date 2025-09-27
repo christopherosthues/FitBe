@@ -614,29 +614,29 @@
 
     <string name="add_beverage">Getränk hinzufügen</string>
     <plurals name="beverage_in_cup">
-        <item quantity="zero">%1$d Tassen %2$s</item>
-        <item quantity="one">%1$d Tasse %2$s</item>
-        <item quantity="other">%1$d Tassen %2$s</item>
+        <item quantity="zero">%1$.2f Tassen %2$s</item>
+        <item quantity="one">%1$.2f Tasse %2$s</item>
+        <item quantity="other">%1$.2f Tassen %2$s</item>
     </plurals>
     <plurals name="beverage_in_small_glass">
-        <item quantity="zero">%1$d kleine Gläser %2$s</item>
-        <item quantity="one">%1$d kleines Glas %2$s</item>
-        <item quantity="other">%1$d kleine Gläser %2$s</item>
+        <item quantity="zero">%1$.2f kleine Gläser %2$s</item>
+        <item quantity="one">%1$.2f kleines Glas %2$s</item>
+        <item quantity="other">%1$.2f kleine Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_normal_glass">
-        <item quantity="zero">%1$d normale Gläser %2$s</item>
-        <item quantity="one">%1$d normales Glas %2$s</item>
-        <item quantity="other">%1$d normale Gläser %2$s</item>
+        <item quantity="zero">%1$.2f normale Gläser %2$s</item>
+        <item quantity="one">%1$.2f normales Glas %2$s</item>
+        <item quantity="other">%1$.2f normale Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_large_glass">
-        <item quantity="zero">%1$d große Gläser %2$s</item>
-        <item quantity="one">%1$d großes Glas %2$s</item>
-        <item quantity="other">%1$d große Gläser %2$s</item>
+        <item quantity="zero">%1$.2f große Gläser %2$s</item>
+        <item quantity="one">%1$.2f großes Glas %2$s</item>
+        <item quantity="other">%1$.2f große Gläser %2$s</item>
     </plurals>
-    <string name="beverage_in_milliliter">%1$d ml %2$s</string>
-    <string name="beverage_in_centiliter">%1$d cl %2$s</string>
-    <string name="beverage_in_deciliter">%1$d dl %2$s</string>
-    <string name="beverage_in_liter">%1$d l %2$s</string>
+    <string name="beverage_in_milliliter">%1$.2f ml %2$s</string>
+    <string name="beverage_in_centiliter">%1$.2f cl %2$s</string>
+    <string name="beverage_in_deciliter">%1$.2f dl %2$s</string>
+    <string name="beverage_in_liter">%1$.2f l %2$s</string>
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>

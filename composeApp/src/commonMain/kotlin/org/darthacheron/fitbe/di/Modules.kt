@@ -13,6 +13,7 @@ import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
+import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
@@ -126,4 +127,5 @@ val sharedModule = module {
     viewModelOf(::WorkoutTemplateDetailViewModel)
     viewModelOf(::ExerciseExecutionViewModel)
     viewModelOf(::ProgramOverviewViewModel)
+    viewModelOf(::AddBeverageDialogViewModel)
 }

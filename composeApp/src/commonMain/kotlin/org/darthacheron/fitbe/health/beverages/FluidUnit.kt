@@ -28,31 +28,31 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-enum class FluidUnit(private val conversionFactorToMilliliter: UInt) {
-    Cup(236u),
-    SmallGlass(150u),
-    NormalGlass(250u),
-    LargeGlass(300u),
-    Milliliter(1u),
-    Centiliter(10u),
-    Deciliter(100u),
-    Liter(1000u);
+enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
+    Cup(236.0),
+    SmallGlass(150.0),
+    NormalGlass(250.0),
+    LargeGlass(300.0),
+    Milliliter(1.0),
+    Centiliter(10.0),
+    Deciliter(100.0),
+    Liter(1000.0);
 
-    fun toMilliliter(amount: UInt): UInt {
+    fun toMilliliter(amount: Double): Double {
         return conversionFactorToMilliliter * amount
     }
 
     @Composable
-    fun localizedString(amount: UInt): String {
+    fun localizedString(amount: Double): String {
         return when (this) {
-            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = amount.toInt(), amount)
-            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = amount.toInt(), amount)
-            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = amount.toInt(), amount)
-            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = amount.toInt(), amount)
-            Milliliter -> stringResource(Res.string.fluid_unit_milliliter, amount)
-            Centiliter -> stringResource(Res.string.fluid_unit_centiliter, amount)
-            Deciliter -> stringResource(Res.string.fluid_unit_deciliter, amount)
-            Liter -> stringResource(Res.string.fluid_unit_liter, amount)
+            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = amount.toInt())
+            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = amount.toInt())
+            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = amount.toInt())
+            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = amount.toInt())
+            Milliliter -> stringResource(Res.string.fluid_unit_milliliter)
+            Centiliter -> stringResource(Res.string.fluid_unit_centiliter)
+            Deciliter -> stringResource(Res.string.fluid_unit_deciliter)
+            Liter -> stringResource(Res.string.fluid_unit_liter)
         }
     }
 

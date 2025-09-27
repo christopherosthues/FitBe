@@ -146,7 +146,7 @@ fun PlotBeverages(
         ) {
             if (dates.size > 1) {
                 AreaPlot(
-                    data = beverages.map { Point(it.dateUtc, it.amount.toInt()) },
+                    data = beverages.map { Point(it.dateUtc, it.amountMl.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
                     lineStyle = LineStyle(
@@ -182,7 +182,7 @@ fun PlotBeverages(
             }
             if (beverages.isNotEmpty()) {
                 LinePlot(
-                    data = beverages.map { Point(it.dateUtc, it.amount.toInt()) },
+                    data = beverages.map { Point(it.dateUtc, it.amountMl.toInt()) },
                     lineStyle = LineStyle(
                         brush = SolidColor(MaterialTheme.colorScheme.primary),
                         strokeWidth = 2.dp
@@ -223,6 +223,6 @@ private fun monthResourceString(labelDate: LocalDate): StringResource {
 
 private fun toVerticalBarData(steps: List<BeverageOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> {
     return steps.map {
-        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.amount.toInt()))
+        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.amountMl.toInt()))
     }
 }

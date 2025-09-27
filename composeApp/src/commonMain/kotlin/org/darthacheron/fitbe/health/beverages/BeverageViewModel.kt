@@ -66,7 +66,7 @@ class BeverageViewModel(
     }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addBeverage(amount: UInt, unit: FluidUnit, beverage: String) {
+    fun addBeverage(amount: Double, unit: FluidUnit, beverage: String) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             repository.addBeverage(

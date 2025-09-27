@@ -15,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun BeverageOverviewView(
     beverageOverviewViewModel: BeverageOverviewViewModel,
+    addBeverageDialogViewModel: AddBeverageDialogViewModel
 ) {
     LaunchedEffect(Unit) {
         beverageOverviewViewModel.updateTopBarConfig()
@@ -42,6 +45,7 @@ fun BeverageOverviewView(
     val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
     val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
     val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
+    var showAddBeverageDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -56,8 +60,15 @@ fun BeverageOverviewView(
         }
     }
 
-    if (uiState.showAddBeverageDialog) {
-        AddBeverageDialog(beverageOverviewViewModel)
+    if (showAddBeverageDialog) {
+        AddBeverageDialog(
+            viewModel = addBeverageDialogViewModel,
+            onDismiss = { showAddBeverageDialog = false },
+            onSave = { amount, name, unit, date -> {
+                beverageOverviewViewModel.saveBeverage(amount, name, unit, date) }
+                showAddBeverageDialog = false
+            }
+        )
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -106,7 +117,7 @@ fun BeverageOverviewView(
             }
 
             FloatingActionButton(
-                onClick = { beverageOverviewViewModel.showAddBeverageDialog() },
+                onClick = { showAddBeverageDialog = true },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
                 Icon(

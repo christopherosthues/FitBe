@@ -230,7 +230,7 @@ fun ProfileView(
                                 uiState.error.beverageError?.let { Text(text = stringResource(it)) }
                             }
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth()
                     )
 
