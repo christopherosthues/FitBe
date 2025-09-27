@@ -8,7 +8,6 @@ import fitbe.composeapp.generated.resources.training_equipment_error_favorites
 import fitbe.composeapp.generated.resources.training_equipment_error_loading
 import fitbe.composeapp.generated.resources.training_equipment_error_toggle_favorite
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,15 +26,6 @@ import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-@OptIn(ExperimentalUuidApi::class)
-data class TrainingEquipmentScreenUiState(
-    val isLoading: Boolean = true,
-    val rawEquipmentList: List<TrainingEquipment> = emptyList(),
-    val favoriteEquipmentIds: Set<Uuid> = emptySet(),
-    val equipmentListError: StringResource? = null,
-    val favoriteStateError: StringResource? = null
-)
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class TrainingEquipmentViewModel(

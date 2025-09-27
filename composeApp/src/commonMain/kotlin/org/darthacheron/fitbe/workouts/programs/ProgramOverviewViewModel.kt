@@ -24,19 +24,9 @@ import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FilterableViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesUiState
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-@OptIn(ExperimentalUuidApi::class)
-data class ProgramsUiState(
-    val isLoading: Boolean = true,
-    val rawProgramList: List<Program> = emptyList(),
-    val favoriteProgramIds: Set<Uuid> = emptySet(),
-    val programListError: StringResource? = null,
-    val favoriteStateError: StringResource? = null
-)
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class ProgramOverviewViewModel(

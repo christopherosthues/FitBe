@@ -43,36 +43,9 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarAction
-import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-data class TrainingEquipmentError(
-    val hasGeneralError: Boolean = false,
-    val generalError: StringResource? = null,
-    val hasNameError: Boolean = false,
-    val nameError: StringResource? = null
-) {
-    val hasError: Boolean
-        get() = hasGeneralError || hasNameError
-}
-
-@OptIn(ExperimentalUuidApi::class)
-data class AddEditTrainingEquipmentUiState(
-    val name: String = "",
-    val imageUri: String? = null,
-    val default: Boolean = false,
-    val isLoading: Boolean = false,
-    val isEditing: Boolean = false,
-    val equipmentId: Uuid? = null,
-    val error: TrainingEquipmentError = TrainingEquipmentError(),
-    val persistedDefaultName: String? = null,
-    val persistedDefaultImageUri: String? = null,
-    val isModifiedFromPersistedDefault: Boolean = false,
-    val exercises: List<Exercise> = emptyList(),
-    val isFavorite: Boolean = false
-)
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class TrainingEquipmentDetailViewModel(

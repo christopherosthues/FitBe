@@ -54,51 +54,6 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
-data class ExerciseDetailUiState(
-    val name: String = "",
-    val guide: String = "",
-    val targetMuscleGroups: List<MuscleGroup> = emptyList(),
-    val imageUri: String? = null,
-    val equipmentList: List<TrainingEquipment> = emptyList(),
-    val recommendedFor: List<RecommendedFor> = emptyList(),
-    val exerciseType: ExerciseType = ExerciseType.UNKNOWN,
-    val isLoading: Boolean = false,
-    val isEditing: Boolean = false,
-    val exerciseId: Uuid? = null,
-    val error: ExerciseError = ExerciseError(),
-    val default: Boolean = false,
-    val persistedDefaultName: String? = null,
-    val persistedDefaultGuide: String? = null,
-    val persistedDefaultImageUri: String? = null,
-    val persistedDefaultMuscleGroups: List<MuscleGroup>? = null,
-    val persistedDefaultEquipmentList: List<TrainingEquipment>? = null,
-    val persistedDefaultRecommendedForList: List<RecommendedFor>? = null,
-    val persistedDefaultExerciseType: ExerciseType? = null,
-    val isModifiedFromPersistedDefault: Boolean = false,
-    val isFavorite: Boolean = false
-)
-
-data class ExerciseError(
-    val hasGeneralError: Boolean = false,
-    val generalError: StringResource? = null,
-    val hasNameError: Boolean = false,
-    val nameError: StringResource? = null,
-    val hasGuideError: Boolean = false,
-    val guideError: StringResource? = null,
-    val hasMuscleGroupError: Boolean = false,
-    val muscleGroupError: StringResource? = null,
-    val hasRecommendedForError: Boolean = false,
-    val recommendedForError: StringResource? = null,
-    val hasEquipmentError: Boolean = false,
-    val equipmentError: StringResource? = null,
-    val hasExerciseTypeError: Boolean = false,
-    val exerciseTypeError: StringResource? = null
-) {
-    val hasError: Boolean
-        get() = hasGeneralError || hasNameError || hasGuideError || hasMuscleGroupError || hasEquipmentError || hasRecommendedForError || hasExerciseTypeError
-}
-
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class ExerciseDetailViewModel(
     private val exerciseRepository: ExerciseRepository,
