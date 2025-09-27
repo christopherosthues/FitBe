@@ -1,20 +1,14 @@
 package org.darthacheron.fitbe.settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.settings_error_loading
 import fitbe.composeapp.generated.resources.settings_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_settings
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
@@ -22,23 +16,6 @@ import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
-
-data class SettingsError(
-    val hasError: Boolean = false,
-    val errorResId: StringResource? = null
-)
-
-@OptIn(ExperimentalUuidApi::class)
-data class SettingsUiState(
-    val isLoading: Boolean = false,
-    // currentSettings fields are now flattened:
-    val currentWeightUnit: WeightUnit = WeightUnit.KG,
-    val currentDistanceUnit: DistanceUnit = DistanceUnit.KM,
-    val currentBodyMeasurementUnit: BodyMeasurementUnit = BodyMeasurementUnit.CM,
-    val currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
-    val persistedSettings: Settings = Settings(), // Keep persisted settings as a single object
-    val error: SettingsError = SettingsError()
-)
 
 @OptIn(ExperimentalUuidApi::class)
 class SettingsViewModel(
@@ -65,7 +42,7 @@ class SettingsViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = SettingsError(hasError = true, errorResId = Res.string.settings_error_loading)
+                            error = SettingsError(generalErrorMessage = Res.string.settings_error_loading)
                         )
                     }
                 }
@@ -126,7 +103,7 @@ class SettingsViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = SettingsError(hasError = true, errorResId = Res.string.settings_error_saving)
+                        error = SettingsError(generalErrorMessage = Res.string.settings_error_saving)
                     )
                 }
             }

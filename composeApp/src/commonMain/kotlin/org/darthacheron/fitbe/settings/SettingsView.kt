@@ -19,16 +19,25 @@ fun SettingsView(
     navHostController: NavHostController,
     viewModel: SettingsViewModel
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
+    val uiState by viewModel.uiState.collectAsState()
 
-    val errorResId = uiState.error.errorResId
-    val errorMessage = if (errorResId != null && uiState.error.hasError) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    uiState.error.generalError?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) {
+            scope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.clearError() // Clear error after showing
+            }
+        }
+    }
+    val errorResId = uiState.error.generalError
+    val errorMessage = if (errorResId != null && uiState.error.hasGeneralError) {
         stringResource(errorResId)
     } else {
         null

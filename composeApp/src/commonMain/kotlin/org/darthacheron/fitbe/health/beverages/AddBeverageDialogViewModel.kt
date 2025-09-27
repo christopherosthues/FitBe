@@ -51,7 +51,7 @@ class AddBeverageDialogViewModel(
         viewModelScope.launch {
             val currentState = uiState.value
             val amount = currentState.amount
-            val amountAsDouble = amount.toDoubleOrNull()
+            val amountAsDouble = amount.replace(',', '.').toDoubleOrNull()
 
             var error = if (!positiveDecimalValidator.validate(amount) || !beverageValidator.validate(amountAsDouble)) {
                 Res.string.beverages_overview_error_invalid_amount

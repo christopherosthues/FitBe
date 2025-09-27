@@ -54,49 +54,6 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-data class ProfileError(
-    val hasGeneralError: Boolean = false,
-    val generalError: StringResource? = null,
-    val hasNameError: Boolean = false,
-    val nameError: StringResource? = null,
-    val hasKcalError: Boolean = false,
-    val kcalError: StringResource? = null,
-    val hasBeverageError: Boolean = false,
-    val beverageError: StringResource? = null,
-    val hasWeightError: Boolean = false,
-    val weightError: StringResource? = null,
-    val hasStepsError: Boolean = false,
-    val stepsError: StringResource? = null,
-    val hasHeightError: Boolean = false,
-    val heightError: StringResource? = null
-) {
-    val hasAnyFieldError: Boolean
-        get() = hasNameError || hasKcalError || hasBeverageError || hasWeightError || hasStepsError || hasHeightError
-}
-
-@OptIn(ExperimentalUuidApi::class)
-data class ProfileUiState(
-    val isLoading: Boolean = false,
-    val currentProfile: Profile? = null,
-    val currentProfileDisplay: Profile? = null,
-    val allProfilesDisplay: List<Profile> = emptyList(),
-    val error: ProfileError = ProfileError(),
-    val isEditing: Boolean = false,
-    val editingProfileId: Uuid? = null,
-
-    val inputName: String = "",
-    val inputDateOfBirth: LocalDate? = null,
-    val inputGender: Gender = ProfileDefaults.gender,
-    val inputTargetKcal: String = "",
-    val inputTargetBeverage: String = "",
-    val inputTargetWeight: String = "",
-    val inputTargetSleepDuration: UInt? = null,
-    val inputTargetSteps: String = "",
-    val inputBodyHeight: String = "",
-    val currentSettings: Settings = Settings()
-)
-
-@OptIn(ExperimentalUuidApi::class)
 private data class ProfileCombinedInitData(
     val domainCurrent: Profile?,
     val displayCurrent: Profile?,
@@ -180,16 +137,14 @@ class ProfileViewModel(
                     allProfilesDisplay = initData.displayAll,
                     error = if (initData.settings.selectedProfileId != null && initData.domainCurrent == null && initData.displayAll.isNotEmpty()) {
                         it.error.copy(
-                            hasGeneralError = true,
                             generalError = Res.string.profile_error_loading
                         )
                     } else if (initData.domainCurrent == null && initData.displayAll.isEmpty() && !it.isEditing) {
                         it.error.copy(
-                            hasGeneralError = it.error.hasGeneralError,
                             generalError = it.error.generalError
                         )
                     } else {
-                        it.error.copy(hasGeneralError = false, generalError = null)
+                        it.error.copy(generalError = null)
                     },
                     currentSettings = initData.settings
                 )
@@ -216,7 +171,6 @@ class ProfileViewModel(
                 it.copy(
                     isLoading = false,
                     error = ProfileError(
-                        hasGeneralError = true,
                         generalError = Res.string.profile_error_loading
                     )
                 )
@@ -237,16 +191,14 @@ class ProfileViewModel(
 
                 val error = if (trimmedName.isBlank()) {
                     it.error.copy(
-                        hasNameError = true,
                         nameError = Res.string.profile_error_name_blank
                     )
                 } else if (existingProfileByName != null && existingProfileByName.id != profileId) {
                     it.error.copy(
-                        hasNameError = true,
                         nameError = Res.string.profile_error_name_exists
                     )
                 } else {
-                    it.error.copy(hasNameError = false, nameError = null)
+                    it.error.copy(nameError = null)
                 }
                 it.copy(error = error)
             }
@@ -261,9 +213,9 @@ class ProfileViewModel(
     fun onTargetKcalChanged(kcal: String) = _uiState.update {
         val error =
             if (!positiveNumberValidator.validate(kcal) || !kcalValidator.validate(kcal.toUIntOrNull())) {
-                it.error.copy(hasKcalError = true, kcalError = Res.string.profile_error_kcal)
+                it.error.copy(kcalError = Res.string.profile_error_kcal)
             } else {
-                it.error.copy(hasKcalError = false, kcalError = null)
+                it.error.copy(kcalError = null)
             }
         it.copy(inputTargetKcal = kcal, error = error)
     }
@@ -273,11 +225,10 @@ class ProfileViewModel(
                 beverage.toDoubleOrNull()
             )) {
             it.error.copy(
-                hasBeverageError = true,
                 beverageError = Res.string.profile_error_beverage
             )
         } else {
-            it.error.copy(hasBeverageError = false, beverageError = null)
+            it.error.copy(beverageError = null)
         }
         it.copy(inputTargetBeverage = beverage, error = error)
     }
@@ -291,14 +242,13 @@ class ProfileViewModel(
             )
         ) {
             it.error.copy(
-                hasWeightError = true,
                 weightError = when(settings.weightUnit){
                     WeightUnit.KG -> Res.string.profile_error_weight_kg
                     WeightUnit.POUND -> Res.string.profile_error_weight_lb
                 }
             )
         } else {
-            it.error.copy(hasWeightError = false, weightError = null)
+            it.error.copy(weightError = null)
         }
         it.copy(inputTargetWeight = weight, error = error)
     }
@@ -310,9 +260,9 @@ class ProfileViewModel(
         val error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(
                 steps.toUIntOrNull()
             )) {
-            it.error.copy(hasStepsError = true, stepsError = Res.string.profile_error_steps)
+            it.error.copy(stepsError = Res.string.profile_error_steps)
         } else {
-            it.error.copy(hasStepsError = false, stepsError = null)
+            it.error.copy(stepsError = null)
         }
         it.copy(inputTargetSteps = steps, error = error)
     }
@@ -323,14 +273,13 @@ class ProfileViewModel(
                 height.toDoubleOrNull()
             )) {
             it.error.copy(
-                hasHeightError = true,
                 heightError = when(settings.bodyMeasurementUnit){
                     BodyMeasurementUnit.CM -> Res.string.profile_error_height_cm
                     BodyMeasurementUnit.INCH -> Res.string.profile_error_height_inch
                 }
             )
         } else {
-            it.error.copy(hasHeightError = false, heightError = null)
+            it.error.copy(heightError = null)
         }
         it.copy(inputBodyHeight = height, error = error)
     }
@@ -383,12 +332,12 @@ class ProfileViewModel(
                 isEditing = false,
                 editingProfileId = null,
                 error = it.error.copy(
-                    hasNameError = false, nameError = null,
-                    hasKcalError = false, kcalError = null,
-                    hasBeverageError = false, beverageError = null,
-                    hasWeightError = false, weightError = null,
-                    hasStepsError = false, stepsError = null,
-                    hasHeightError = false, heightError = null
+                    nameError = null,
+                    kcalError = null,
+                    beverageError = null,
+                    weightError = null,
+                    stepsError = null,
+                    heightError = null
                 ),
                 inputName = currentDisplay?.name ?: ProfileDefaults.NAME,
                 inputDateOfBirth = currentDisplay?.dateOfBirth ?: Clock.System.now()
@@ -415,7 +364,7 @@ class ProfileViewModel(
         _uiState.update {
             it.copy(
                 isLoading = true,
-                error = it.error.copy(hasGeneralError = false, generalError = null)
+                error = it.error.copy(generalError = null)
             )
         }
 
@@ -459,7 +408,6 @@ class ProfileViewModel(
                         it.copy(
                             isLoading = false,
                             error = ProfileError(
-                                hasGeneralError = true,
                                 generalError = Res.string.profile_error_saving
                             )
                             // Do not reset isEditing or editingProfileId, as save failed
@@ -484,7 +432,6 @@ class ProfileViewModel(
                     it.copy(
                         isLoading = false,
                         error = ProfileError(
-                            hasGeneralError = true,
                             generalError = Res.string.profile_error_saving
                         )
                         // Do not reset isEditing or editingProfileId, as save failed due to unexpected exception
@@ -515,9 +462,7 @@ class ProfileViewModel(
                                 it.copy(
                                     isLoading = false,
                                     error = ProfileError(
-                                        hasGeneralError = true,
                                         generalError = Res.string.profile_error_saving,
-                                        hasNameError = true,
                                         nameError = Res.string.profile_error_name_exists
                                     ),
                                     currentProfile = null,
@@ -536,7 +481,6 @@ class ProfileViewModel(
                                     it.copy(
                                         isLoading = false,
                                         error = ProfileError(
-                                            hasGeneralError = true,
                                             generalError = Res.string.profile_error_saving
                                         ),
                                         currentProfile = null,
@@ -553,7 +497,6 @@ class ProfileViewModel(
                                 it.copy(
                                     isLoading = false,
                                     error = ProfileError(
-                                        hasGeneralError = true,
                                         generalError = Res.string.profile_error_deleting
                                     ),
                                     currentProfile = null,
@@ -580,7 +523,6 @@ class ProfileViewModel(
                         it.copy(
                             isLoading = false,
                             error = ProfileError(
-                                hasGeneralError = true,
                                 generalError = Res.string.profile_error_deleting
                             )
                         )
@@ -591,7 +533,6 @@ class ProfileViewModel(
                     it.copy(
                         isLoading = false,
                         error = ProfileError(
-                            hasGeneralError = true,
                             generalError = Res.string.profile_error_deleting
                         )
                     )
@@ -621,7 +562,6 @@ class ProfileViewModel(
                         it.copy(
                             isLoading = false,
                             error = ProfileError(
-                                hasGeneralError = true,
                                 generalError = Res.string.profile_error_switching
                             )
                         )
@@ -632,7 +572,6 @@ class ProfileViewModel(
                     it.copy(
                         isLoading = false,
                         error = ProfileError(
-                            hasGeneralError = true,
                             generalError = Res.string.profile_error_switching
                         )
                     )
@@ -645,7 +584,6 @@ class ProfileViewModel(
         _uiState.update {
             it.copy(
                 error = it.error.copy(
-                    hasGeneralError = false,
                     generalError = null
                 )
             )

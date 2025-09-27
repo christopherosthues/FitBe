@@ -317,7 +317,7 @@ fun ProfileView(
                             }
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 72.dp) // Padding for FABs
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 72.dp)
                     )
                 } else if (!uiState.isLoading) {
                     Text(
@@ -396,6 +396,7 @@ fun ProfileView(
                     FloatingActionButton(
                         onClick = { profileViewModel.saveProfile() },
                         containerColor = MaterialTheme.colorScheme.primary
+                        // TODO: disable when error is set
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_save),
