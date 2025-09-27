@@ -45,6 +45,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun BeverageView(
     beverageViewModel: BeverageViewModel,
+    addBeverageDialogViewModel: AddBeverageDialogViewModel
 ) {
     LaunchedEffect(Unit) {
         beverageViewModel.updateTopBarConfig()
@@ -98,76 +99,12 @@ fun BeverageView(
 
     if (showDialog) {
         AddBeverageDialog(
-            initialAmount = 0.0,
-            onSet = { amount, unit, beverage ->
-                beverageViewModel.addBeverage(amount, unit, beverage)
+            viewModel = addBeverageDialogViewModel,
+            onSave = { amount, name, unit, date ->
+                beverageViewModel.addBeverage(amount, name, unit, date)
                 showDialog = false
             },
             onDismiss = { showDialog = false }
         )
     }
-}
-
-@Composable
-fun AddBeverageDialog(
-    initialAmount: Double?,
-    onSet: (Double, FluidUnit, String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var selectedUnit by remember { mutableStateOf(FluidUnit.Milliliter) }
-    var amountText by remember { mutableStateOf((initialAmount ?: "").toString()) }
-    var beverage by remember { mutableStateOf("") }
-    val unitOptions = FluidUnit.entries
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Set Daily Beverage Intake") },
-        text = {
-            Column {
-                TextField(value = beverage, onValueChange = { beverage = it })
-
-                OutlinedTextField(
-                    value = amountText,
-                    onValueChange = { amountText = it },
-                    label = { Text("Amount") },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                DropdownSelection(
-                    initialState = false,
-                    items = unitOptions,
-                    title = "Choose a unit",
-                    itemContent = { item, onClick ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(item.localizedString(amountText.toDoubleOrNull() ?: 0.0))
-                            },
-                            leadingIcon = { Icon(painterResource(item.iconResource()), contentDescription = null) },
-                            onClick = onClick
-                        )
-                    },
-                    itemToString = {
-                        it.localizedString(amountText.toDoubleOrNull() ?: 0.0)
-                    },
-                    onItemSelected = {
-                        selectedUnit = unitOptions[it]
-                    }
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onSet(amountText.toDouble(), selectedUnit, beverage)
-            }) {
-                Text("Save")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
 }

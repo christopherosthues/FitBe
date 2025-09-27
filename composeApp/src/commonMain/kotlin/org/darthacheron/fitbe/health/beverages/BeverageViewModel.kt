@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -66,14 +67,15 @@ class BeverageViewModel(
     }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addBeverage(amount: Double, unit: FluidUnit, beverage: String) {
+    fun addBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             repository.addBeverage(
                 Beverage(
                     amount = amount,
-                    beverage = beverage,
+                    beverage = name,
                     unit = unit,
+                    dateUtc = date,
                     profileId = settings.selectedProfileId!!
                 )
             )
