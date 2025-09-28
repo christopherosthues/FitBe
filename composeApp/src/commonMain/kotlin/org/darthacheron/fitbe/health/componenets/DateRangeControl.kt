@@ -22,12 +22,14 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.health.OverviewViewModel
+import org.darthacheron.fitbe.ui.UiState
+import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun <E> DateRangeControl(
+internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
     dateRange: DateRange,
-    overviewViewModel: OverviewViewModel<E>,
+    overviewViewModel: OverviewViewModel<Error, State>,
 ) {
     var showDateRangeDialog by remember { mutableStateOf(false) }
 

@@ -44,7 +44,7 @@ class WeightOverviewViewModel(
     profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
     topBarManager: TopBarManager
-) : OverviewViewModel<BodyWeight>(settingsRepository, topBarManager) {
+) : OverviewViewModel<WeightOverviewError, WeightOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_body_weights
 
@@ -53,9 +53,6 @@ class WeightOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
-
-    private val _isLoading = MutableStateFlow(true)
-    private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
     val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
@@ -105,7 +102,7 @@ class WeightOverviewViewModel(
     }
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
-    val uiState: StateFlow<WeightOverviewUiState> = combine(
+    override val uiState: StateFlow<WeightOverviewUiState> = combine(
         bodyWeightsDataFlow,
         _isLoading,
         _errorMessage
@@ -250,9 +247,5 @@ class WeightOverviewViewModel(
                 )
             }
         }
-    }
-
-    fun clearErrorMessage() {
-        _errorMessage.value = null
     }
 }

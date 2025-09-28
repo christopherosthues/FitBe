@@ -39,7 +39,7 @@ class StepsOverviewViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<Steps>(settingsRepository, topBarManager) {
+) : OverviewViewModel<StepsOverviewError, StepsOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_steps
 
@@ -48,9 +48,6 @@ class StepsOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
-
-    private val _isLoading = MutableStateFlow(true)
-    private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
     val targetSteps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
@@ -100,7 +97,7 @@ class StepsOverviewViewModel(
     }
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val uiState: StateFlow<StepsOverviewUiState> = combine(
+    override val uiState: StateFlow<StepsOverviewUiState> = combine(
         stepsDataFlow,
         _isLoading,
         _errorMessage
@@ -190,9 +187,5 @@ class StepsOverviewViewModel(
                 )
             }
         }
-    }
-
-    fun clearErrorMessage() {
-        _errorMessage.value = null
     }
 }

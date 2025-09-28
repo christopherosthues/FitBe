@@ -43,7 +43,7 @@ class SleepOverviewViewModel(
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<Sleep>(settingsRepository, topBarManager) {
+) : OverviewViewModel<SleepOverviewError, SleepOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_sleeps
 
@@ -52,9 +52,6 @@ class SleepOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
-
-    private val _isLoading = MutableStateFlow(true)
-    private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
     val targetSleeps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
@@ -112,7 +109,7 @@ class SleepOverviewViewModel(
 //                }
 //            }
 
-    val uiState: StateFlow<SleepOverviewUiState> = combine(
+    override val uiState: StateFlow<SleepOverviewUiState> = combine(
         sleepsDataFlow,
         _isLoading,
         _errorMessage
@@ -204,9 +201,5 @@ class SleepOverviewViewModel(
                 )
             )
         }
-    }
-
-    fun clearErrorMessage() {
-        _errorMessage.value = null
     }
 }

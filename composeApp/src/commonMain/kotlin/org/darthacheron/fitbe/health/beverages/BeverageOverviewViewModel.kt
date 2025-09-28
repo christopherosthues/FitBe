@@ -44,7 +44,7 @@ class BeverageOverviewViewModel(
 
     profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : OverviewViewModel<BeverageOverview>(settingsRepository, topBarManager) {
+) : OverviewViewModel<BeverageOverviewError, BeverageOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_beverages_overview
 
@@ -53,9 +53,6 @@ class BeverageOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
-
-    private val _isLoading = MutableStateFlow(true)
-    private val _errorMessage = MutableStateFlow<StringResource?>(null)
 
     val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
@@ -106,7 +103,7 @@ class BeverageOverviewViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val uiState: StateFlow<BeverageOverviewUiState> = combine(
+    override val uiState: StateFlow<BeverageOverviewUiState> = combine(
         beveragesFlow,
         _isLoading,
         _errorMessage,
@@ -185,10 +182,6 @@ class BeverageOverviewViewModel(
             groupKeySelector = { it.dateUtc.toLocalDateTime(TimeZone.UTC).date.year },
             representativeDateSelector = { group -> group.first().dateUtc.toLocalDateTime(TimeZone.UTC).date.firstDayOfYear() }
         )
-    }
-
-    fun clearErrorMessage() {
-        _errorMessage.value = null
     }
 
     fun saveBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
