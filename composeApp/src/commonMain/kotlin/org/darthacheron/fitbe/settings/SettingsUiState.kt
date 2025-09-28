@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.settings
 
-import org.darthacheron.fitbe.health.componenets.UiState
+import org.darthacheron.fitbe.ui.UiState
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)

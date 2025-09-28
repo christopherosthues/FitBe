@@ -2,10 +2,7 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_amount
-import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_total_amount
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
-import fitbe.composeapp.generated.resources.beverages_overview_error_name_empty
 import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,23 +11,17 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.components.validators.BeverageValidator
-import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
@@ -124,7 +115,7 @@ class BeverageOverviewViewModel(
             isLoading = isLoading,
             beverages = beverages,
             dates = beverages.map { it.dateUtc },
-            errorMessage = errorMessage,
+            error = BeverageOverviewError(errorMessage),
         )
     }.stateIn(
         scope = viewModelScope,

@@ -1,12 +1,12 @@
 package org.darthacheron.fitbe.health.weight
 
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.health.weight.BodyWeight
-import org.jetbrains.compose.resources.StringResource
+import org.darthacheron.fitbe.ui.UiState
 
-data class WeightOverviewUiState(
-    val isLoading: Boolean = true,
+class WeightOverviewUiState(
+    isLoading: Boolean = true,
     val bodyWeights: List<BodyWeight> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
-    val errorMessage: StringResource? = null
-)
+    error: WeightOverviewError = WeightOverviewError()
+) : UiState<WeightOverviewError>(isLoading, error)
+

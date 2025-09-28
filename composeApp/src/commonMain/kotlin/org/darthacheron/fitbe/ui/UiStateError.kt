@@ -1,8 +1,6 @@
-package org.darthacheron.fitbe.health.componenets
+package org.darthacheron.fitbe.ui
 
 import org.jetbrains.compose.resources.StringResource
-
-abstract class UiState<Error : UiStateError>(val isLoading: Boolean = false, val error: Error)
 
 abstract class UiStateError(
     val generalError: StringResource? = null

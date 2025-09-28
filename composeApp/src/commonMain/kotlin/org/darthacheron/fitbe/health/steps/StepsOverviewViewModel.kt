@@ -34,7 +34,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-class StepsViewModel(
+class StepsOverviewViewModel(
     private val stepsRepository: StepsRepository,
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
@@ -100,21 +100,21 @@ class StepsViewModel(
     }
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val uiState: StateFlow<StepsUiState> = combine(
+    val uiState: StateFlow<StepsOverviewUiState> = combine(
         stepsDataFlow,
         _isLoading,
         _errorMessage
     ) { steps, isLoading, errorMessage ->
-        StepsUiState(
+        StepsOverviewUiState(
             isLoading = isLoading,
             steps = steps,
             dates = steps.map { it.dateUtc },
-            errorMessage = errorMessage
+            error = StepsOverviewError(errorMessage)
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = StepsUiState(isLoading = true)
+        initialValue = StepsOverviewUiState(isLoading = true)
     )
 
     val maxSteps: StateFlow<UInt> = uiState

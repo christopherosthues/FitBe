@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.profile
 
-import org.darthacheron.fitbe.health.componenets.UiStateError
+import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 

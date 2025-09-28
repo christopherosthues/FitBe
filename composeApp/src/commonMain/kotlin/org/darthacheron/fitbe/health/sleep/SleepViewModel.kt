@@ -29,8 +29,6 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
-import org.darthacheron.fitbe.utils.roundToDecimals
-import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.collections.map
 import kotlin.collections.maxOfOrNull
@@ -123,7 +121,7 @@ class SleepViewModel(
             isLoading = isLoading,
             sleeps = sleeps,
             dates = sleeps.map { it.dateUtc },
-            errorMessage = errorMessage
+            error = SleepOverviewError(errorMessage)
         )
     }.stateIn(
         scope = viewModelScope,

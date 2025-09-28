@@ -50,7 +50,7 @@ fun BeverageOverviewView(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    uiState.errorMessage?.let {
+    uiState.error.generalError?.let {
         val message = stringResource(it)
         LaunchedEffect(it, message) {
             scope.launch {

@@ -1,11 +1,12 @@
 package org.darthacheron.fitbe.health.sleep
 
 import kotlinx.datetime.LocalDate
-import org.jetbrains.compose.resources.StringResource
+import org.darthacheron.fitbe.ui.UiState
 
-data class SleepOverviewUiState(
-    val isLoading: Boolean = true,
+class SleepOverviewUiState(
+    isLoading: Boolean = true,
     val sleeps: List<Sleep> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
-    val errorMessage: StringResource? = null
-)
+    error: SleepOverviewError = SleepOverviewError()
+) : UiState<SleepOverviewError>(isLoading, error)
+

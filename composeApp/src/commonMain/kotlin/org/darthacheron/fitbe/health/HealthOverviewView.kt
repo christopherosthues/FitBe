@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,7 +20,7 @@ import org.darthacheron.fitbe.health.beverages.PlotBeverages
 import org.darthacheron.fitbe.health.sleep.PlotSleeps
 import org.darthacheron.fitbe.health.sleep.SleepViewModel
 import org.darthacheron.fitbe.health.steps.PlotSteps
-import org.darthacheron.fitbe.health.steps.StepsViewModel
+import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
 import org.darthacheron.fitbe.health.weight.PlotBodyWeights
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.settings.Settings
@@ -70,7 +68,7 @@ fun HealthOverviewView(
                         onClick = { healthOverviewViewModel.navigateToStepsOverview() },
                         content = {
                             StepsOverview(
-                                healthOverviewViewModel.stepsViewModel
+                                healthOverviewViewModel.stepsOverviewViewModel
                             )
                         }
                     )
@@ -117,11 +115,11 @@ private fun BeveragesOverview(beverageOverviewViewModel: BeverageOverviewViewMod
 
 @Composable
 private fun StepsOverview(
-    stepsViewModel: StepsViewModel,
+    stepsOverviewViewModel: StepsOverviewViewModel,
 ) {
-    val uiState by stepsViewModel.uiState.collectAsState()
-    val maxSteps by stepsViewModel.maxSteps.collectAsState()
-    val dateRange by stepsViewModel.dateRangeFlow.collectAsState()
+    val uiState by stepsOverviewViewModel.uiState.collectAsState()
+    val maxSteps by stepsOverviewViewModel.maxSteps.collectAsState()
+    val dateRange by stepsOverviewViewModel.dateRangeFlow.collectAsState()
 
     PlotSteps(
         stepsData = uiState.steps,

@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.beverages
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res

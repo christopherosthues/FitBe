@@ -40,11 +40,9 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.fluid_unit_milliliter
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_add
-import fitbe.composeapp.generated.resources.ic_cancel
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
-import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.profile_add
 import fitbe.composeapp.generated.resources.profile_body_height
@@ -64,8 +62,6 @@ import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DropdownSelection
@@ -93,16 +89,11 @@ fun ProfileView(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val generalErrorResId = uiState.error.generalError
-    val generalErrorMessage = if (generalErrorResId != null && uiState.error.hasGeneralError) {
-        stringResource(generalErrorResId)
-    } else {
-        null
-    }
-    LaunchedEffect(uiState.error) {
-        if (generalErrorMessage != null) {
+    uiState.error.generalError?.let {
+        val message = stringResource(it)
+        LaunchedEffect(it, message) {
             scope.launch {
-                snackbarHostState.showSnackbar(generalErrorMessage)
+                snackbarHostState.showSnackbar(message)
                 profileViewModel.clearGeneralError()
             }
         }

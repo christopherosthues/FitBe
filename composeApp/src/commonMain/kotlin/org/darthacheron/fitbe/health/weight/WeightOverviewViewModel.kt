@@ -114,7 +114,7 @@ class WeightOverviewViewModel(
             isLoading = isLoading,
             bodyWeights = bodyWeights,
             dates = bodyWeights.map { it.dateUtc },
-            errorMessage = errorMessage
+            error = WeightOverviewError(errorMessage)
         )
     }.stateIn(
         scope = viewModelScope,

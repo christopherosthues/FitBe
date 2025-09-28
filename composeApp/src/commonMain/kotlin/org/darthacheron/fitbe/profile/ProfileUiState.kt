@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.profile
 
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.health.componenets.UiState
+import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.settings.Settings
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

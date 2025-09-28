@@ -1,27 +1,13 @@
 package org.darthacheron.fitbe.health.beverages
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.StringResource
+import org.darthacheron.fitbe.ui.UiState
 
-data class BeverageOverviewUiState(
-    val isLoading: Boolean = true,
+class BeverageOverviewUiState(
+    isLoading: Boolean = true,
     val beverages: List<BeverageOverview> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
-    val errorMessage: StringResource? = null,
-)
-
-data class BeverageDialogUiState(
-    val selectedDateForDialog: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-    val amount: String = "",
-    val beverageName: String = "",
-    val selectedUnit: FluidUnit = FluidUnit.Milliliter,
-    val amountError: StringResource? = null,
-    val beverageNameError: StringResource? = null,
-) {
-    val canSave: Boolean
-        get() = amountError == null && beverageNameError == null && amount.isNotBlank() && beverageName.isNotBlank()
+    error: BeverageOverviewError = BeverageOverviewError(),
+) : UiState<BeverageOverviewError>(isLoading, error) {
 
 }
