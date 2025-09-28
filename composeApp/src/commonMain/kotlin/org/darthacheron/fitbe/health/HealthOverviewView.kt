@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.PlotBeverages
 import org.darthacheron.fitbe.health.sleep.PlotSleeps
-import org.darthacheron.fitbe.health.sleep.SleepViewModel
+import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
 import org.darthacheron.fitbe.health.steps.PlotSteps
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
 import org.darthacheron.fitbe.health.weight.PlotBodyWeights
@@ -58,7 +58,7 @@ fun HealthOverviewView(
                         onClick = { healthOverviewViewModel.navigateToSleepOverview() },
                         content = {
                             SleepsOverview(
-                                healthOverviewViewModel.sleepViewModel,
+                                healthOverviewViewModel.sleepOverviewViewModel,
                             )
                         }
                     )
@@ -132,7 +132,7 @@ private fun StepsOverview(
 
 @Composable
 private fun SleepsOverview(
-    sleepsViewModel: SleepViewModel,
+    sleepsViewModel: SleepOverviewViewModel,
 ) {
     val uiState by sleepsViewModel.uiState.collectAsState()
     val maxSleeps by sleepsViewModel.maxSleeps.collectAsState()

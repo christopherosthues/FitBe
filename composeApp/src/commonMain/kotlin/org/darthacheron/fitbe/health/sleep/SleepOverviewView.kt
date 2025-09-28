@@ -60,7 +60,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SleepOverviewView(
-    viewModel: SleepViewModel,
+    viewModel: SleepOverviewViewModel,
 ) {
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()

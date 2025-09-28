@@ -38,7 +38,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-class SleepViewModel(
+class SleepOverviewViewModel(
     private val sleepRepository: SleepRepository,
     settingsRepository: SettingsRepository,
     profileRepository: ProfileRepository,
