@@ -69,6 +69,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DropdownSelection
+import org.darthacheron.fitbe.components.SaveCancelFloatingActionButtonRow
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimeInputDialog
 import org.jetbrains.compose.resources.painterResource
@@ -378,33 +379,16 @@ fun ProfileView(
                 }
             }
 
-            AnimatedVisibility(
-                visible = uiState.isEditing,
+            SaveCancelFloatingActionButtonRow(
+                onSave = { profileViewModel.saveProfile() },
+                onCancel = { profileViewModel.cancelEditingOrAdding() },
+                isEditing = uiState.isEditing,
+                isLoading = uiState.isLoading,
+                hasError = uiState.error.hasAnyFieldError,
+                saveButtonContentDescription = Res.string.profile_save,
+                cancelButtonContentDescription = Res.string.profile_cancel,
                 modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    FloatingActionButton(
-                        onClick = { profileViewModel.cancelEditingOrAdding() },
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        modifier = Modifier.padding(end = 16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_cancel),
-                            contentDescription = stringResource(Res.string.profile_cancel)
-                        )
-                    }
-                    FloatingActionButton(
-                        onClick = { profileViewModel.saveProfile() },
-                        containerColor = if (!uiState.isLoading && !uiState.error.hasAnyFieldError) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                        // TODO: disable when error is set
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_save),
-                            contentDescription = stringResource(Res.string.profile_save)
-                        )
-                    }
-                }
-            }
+            )
         }
 
         if (showProfileDialog && uiState.allProfilesDisplay.isNotEmpty()) {
