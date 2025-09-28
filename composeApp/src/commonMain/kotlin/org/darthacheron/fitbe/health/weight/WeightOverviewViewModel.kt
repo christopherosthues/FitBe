@@ -5,6 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
 import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -54,7 +55,9 @@ class WeightOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    val targetWeight: StateFlow<Double?> = settingsRepository.getSettingsFlow()
+    private val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
+
+    val targetWeight: StateFlow<Double?> = settings
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
             if (profileId != null) {
@@ -103,14 +106,16 @@ class WeightOverviewViewModel(
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     override val uiState: StateFlow<WeightOverviewUiState> = combine(
+        settings,
         bodyWeightsDataFlow,
         _isLoading,
         _errorMessage
-    ) { bodyWeights, isLoading, errorMessage ->
+    ) { settings, bodyWeights, isLoading, errorMessage ->
         WeightOverviewUiState(
             isLoading = isLoading,
             bodyWeights = bodyWeights,
             dates = bodyWeights.map { it.dateUtc },
+            settings = settings,
             error = WeightOverviewError(errorMessage)
         )
     }.stateIn(

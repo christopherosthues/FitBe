@@ -174,6 +174,7 @@ class StepsOverviewViewModel(
         )
     }
 
+    // TODO: accumulate steps over all entries for a day
     fun addSteps(dateUtc: LocalDate, steps: UInt) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()

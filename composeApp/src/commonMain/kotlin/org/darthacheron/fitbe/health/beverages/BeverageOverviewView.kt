@@ -28,6 +28,7 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.health.OverviewView
 import org.darthacheron.fitbe.health.componenets.DateRangeControl
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -37,94 +38,30 @@ fun BeverageOverviewView(
     beverageOverviewViewModel: BeverageOverviewViewModel,
     addBeverageDialogViewModel: AddBeverageDialogViewModel
 ) {
-    LaunchedEffect(Unit) {
-        beverageOverviewViewModel.updateTopBarConfig()
-    }
-
-    val uiState by beverageOverviewViewModel.uiState.collectAsState()
-    val dateRange by beverageOverviewViewModel.dateRangeFlow.collectAsState()
-    val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
-    val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
-    var showAddBeverageDialog by remember { mutableStateOf(false) }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
-    uiState.error.generalError?.let {
-        val message = stringResource(it)
-        LaunchedEffect(it, message) {
-            scope.launch {
-                snackbarHostState.showSnackbar(message)
-                beverageOverviewViewModel.clearErrorMessage()
-            }
-        }
-    }
-
-    if (showAddBeverageDialog) {
-        AddBeverageDialog(
-            viewModel = addBeverageDialogViewModel,
-            onDismiss = { showAddBeverageDialog = false },
-            onSave = { amount, name, unit, date -> {
-                beverageOverviewViewModel.saveBeverage(amount, name, unit, date) }
-                showAddBeverageDialog = false
-            }
-        )
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        } else {
+    OverviewView(
+        overviewViewModel = beverageOverviewViewModel,
+        plot = { state, dateRange ->
+            val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
+            val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
             PlotBeverages(
                 Modifier.padding(bottom = 64.dp),
-                uiState.beverages,
+                state.beverages,
                 dateRange,
-                uiState.dates, // Changed here
+                state.dates,
                 maxBeverages,
                 false,
                 targetBeverages,
             )
-
-            IconButton(
-                onClick = { beverageOverviewViewModel.movePast() },
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_back),
-                    contentDescription = null
-                )
-            }
-
-            IconButton(
-                onClick = { beverageOverviewViewModel.moveFuture() },
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_forward),
-                    contentDescription = null
-                )
-            }
-
-            Row(
-                modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                DateRangeControl(
-                    dateRange,
-                    beverageOverviewViewModel
-                )
-            }
-
-            FloatingActionButton(
-                onClick = { showAddBeverageDialog = true },
-                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_add),
-                    contentDescription = stringResource(Res.string.beverages_overview_content_description_add_beverage)
-                )
-            }
+        },
+        addDialog = { dismissDialog ->
+            AddBeverageDialog(
+                viewModel = addBeverageDialogViewModel,
+                onSave = { amount, name, unit, date ->
+                    beverageOverviewViewModel.saveBeverage(amount, name, unit, date)
+                    dismissDialog()
+                },
+                onDismiss = { dismissDialog() }
+            )
         }
-    }
+    )
 }

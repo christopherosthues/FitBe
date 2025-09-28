@@ -145,8 +145,7 @@ fun BottomBarNavGraph(
         }
         composable<Screen.BodyWeights> {
             val viewModel = koinViewModel<WeightOverviewViewModel>()
-            val settingsRepository = getKoin().get<SettingsRepository>()
-            WeightOverviewView(viewModel, settingsRepository)
+            WeightOverviewView(viewModel)
         }
         composable<Screen.WorkoutsOverview> {
             val viewModel = koinViewModel<WorkoutTemplatesOverviewViewModel>(
