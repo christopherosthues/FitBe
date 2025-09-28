@@ -395,7 +395,7 @@ fun ProfileView(
                     }
                     FloatingActionButton(
                         onClick = { profileViewModel.saveProfile() },
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = if (!uiState.isLoading && !uiState.error.hasAnyFieldError) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                         // TODO: disable when error is set
                     ) {
                         Icon(
