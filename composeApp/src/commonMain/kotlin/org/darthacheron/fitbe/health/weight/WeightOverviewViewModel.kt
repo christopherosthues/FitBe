@@ -132,19 +132,12 @@ class WeightOverviewViewModel(
         }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
     private fun mapDay(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeight> {
-        return bodyWeights.map {
-            it.copy(
-                weightInKg = weightUnitConverter.convert(
-                    it.weightInKg, WeightUnit.KG, settings.weightUnit
-                )?.roundToDecimals(2) ?: it.weightInKg, // Fallback if conversion is null
-                muscleMassInKg = it.muscleMassInKg?.let { mm ->
-                    weightUnitConverter.convert(mm, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: mm
-                },
-                boneMassInKg = it.boneMassInKg?.let { bm ->
-                    weightUnitConverter.convert(bm, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2) ?: bm
-                }
-            )
-        }
+        return aggregateBodyWeightsByPeriod(
+            bodyWeights = bodyWeights,
+            settings = settings,
+            groupKeySelector = { it.dateUtc },
+            representativeDateSelector = { group -> group.first().dateUtc }
+        )
     }
 
     private fun <K> aggregateBodyWeightsByPeriod(

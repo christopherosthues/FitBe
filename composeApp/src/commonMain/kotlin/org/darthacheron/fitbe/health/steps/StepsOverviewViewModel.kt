@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onStart // Added
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.daysUntil
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -122,28 +123,48 @@ class StepsOverviewViewModel(
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
     private fun mapDay(steps: List<Steps>): List<Steps> {
-        return steps
+        return aggregateDailySteps(steps)
     }
 
-    private fun <K> aggregateStepsByPeriod(
-        steps: List<Steps>,
-        groupKeySelector: (Steps) -> K,
-        representativeDateSelector: (List<Steps>) -> LocalDate
-    ): List<Steps> {
-        if (steps.isEmpty()) return emptyList()
+    private fun aggregateDailySteps(steps: List<Steps>): List<Steps> {
+        if (steps.isEmpty()) {
+            return emptyList()
+        }
 
-        return steps.groupBy(groupKeySelector)
+        return steps.groupBy { it.dateUtc }
+            .map { (date, group) ->
+                Steps(
+                    id = Uuid.random(),
+                    dateUtc = date,
+                    profileId = group.first().profileId,
+                    steps = group.sumOf { it.steps }
+                )
+            }
+    }
+
+    private fun <K> aggregateAverageStepsByPeriod(
+        dailySteps: List<Steps>,
+        groupKeySelector: (Steps) -> K,
+        representativeDateSelector: (List<Steps>) -> LocalDate,
+        daysInPeriodSelector: (List<Steps>) -> Int
+    ): List<Steps> {
+        if (dailySteps.isEmpty()) return emptyList()
+
+        return dailySteps.groupBy(groupKeySelector)
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
-                val groupSize = group.size
-                val avgSteps = group.sumOf { it.steps.toDouble() } / groupSize // Ensure double for division
+                val sumSteps = group.sumOf { it.steps }
+                val daysInPeriod = daysInPeriodSelector(group)
+                if (daysInPeriod == 0) return@mapNotNull null
+
+                val avgSteps = (sumSteps.toDouble() / daysInPeriod).roundToInt().toUInt()
 
                 Steps(
                     id = Uuid.random(),
                     dateUtc = representativeDateSelector(group),
                     profileId = group.first().profileId,
-                    steps = avgSteps.roundToInt().toUInt(),
+                    steps = avgSteps
                 )
             }
     }
@@ -151,26 +172,45 @@ class StepsOverviewViewModel(
     private fun mapWeek(
         stepList: List<Steps>,
     ): List<Steps> {
-        return aggregateStepsByPeriod(
-            steps = stepList,
+        val dailySteps = aggregateDailySteps(stepList)
+        return aggregateAverageStepsByPeriod(
+            dailySteps = dailySteps,
             groupKeySelector = { it.dateUtc.isoWeekAndYear() },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() },
+            daysInPeriodSelector = { _ -> 7 }
         )
     }
 
     private fun mapMonth(stepsList: List<Steps>): List<Steps> {
-        return aggregateStepsByPeriod(
-            steps = stepsList,
+        val dailySteps = aggregateDailySteps(stepsList)
+        return aggregateAverageStepsByPeriod(
+            dailySteps = dailySteps,
             groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() },
+            daysInPeriodSelector = { group ->
+                val date = group.first().dateUtc
+                val firstDay = date.firstDayOfMonth()
+                val nextMonth = if (firstDay.monthNumber == 12) {
+                    LocalDate(firstDay.year + 1, 1, 1)
+                } else {
+                    LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
+                }
+                firstDay.daysUntil(nextMonth)
+            }
         )
     }
 
     private fun mapYear(stepsList: List<Steps>): List<Steps> {
-        return aggregateStepsByPeriod(
-            steps = stepsList,
+        val dailySteps = aggregateDailySteps(stepsList)
+        return aggregateAverageStepsByPeriod(
+            dailySteps = dailySteps,
             groupKeySelector = { it.dateUtc.year },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
+            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() },
+            daysInPeriodSelector = { group ->
+                val year = group.first().dateUtc.year
+                val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+                if (isLeap) 366 else 365
+            }
         )
     }
 
