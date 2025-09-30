@@ -40,8 +40,7 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_photo_library // Added
 import fitbe.composeapp.generated.resources.ic_remove // Added
-// TODO: Add specific string resources for workout template images if needed
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_equipment // Placeholder
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_exercise // Placeholder
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_edit
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_image // Placeholder
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image // Placeholder
@@ -113,7 +112,7 @@ fun WorkoutTemplateDetailView(
                                 imageResource = getWorkoutImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
                                 contentDescription = stringResource(Res.string.exercise_detail_content_description_image), // TODO: Change to workout_template_content_description_image
-                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment), // TODO: Change to workout_template_content_description_default_image
+                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise), // TODO: Change to workout_template_content_description_default_image
                                 modifier = Modifier.size(150.dp) // Adjusted size for template image
                             )
                             if (uiState.isEditing) {
@@ -132,7 +131,7 @@ fun WorkoutTemplateDetailView(
                             ImagePlaceholder(
                                 isEditing = uiState.isEditing,
                                 default = uiState.default, // You might want a specific placeholder for templates
-                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment), // TODO: Change to workout_template_content_description_default_image
+                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise), // TODO: Change to workout_template_content_description_default_image
                             )
                         }
                         if (uiState.isEditing) {

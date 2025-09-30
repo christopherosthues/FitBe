@@ -133,7 +133,7 @@ class BeverageOverviewViewModel(
             .map { (date, beverageEntries) ->
                 BeverageOverview(
                     date,
-                    beverageEntries.sumOf { it.amount.toInt() }.toUInt()
+                    beverageEntries.sumOf { it.amount }.toUInt()
                 )
             }
     }
@@ -149,7 +149,7 @@ class BeverageOverviewViewModel(
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
-                val avgAmount = group.sumOf { it.amount.toDouble() } / group.size
+                val avgAmount = group.sumOf { it.amount } / group.size
 
                 BeverageOverview(
                     dateUtc = representativeDateSelector(group),

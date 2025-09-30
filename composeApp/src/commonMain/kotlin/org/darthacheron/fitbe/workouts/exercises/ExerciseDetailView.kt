@@ -76,7 +76,7 @@ import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.ic_reset_default
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_select_image
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_equipment
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_image
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_start_workout
@@ -164,7 +164,7 @@ fun ExerciseDetailView(
                                 imageResource = getExerciseImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
                                 contentDescription = stringResource(Res.string.exercise_detail_content_description_image),
-                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment),
+                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise),
                                 modifier = Modifier.size(256.dp).align(Alignment.Center)
                             )
                             if (uiState.isEditing) {
@@ -183,7 +183,7 @@ fun ExerciseDetailView(
                             ImagePlaceholder(
                                 isEditing = uiState.isEditing,
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_equipment),
+                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise),
                             )
                         }
                         if (uiState.isEditing) {

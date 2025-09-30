@@ -121,7 +121,7 @@
     <string name="exercise_detail_content_description_select_image">Bild auswählen</string>
     <string name="exercise_detail_content_description_image">Übung Bild</string>
     <string name="exercise_detail_content_description_remove_image">Bild entfernen</string>
-    <string name="exercise_detail_content_description_default_equipment">Standardübung</string>
+    <string name="exercise_detail_content_description_default_exercise">Standardübung</string>
     <string name="exercise_detail_content_description_remove_muscle_groups">Muskelgruppe entfernen</string>
     <string name="exercise_detail_content_description_add_muscle_groups">Muskelgruppe hinzufügen</string>
     <string name="exercise_detail_content_description_remove_equipment">Gerät entfernen</string>
