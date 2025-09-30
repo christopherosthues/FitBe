@@ -11,15 +11,17 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface StepsDao {
-    @Query("""
+    @Query(
+        """
         SELECT * FROM steps 
         WHERE profileId = :profileId
-        AND dateUtc BETWEEN SUBSTR(:startDate, 1, 10) AND SUBSTR(:endDate, 1, 10)
+        AND dateUtc BETWEEN SUBSTR(:start, 1, 10) AND SUBSTR(:end, 1, 10)
         ORDER BY dateUtc ASC
-    """)
+    """
+    )
     fun getStepsBetweenDates(
-        startDate: String,
-        endDate: String,
+        start: String,
+        end: String,
         profileId: Uuid
     ): Flow<List<StepsEntity>>
 

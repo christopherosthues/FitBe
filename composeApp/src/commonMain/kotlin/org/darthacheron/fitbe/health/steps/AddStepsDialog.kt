@@ -10,6 +10,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +36,12 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AddStepsDialog(
+    viewModel: AddStepsDialogViewModel,
     onDismiss: () -> Unit,
     onSave: (date: LocalDate, steps: UInt) -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     var steps by remember { mutableStateOf("0") }
     var date by remember { mutableStateOf(Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
     var showDateDialog by remember { mutableStateOf(false) }

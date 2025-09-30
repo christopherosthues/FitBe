@@ -28,7 +28,7 @@ class StartUpService(
                     profileRepository.upsertProfile(defaultProfile)
                     settingsRepository.saveSettings(settings.copy(selectedProfileId = defaultProfile.id))
                 }
-                seedDatabase(database)
+//                seedDatabase(database)
             } catch (exception: Exception) {
                 // TODO proper error handling
             }

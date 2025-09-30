@@ -94,6 +94,8 @@ import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+// TODO: Reset button and cancel button not correctly displayed (All views)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun ExerciseDetailView(

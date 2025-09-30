@@ -6,8 +6,11 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.health.beverages.Beverage
 import org.darthacheron.fitbe.utils.toDateSpan
+import kotlin.collections.map
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -32,6 +35,17 @@ class StepsRepository(private val stepsDao: StepsDao) {
         return stepsDao.getStepsForDate(today.toString(), profileId).map {
             it.toSteps()
         }
+    }
+
+    fun getStepsForDate(date: LocalDate, profileId: Uuid): Flow<List<Steps>> {
+        val startOfDay = date.atStartOfDayIn(TimeZone.UTC)
+        val dateSpan = toDateSpan(startOfDay, startOfDay)
+
+        return stepsDao.getStepsBetweenDates(
+            start = dateSpan.first.toString(),
+            end = dateSpan.second.toString(),
+            profileId = profileId
+        ).map { entities -> entities.map { it.toSteps() } }
     }
 
     suspend fun addSteps(steps: Steps) {

@@ -4,6 +4,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.health.componenets.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
 data class BeverageDialogUiState(
@@ -13,7 +14,7 @@ data class BeverageDialogUiState(
     val selectedUnit: FluidUnit = FluidUnit.Milliliter,
     val amountError: StringResource? = null,
     val beverageNameError: StringResource? = null,
-) {
-    val canSave: Boolean
+) : DialogUiState {
+    override val canSave: Boolean
         get() = amountError == null && beverageNameError == null && amount.isNotBlank() && beverageName.isNotBlank()
 }
