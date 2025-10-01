@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.beverages
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_add_dialog_error_invalid_amount
@@ -16,6 +15,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
+import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -25,23 +25,23 @@ class AddBeverageDialogViewModel(
     private val settingsRepository: SettingsRepository,
     private val beverageValidator: BeverageValidator,
     private val positiveDecimalValidator: PositiveDecimalValidator,
-) : ViewModel() {
-    val uiState = MutableStateFlow(BeverageDialogUiState())
+) : AddDialogViewModel<AddBeverageDialogUiState>() {
+    override val uiState = MutableStateFlow(AddBeverageDialogUiState())
 
-    fun dismissAddBeverageDialog() {
+    override fun dismissDialog() {
         uiState.update {
             it.copy(
                 amount = "",
                 beverageName = "",
                 selectedUnit = FluidUnit.Milliliter,
-                selectedDateForDialog = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+                date = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
                 amountError = null,
                 beverageNameError = null,
             )
         }
     }
 
-    fun onDialogAmountChange(amount: String) {
+    fun onAmountChange(amount: String) {
         uiState.update { it.copy(amount = amount) }
         validateAmount()
     }
@@ -59,7 +59,7 @@ class AddBeverageDialogViewModel(
             }
 
             if (error == null) {
-                val selectedDate = currentState.selectedDateForDialog
+                val selectedDate = currentState.date
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val beveragesForDay = beverageRepository.getBeveragesForDate(selectedDate, profileId).first()
@@ -74,7 +74,7 @@ class AddBeverageDialogViewModel(
         }
     }
 
-    fun onDialogBeverageNameChange(name: String) {
+    fun onNameChange(name: String) {
 
         val error = if (name.isBlank()) {
             Res.string.beverages_add_dialog_error_name_empty
@@ -84,13 +84,13 @@ class AddBeverageDialogViewModel(
         uiState.update { it.copy(beverageName = name, beverageNameError = error) }
     }
 
-    fun onDialogUnitChange(unit: FluidUnit) {
+    fun onUnitChange(unit: FluidUnit) {
         uiState.update { it.copy(selectedUnit = unit) }
         validateAmount()
     }
 
-    fun onDialogDateChange(date: LocalDate) {
-        uiState.update { it.copy(selectedDateForDialog = date) }
+    fun onDateChange(date: LocalDate) {
+        uiState.update { it.copy(date = date) }
         validateAmount()
     }
 

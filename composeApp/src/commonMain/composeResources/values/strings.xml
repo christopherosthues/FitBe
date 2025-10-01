@@ -743,14 +743,13 @@
 
     <string name="steps_chart_thumbnail_title">Steps</string>
     <string name="steps_chart_y_axis_title">Steps</string>
-    <string name="steps_add_steps_title">Record steps</string>
-    <string name="steps_add_steps_date">Date</string>
-    <string name="steps_add_steps_count">Steps count</string>
-    <string name="steps_save">Save</string>
-    <string name="steps_cancel">Cancel</string>
     <string name="steps_error_count">Enter a value between 0 and 500,000.</string>
     <string name="steps_overview_error_loading">Error loading steps data.</string>
 
+    <string name="steps_add_dialog_title">Record steps</string>
+    <string name="steps_add_dialog_steps">Steps count</string>
+    <string name="steps_add_dialog_save">Save</string>
+    <string name="steps_add_dialog_cancel">Cancel</string>
     <string name="steps_add_dialog_error_invalid_steps">Enter a value between 0 and 500,000.</string>
     <string name="steps_add_dialog_error_invalid_total_steps">The total number of steps per day must be between 0 and 500,000.</string>
 

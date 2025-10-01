@@ -7,8 +7,8 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.componenets.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
-data class BeverageDialogUiState(
-    val selectedDateForDialog: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC).date,
+data class AddBeverageDialogUiState(
+    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC).date,
     val amount: String = "",
     val beverageName: String = "",
     val selectedUnit: FluidUnit = FluidUnit.Milliliter,

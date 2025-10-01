@@ -2,7 +2,8 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_total_amount
+import fitbe.composeapp.generated.resources.steps_add_dialog_error_invalid_steps
+import fitbe.composeapp.generated.resources.steps_add_dialog_error_invalid_total_steps
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update

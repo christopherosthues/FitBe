@@ -742,15 +742,14 @@
     <string name="month_december">Dezember</string>
 
     <string name="steps_chart_thumbnail_title">Schritte</string>
-    <string name="steps_chart_y_axis_title">Schritte</string>
-    <string name="steps_add_steps_title">Schritte eintragen</string>
-    <string name="steps_add_steps_date">Datum</string>
-    <string name="steps_add_steps_count">Schrittanzahl</string>
-    <string name="steps_save">Speichern</string>
-    <string name="steps_cancel">Abbrechen</string>
+    <string name="steps_add_dialog_steps">Schrittanzahl</string>
     <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
     <string name="steps_overview_error_loading">Fehler beim Laden der Schrittdaten.</string>
 
+    <string name="steps_add_dialog_title">Schritte eintragen</string>
+    <string name="steps_chart_y_axis_title">Schritte</string>
+    <string name="steps_add_dialog_save">Speichern</string>
+    <string name="steps_add_dialog_cancel">Abbrechen</string>
     <string name="steps_add_dialog_error_invalid_steps">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
     <string name="steps_add_dialog_error_invalid_total_steps">Die Gesamtanzahl an Schritten pro Tag muss zwischen 0 und 500.000 liegen.</string>
 
