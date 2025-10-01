@@ -697,24 +697,25 @@
     <string name="profile_error_switching">Fehler beim Wechseln des Profils. Bitte versuche es erneut.</string>
     <string name="profile_no_profiles_prompt_add">Keine Profile gefunden. Klicke auf \'+\' um eines hinzuzufügen.</string>
 
-    <string name="body_weight_total_weight_error_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_total_weight_error_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_body_fat_error">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
-    <string name="body_weight_muscle_mass_error_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_muscle_mass_error_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_bone_mass_error_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_bone_mass_error_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_body_water_error">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
-    <string name="body_weight_total_weight_sum_error">Die Summe der Einzelgewichte darf das Gesamtgewicht nicht überschreiten.</string>
-    <string name="body_weight_add_body_weight_title">Körpergewicht eintragen</string>
-    <string name="body_weight_add_body_weight_date">Datum</string>
-    <string name="body_weight_add_body_weight_total_weight">Gesamtgewicht (%1$s)</string>
-    <string name="body_weight_add_body_weight_body_fat">Körperfett (%)</string>
-    <string name="body_weight_add_body_weight_muscle_mass">Muskelmasse (%1$s)</string>
-    <string name="body_weight_add_body_weight_bone_mass">Knochenmasse (%1$s)</string>
-    <string name="body_weight_add_body_weight_body_water">Körperwasser (%)</string>
-    <string name="body_weight_save">Speichern</string>
-    <string name="body_weight_cancel">Abbrechen</string>
+    <!-- Body Weight Add Dialog -->
+    <string name="body_weight_add_dialog_error_total_weight_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_total_weight_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_body_fat">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_body_water">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
+    <string name="body_weight_add_dialog_error_total_weight_sum">Die Summe der Einzelgewichte darf das Gesamtgewicht nicht überschreiten.</string>
+    <string name="body_weight_add_dialog_title">Körpergewicht eintragen</string>
+    <string name="body_weight_add_dialog_total_weight">Gesamtgewicht (%1$s)</string>
+    <string name="body_weight_add_dialog_body_fat">Körperfett (%)</string>
+    <string name="body_weight_add_dialog_muscle_mass">Muskelmasse (%1$s)</string>
+    <string name="body_weight_add_dialog_bone_mass">Knochenmasse (%1$s)</string>
+    <string name="body_weight_add_dialog_body_water">Körperwasser (%)</string>
+    <string name="body_weight_add_dialog_save">Speichern</string>
+    <string name="body_weight_add_dialog_cancel">Abbrechen</string>
+
     <string name="body_weight_chart_thumbnail_title">Körpergewicht</string>
     <string name="body_weight_chart_annotation_bone_mass_value">Knochenmasse: %1$d %2$s</string>
     <string name="body_weight_chart_annotation_muscle_mass_value">Muskelmasse: %1$d %2$s</string>

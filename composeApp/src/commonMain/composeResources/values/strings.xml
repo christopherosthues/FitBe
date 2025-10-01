@@ -697,24 +697,25 @@
     <string name="profile_error_switching">Error switching profile. Please try again.</string>
     <string name="profile_no_profiles_prompt_add">No profiles found. Click \'+\' to add one.</string>
 
-    <string name="body_weight_total_weight_error_kg">Enter a value between 0.0 and 600.0 kg.</string>
-    <string name="body_weight_total_weight_error_lb">Enter a value between 0.0 and 1322.77 lb.</string>
-    <string name="body_weight_body_fat_error">Enter a value between 0.0 and 100.0 %.</string>
-    <string name="body_weight_muscle_mass_error_kg">Enter a value between 0.0 and 600.0 kg.</string>
-    <string name="body_weight_muscle_mass_error_lb">Enter a value between 0.0 and 1322.77 lb.</string>
-    <string name="body_weight_bone_mass_error_kg">Enter a value between 0.0 and 600.0 kg.</string>
-    <string name="body_weight_bone_mass_error_lb">Enter a value between 0.0 and 1322.77 lb.</string>
-    <string name="body_weight_body_water_error">Enter a value between 0.0 and 100.0 %.</string>
-    <string name="body_weight_total_weight_sum_error">The total of the individual weights must not exceed the total weight.</string>
-    <string name="body_weight_add_body_weight_title">Record body weight</string>
-    <string name="body_weight_add_body_weight_date">Date</string>
-    <string name="body_weight_add_body_weight_total_weight">Total weight (%1$s)</string>
-    <string name="body_weight_add_body_weight_body_fat">Body fat (%)</string>
-    <string name="body_weight_add_body_weight_muscle_mass">Muscle mass (%1$s)</string>
-    <string name="body_weight_add_body_weight_bone_mass">Bone mass (%1$s)</string>
-    <string name="body_weight_add_body_weight_body_water">Body water (%)</string>
-    <string name="body_weight_save">Save</string>
-    <string name="body_weight_cancel">Cancel</string>
+    <!-- Body Weight Add Dialog -->
+    <string name="body_weight_add_dialog_error_total_weight_kg">Enter a value between 0.0 and 600.0 kg.</string>
+    <string name="body_weight_add_dialog_error_total_weight_lb">Enter a value between 0.0 and 1322.77 lb.</string>
+    <string name="body_weight_add_dialog_error_body_fat">Enter a value between 0.0 and 100.0 %.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_kg">Enter a value between 0.0 and 600.0 kg.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_lb">Enter a value between 0.0 and 1322.77 lb.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_kg">Enter a value between 0.0 and 600.0 kg.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_lb">Enter a value between 0.0 and 1322.77 lb.</string>
+    <string name="body_weight_add_dialog_error_body_water">Enter a value between 0.0 and 100.0 %.</string>
+    <string name="body_weight_add_dialog_error_total_weight_sum">The total of the individual weights must not exceed the total weight.</string>
+    <string name="body_weight_add_dialog_title">Record body weight</string>
+    <string name="body_weight_add_dialog_total_weight">Total weight (%1$s)</string>
+    <string name="body_weight_add_dialog_body_fat">Body fat (%)</string>
+    <string name="body_weight_add_dialog_muscle_mass">Muscle mass (%1$s)</string>
+    <string name="body_weight_add_dialog_bone_mass">Bone mass (%1$s)</string>
+    <string name="body_weight_add_dialog_body_water">Body water (%)</string>
+    <string name="body_weight_add_dialog_save">Save</string>
+    <string name="body_weight_add_dialog_cancel">Cancel</string>
+
     <string name="body_weight_chart_thumbnail_title">Body weight</string>
     <string name="body_weight_chart_annotation_bone_mass_value">Bone mass: %1$d %2$s</string>
     <string name="body_weight_chart_annotation_muscle_mass_value">muscle mass: %1$d %2$s</string>

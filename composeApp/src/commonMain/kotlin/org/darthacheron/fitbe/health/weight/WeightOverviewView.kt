@@ -14,6 +14,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun WeightOverviewView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
+    addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel
 ) {
     OverviewView(
         overviewViewModel = bodyWeightOverviewViewModel,
@@ -32,9 +33,8 @@ fun WeightOverviewView(
             )
         },
         addDialog = { dismissDialog ->
-            val uiState by bodyWeightOverviewViewModel.uiState.collectAsState()
             AddBodyWeightDialog(
-                settings = uiState.settings,
+                addBodyWeightDialogViewModel,
                 onSave = { date,
                            weightInKg,
                            bodyFatPercentage,
