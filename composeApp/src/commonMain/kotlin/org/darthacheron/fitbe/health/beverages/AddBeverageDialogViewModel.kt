@@ -3,9 +3,9 @@ package org.darthacheron.fitbe.health.beverages
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_amount
-import fitbe.composeapp.generated.resources.beverages_overview_error_invalid_total_amount
-import fitbe.composeapp.generated.resources.beverages_overview_error_name_empty
+import fitbe.composeapp.generated.resources.beverages_add_dialog_error_invalid_amount
+import fitbe.composeapp.generated.resources.beverages_add_dialog_error_invalid_total_amount
+import fitbe.composeapp.generated.resources.beverages_add_dialog_error_name_empty
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -53,7 +53,7 @@ class AddBeverageDialogViewModel(
             val amountAsDouble = amount.replace(',', '.').toDoubleOrNull()
 
             var error = if (!positiveDecimalValidator.validate(amount) || !beverageValidator.validate(amountAsDouble)) {
-                Res.string.beverages_overview_error_invalid_amount
+                Res.string.beverages_add_dialog_error_invalid_amount
             } else {
                 null
             }
@@ -67,7 +67,7 @@ class AddBeverageDialogViewModel(
                 val totalAmountForDay = beveragesForDay.sumOf { it.unit.toMilliliter(it.amount) } + amountInMl
 
                 if (totalAmountForDay > 5000) {
-                    error = Res.string.beverages_overview_error_invalid_total_amount
+                    error = Res.string.beverages_add_dialog_error_invalid_total_amount
                 }
             }
             uiState.update { it.copy(amountError = error) }
@@ -77,7 +77,7 @@ class AddBeverageDialogViewModel(
     fun onDialogBeverageNameChange(name: String) {
 
         val error = if (name.isBlank()) {
-            Res.string.beverages_overview_error_name_empty
+            Res.string.beverages_add_dialog_error_name_empty
         } else {
             null
         }

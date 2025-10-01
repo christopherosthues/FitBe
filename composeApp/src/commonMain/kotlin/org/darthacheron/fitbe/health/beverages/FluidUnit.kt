@@ -45,15 +45,25 @@ enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
     @Composable
     fun localizedString(amount: Double): String {
         return when (this) {
-            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = amount.toInt())
-            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = amount.toInt())
-            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = amount.toInt())
-            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = amount.toInt())
+            Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = roundAmount(amount))
+            SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = roundAmount(amount))
+            NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = roundAmount(amount))
+            LargeGlass -> pluralStringResource(Res.plurals.fluid_unit_large_glass, quantity = roundAmount(amount))
             Milliliter -> stringResource(Res.string.fluid_unit_milliliter)
             Centiliter -> stringResource(Res.string.fluid_unit_centiliter)
             Deciliter -> stringResource(Res.string.fluid_unit_deciliter)
             Liter -> stringResource(Res.string.fluid_unit_liter)
         }
+    }
+
+    private fun roundAmount(amount: Double) : Int {
+        if (amount == 1.0) {
+            return amount.toInt()
+        } else if (amount > 1.0 && amount < 2.0) {
+            return 2
+        }
+
+        return amount.toInt()
     }
 
     fun iconResource(): DrawableResource {

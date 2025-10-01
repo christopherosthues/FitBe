@@ -26,12 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_overview_add_beverage_title
-import fitbe.composeapp.generated.resources.beverages_overview_beverage_amount
-import fitbe.composeapp.generated.resources.beverages_overview_beverage_name
-import fitbe.composeapp.generated.resources.beverages_overview_beverage_unit
-import fitbe.composeapp.generated.resources.beverages_overview_cancel
-import fitbe.composeapp.generated.resources.beverages_overview_save
+import fitbe.composeapp.generated.resources.beverages_add_dialog_title
+import fitbe.composeapp.generated.resources.beverages_add_dialog_amount
+import fitbe.composeapp.generated.resources.beverages_add_dialog_name
+import fitbe.composeapp.generated.resources.beverages_add_dialog_unit
+import fitbe.composeapp.generated.resources.beverages_add_dialog_cancel
+import fitbe.composeapp.generated.resources.beverages_add_dialog_save
 import fitbe.composeapp.generated.resources.ic_date_range
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -53,7 +53,7 @@ fun AddBeverageDialog(
 
     AlertDialog(
         onDismissRequest = viewModel::dismissAddBeverageDialog,
-        title = { Text(stringResource(Res.string.beverages_overview_add_beverage_title)) },
+        title = { Text(stringResource(Res.string.beverages_add_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 TextButton(onClick = { showDatePicker = true }) {
@@ -85,7 +85,7 @@ fun AddBeverageDialog(
                 TextField(
                     value = uiState.amount,
                     onValueChange = viewModel::onDialogAmountChange,
-                    label = { Text(stringResource(Res.string.beverages_overview_beverage_amount)) },
+                    label = { Text(stringResource(Res.string.beverages_add_dialog_amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
                     isError = uiState.amountError != null,
@@ -96,7 +96,7 @@ fun AddBeverageDialog(
                 TextField(
                     value = uiState.beverageName,
                     onValueChange = viewModel::onDialogBeverageNameChange,
-                    label = { Text(stringResource(Res.string.beverages_overview_beverage_name)) },
+                    label = { Text(stringResource(Res.string.beverages_add_dialog_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = uiState.beverageNameError != null,
                     supportingText = {
@@ -114,7 +114,7 @@ fun AddBeverageDialog(
                         value = uiState.selectedUnit.localizedString(uiState.amount.toDoubleOrNull() ?: 0.0),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text(stringResource(Res.string.beverages_overview_beverage_unit)) },
+                        label = { Text(stringResource(Res.string.beverages_add_dialog_unit)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = unitDropdownExpanded) },
                         modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
                     )
@@ -148,7 +148,7 @@ fun AddBeverageDialog(
                 },
                 enabled = uiState.canSave
             ) {
-                Text(stringResource(Res.string.beverages_overview_save))
+                Text(stringResource(Res.string.beverages_add_dialog_save))
             }
         },
         dismissButton = {
@@ -156,7 +156,7 @@ fun AddBeverageDialog(
                 viewModel.dismissAddBeverageDialog()
                 onDismiss()
             }) {
-                Text(stringResource(Res.string.beverages_overview_cancel))
+                Text(stringResource(Res.string.beverages_add_dialog_cancel))
             }
         }
     )
