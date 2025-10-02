@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import org.darthacheron.fitbe.profile.ProfileEntity
@@ -26,16 +27,16 @@ import org.darthacheron.fitbe.profile.ProfileEntity
 data class SleepEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val hours: Int,
-    val minutes: Int,
+    val startTime: LocalTime,
+    val endTime: LocalTime,
     val dateUtc: LocalDate,
 ) {
     fun toSleep(): Sleep {
         return Sleep(
             id = id,
             profileId = profileId,
-            hours = hours.toUInt(),
-            minutes = minutes.toUInt(),
+            startTime = startTime,
+            endTime = endTime,
             dateUtc = dateUtc
         )
     }
@@ -46,8 +47,8 @@ fun Sleep.toSleepEntity(): SleepEntity {
     return SleepEntity(
         id = this.id,
         profileId = this.profileId,
-        hours = this.hours.toInt(),
-        minutes = this.minutes.toInt(),
+        startTime = this.startTime,
+        endTime = this.endTime,
         dateUtc = this.dateUtc
     )
 }
