@@ -11,6 +11,7 @@ import org.darthacheron.fitbe.health.OverviewView
 @Composable
 fun StepsOverviewView(
     stepsOverviewViewModel: StepsOverviewViewModel,
+    addStepsDialogViewModel: AddStepsDialogViewModel
 ) {
     OverviewView(
         overviewViewModel = stepsOverviewViewModel,
@@ -29,6 +30,7 @@ fun StepsOverviewView(
         },
         addDialog = { dismissDialog ->
             AddStepsDialog(
+                viewModel = addStepsDialogViewModel,
                 onSave = { date, steps ->
                     stepsOverviewViewModel.addSteps(date, steps)
                     dismissDialog()

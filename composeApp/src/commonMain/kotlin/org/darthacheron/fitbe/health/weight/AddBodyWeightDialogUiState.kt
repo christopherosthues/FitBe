@@ -9,7 +9,7 @@ import org.jetbrains.compose.resources.StringResource
 
 data class AddBodyWeightDialogUiState(
     val weight: String = "",
-    val bodyFatPercentage: String = "",
+    val bodyFatInPercentage: String = "",
     val muscleMass: String = "",
     val boneMass: String = "",
     val bodyWaterInPercentage: String = "",

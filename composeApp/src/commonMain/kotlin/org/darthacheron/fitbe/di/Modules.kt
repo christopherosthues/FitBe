@@ -6,6 +6,7 @@ import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.BodyHeightValidator
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.KcalValidator
+import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
@@ -86,6 +87,7 @@ val sharedModule = module {
     factoryOf(::PositiveDecimalValidator)
     factoryOf(::PositiveNumberValidator)
     factoryOf(::StepsValidator)
+    factoryOf(::PercentageValidator)
 
     // Database and DAOs
     single {

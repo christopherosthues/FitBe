@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +32,7 @@ import fitbe.composeapp.generated.resources.body_weight_add_dialog_total_weight
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_cancel
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_save
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -111,7 +113,7 @@ fun AddBodyWeightDialog(
                     },
                 )
                 TextField(
-                    value = uiState.bodyFatPercentage,
+                    value = uiState.bodyFatInPercentage,
                     onValueChange = viewModel::onBodyFatChange,
                     label = { Text(stringResource(Res.string.body_weight_add_dialog_body_fat)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
@@ -171,17 +173,22 @@ fun AddBodyWeightDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                viewModel.dismissDialog()
-                onSave(
-                    uiState.date,
-                    uiState.weight.toDouble(),
-                    uiState.bodyFatPercentage.toDoubleOrNull(),
-                    uiState.muscleMass.toDoubleOrNull(),
-                    uiState.boneMass.toDoubleOrNull(),
-                    uiState.bodyWaterInPercentage.toDoubleOrNull()
-                )
-            }) { Text(stringResource(Res.string.body_weight_add_dialog_save)) }
+            Button(
+                onClick = {
+                    viewModel.dismissDialog()
+                    onSave(
+                        uiState.date,
+                        uiState.weight.toDouble(),
+                        uiState.bodyFatInPercentage.toDoubleOrNull(),
+                        uiState.muscleMass.toDoubleOrNull(),
+                        uiState.boneMass.toDoubleOrNull(),
+                        uiState.bodyWaterInPercentage.toDoubleOrNull()
+                    )
+                },
+                enabled = uiState.canSave
+            ) {
+                Text(text = stringResource(Res.string.body_weight_add_dialog_save))
+            }
         },
         dismissButton = {
             TextButton(onClick = {

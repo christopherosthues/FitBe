@@ -2,9 +2,15 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_body_fat
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_body_water
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_bone_mass_kg
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_bone_mass_lb
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_muscle_mass_kg
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_muscle_mass_lb
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_total_weight_kg
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_total_weight_lb
-import fitbe.composeapp.generated.resources.steps_add_dialog_error_invalid_steps
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_error_total_weight_sum
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -15,6 +21,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
+import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
 import org.darthacheron.fitbe.settings.Settings
@@ -25,6 +32,7 @@ import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 class AddBodyWeightDialogViewModel(
     private val positiveDecimalValidator: PositiveDecimalValidator,
     private val bodyWeightValidator: BodyWeightValidator,
+    private val percentageValidator: PercentageValidator,
     private val bodyWeightRepository: BodyWeightRepository,
     weightUnitConverter: WeightUnitConverter,
     private val settingsRepository: SettingsRepository
@@ -36,7 +44,7 @@ class AddBodyWeightDialogViewModel(
     override fun dismissDialog() {
         uiState.update { it.copy(
             weight = "",
-            bodyFatPercentage = "",
+            bodyFatInPercentage = "",
             muscleMass = "",
             boneMass = "",
             bodyWaterInPercentage = "",
@@ -80,65 +88,171 @@ class AddBodyWeightDialogViewModel(
     }
 
     fun onBodyFatChange(bodyFat: String) {
-        uiState.update { it.copy(bodyFatPercentage = bodyFat) }
-        // Res.string.body_weight_add_dialog_error_body_fat
+        uiState.update { it.copy(bodyFatInPercentage = bodyFat) }
+
+        validateBodyFat(bodyFat)
         validateBodyWeight()
     }
 
+    private fun validateBodyFat(bodyFat: String) {
+        val bodyFatAsDouble = bodyFat.replace(',', '.').toDoubleOrNull()
+        val error =
+            if (!positiveDecimalValidator.validate(bodyFat) || !percentageValidator.validate(
+                    bodyFatAsDouble
+                )
+            ) {
+                Res.string.body_weight_add_dialog_error_body_fat
+            } else {
+                null
+            }
+
+        uiState.update { it.copy(bodyFatError = error) }
+    }
+
+
     fun onMuscleMassChange(muscleMass: String) {
         uiState.update { it.copy(muscleMass = muscleMass) }
-//        when (settings.weightUnit) {
-//            WeightUnit.KG -> Res.string.body_weight_add_dialog_error_muscle_mass_kg
-//            WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_muscle_mass_lb
-//        }
+
+        validateMuscleMass(muscleMass)
         validateBodyWeight()
+    }
+
+    private fun validateMuscleMass(muscleMass: String) {
+        viewModelScope.launch {
+            val currentState = uiState.value
+            val settings = settings.first()
+            val weightUnit = settings.weightUnit
+
+            val muscleMassAsDouble = muscleMass.replace(',', '.').toDoubleOrNull()
+            val error = if (!positiveDecimalValidator.validate(muscleMass) || !bodyWeightValidator.validate(muscleMassAsDouble, weightUnit)) {
+                when (settings.weightUnit) {
+                    WeightUnit.KG -> Res.string.body_weight_add_dialog_error_muscle_mass_kg
+                    WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_muscle_mass_lb
+                }
+            } else {
+                null
+            }
+            uiState.update { it.copy(muscleMassError = error) }
+        }
     }
 
     fun onBoneMassChange(boneMass: String) {
         uiState.update { it.copy(boneMass = boneMass) }
-//        when (settings.weightUnit) {
-//            WeightUnit.KG -> Res.string.body_weight_add_dialog_error_bone_mass_kg
-//            WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_bone_mass_lb
-//        }
+
+        validateBoneMass(boneMass)
         validateBodyWeight()
+    }
+
+    private fun validateBoneMass(boneMass: String) {
+        viewModelScope.launch {
+            val settings = settings.first()
+            val weightUnit = settings.weightUnit
+
+            val boneMassAsDouble = boneMass.replace(',', '.').toDoubleOrNull()
+            val error = if (!positiveDecimalValidator.validate(boneMass) || !bodyWeightValidator.validate(boneMassAsDouble, weightUnit)) {
+                when (settings.weightUnit) {
+                    WeightUnit.KG -> Res.string.body_weight_add_dialog_error_bone_mass_kg
+                    WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_bone_mass_lb
+                }
+            } else {
+                null
+            }
+            uiState.update { it.copy(boneMassError = error) }
+        }
     }
 
     fun onBodyWaterChange(bodyWater: String) {
         uiState.update { it.copy(bodyWaterInPercentage = bodyWater) }
 //        Res.string.body_weight_add_dialog_error_body_water
+        validateBodyWater(bodyWater)
         validateBodyWeight()
+    }
+
+    private fun validateBodyWater(bodyWater: String) {
+        val bodyWaterAsDouble = bodyWater.replace(',', '.').toDoubleOrNull()
+        val error =
+            if (!positiveDecimalValidator.validate(bodyWater) || !percentageValidator.validate(
+                    bodyWaterAsDouble
+                )
+            ) {
+                Res.string.body_weight_add_dialog_error_body_water
+            } else {
+                null
+            }
+
+        uiState.update { it.copy(bodyWaterError = error) }
     }
 
     private fun validateBodyWeight() {
         viewModelScope.launch {
-            // sum: body_weight_add_dialog_error_total_weight_sum
-
             val currentState = uiState.value
-//            val sum =
-//                currentState.bodyFatPercentage.toDoubleOrNull() +
-//                        currentState.muscleMass.toDoubleOrNull() +
-//                        currentState.boneMass.toDoubleOrNull()
-//            val steps = currentState.steps
-//            val stepsAsUInt = steps.replace(',', '.').toUIntOrNull()
-//
-//            var error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(stepsAsUInt)) {
-//                Res.string.steps_add_dialog_error_invalid_steps
-//            } else {
-//                null
-//            }
-//
-//            if (error == null) {
-//                val selectedDate = currentState.date
-//                val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
-//
-//                val stepsForDate = stepsRepository.getStepsForDate(selectedDate, profileId).first()
-//                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt!!
-//
-//                if (totalAmountForDay > 500_000u) {
-//                    error = Res.string.steps_add_dialog_error_invalid_total_steps
-//                }
-//            }
-//            uiState.update { it.copy(stepsError = error) }
+            val totalWeight = currentState.weight.replace(',', '.').toDoubleOrNull()
+
+            // We can only validate the sum if the total weight is a valid positive number.
+            // `validateWeight()` is responsible for flagging errors on the weight field itself.
+            if (totalWeight == null || totalWeight <= 0.0) {
+                return@launch
+            }
+
+            // Safely parse component values, defaulting to 0.0 if empty or invalid.
+            val bodyFatPercentage = currentState.bodyFatInPercentage.replace(',', '.').toDoubleOrNull() ?: 0.0
+            val muscleMass = currentState.muscleMass.replace(',', '.').toDoubleOrNull() ?: 0.0
+            val boneMass = currentState.boneMass.replace(',', '.').toDoubleOrNull() ?: 0.0
+            val bodyWaterPercentage = currentState.bodyWaterInPercentage.replace(',', '.').toDoubleOrNull() ?: 0.0
+
+            // Calculate fat mass from the percentage of total weight.
+            val fatMass = (bodyFatPercentage / 100.0) * totalWeight
+            val bodyWaterMass = (bodyWaterPercentage / 100.0) * totalWeight
+
+
+            // Sum of the component masses. Body water is a sub-component of the others,
+            // so it's not included in this top-level sum check.
+            val componentSum = fatMass + muscleMass + boneMass + bodyWaterMass
+
+            val error = if (componentSum > totalWeight) {
+                Res.string.body_weight_add_dialog_error_total_weight_sum
+            } else {
+                null
+            }
+
+            // Update the error state for all component fields involved in the sum.
+            // This provides clear feedback to the user about which values are part of the issue.
+            uiState.update {
+                it.copy(
+                    weightError = error
+                )
+            }
         }
+
+//        viewModelScope.launch {
+//            // sum: body_weight_add_dialog_error_total_weight_sum
+//
+//            val currentState = uiState.value
+////            val sum =
+////                currentState.bodyFatPercentage.toDoubleOrNull() +
+////                        currentState.muscleMass.toDoubleOrNull() +
+////                        currentState.boneMass.toDoubleOrNull()
+////            val steps = currentState.steps
+////            val stepsAsUInt = steps.replace(',', '.').toUIntOrNull()
+////
+////            var error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(stepsAsUInt)) {
+////                Res.string.steps_add_dialog_error_invalid_steps
+////            } else {
+////                null
+////            }
+////
+////            if (error == null) {
+////                val selectedDate = currentState.date
+////                val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
+////
+////                val stepsForDate = stepsRepository.getStepsForDate(selectedDate, profileId).first()
+////                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt!!
+////
+////                if (totalAmountForDay > 500_000u) {
+////                    error = Res.string.steps_add_dialog_error_invalid_total_steps
+////                }
+////            }
+////            uiState.update { it.copy(stepsError = error) }
+//        }
     }
 }
