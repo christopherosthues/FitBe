@@ -770,4 +770,14 @@
     <!-- Sleep overview -->
     <string name="sleeps_chart_thumbnail_title">Sleep</string>
     <string name="sleeps_chart_y_axis_title">Sleep Duration (minutes)</string>
+
+    <!-- Add sleep dialog -->
+    <string name="sleep_add_dialog_title">Record sleep</string>
+    <string name="sleep_add_dialog_start_date">Start date</string>
+    <string name="sleep_add_dialog_start_time">Start time</string>
+    <string name="sleep_add_dialog_end_date">End date</string>
+    <string name="sleep_add_dialog_end_time">End time</string>
+    <string name="sleep_add_dialog_duration">Duration</string>
+    <string name="sleep_add_dialog_save">Save</string>
+    <string name="sleep_add_dialog_cancel">Cancel</string>
 </resources>

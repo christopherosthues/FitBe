@@ -26,8 +26,9 @@ import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
 import org.darthacheron.fitbe.health.beverages.BeverageViewModel
-//import org.darthacheron.fitbe.health.sleep.SleepOverviewView
-//import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
+import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
+import org.darthacheron.fitbe.health.sleep.SleepOverviewView
+import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
 import org.darthacheron.fitbe.health.steps.AddStepsDialogViewModel
 import org.darthacheron.fitbe.health.steps.StepsOverviewView
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
@@ -128,8 +129,9 @@ fun BottomBarNavGraph(
             TrainingEquipmentDetailView(id, viewModel)
         }
         composable<Screen.Sleeps> {
-//            val viewModel = koinViewModel<SleepOverviewViewModel>()
-//            SleepOverviewView(viewModel)
+            val viewModel = koinViewModel<SleepOverviewViewModel>()
+            val dialogViewModel = koinViewModel<AddSleepDialogViewModel>()
+            SleepOverviewView(viewModel, dialogViewModel)
         }
         composable<Screen.Steps> {
             val viewModel = koinViewModel<StepsOverviewViewModel>()

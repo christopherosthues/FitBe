@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +27,14 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.sleep_add_dialog_cancel
+import fitbe.composeapp.generated.resources.sleep_add_dialog_duration
+import fitbe.composeapp.generated.resources.sleep_add_dialog_end_date
+import fitbe.composeapp.generated.resources.sleep_add_dialog_end_time
+import fitbe.composeapp.generated.resources.sleep_add_dialog_save
+import fitbe.composeapp.generated.resources.sleep_add_dialog_start_date
+import fitbe.composeapp.generated.resources.sleep_add_dialog_start_time
+import fitbe.composeapp.generated.resources.sleep_add_dialog_title
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -38,6 +47,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -46,45 +56,33 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun AddSleepDialog(
     viewModel: AddSleepDialogViewModel,
-    onAdd: (hours: Long, minutes: Long) -> Unit,
+    onSave: (start: Instant, end: Instant) -> Unit,
     onDismiss: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    var startDateTime by remember {
-        mutableStateOf(
-            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    }
-    var endDateTime by remember {
-        mutableStateOf(
-            Clock.System.now().plus(value = 8, unit = DateTimeUnit.HOUR)
-                .toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-    }
 
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showStartTimePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
 
-    val duration = remember(startDateTime, endDateTime) {
-        val diff = endDateTime.toInstant(TimeZone.currentSystemDefault())
-            .minus(startDateTime.toInstant(TimeZone.currentSystemDefault()))
+    val duration = remember(uiState.startDateTime, uiState.endDateTime) {
+        val diff = uiState.endDateTime.toInstant(TimeZone.currentSystemDefault())
+            .minus(uiState.startDateTime.toInstant(TimeZone.currentSystemDefault()))
         if (diff.isNegative()) Duration.ZERO else diff
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Sleep") },
+        title = { Text(text = stringResource(Res.string.sleep_add_dialog_title)) },
         text = {
             Column {
                 // Start Date & Time
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
-                        value = startDateTime.date.toString(),
+                        value = uiState.startDateTime.date.toString(),
                         onValueChange = {},
-                        label = { Text("Start Date") },
+                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_date)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showStartDatePicker = true }) {
@@ -98,11 +96,9 @@ fun AddSleepDialog(
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
-                        value = "${
-                            startDateTime.hour.toString().padStart(2, '0')
-                        }:${startDateTime.minute.toString().padStart(2, '0')}",
+                        value = formatTime(uiState.startDateTime.time),
                         onValueChange = {},
-                        label = { Text("Start Time") },
+                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_time)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showStartTimePicker = true }) {
@@ -119,9 +115,9 @@ fun AddSleepDialog(
                 // End Date & Time
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
-                        value = endDateTime.date.toString(),
+                        value = uiState.endDateTime.date.toString(),
                         onValueChange = {},
-                        label = { Text("End Date") },
+                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_date)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showEndDatePicker = true }) {
@@ -135,11 +131,9 @@ fun AddSleepDialog(
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
-                        value = "${
-                            endDateTime.hour.toString().padStart(2, '0')
-                        }:${endDateTime.minute.toString().padStart(2, '0')}",
+                        value = formatTime(uiState.endDateTime.time),
                         onValueChange = {},
-                        label = { Text("End Time") },
+                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_time)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showEndTimePicker = true }) {
@@ -158,23 +152,27 @@ fun AddSleepDialog(
                 OutlinedTextField(
                     value = formatDuration(duration),
                     onValueChange = {},
-                    label = { Text("Sleeping Time") },
+                    label = { Text(text = stringResource(Res.string.sleep_add_dialog_duration)) },
                     readOnly = true,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = {
-                val hours = duration.toLong(DurationUnit.HOURS)
-                val minutes = (duration.inWholeMinutes % 60)
-                onAdd(hours, minutes)
-            }) {
-                Text("Add")
+            Button(
+                onClick = {
+                    onSave(
+                        uiState.startDateTime.toInstant(TimeZone.currentSystemDefault()),
+                        uiState.endDateTime.toInstant(TimeZone.currentSystemDefault())
+                    )
+                },
+                enabled = uiState.canSave
+            ) {
+                Text(text = stringResource(Res.string.sleep_add_dialog_save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(text = stringResource(Res.string.sleep_add_dialog_cancel)) }
         }
     )
 
@@ -185,7 +183,7 @@ fun AddSleepDialog(
                 millis?.let {
                     val date = Instant.fromEpochMilliseconds(it)
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    startDateTime = LocalDateTime(date, startDateTime.time)
+                    viewModel.onStartDateChange(date)
                 }
                 showStartDatePicker = false
             },
@@ -194,10 +192,10 @@ fun AddSleepDialog(
     }
     if (showStartTimePicker) {
         TimePickerDialog(
-            initialHour = startDateTime.hour,
-            initialMinute = startDateTime.minute,
+            initialHour = uiState.startDateTime.hour,
+            initialMinute = uiState.startDateTime.minute,
             onTimeSelected = { hour, minute ->
-                startDateTime = LocalDateTime(startDateTime.date, LocalTime(hour, minute))
+                viewModel.onStartTimeChange(LocalTime(hour, minute))
                 showStartTimePicker = false
             },
             onDismiss = { showStartTimePicker = false }
@@ -209,7 +207,7 @@ fun AddSleepDialog(
                 millis?.let {
                     val date = Instant.fromEpochMilliseconds(it)
                         .toLocalDateTime(TimeZone.currentSystemDefault()).date
-                    endDateTime = LocalDateTime(date, endDateTime.time)
+                    viewModel.onEndDateChange(date)
                 }
                 showEndDatePicker = false
             },
@@ -218,15 +216,19 @@ fun AddSleepDialog(
     }
     if (showEndTimePicker) {
         TimePickerDialog(
-            initialHour = endDateTime.hour,
-            initialMinute = endDateTime.minute,
+            initialHour = uiState.endDateTime.hour,
+            initialMinute = uiState.endDateTime.minute,
             onTimeSelected = { hour, minute ->
-                endDateTime = LocalDateTime(endDateTime.date, LocalTime(hour, minute))
+                viewModel.onEndTimeChange(LocalTime(hour, minute))
                 showEndTimePicker = false
             },
             onDismiss = { showEndTimePicker = false }
         )
     }
+}
+
+private fun formatTime(time: LocalTime): String {
+    return "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
 }
 
 // Helper to format duration as "Xh Ym"
