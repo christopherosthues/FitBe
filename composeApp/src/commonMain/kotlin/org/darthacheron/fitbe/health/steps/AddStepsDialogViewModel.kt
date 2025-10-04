@@ -8,10 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
@@ -28,7 +25,7 @@ class AddStepsDialogViewModel(
     override val uiState = MutableStateFlow(AddStepsDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update { it.copy(steps = "", date = Clock.System.now().toLocalDateTime(TimeZone.UTC).date) }
+        uiState.update { AddStepsDialogUiState() }
     }
 
     fun onStepsChange(steps: String) {

@@ -4,9 +4,13 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.datetime.Instant
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import org.darthacheron.fitbe.profile.ProfileEntity
@@ -27,17 +31,15 @@ import org.darthacheron.fitbe.profile.ProfileEntity
 data class SleepEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val startTime: LocalTime,
-    val endTime: LocalTime,
-    val dateUtc: LocalDate,
+    val start: Instant,
+    val end: Instant,
 ) {
     fun toSleep(): Sleep {
         return Sleep(
             id = id,
             profileId = profileId,
-            startTime = startTime,
-            endTime = endTime,
-            dateUtc = dateUtc
+            start = start.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
+            end = end.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
         )
     }
 }
@@ -47,8 +49,7 @@ fun Sleep.toSleepEntity(): SleepEntity {
     return SleepEntity(
         id = this.id,
         profileId = this.profileId,
-        startTime = this.startTime,
-        endTime = this.endTime,
-        dateUtc = this.dateUtc
+        start = this.start.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
+        end = this.end.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
     )
 }

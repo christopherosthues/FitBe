@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.health.sleep
 
+import kotlinx.datetime.Instant
 import kotlin.time.ExperimentalTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -10,7 +11,6 @@ import kotlin.uuid.Uuid
 data class Sleep(
     val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val startTime: LocalTime,
-    val endTime: LocalTime,
-    val dateUtc: LocalDate,
+    val start: Instant,
+    val end: Instant,
 )

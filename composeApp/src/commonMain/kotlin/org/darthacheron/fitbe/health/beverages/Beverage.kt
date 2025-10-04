@@ -33,7 +33,7 @@ import kotlin.uuid.Uuid
 data class Beverage(
     val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val dateUtc: Instant =Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
+    val date: Instant,
     val amount: Double,
     val beverage: String,
     val unit: FluidUnit

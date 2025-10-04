@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime
@@ -30,7 +30,7 @@ import org.darthacheron.fitbe.profile.ProfileEntity
 data class BeverageEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val dateUtc: Instant = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.atStartOfDayIn(TimeZone.UTC),
+    val dateUtc: Instant,
     val amount: Double,
     val beverage: String,
     val unit: FluidUnit
@@ -40,7 +40,7 @@ data class BeverageEntity(
         return Beverage(
             id = id,
             profileId = profileId,
-            dateUtc = dateUtc,
+            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
             amount = amount,
             beverage = beverage,
             unit = unit
@@ -53,7 +53,7 @@ fun Beverage.toBeverageEntity(): BeverageEntity {
     return BeverageEntity(
         id = this.id,
         profileId = this.profileId,
-        dateUtc = this.dateUtc,
+        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
         amount = this.amount,
         beverage = this.beverage,
         unit = this.unit

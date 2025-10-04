@@ -145,49 +145,49 @@ fun PlotSleeps(
             },
         ) {
             if (dates.size > 1) {
-                AreaPlot(
-                    data = sleeps.map { Point(it.dateUtc, it.hours.toInt() * 60 + it.minutes.toInt()) },
-                    areaBaseline = AreaBaseline.ConstantLine(0),
-                    areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
-                )
+//                AreaPlot(
+//                    data = sleeps.map { Point(it.dateUtc, it.hours.toInt() * 60 + it.minutes.toInt()) },
+//                    areaBaseline = AreaBaseline.ConstantLine(0),
+//                    areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
+//                    lineStyle = LineStyle(
+//                        brush = SolidColor(MaterialTheme.colorScheme.primary),
+//                        strokeWidth = 2.dp
+//                    ),
+//                )
             } else if (dates.size == 1) {
-                val stepsChartData = toVerticalBarData(sleeps)
-                VerticalBarPlot(
-                    data = stepsChartData,
-                    barWidth = 0.8f,
-                    bar = { index ->
-                        DefaultVerticalBar(
-                            brush = SolidColor(Color(0xFFCC6666)),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            if (!thumbnail) {
-                                Surface(
-                                    shadowElevation = 2.dp,
-                                    shape = MaterialTheme.shapes.medium,
-                                    color = Color.LightGray,
-                                    modifier = modifier.padding(8.dp)
-                                ) {
-                                    Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(text = stepsChartData[index].y.yMax.toString())
-                                    }
-                                }
-                            }
-                        }
-                    },
-                )
+//                val stepsChartData = toVerticalBarData(sleeps)
+//                VerticalBarPlot(
+//                    data = stepsChartData,
+//                    barWidth = 0.8f,
+//                    bar = { index ->
+//                        DefaultVerticalBar(
+//                            brush = SolidColor(Color(0xFFCC6666)),
+//                            modifier = Modifier.fillMaxWidth(),
+//                        ) {
+//                            if (!thumbnail) {
+//                                Surface(
+//                                    shadowElevation = 2.dp,
+//                                    shape = MaterialTheme.shapes.medium,
+//                                    color = Color.LightGray,
+//                                    modifier = modifier.padding(8.dp)
+//                                ) {
+//                                    Box(modifier = Modifier.padding(8.dp)) {
+////                                        Text(text = stepsChartData[index].y.yMax.toString())
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    },
+//                )
             }
             if (sleeps.isNotEmpty()) {
-                LinePlot(
-                    data = sleeps.map { Point(it.dateUtc, it.hours.toInt() * 60 + it.minutes.toInt()) },
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
-                )
+//                LinePlot(
+//                    data = sleeps.map { Point(it.dateUtc, it.hours.toInt() * 60 + it.minutes.toInt()) },
+//                    lineStyle = LineStyle(
+//                        brush = SolidColor(MaterialTheme.colorScheme.primary),
+//                        strokeWidth = 2.dp
+//                    ),
+//                )
             }
 
             if (targetSleepDuration != null && targetSleepDuration > 0u) {
@@ -221,8 +221,8 @@ private fun monthResourceString(labelDate: LocalDate): StringResource {
     }
 }
 
-private fun toVerticalBarData(sleeps: List<Sleep>): List<VerticalBarPlotEntry<LocalDate, Int>> {
-    return sleeps.map {
-        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.hours.toInt() + 60 + it.minutes.toInt()))
-    }
-}
+//private fun toVerticalBarData(sleeps: List<Sleep>): List<VerticalBarPlotEntry<LocalDate, Int>> {
+//    return sleeps.map {
+//        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.hours.toInt() + 60 + it.minutes.toInt()))
+//    }
+//}

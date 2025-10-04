@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.beverages
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
@@ -14,11 +13,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -75,7 +70,7 @@ class BeverageViewModel(
                     amount = amount,
                     beverage = name,
                     unit = unit,
-                    dateUtc = date,
+                    date = date,
                     profileId = settings.selectedProfileId!!
                 )
             )

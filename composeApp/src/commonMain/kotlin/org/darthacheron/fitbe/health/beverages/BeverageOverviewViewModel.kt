@@ -6,7 +6,6 @@ import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -111,7 +110,7 @@ class BeverageOverviewViewModel(
         BeverageOverviewUiState(
             isLoading = isLoading,
             beverages = beverages,
-            dates = beverages.map { it.dateUtc },
+            dates = beverages.map { it.date },
             error = BeverageOverviewError(errorMessage),
         )
     }.stateIn(
@@ -129,7 +128,7 @@ class BeverageOverviewViewModel(
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
     private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> {
-        return beverages.groupBy { it.dateUtc.toLocalDateTime(TimeZone.UTC).date }
+        return beverages.groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, beverageEntries) ->
                 BeverageOverview(
                     date,
@@ -138,7 +137,7 @@ class BeverageOverviewViewModel(
             }
     }
 
-    private fun <K> aggregateStepsByPeriod(
+    private fun <K> aggregateBeveragesByPeriod(
         beverages: List<Beverage>,
         groupKeySelector: (Beverage) -> K,
         representativeDateSelector: (List<Beverage>) -> LocalDate
@@ -152,7 +151,7 @@ class BeverageOverviewViewModel(
                 val avgAmount = group.sumOf { it.amount } / group.size
 
                 BeverageOverview(
-                    dateUtc = representativeDateSelector(group),
+                    date = representativeDateSelector(group),
                     amountMl = avgAmount.roundToInt().toUInt(),
                 )
             }
@@ -161,26 +160,26 @@ class BeverageOverviewViewModel(
     private fun mapWeek(
         beverages: List<Beverage>,
     ): List<BeverageOverview> {
-        return aggregateStepsByPeriod(
+        return aggregateBeveragesByPeriod(
             beverages = beverages,
-            groupKeySelector = { it.dateUtc.toLocalDateTime(TimeZone.UTC).date.isoWeekAndYear() },
-            representativeDateSelector = { group -> group.first().dateUtc.toLocalDateTime(TimeZone.UTC).date.firstDayOfIsoWeek() }
+            groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfIsoWeek() }
         )
     }
 
     private fun mapMonth(beverages: List<Beverage>): List<BeverageOverview> {
-        return aggregateStepsByPeriod(
+        return aggregateBeveragesByPeriod(
             beverages = beverages,
-            groupKeySelector = { val date = it.dateUtc.toLocalDateTime(TimeZone.UTC).date; date.year to date.month },
-            representativeDateSelector = { group -> group.first().dateUtc.toLocalDateTime(TimeZone.UTC).date.firstDayOfMonth() }
+            groupKeySelector = { val date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date; date.year to date.month },
+            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfMonth() }
         )
     }
 
     private fun mapYear(beverages: List<Beverage>): List<BeverageOverview> {
-        return aggregateStepsByPeriod(
+        return aggregateBeveragesByPeriod(
             beverages = beverages,
-            groupKeySelector = { it.dateUtc.toLocalDateTime(TimeZone.UTC).date.year },
-            representativeDateSelector = { group -> group.first().dateUtc.toLocalDateTime(TimeZone.UTC).date.firstDayOfYear() }
+            groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).year },
+            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfYear() }
         )
     }
 
@@ -200,7 +199,7 @@ class BeverageOverviewViewModel(
                         amount = amount,
                         beverage = name,
                         unit = unit,
-                        dateUtc = date,
+                        date = date,
                         profileId = profileId
                     )
                 )

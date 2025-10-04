@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.health.steps
 
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -9,5 +9,5 @@ data class Steps(
     val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val steps: UInt,
-    val dateUtc: LocalDate
+    val date: Instant
 )

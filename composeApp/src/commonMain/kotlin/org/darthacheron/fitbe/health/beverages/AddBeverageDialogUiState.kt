@@ -8,7 +8,7 @@ import org.darthacheron.fitbe.health.componenets.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
 data class AddBeverageDialogUiState(
-    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC).date,
+    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val amount: String = "",
     val beverageName: String = "",
     val selectedUnit: FluidUnit = FluidUnit.Milliliter,

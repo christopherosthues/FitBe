@@ -2,22 +2,24 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.steps_overview_error_loading // Added
+import fitbe.composeapp.generated.resources.steps_overview_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch // Added
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart // Added
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -32,7 +34,6 @@ import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class StepsOverviewViewModel(
@@ -62,7 +63,7 @@ class StepsOverviewViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
-    private val stepsDataFlow: StateFlow<List<Steps>> = combine(
+    private val stepsDataFlow: StateFlow<List<StepsOverview>> = combine(
         dateRange,
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
@@ -106,7 +107,7 @@ class StepsOverviewViewModel(
         StepsOverviewUiState(
             isLoading = isLoading,
             steps = steps,
-            dates = steps.map { it.dateUtc },
+            dates = steps.map { it.date },
             error = StepsOverviewError(errorMessage)
         )
     }.stateIn(
@@ -122,32 +123,30 @@ class StepsOverviewViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
-    private fun mapDay(steps: List<Steps>): List<Steps> {
+    private fun mapDay(steps: List<Steps>): List<StepsOverview> {
         return aggregateDailySteps(steps)
     }
 
-    private fun aggregateDailySteps(steps: List<Steps>): List<Steps> {
+    private fun aggregateDailySteps(steps: List<Steps>): List<StepsOverview> {
         if (steps.isEmpty()) {
             return emptyList()
         }
 
-        return steps.groupBy { it.dateUtc }
+        return steps.groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, group) ->
-                Steps(
-                    id = Uuid.random(),
-                    dateUtc = date,
-                    profileId = group.first().profileId,
+                StepsOverview(
+                    date = date,
                     steps = group.sumOf { it.steps }
                 )
             }
     }
 
     private fun <K> aggregateAverageStepsByPeriod(
-        dailySteps: List<Steps>,
-        groupKeySelector: (Steps) -> K,
-        representativeDateSelector: (List<Steps>) -> LocalDate,
-        daysInPeriodSelector: (List<Steps>) -> Int
-    ): List<Steps> {
+        dailySteps: List<StepsOverview>,
+        groupKeySelector: (StepsOverview) -> K,
+        representativeDateSelector: (List<StepsOverview>) -> LocalDate,
+        daysInPeriodSelector: (List<StepsOverview>) -> Int
+    ): List<StepsOverview> {
         if (dailySteps.isEmpty()) return emptyList()
 
         return dailySteps.groupBy(groupKeySelector)
@@ -160,10 +159,8 @@ class StepsOverviewViewModel(
 
                 val avgSteps = (sumSteps.toDouble() / daysInPeriod).roundToInt().toUInt()
 
-                Steps(
-                    id = Uuid.random(),
-                    dateUtc = representativeDateSelector(group),
-                    profileId = group.first().profileId,
+                StepsOverview(
+                    date = representativeDateSelector(group),
                     steps = avgSteps
                 )
             }
@@ -171,25 +168,27 @@ class StepsOverviewViewModel(
 
     private fun mapWeek(
         stepList: List<Steps>,
-    ): List<Steps> {
+    ): List<StepsOverview> {
         val dailySteps = aggregateDailySteps(stepList)
         return aggregateAverageStepsByPeriod(
             dailySteps = dailySteps,
-            groupKeySelector = { it.dateUtc.isoWeekAndYear() },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() },
+            groupKeySelector = { it.date.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().date.firstDayOfIsoWeek() },
             daysInPeriodSelector = { _ -> 7 }
         )
     }
 
-    private fun mapMonth(stepsList: List<Steps>): List<Steps> {
+    private fun mapMonth(stepsList: List<Steps>): List<StepsOverview> {
         val dailySteps = aggregateDailySteps(stepsList)
         return aggregateAverageStepsByPeriod(
             dailySteps = dailySteps,
-            groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() },
+            groupKeySelector = { it.date.year to it.date.month },
+            representativeDateSelector = { group ->
+                group.first().date.firstDayOfMonth()
+            },
             daysInPeriodSelector = { group ->
-                val date = group.first().dateUtc
-                val firstDay = date.firstDayOfMonth()
+                val localDate = group.first().date
+                val firstDay = localDate.firstDayOfMonth()
                 val nextMonth = if (firstDay.monthNumber == 12) {
                     LocalDate(firstDay.year + 1, 1, 1)
                 } else {
@@ -200,29 +199,28 @@ class StepsOverviewViewModel(
         )
     }
 
-    private fun mapYear(stepsList: List<Steps>): List<Steps> {
+    private fun mapYear(stepsList: List<Steps>): List<StepsOverview> {
         val dailySteps = aggregateDailySteps(stepsList)
         return aggregateAverageStepsByPeriod(
             dailySteps = dailySteps,
-            groupKeySelector = { it.dateUtc.year },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() },
+            groupKeySelector = { it.date.year },
+            representativeDateSelector = { group -> group.first().date.firstDayOfYear() },
             daysInPeriodSelector = { group ->
-                val year = group.first().dateUtc.year
+                val year = group.first().date.year
                 val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
                 if (isLeap) 366 else 365
             }
         )
     }
 
-    // TODO: accumulate steps over all entries for a day
-    fun addSteps(dateUtc: LocalDate, steps: UInt) {
+    fun addSteps(date: LocalDate, steps: UInt) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             settings.selectedProfileId?.let { profileId ->
                 stepsRepository.addSteps(
                     Steps(
                         profileId = profileId,
-                        dateUtc = dateUtc,
+                        date = date.atStartOfDayIn(TimeZone.currentSystemDefault()),
                         steps = steps
                     )
                 )

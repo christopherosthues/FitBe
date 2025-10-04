@@ -29,16 +29,7 @@ class AddBeverageDialogViewModel(
     override val uiState = MutableStateFlow(AddBeverageDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update {
-            it.copy(
-                amount = "",
-                beverageName = "",
-                selectedUnit = FluidUnit.Milliliter,
-                date = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-                amountError = null,
-                beverageNameError = null,
-            )
-        }
+        uiState.update { AddBeverageDialogUiState() }
     }
 
     fun onAmountChange(amount: String) {

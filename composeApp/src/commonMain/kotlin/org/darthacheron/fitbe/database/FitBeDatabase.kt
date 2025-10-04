@@ -9,7 +9,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
@@ -54,7 +56,10 @@ import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionEntity
 import org.darthacheron.fitbe.workouts.workouts.WorkoutSetExecutionEntity
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -126,26 +131,36 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         return
     }
 
-    for (i in 1..730) {
-        val sleep = SleepEntity(
-            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
-                i - 1,
-                DateTimeUnit.DAY
-            ),
-            hours = Random.nextInt(0, 12),
-            minutes = Random.nextInt(0, 59),
-            profileId = profile.id
-        )
-        sleepDao.upsertSleep(
-            sleep
-        )
+    for (i in 0 until 730) {
+//        val startPreviousDay = Random.nextBoolean()
+//        if (startPreviousDay) {
+//            val startingHour = Random.nextInt(21, 24)
+//            val startingMinute = Random.nextInt(0, 60)
+//            if (startingHour != 23 || startingMinute != 59) {
+//                val previousDay = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+//                    .date.minus(1, DateTimeUnit.DAY)
+//                val sleepingStartPreviousDay = previousDay.atTime(startingHour, startingMinute)
+//                    .toInstant(TimeZone.UTC)
+//                val sleepingEndPreviousDay = previousDay.atTime(23, 59, 59, 999)
+//                    .toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
+//
+//            }
+//        }
+//        val sleep = SleepEntity(
+//            start = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+//                .toInstant(TimeZone.UTC).minus(i.days),
+//            end = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+//                .toInstant(TimeZone.UTC).minus((i - 1).days),
+//            profileId = profile.id
+//        )
+//        sleepDao.upsertSleep(
+//            sleep
+//        )
 
         for (j in 1..Random.nextInt(1, 5)) {
             val beverage = BeverageEntity(
-                dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
-                    i - 1,
-                    DateTimeUnit.DAY
-                ).atStartOfDayIn(TimeZone.UTC),
+                dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+                    .toInstant(TimeZone.UTC).minus((i - 1).days),
                 beverage = "",
                 amount = Random.nextInt(200, 1500).toDouble(),
                 unit = FluidUnit.Milliliter,
@@ -156,10 +171,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
 
         val steps = StepsEntity(
             steps = Random.nextInt(0, 20_000),
-            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
-                i - 1,
-                DateTimeUnit.DAY
-            ),
+            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+                .toInstant(TimeZone.UTC).minus((i - 1).days),
             profileId = profile.id
         )
         stepsDao.upsertSteps(steps)
@@ -176,10 +189,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         val bodyFatPercentage = (bodyFatInKg / weightInKg) * 100
         val bodyWaterPercentage = (bodyWaterInKg / weightInKg) * 100
         val bodyWeight = BodyWeightEntity(
-            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.minus(
-                i - 1,
-                DateTimeUnit.DAY
-            ).atStartOfDayIn(TimeZone.UTC).plus(12.hours),
+            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+                .toInstant(TimeZone.UTC).minus((i - 1).days),
             muscleMassInKg = muscleMassInKg,
             boneMassInKg = boneMassInKg,
             bodyFatPercentage = bodyFatPercentage.roundToDecimals(2),

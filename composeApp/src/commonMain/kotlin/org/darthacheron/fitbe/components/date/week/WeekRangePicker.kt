@@ -217,7 +217,7 @@ private fun WeekRangePickerContent(
 
     // Calculate the index of the current month
     val currentYearWeek =
-        Clock.System.now().toLocalDateTime(TimeZone.UTC).date.isoWeekAndYear().let {
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.isoWeekAndYear().let {
             YearWeek(it.first, it.second)
         }
     val currentYearWeekIndex = sortedYears.indexOf(currentYearWeek.year)

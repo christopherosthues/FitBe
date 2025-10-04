@@ -8,7 +8,7 @@ import org.darthacheron.fitbe.health.componenets.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
 data class AddStepsDialogUiState(
-    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC).date,
+    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val steps: String = "",
     val stepsError: StringResource? = null,
 ) : DialogUiState {

@@ -6,7 +6,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 
 object PastOrPresentSelectableWeeks : SelectableWeeks {
-    private val today = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+    private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     override fun isWeekSelectable(yearWeek: YearWeek): Boolean {
         val isoWeekAndYear = today.date.isoWeekAndYear()

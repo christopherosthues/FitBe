@@ -71,7 +71,7 @@ fun AddBeverageDialog(
                         onDateSelected = { millis ->
                             millis?.let {
                                 val selectedDate =
-                                    Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date
+                                    Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
                                 viewModel.onDateChange(selectedDate)
                             }
                             showDatePicker = false
@@ -143,7 +143,7 @@ fun AddBeverageDialog(
                         uiState.amount.toDouble(),
                         uiState.beverageName,
                         uiState.selectedUnit,
-                        uiState.date.atStartOfDayIn(TimeZone.UTC)
+                        uiState.date.atStartOfDayIn(TimeZone.currentSystemDefault())
                     )
                 },
                 enabled = uiState.canSave

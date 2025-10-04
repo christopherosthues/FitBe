@@ -13,7 +13,7 @@ data class AddBodyWeightDialogUiState(
     val muscleMass: String = "",
     val boneMass: String = "",
     val bodyWaterInPercentage: String = "",
-    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC).date,
+    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val weightError: StringResource? = null,
     val bodyFatError: StringResource? = null,
     val muscleMassError: StringResource? = null,

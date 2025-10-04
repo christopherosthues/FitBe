@@ -195,7 +195,7 @@ private fun YearRangePickerContent(
     val coroutineScope = rememberCoroutineScope()
 
     // Calculate the index of the current year
-    val currentYear = Clock.System.now().toLocalDateTime(TimeZone.UTC).date.year
+    val currentYear = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.year
     val currentYearIndex = allYears.indexOfFirst { it.value == currentYear }
 
     val orderedStart = if (selectedStartYear != null && selectedEndYear != null)

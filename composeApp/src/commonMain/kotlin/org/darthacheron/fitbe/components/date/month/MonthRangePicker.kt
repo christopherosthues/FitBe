@@ -213,7 +213,7 @@ private fun MonthRangePickerContent(
     val sortedYears = yearRange.toList().sorted()
 
     // Calculate the index of the current month
-    val currentYearMonth = Clock.System.now().toLocalDateTime(TimeZone.UTC).let {
+    val currentYearMonth = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).let {
         YearMonth(it.year, it.monthNumber)
     }
     val currentYearMonthIndex = sortedYears.indexOf(currentYearMonth.year)

@@ -8,7 +8,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class)
 class WeightOverviewUiState(
     isLoading: Boolean = true,
-    val bodyWeights: List<BodyWeight> = emptyList(),
+    val bodyWeights: List<BodyWeightOverview> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
     val settings: Settings = Settings(),
     error: WeightOverviewError = WeightOverviewError()

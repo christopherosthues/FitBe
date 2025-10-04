@@ -4,13 +4,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.profile.ProfileEntity
-import kotlin.time.Duration.Companion.hours
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -30,7 +28,7 @@ import kotlin.uuid.Uuid
 data class BodyWeightEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
-    val dateUtc: Instant = Clock.System.now(),
+    val dateUtc: Instant,
     val weightInKg: Double,
     val bodyFatPercentage: Double?,
     val muscleMassInKg: Double?,
@@ -44,10 +42,9 @@ data class BodyWeightEntity(
         muscleMassInKg = muscleMassInKg,
         boneMassInKg = boneMassInKg,
         bodyWaterInPercentage = bodyWaterInPercentage,
-        dateUtc = dateUtc.toLocalDateTime(TimeZone.UTC).date,
+        date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
         profileId = profileId
     )
-
 }
 
 @OptIn(ExperimentalUuidApi::class)
@@ -58,6 +55,6 @@ fun BodyWeight.toBodyWeightEntity(): BodyWeightEntity = BodyWeightEntity(
     muscleMassInKg = this.muscleMassInKg,
     boneMassInKg = this.boneMassInKg,
     bodyWaterInPercentage = this.bodyWaterInPercentage,
-    dateUtc = this.dateUtc.atStartOfDayIn(TimeZone.UTC).plus(12.hours),
+    dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
     profileId = this.profileId
 )

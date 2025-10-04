@@ -42,19 +42,7 @@ class AddBodyWeightDialogViewModel(
     override val uiState = MutableStateFlow(AddBodyWeightDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update { it.copy(
-            weight = "",
-            bodyFatInPercentage = "",
-            muscleMass = "",
-            boneMass = "",
-            bodyWaterInPercentage = "",
-            date = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
-            weightError = null,
-            bodyFatError = null,
-            muscleMassError = null,
-            boneMassError = null,
-            bodyWaterError = null
-        ) }
+        uiState.update { AddBodyWeightDialogUiState()}
     }
 
     fun onDateChange(date: LocalDate) {

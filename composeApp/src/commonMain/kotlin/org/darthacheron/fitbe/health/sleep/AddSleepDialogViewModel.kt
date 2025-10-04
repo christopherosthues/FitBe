@@ -11,27 +11,22 @@ class AddSleepDialogViewModel : AddDialogViewModel<AddSleepDialogUiState>() {
     override val uiState = MutableStateFlow(AddSleepDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update { it.copy(
-            startDateTime = null,
-            endDateTime = null,
-            startDateTimeError = null,
-            endDateTimeError = null
-        ) }
+        uiState.update { AddSleepDialogUiState() }
     }
 
     fun onStartDateChange(startDate: LocalDate) {
-//        uiState.update { it.copy(startDateTime = LocalDateTime(startDate, it.startDateTime?.time)) }
+        uiState.update { it.copy(startDateTime = LocalDateTime(startDate, it.startDateTime.time)) }
     }
 
     fun onStartTimeChange(startTime: LocalTime) {
-
+        uiState.update { it.copy(startDateTime = LocalDateTime(it.startDateTime.date, startTime)) }
     }
 
     fun onEndDateChange(endDate: LocalDate) {
-
+        uiState.update { it.copy(startDateTime = LocalDateTime(endDate, it.endDateTime.time)) }
     }
 
     fun onEndTimeChange(endTime: LocalTime) {
-
+        uiState.update { it.copy(startDateTime = LocalDateTime(it.endDateTime.date, endTime)) }
     }
 }

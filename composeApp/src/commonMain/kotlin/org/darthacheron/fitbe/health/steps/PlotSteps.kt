@@ -61,7 +61,7 @@ import kotlin.math.roundToInt
 @Composable
 fun PlotSteps(
     modifier: Modifier = Modifier,
-    stepsData: List<Steps>,
+    stepsData: List<StepsOverview>,
     dateRange: DateRange,
     dates: List<LocalDate>,
     maxSteps: UInt,
@@ -145,7 +145,7 @@ fun PlotSteps(
         ) {
             if (dates.size > 1) {
                 AreaPlot(
-                    data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
+                    data = stepsData.map { Point(it.date, it.steps.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
                     lineStyle = LineStyle(
@@ -181,7 +181,7 @@ fun PlotSteps(
             }
             if (stepsData.isNotEmpty()) {
                 LinePlot(
-                    data = stepsData.map { Point(it.dateUtc, it.steps.toInt()) },
+                    data = stepsData.map { Point(it.date, it.steps.toInt()) },
                     lineStyle = LineStyle(
                         brush = SolidColor(MaterialTheme.colorScheme.primary),
                         strokeWidth = 2.dp
@@ -220,8 +220,8 @@ private fun monthResourceString(labelDate: LocalDate): StringResource {
     }
 }
 
-private fun toVerticalBarData(steps: List<Steps>): List<VerticalBarPlotEntry<LocalDate, Int>> {
+private fun toVerticalBarData(steps: List<StepsOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> {
     return steps.map {
-        DefaultVerticalBarPlotEntry(it.dateUtc, DefaultVerticalBarPosition(0, it.steps.toInt()))
+        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.steps.toInt()))
     }
 }

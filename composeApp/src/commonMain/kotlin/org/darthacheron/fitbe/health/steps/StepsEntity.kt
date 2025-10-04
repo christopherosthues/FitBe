@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.profile.ProfileEntity
 import kotlin.uuid.ExperimentalUuidApi
@@ -29,14 +29,14 @@ data class StepsEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val steps: Int,
-    val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val dateUtc: Instant,
 ) {
     fun toSteps(): Steps {
         return Steps(
             id = id,
             profileId = profileId,
             steps = steps.toUInt(),
-            dateUtc = dateUtc,
+            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
         )
     }
 }
@@ -47,6 +47,6 @@ fun Steps.toStepsEntity(): StepsEntity {
         id = this.id,
         profileId = this.profileId,
         steps = this.steps.toInt(),
-        dateUtc = this.dateUtc,
+        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
     )
 }

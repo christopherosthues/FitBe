@@ -1,9 +1,9 @@
-package org.darthacheron.fitbe.health.beverages
+package org.darthacheron.fitbe.health.steps
 
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.health.componenets.Overview
 
-data class BeverageOverview(
+data class StepsOverview(
     override val date: LocalDate,
-    val amountMl: UInt,
+    val steps: UInt,
 ) : Overview
