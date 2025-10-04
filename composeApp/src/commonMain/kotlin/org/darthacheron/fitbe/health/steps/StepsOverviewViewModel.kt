@@ -85,24 +85,24 @@ class StepsOverviewViewModel(
         }
     }
     .onStart {
-        _isLoading.value = true
-        _errorMessage.value = null
+        isLoading.value = true
+        errorMessage.value = null
     }
     .catch {
-        _isLoading.value = false
-        _errorMessage.value = Res.string.steps_overview_error_loading
+        isLoading.value = false
+        errorMessage.value = Res.string.steps_overview_error_loading
         emit(emptyList())
     }
     .map { steps ->
-        _isLoading.value = false
+        isLoading.value = false
         steps
     }
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val uiState: StateFlow<StepsOverviewUiState> = combine(
         stepsDataFlow,
-        _isLoading,
-        _errorMessage
+        isLoading,
+        errorMessage
     ) { steps, isLoading, errorMessage ->
         StepsOverviewUiState(
             isLoading = isLoading,

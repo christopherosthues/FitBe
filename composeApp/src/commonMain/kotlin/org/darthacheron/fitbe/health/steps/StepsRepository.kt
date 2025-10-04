@@ -21,16 +21,16 @@ class StepsRepository(private val stepsDao: StepsDao) {
                  profileId: Uuid): Flow<List<Steps>> {
         val dateSpan = toDateSpan(startDate, endDate)
         return stepsDao.getStepsBetweenDates(
-            dateSpan.first,
-            dateSpan.second,
-            profileId)
+            start = dateSpan.first,
+            end = dateSpan.second,
+            profileId = profileId)
             .map { list -> list.map { it.toSteps() }
         }
     }
 
     fun getTodaySteps(profileId: Uuid): Flow<Steps> {
         val today: LocalDate = Clock.System.now()
-            .toLocalDateTime(TimeZone.UTC)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
             .date
         return stepsDao.getStepsForDate(today.toString(), profileId).map {
             it.toSteps()
@@ -38,7 +38,7 @@ class StepsRepository(private val stepsDao: StepsDao) {
     }
 
     fun getStepsForDate(date: LocalDate, profileId: Uuid): Flow<List<Steps>> {
-        val startOfDay = date.atStartOfDayIn(TimeZone.UTC)
+        val startOfDay = date.atStartOfDayIn(TimeZone.currentSystemDefault())
         val dateSpan = toDateSpan(startOfDay, startOfDay)
 
         return stepsDao.getStepsBetweenDates(

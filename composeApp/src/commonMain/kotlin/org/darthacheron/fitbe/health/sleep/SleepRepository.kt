@@ -14,7 +14,10 @@ class SleepRepository(private val dao: SleepDao) {
         val dateSpan = toDateSpan(start, end)
         // TODO: start is not correct
 //        return dao.getSleepsBetween(dateSpan.first.toString(), dateSpan.second.toString(), profileId)
-        return dao.getSleepsBetween(profileId)
+        return dao.getSleepsBetween(
+            start = dateSpan.first,
+            end = dateSpan.second,
+            profileId = profileId)
             .map { sleepEntities -> sleepEntities.map { it.toSleep() } }
     }
 

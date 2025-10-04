@@ -22,14 +22,13 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
         endDate: Instant,
         profileId: Uuid
     ): Flow<List<Beverage>> {
-        val dateSpan = toDateSpan(startDate, endDate)
         val timeZone = TimeZone.currentSystemDefault()
-        val startOfDay = startDate.toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
-        val endOfDay = endDate.toLocalDateTime(timeZone).date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
+        val dateSpan = toDateSpan(startDate, endDate, timeZone)
 
         return beverageDao.getBeverages(
-            startOfDay,
-            endOfDay, profileId
+            start = dateSpan.first,
+            end = dateSpan.second,
+            profileId = profileId
         ).map { list ->
             list.map { it.toBeverage() }
         }
@@ -37,8 +36,8 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
 
     fun getTodayBeverages(profileId: Uuid): Flow<List<Beverage>> {
         val today: Instant = Clock.System.now()
-            .toLocalDateTime(TimeZone.UTC)
-            .date.atStartOfDayIn(TimeZone.UTC)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date.atStartOfDayIn(TimeZone.currentSystemDefault())
         val dateSpan = toDateSpan(today, today)
 
         return beverageDao.getBeverages(
@@ -51,17 +50,17 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
     fun getBeveragesForDate(date: LocalDate, profileId: Uuid): Flow<List<Beverage>> {
         val timeZone = TimeZone.currentSystemDefault()
         val startOfDay = date.atStartOfDayIn(timeZone)
-        val endOfDay = date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
+        val dateSpan = toDateSpan(startOfDay, startOfDay)
 
         return beverageDao.getBeverages(
-            start = startOfDay,
-            end = endOfDay,
+            start = dateSpan.first,
+            end = dateSpan.second,
             profileId = profileId
         ).map { entities -> entities.map { it.toBeverage() } }
     }
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun addBeverage(beverage: Beverage) {
-        beverageDao.upsertBeverage(beverage.toBeverageEntity())
+        beverageDao.upsertBeverage(intake = beverage.toBeverageEntity())
     }
 }

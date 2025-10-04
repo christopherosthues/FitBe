@@ -88,24 +88,24 @@ class BeverageOverviewViewModel(
         }
     }
         .onStart {
-            _isLoading.value = true
-            _errorMessage.value = null
+            isLoading.value = true
+            errorMessage.value = null
         }
         .catch {
-            _isLoading.value = false
-            _errorMessage.value = Res.string.beverages_overview_error_loading
+            isLoading.value = false
+            errorMessage.value = Res.string.beverages_overview_error_loading
             emit(emptyList())
         }
         .map { beverages ->
-            _isLoading.value = false
+            isLoading.value = false
             beverages
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val uiState: StateFlow<BeverageOverviewUiState> = combine(
         beveragesFlow,
-        _isLoading,
-        _errorMessage,
+        isLoading,
+        errorMessage,
     ) { beverages, isLoading, errorMessage ->
         BeverageOverviewUiState(
             isLoading = isLoading,
@@ -189,7 +189,7 @@ class BeverageOverviewViewModel(
                 val profileId = settingsRepository.getSettings().selectedProfileId
 
                 if (profileId == null) {
-                    _errorMessage.value = Res.string.beverages_overview_error_saving
+                    errorMessage.value = Res.string.beverages_overview_error_saving
                     return@launch
                 }
 
@@ -204,7 +204,7 @@ class BeverageOverviewViewModel(
                     )
                 )
             } catch (e: Exception) {
-                _errorMessage.value = Res.string.beverages_overview_error_saving
+                errorMessage.value = Res.string.beverages_overview_error_saving
             }
         }
     }

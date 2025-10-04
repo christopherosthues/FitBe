@@ -1,29 +1,26 @@
 package org.darthacheron.fitbe.utils
 
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
-import kotlinx.datetime.minus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.DatePeriod
-import kotlin.time.ExperimentalTime
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import org.darthacheron.fitbe.components.date.DateUnit
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.components.date.year.Year
-import org.darthacheron.fitbe.components.date.month.YearMonth
-import org.darthacheron.fitbe.components.date.week.YearWeek
+import org.darthacheron.fitbe.components.date.DateUnit
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-fun toDateSpan(start: Instant, end: Instant): Pair<Instant, Instant> {
-    return Pair(start.toLocalDateTime(TimeZone.currentSystemDefault()).date.atStartOfDayIn(TimeZone.currentSystemDefault()), end.toLocalDateTime(
-        TimeZone.currentSystemDefault()).date.atTime(23, 59, 59, 999).toInstant(TimeZone.currentSystemDefault()))
+fun toDateSpan(start: Instant, end: Instant, timeZone: TimeZone = TimeZone.currentSystemDefault()): Pair<Instant, Instant> {
+    val startOfDay = start.toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
+    val endOfDay = end.toLocalDateTime(timeZone).date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
+
+    return Pair(startOfDay, endOfDay)
 }
 
 fun LocalDate.isoWeekAndYear(): Pair<Int, Int> {
@@ -55,112 +52,72 @@ fun LocalDate.firstDayOfIsoWeek(): LocalDate {
     return this.minus(DatePeriod(days = dayOfWeek - 1))
 }
 
-fun LocalDate.lastDayOfIsoWeek(): LocalDate {
-    val dayOfWeek = this.dayOfWeek.isoDayNumber // Monday=1, Sunday=7
-    return this.plus(DatePeriod(days = 7 - dayOfWeek))
-}
-
 fun LocalDate.firstDayOfMonth(): LocalDate {
     return LocalDate(this.year, this.monthNumber, 1)
 }
 
-fun LocalDate.lastDayOfMonth(): LocalDate {
-    val firstOfNextMonth = if (this.monthNumber == 12) {
-        LocalDate(this.year + 1, 1, 1)
-    } else {
-        LocalDate(this.year, this.monthNumber + 1, 1)
-    }
-    return firstOfNextMonth.minus(DatePeriod(days = 1))
-}
-
 fun Instant.lastDayOfMonth(): Instant {
-    val date = this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    val date = this.toLocalDateTime(TimeZone.UTC).date
     val firstOfNextMonth = if (date.monthNumber == 12) {
         LocalDate(date.year + 1, 1, 1)
     } else {
         LocalDate(date.year, date.monthNumber + 1, 1)
     }
-    return firstOfNextMonth.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
+    return firstOfNextMonth.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
 }
 
 fun LocalDate.firstDayOfYear(): LocalDate {
     return LocalDate(this.year, 1, 1)
 }
 
-fun LocalDate.lastDayOfYear(): LocalDate {
-    return LocalDate(this.year, 12, 31)
-}
-
-fun Instant.plusOne(viewType: DateUnit): Instant {
-    val localDateTime = this.toLocalDateTime(TimeZone.currentSystemDefault())
-    val newLocalDateTime = when(viewType) {
-        DateUnit.DAY -> localDateTime.date.plus(DatePeriod(days = 1))
-        DateUnit.WEEK -> localDateTime.date.plus(DatePeriod(days = 7))
-        DateUnit.MONTH -> localDateTime.date.plus(DatePeriod(months = 1))
-        DateUnit.YEAR -> localDateTime.date.plus(DatePeriod(years = 1))
-    }
-    return newLocalDateTime.atStartOfDayIn(TimeZone.currentSystemDefault())
-}
-
-fun Instant.minusOne(viewType: DateUnit): Instant {
-    val localDateTime = this.toLocalDateTime(TimeZone.currentSystemDefault())
-    val newLocalDateTime = when(viewType) {
-        DateUnit.DAY -> localDateTime.date.minus(DatePeriod(days = 1))
-        DateUnit.WEEK -> localDateTime.date.minus(DatePeriod(days = 7))
-        DateUnit.MONTH -> localDateTime.date.minus(DatePeriod(months = 1))
-        DateUnit.YEAR -> localDateTime.date.minus(DatePeriod(years = 1))
-    }
-    return newLocalDateTime.atStartOfDayIn(TimeZone.currentSystemDefault())
-}
-
 fun DateRange.plusOne(): DateRange {
-    val startDate = this.startDate.toLocalDateTime(TimeZone.currentSystemDefault())
-    val endDate = this.endDate.toLocalDateTime(TimeZone.currentSystemDefault())
+    val startDate = this.startDate.toLocalDateTime(this.timeZone)
+    val endDate = this.endDate.toLocalDateTime(this.timeZone)
     var newStartDate: Instant
     var newEndDate: Instant
     when (this.dateUnit) {
         DateUnit.DAY -> {
-            newStartDate = startDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.plus(DatePeriod(days = 1)).atStartOfDayIn(this.timeZone)
         }
         DateUnit.WEEK -> {
-            newStartDate = startDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.plus(DatePeriod(days = 7)).atStartOfDayIn(this.timeZone)
         }
         DateUnit.MONTH -> {
-            newStartDate = startDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.currentSystemDefault()).lastDayOfMonth()
+            newStartDate = startDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone).lastDayOfMonth()
         }
         DateUnit.YEAR -> {
-            newStartDate = startDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.plus(DatePeriod(years = 1)).atStartOfDayIn(this.timeZone)
         }
     }
-    return DateRange(newStartDate, newEndDate, this.dateUnit)
+    return DateRange(newStartDate, newEndDate, this.dateUnit, this.timeZone)
 }
 
 fun DateRange.minusOne(): DateRange {
-    val startDate = this.startDate.toLocalDateTime(TimeZone.currentSystemDefault())
-    val endDate = this.endDate.toLocalDateTime(TimeZone.currentSystemDefault())
+    val startDate = this.startDate.toLocalDateTime(this.timeZone)
+    val endDate = this.endDate.toLocalDateTime(this.timeZone)
     var newStartDate: Instant
     var newEndDate: Instant
     when (this.dateUnit) {
         DateUnit.DAY -> {
-            newStartDate = startDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.minus(DatePeriod(days = 1)).atStartOfDayIn(this.timeZone)
         }
         DateUnit.WEEK -> {
-            newStartDate = startDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.minus(DatePeriod(days = 7)).atStartOfDayIn(this.timeZone)
         }
         DateUnit.MONTH -> {
-            newStartDate = startDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(TimeZone.currentSystemDefault()).lastDayOfMonth()
+            newStartDate = startDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone).lastDayOfMonth()
         }
         DateUnit.YEAR -> {
-            newStartDate = startDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
-            newEndDate = endDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(TimeZone.currentSystemDefault())
+            newStartDate = startDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(this.timeZone)
+            newEndDate = endDate.date.minus(DatePeriod(years = 1)).atStartOfDayIn(this.timeZone)
         }
     }
-    return DateRange(newStartDate, newEndDate, this.dateUnit)
+    return DateRange(newStartDate, newEndDate, this.dateUnit, this.timeZone)
 }

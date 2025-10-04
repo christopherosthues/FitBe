@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.projectHasAnnotationProcessors
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
@@ -102,6 +103,17 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.androidx.room.testing)
+            implementation(libs.turbine.test)
+        }
+        androidNativeTest.dependencies {
+            implementation(libs.kotlin.testJunit)
+            implementation(libs.androidx.testExt.junit)
+            implementation(libs.androidx.test.core.ktx)
+
+        }
+        androidUnitTest.dependencies {
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

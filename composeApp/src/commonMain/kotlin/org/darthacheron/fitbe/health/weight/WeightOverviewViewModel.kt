@@ -38,7 +38,6 @@ import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class WeightOverviewViewModel(
@@ -76,7 +75,7 @@ class WeightOverviewViewModel(
         settingsRepository.getSettingsFlow()
     ) { range, settings ->
         settings.selectedProfileId?.let {
-            Pair(settings, range.dateUnit) to bodyWeightRepository.getEntries(
+            Pair(settings, range.dateUnit) to bodyWeightRepository.getBeverages(
                 range.startDate,
                 range.endDate,
                 it
@@ -93,16 +92,16 @@ class WeightOverviewViewModel(
         }
     }
     .onStart {
-        _isLoading.value = true
-        _errorMessage.value = null
+        isLoading.value = true
+        errorMessage.value = null
     }
     .catch {
-        _isLoading.value = false
-        _errorMessage.value = Res.string.weight_overview_error_loading
+        isLoading.value = false
+        errorMessage.value = Res.string.weight_overview_error_loading
         emit(emptyList())
     }
     .map {
-        _isLoading.value = false
+        isLoading.value = false
         it
     }
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
@@ -110,8 +109,8 @@ class WeightOverviewViewModel(
     override val uiState: StateFlow<WeightOverviewUiState> = combine(
         settings,
         bodyWeightsDataFlow,
-        _isLoading,
-        _errorMessage
+        isLoading,
+        errorMessage
     ) { settings, bodyWeights, isLoading, errorMessage ->
         WeightOverviewUiState(
             isLoading = isLoading,

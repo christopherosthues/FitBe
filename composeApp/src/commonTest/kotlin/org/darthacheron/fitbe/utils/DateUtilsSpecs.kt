@@ -162,7 +162,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testPlusOneDay() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY,
+            TimeZone.UTC)
         val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 2, 16).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 17).atStartOfDayIn(TimeZone.UTC)
@@ -172,7 +173,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testMinusOneDay() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.DAY,
+            TimeZone.UTC)
         val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 2, 14).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 15).atStartOfDayIn(TimeZone.UTC)
@@ -182,7 +184,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testPlusOneWeek() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK,
+            TimeZone.UTC)
         val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 2, 22).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 23).atStartOfDayIn(TimeZone.UTC)
@@ -192,7 +195,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testMinusOneWeek() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.WEEK,
+            TimeZone.UTC)
         val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 2, 8).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 9).atStartOfDayIn(TimeZone.UTC)
@@ -205,7 +209,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.MONTH
+            DateUnit.MONTH,
+            TimeZone.UTC
         ).plusOne()
         val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
@@ -218,7 +223,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.MONTH
+            DateUnit.MONTH,
+            TimeZone.UTC
         ).plusOne()
         val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of March
@@ -228,7 +234,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testPlusOneMonth() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH,
+            TimeZone.UTC)
         val result = pair.plusOne()
         val expectedStart = LocalDate(2024, 3, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC) // Last day of March
@@ -241,7 +248,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 12, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.MONTH
+            DateUnit.MONTH,
+            TimeZone.UTC
         ).minusOne()
         val expectedStart = LocalDate(2024, 11, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 11, 30).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
@@ -254,7 +262,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 3, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 3, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.MONTH
+            DateUnit.MONTH,
+            TimeZone.UTC
         ).minusOne()
         val expectedStart = LocalDate(2024, 2, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 2, 29).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
@@ -264,7 +273,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testMinusOneMonth() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.MONTH,
+            TimeZone.UTC)
         val result = pair.minusOne()
         val expectedStart = LocalDate(2024, 1, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2024, 1, 31).atStartOfDayIn(TimeZone.UTC) // Last day of Jan
@@ -277,7 +287,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.YEAR
+            DateUnit.YEAR,
+            TimeZone.UTC
         ).minusOne()
         val expectedStart = LocalDate(2023, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2023, 12, 31).atStartOfDayIn(TimeZone.UTC)
@@ -287,7 +298,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testPlusOneYear() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR,
+            TimeZone.UTC)
         val result = pair.plusOne()
         val expectedStart = LocalDate(2025, 2, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 2, 16).atStartOfDayIn(TimeZone.UTC)
@@ -300,7 +312,8 @@ class DateUtilsSpecs {
         val result = DateRange(
             LocalDate(2024, 1, 1).atStartOfDayIn(TimeZone.UTC),
             LocalDate(2024, 12, 31).atStartOfDayIn(TimeZone.UTC),
-            DateUnit.YEAR
+            DateUnit.YEAR,
+            TimeZone.UTC
         ).plusOne()
         val expectedStart = LocalDate(2025, 1, 1).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2025, 12, 31).atStartOfDayIn(TimeZone.UTC)
@@ -310,7 +323,8 @@ class DateUtilsSpecs {
 
     @Test
     fun testMinusOneYear() {
-        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR)
+        val pair = DateRange(baseStart, baseEnd, DateUnit.YEAR,
+            TimeZone.UTC)
         val result = pair.minusOne()
         val expectedStart = LocalDate(2023, 2, 15).atStartOfDayIn(TimeZone.UTC)
         val expectedEnd = LocalDate(2023, 2, 16).atStartOfDayIn(TimeZone.UTC)
