@@ -21,8 +21,8 @@ class StepsRepository(private val stepsDao: StepsDao) {
                  profileId: Uuid): Flow<List<Steps>> {
         val dateSpan = toDateSpan(startDate, endDate)
         return stepsDao.getStepsBetweenDates(
-            dateSpan.first.toString(),
-            dateSpan.second.toString(),
+            dateSpan.first,
+            dateSpan.second,
             profileId)
             .map { list -> list.map { it.toSteps() }
         }
@@ -42,8 +42,8 @@ class StepsRepository(private val stepsDao: StepsDao) {
         val dateSpan = toDateSpan(startOfDay, startOfDay)
 
         return stepsDao.getStepsBetweenDates(
-            start = dateSpan.first.toString(),
-            end = dateSpan.second.toString(),
+            start = dateSpan.first,
+            end = dateSpan.second,
             profileId = profileId
         ).map { entities -> entities.map { it.toSteps() } }
     }

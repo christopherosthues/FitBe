@@ -42,8 +42,8 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
         val dateSpan = toDateSpan(today, today)
 
         return beverageDao.getBeverages(
-            start = dateSpan.first.toString(),
-            end = dateSpan.second.toString(),
+            start = dateSpan.first,
+            end = dateSpan.second,
             profileId = profileId
         ).map { entities -> entities.map { it.toBeverage() } }
     }

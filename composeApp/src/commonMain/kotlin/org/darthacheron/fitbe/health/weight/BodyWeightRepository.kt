@@ -22,8 +22,8 @@ class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
     ): Flow<List<BodyWeight>> {
         val dateSpan = toDateSpan(startDate, endDate)
         return bodyWeightDao.getBodyWeightsBetweenDates(
-            dateSpan.first.toString(),
-            dateSpan.second.toString(),
+            dateSpan.first,
+            dateSpan.second,
             profileId
         )
             .map { list -> list.map { it.toBodyWeight() } }
