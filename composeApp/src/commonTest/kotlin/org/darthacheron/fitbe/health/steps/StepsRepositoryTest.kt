@@ -220,7 +220,7 @@ class StepsRepositoryTest {
         // --- WHEN ---
         // We query for the range of Oct 26. The end date is the exclusive start of Oct 27.
         val startDate = LocalDate(2025, 10, 26).atStartOfDayIn(germanTimeZone)
-        val endDate = LocalDate(2025, 10, 27).atStartOfDayIn(germanTimeZone)
+        val endDate = LocalDate(2025, 10, 26).atStartOfDayIn(germanTimeZone)
 
         // --- THEN ---
         repository.getSteps(startDate, endDate, testProfileId).test {
