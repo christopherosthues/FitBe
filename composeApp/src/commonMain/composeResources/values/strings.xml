@@ -306,6 +306,10 @@
     <string name="default_exercise_calf_raises_single_leg_dumbbell_name">Single-Leg Dumbbell Calf Raise</string>
     <string name="default_exercise_box_jumps_calf_focus_name">Box Jumps (Calf Focus)</string>
     <string name="default_exercise_jump_rope_name">Jump Rope</string>
+    <string name="default_exercise_incline_bench_press_barbell_name">Incline Bench Press (Barbell)</string>
+    <string name="default_exercise_incline_bench_press_dumbbell_name">Incline Bench Press (Dumbbell)</string>
+    <string name="default_exercise_around_the_world_dumbbell_name">Around the World (Dumbbell)</string>
+    <string name="default_exercise_around_the_world_plate_name">Around the World (Plate)</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_bodyweight_guide">Stand with feet shoulder-width apart, chest up, core engaged. Lower your hips back and down as if sitting in a chair, keeping knees behind toes. Go as low as comfortable, ideally thighs parallel to the floor. Push through heels to return to start.</string>
@@ -430,6 +434,10 @@
     <string name="default_exercise_calf_raises_single_leg_dumbbell_guide">Stand on one leg, holding a dumbbell in the hand on the same side as your working leg (other hand can be used for balance). Ball of working foot can be on an elevated surface. Rise up onto the ball of your foot, lifting heel. Squeeze calf. Slowly lower. Complete reps, then switch leg and dumbbell hand.</string>
     <string name="default_exercise_box_jumps_calf_focus_guide">Perform box jumps as usual, but with a conscious effort to maximize the push-off from your calves during the jump. Focus on explosive plantar flexion (pointing toes down) as you leave the ground. Land softly.</string>
     <string name="default_exercise_jump_rope_guide">Hold jump rope handles with a relaxed grip, elbows close to your body. Swing the rope using your wrists, not your whole arms. Jump just high enough for the rope to clear under your feet. Land softly on the balls of your feet. Maintain a steady rhythm.</string>
+    <string name="default_exercise_incline_bench_press_barbell_guide">Lie on an incline bench. Grip the barbell with hands slightly wider than shoulder-width. Lower the bar to your upper chest, then press it back up until your arms are fully extended.</string>
+    <string name="default_exercise_incline_bench_press_dumbbell_guide">Lie on an incline bench holding a dumbbell in each hand. Press the dumbbells up until your arms are fully extended. Lower them back down to the sides of your upper chest.</string>
+    <string name="default_exercise_around_the_world_dumbbell_guide">Lie on a flat bench with a dumbbell in each hand, palms facing up. Start with arms extended by your hips. In a circular motion, bring the dumbbells up and around until they meet above your chest. Reverse the motion to return to the start.</string>
+    <string name="default_exercise_around_the_world_plate_guide">Stand with your feet shoulder-width apart, holding a weight plate with both hands. Keeping your arms straight, raise the plate in a large circular motion around your head. Complete reps in one direction, then switch.</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">No equipments available. Add some!</string>

@@ -247,6 +247,10 @@ import fitbe.composeapp.generated.resources.default_exercise_ab_wheel_rollouts_s
 // --- Ankle Weights Exercises ---
 import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_name
 import fitbe.composeapp.generated.resources.default_exercise_ankle_weight_reverse_crunches_guide
+import fitbe.composeapp.generated.resources.default_exercise_around_the_world_dumbbell_guide
+import fitbe.composeapp.generated.resources.default_exercise_around_the_world_dumbbell_name
+import fitbe.composeapp.generated.resources.default_exercise_around_the_world_plate_guide
+import fitbe.composeapp.generated.resources.default_exercise_around_the_world_plate_name
 import fitbe.composeapp.generated.resources.default_exercise_box_jumps_calf_focus_guide
 import fitbe.composeapp.generated.resources.default_exercise_box_jumps_calf_focus_name
 import fitbe.composeapp.generated.resources.default_exercise_calf_raises_barbell_standing_guide
@@ -265,6 +269,10 @@ import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_
 import fitbe.composeapp.generated.resources.default_exercise_calf_raises_single_leg_dumbbell_name
 import fitbe.composeapp.generated.resources.default_exercise_calf_raises_smith_machine_standing_guide
 import fitbe.composeapp.generated.resources.default_exercise_calf_raises_smith_machine_standing_name
+import fitbe.composeapp.generated.resources.default_exercise_incline_bench_press_barbell_guide
+import fitbe.composeapp.generated.resources.default_exercise_incline_bench_press_barbell_name
+import fitbe.composeapp.generated.resources.default_exercise_incline_bench_press_dumbbell_guide
+import fitbe.composeapp.generated.resources.default_exercise_incline_bench_press_dumbbell_name
 import fitbe.composeapp.generated.resources.default_exercise_jump_rope_guide
 import fitbe.composeapp.generated.resources.default_exercise_jump_rope_name
 
@@ -409,6 +417,10 @@ object DefaultExerciseResProvider {
         "default_exercise_calf_raises_single_leg_dumbbell" to Res.string.default_exercise_calf_raises_single_leg_dumbbell_name,
         "default_exercise_box_jumps_calf_focus" to Res.string.default_exercise_box_jumps_calf_focus_name,
         "default_exercise_jump_rope" to Res.string.default_exercise_jump_rope_name,
+        "default_exercise_incline_bench_press_barbell" to Res.string.default_exercise_incline_bench_press_barbell_name,
+        "default_exercise_incline_bench_press_dumbbell" to Res.string.default_exercise_incline_bench_press_dumbbell_name,
+        "default_exercise_around_the_world_dumbbell" to Res.string.default_exercise_around_the_world_dumbbell_name,
+        "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_name,
         )
 
     val exerciseGuideMap: Map<String, StringResource> = mapOf(
@@ -539,7 +551,10 @@ object DefaultExerciseResProvider {
         "default_exercise_calf_raises_single_leg_dumbbell" to Res.string.default_exercise_calf_raises_single_leg_dumbbell_guide,
         "default_exercise_box_jumps_calf_focus" to Res.string.default_exercise_box_jumps_calf_focus_guide,
         "default_exercise_jump_rope" to Res.string.default_exercise_jump_rope_guide,
-
+        "default_exercise_incline_bench_press_barbell" to Res.string.default_exercise_incline_bench_press_barbell_guide,
+        "default_exercise_incline_bench_press_dumbbell" to Res.string.default_exercise_incline_bench_press_dumbbell_guide,
+        "default_exercise_around_the_world_dumbbell" to Res.string.default_exercise_around_the_world_dumbbell_guide,
+        "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_guide,
         )
 
     val exerciseImageMap: Map<String, DrawableResource> = mapOf(
@@ -669,6 +684,9 @@ object DefaultExerciseResProvider {
         "default_exercise_calf_raises_single_leg_dumbbell" to Res.drawable.ic_launcher,
         "default_exercise_box_jumps_calf_focus" to Res.drawable.ic_launcher,
         "default_exercise_jump_rope" to Res.drawable.ic_launcher,
-
+        "default_exercise_incline_bench_press_barbell" to Res.drawable.ic_launcher,
+        "default_exercise_incline_bench_press_dumbbell" to Res.drawable.ic_launcher,
+        "default_exercise_around_the_world_dumbbell" to Res.drawable.ic_launcher,
+        "default_exercise_around_the_world_plate" to Res.drawable.ic_launcher,
         )
 }

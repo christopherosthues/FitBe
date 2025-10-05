@@ -950,6 +950,34 @@ internal val exerciseList: List<ExerciseSeedData> = listOf(
         exerciseType = ExerciseType.TIMED, // Can also be REPS_ONLY
         equipmentKeys = listOf("default_training_equipment_jump_rope") // Ensure "jump_rope" is in your equipmentList
     ),
+    ExerciseSeedData(
+        key = "default_exercise_incline_bench_press_barbell",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_barbell", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_incline_bench_press_dumbbell",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_around_the_world_dumbbell",
+        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
+        recommendedFor = listOf(RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_dumbbell", "default_training_equipment_bench")
+    ),
+    ExerciseSeedData(
+        key = "default_exercise_around_the_world_plate",
+        muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS),
+        recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
+        exerciseType = ExerciseType.WEIGHT_REPS,
+        equipmentKeys = listOf("default_training_equipment_weight_plates")
+    ),
 )
 
 @OptIn(ExperimentalUuidApi::class)

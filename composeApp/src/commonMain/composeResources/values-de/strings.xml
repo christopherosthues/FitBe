@@ -306,6 +306,10 @@
     <string name="default_exercise_calf_raises_single_leg_dumbbell_name">Einbeiniges Wadenheben mit Kurzhantel</string>
     <string name="default_exercise_box_jumps_calf_focus_name">Box Jumps (Wadenfokus)</string>
     <string name="default_exercise_jump_rope_name">Seilspringen</string>
+    <string name="default_exercise_incline_bench_press_barbell_name">Schrägbankdrücken (Langhantel)</string>
+    <string name="default_exercise_incline_bench_press_dumbbell_name">Schrägbankdrücken (Kurzhantel)</string>
+    <string name="default_exercise_around_the_world_dumbbell_name">Around the World (Kurzhantel)</string>
+    <string name="default_exercise_around_the_world_plate_name">Around the World (Hantelscheibe)</string>
 
     <!-- Default Exercise Guides -->
     <string name="default_exercise_squat_bodyweight_guide">Stelle dich schulterbreit hin, Brust raus, Rumpf angespannt. Senke deine Hüften nach hinten und unten, als ob du dich auf einen Stuhl setzt, Knie hinter den Zehen. So tief wie angenehm, idealerweise Oberschenkel parallel zum Boden. Drücke dich durch die Fersen hoch.</string>
@@ -430,6 +434,10 @@
     <string name="default_exercise_calf_raises_single_leg_dumbbell_guide">Stehe auf einem Bein und halte eine Kurzhantel in der Hand auf der gleichen Seite wie dein arbeitendes Bein (die andere Hand kann zum Balancieren verwendet werden). Der Fußballen des arbeitenden Fußes kann auf einer erhöhten Oberfläche stehen. Hebe dich auf den Fußballen und drücke die Ferse hoch. Wade anspannen. Langsam senken. Wiederholungen ausführen, dann Bein und Hantelhand wechseln.</string>
     <string name="default_exercise_box_jumps_calf_focus_guide">Führe Box Jumps wie gewohnt aus, aber mit bewusster Anstrengung, den Abdruck von deinen Waden während des Sprungs zu maximieren. Konzentriere dich auf eine explosive Plantarflexion (Zehen nach unten strecken), während du den Boden verlässt. Lande weich.</string>
     <string name="default_exercise_jump_rope_guide">Halte die Griffe des Springseils locker, Ellbogen nah am Körper. Schwinge das Seil mit den Handgelenken, nicht mit den ganzen Armen. Springe gerade hoch genug, damit das Seil unter deinen Füßen hindurchpasst. Lande weich auf den Fußballen. Halte einen gleichmäßigen Rhythmus bei.</string>
+    <string name="default_exercise_incline_bench_press_barbell_guide">Lege dich auf eine Schrägbank. Greife die Langhantel etwas breiter als schulterbreit. Senke die Stange zur oberen Brust und drücke sie dann wieder hoch, bis die Arme vollständig gestreckt sind.</string>
+    <string name="default_exercise_incline_bench_press_dumbbell_guide">Lege dich auf eine Schrägbank und halte eine Kurzhantel in jeder Hand. Drücke die Hanteln nach oben, bis deine Arme vollständig gestreckt sind. Senke sie dann wieder seitlich zur oberen Brust ab.</string>
+    <string name="default_exercise_around_the_world_dumbbell_guide">Lege dich auf eine Flachbank mit einer Kurzhantel in jeder Hand, Handflächen nach oben. Beginne mit gestreckten Armen neben deiner Hüfte. Bringe die Hanteln in einer kreisförmigen Bewegung nach oben, bis sie sich über deiner Brust treffen. Führe die Bewegung in umgekehrter Richtung aus, um zum Start zurückzukehren.</string>
+    <string name="default_exercise_around_the_world_plate_guide">Stehe schulterbreit und halte eine Hantelscheibe mit beiden Händen. Hebe die Scheibe mit gestreckten Armen in einer großen Kreisbewegung um deinen Kopf. Mache Wiederholungen in eine Richtung, dann wechsle.</string>
 
     <!-- Training Equipment -->
     <string name="training_equipment_no_equipments">Keine Geräte vorhanden. Füge welche hinzu!</string>
