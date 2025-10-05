@@ -9,10 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
@@ -49,12 +46,12 @@ class AddBeverageDialogViewModel(
                 null
             }
 
-            if (error == null) {
+            if (error == null && amountAsDouble != null) {
                 val selectedDate = currentState.date
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val beveragesForDay = beverageRepository.getBeveragesForDate(selectedDate, profileId).first()
-                val amountInMl = currentState.selectedUnit.toMilliliter(amountAsDouble!!)
+                val amountInMl = currentState.selectedUnit.toMilliliter(amountAsDouble)
                 val totalAmountForDay = beveragesForDay.sumOf { it.unit.toMilliliter(it.amount) } + amountInMl
 
                 if (totalAmountForDay > 5000) {

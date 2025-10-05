@@ -45,12 +45,12 @@ class AddStepsDialogViewModel(
                 null
             }
 
-            if (error == null) {
+            if (error == null && stepsAsUInt != null) {
                 val selectedDate = currentState.date
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val stepsForDate = stepsRepository.getStepsForDate(selectedDate, profileId).first()
-                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt!!
+                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt
 
                 if (totalAmountForDay > 500_000u) {
                     error = Res.string.steps_add_dialog_error_invalid_total_steps

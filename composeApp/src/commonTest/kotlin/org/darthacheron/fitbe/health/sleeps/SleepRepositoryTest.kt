@@ -7,7 +7,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.db.createInMemoryRoomDatabase

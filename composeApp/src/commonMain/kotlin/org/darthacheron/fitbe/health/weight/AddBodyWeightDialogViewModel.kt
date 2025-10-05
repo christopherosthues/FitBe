@@ -16,10 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
@@ -27,14 +24,11 @@ import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
-import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
 
 class AddBodyWeightDialogViewModel(
     private val positiveDecimalValidator: PositiveDecimalValidator,
     private val bodyWeightValidator: BodyWeightValidator,
     private val percentageValidator: PercentageValidator,
-    private val bodyWeightRepository: BodyWeightRepository,
-    weightUnitConverter: WeightUnitConverter,
     private val settingsRepository: SettingsRepository
 ) : AddDialogViewModel<AddBodyWeightDialogUiState>() {
     val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
@@ -107,7 +101,6 @@ class AddBodyWeightDialogViewModel(
 
     private fun validateMuscleMass(muscleMass: String) {
         viewModelScope.launch {
-            val currentState = uiState.value
             val settings = settings.first()
             val weightUnit = settings.weightUnit
 
@@ -151,7 +144,6 @@ class AddBodyWeightDialogViewModel(
 
     fun onBodyWaterChange(bodyWater: String) {
         uiState.update { it.copy(bodyWaterInPercentage = bodyWater) }
-//        Res.string.body_weight_add_dialog_error_body_water
         validateBodyWater(bodyWater)
         validateBodyWeight()
     }
@@ -211,36 +203,5 @@ class AddBodyWeightDialogViewModel(
                 )
             }
         }
-
-//        viewModelScope.launch {
-//            // sum: body_weight_add_dialog_error_total_weight_sum
-//
-//            val currentState = uiState.value
-////            val sum =
-////                currentState.bodyFatPercentage.toDoubleOrNull() +
-////                        currentState.muscleMass.toDoubleOrNull() +
-////                        currentState.boneMass.toDoubleOrNull()
-////            val steps = currentState.steps
-////            val stepsAsUInt = steps.replace(',', '.').toUIntOrNull()
-////
-////            var error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(stepsAsUInt)) {
-////                Res.string.steps_add_dialog_error_invalid_steps
-////            } else {
-////                null
-////            }
-////
-////            if (error == null) {
-////                val selectedDate = currentState.date
-////                val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
-////
-////                val stepsForDate = stepsRepository.getStepsForDate(selectedDate, profileId).first()
-////                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt!!
-////
-////                if (totalAmountForDay > 500_000u) {
-////                    error = Res.string.steps_add_dialog_error_invalid_total_steps
-////                }
-////            }
-////            uiState.update { it.copy(stepsError = error) }
-//        }
     }
 }
