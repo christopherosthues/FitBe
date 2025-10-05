@@ -131,31 +131,29 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         return
     }
 
+    val timeZone = TimeZone.currentSystemDefault()
     for (i in 0 until 730) {
-//        val startPreviousDay = Random.nextBoolean()
-//        if (startPreviousDay) {
-//            val startingHour = Random.nextInt(21, 24)
-//            val startingMinute = Random.nextInt(0, 60)
-//            if (startingHour != 23 || startingMinute != 59) {
-//                val previousDay = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-//                    .date.minus(1, DateTimeUnit.DAY)
-//                val sleepingStartPreviousDay = previousDay.atTime(startingHour, startingMinute)
-//                    .toInstant(TimeZone.UTC)
-//                val sleepingEndPreviousDay = previousDay.atTime(23, 59, 59, 999)
-//                    .toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
-//
-//            }
-//        }
-//        val sleep = SleepEntity(
-//            start = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-//                .toInstant(TimeZone.UTC).minus(i.days),
-//            end = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-//                .toInstant(TimeZone.UTC).minus((i - 1).days),
-//            profileId = profile.id
-//        )
-//        sleepDao.upsertSleep(
-//            sleep
-//        )
+        val dateForLoop = Clock.System.now().toLocalDateTime(timeZone)
+            .date.minus(i, DateTimeUnit.DAY)
+
+        // Determine sleep start and end times for the current loop iteration
+        val sleepEndHour = Random.nextInt(5, 9) // Wake up between 5 AM and 8 AM
+        val sleepEndMinute = Random.nextInt(0, 60)
+        val sleepDurationHours = Random.nextInt(6, 10) // Sleep for 6 to 9 hours
+        val sleepDurationMinutes = Random.nextInt(0, 60)
+
+        val endInstant = dateForLoop.atTime(sleepEndHour, sleepEndMinute).toInstant(timeZone)
+        val startInstant = endInstant
+            .minus(sleepDurationHours.hours)
+            .minus(sleepDurationMinutes.minutes)
+
+        // Create and insert the sleep entity
+        val sleep = SleepEntity(
+            profileId = profile.id,
+            startDateTime = startInstant,
+            endDateTime = endInstant
+        )
+        sleepDao.upsertSleep(sleep)
 
         for (j in 1..Random.nextInt(1, 5)) {
             val beverage = BeverageEntity(
