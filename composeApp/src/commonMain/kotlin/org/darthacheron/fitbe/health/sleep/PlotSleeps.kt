@@ -44,7 +44,7 @@ import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.VerticalRotation
 import io.github.koalaplot.core.util.rotateVertically
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
-import io.github.koalaplot.core.xygraph.IntLinearAxisModel
+import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
@@ -65,7 +65,7 @@ fun PlotSleeps(
     sleeps: List<SleepOverview>,
     dateRange: DateRange,
     dates: List<LocalDate>,
-    maxSteps: UInt,
+    maxSleeps: UInt,
     thumbnail: Boolean = false,
     targetSleepDuration: UInt? = null,
 ) {
@@ -92,7 +92,7 @@ fun PlotSleeps(
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = IntLinearAxisModel(0..maxSteps.toInt()),
+            yAxisModel = DoubleLinearAxisModel(0.0..maxSleeps.toDouble()),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
@@ -147,7 +147,7 @@ fun PlotSleeps(
             if (dates.size > 1) {
                 AreaPlot(
                     data = sleeps.map { Point(it.date, it.totalMinutes) },
-                    areaBaseline = AreaBaseline.ConstantLine(0),
+                    areaBaseline = AreaBaseline.ConstantLine(0.0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
                     lineStyle = LineStyle(
                         brush = SolidColor(MaterialTheme.colorScheme.primary),
@@ -192,7 +192,7 @@ fun PlotSleeps(
 
             if (targetSleepDuration != null && targetSleepDuration > 0u) {
                 LinePlot(
-                    data = dates.map { Point(it, targetSleepDuration.toInt()) },
+                    data = dates.map { Point(it, targetSleepDuration.toDouble()) },
                     lineStyle = LineStyle(
                         brush = SolidColor(Color(0xFFED7D31)),
                         strokeWidth = 2.dp,
@@ -221,8 +221,8 @@ private fun monthResourceString(labelDate: LocalDate): StringResource {
     }
 }
 
-private fun toVerticalBarData(sleeps: List<SleepOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> {
+private fun toVerticalBarData(sleeps: List<SleepOverview>): List<VerticalBarPlotEntry<LocalDate, Double>> {
     return sleeps.map {
-        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.totalMinutes))
+        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0.0, it.totalMinutes))
     }
 }

@@ -15,8 +15,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.until
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -28,7 +33,12 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.map
+import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -113,7 +123,7 @@ class SleepOverviewViewModel(
         SleepOverviewUiState(
             isLoading = isLoading,
             sleeps = sleeps,
-            dates = sleeps.map { it.dateUtc },
+            dates = sleeps.map { it.date },
             error = SleepOverviewError(errorMessage)
         )
     }.stateIn(
@@ -124,17 +134,32 @@ class SleepOverviewViewModel(
 
     val maxSleeps: StateFlow<UInt> = uiState.map { it.sleeps }
         .map { sleeps ->
-            sleeps.maxOfOrNull { it.hours * 60u + it.minutes } ?: ProfileDefaults.SLEEP_DURATION
+            sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
         }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
     private fun mapDay(sleeps: List<Sleep>): List<SleepOverview> {
-        return sleeps
+        return aggregateDailySleeps(sleeps)
+    }
+
+    private fun aggregateDailySleeps(sleeps: List<Sleep>): List<SleepOverview> {
+        if (sleeps.isEmpty()) {
+            return emptyList()
+        }
+
+        return sleeps.groupBy { it.start.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+            .map { (date, group) ->
+                SleepOverview(
+                    date,
+                    group.sumOf { it.start.until(it.end, DateTimeUnit.MINUTE) }.toDouble()
+                )
+            }
     }
 
     private fun <K> aggregateSleepsByPeriod(
-        sleeps: List<Sleep>,
-        groupKeySelector: (Sleep) -> K,
-        representativeDateSelector: (List<Sleep>) -> LocalDate
+        sleeps: List<SleepOverview>,
+        groupKeySelector: (SleepOverview) -> K,
+        representativeDateSelector: (List<SleepOverview>) -> LocalDate,
+        daysInPeriodSelector: (List<SleepOverview>) -> Int
     ): List<SleepOverview> {
         if (sleeps.isEmpty()) return emptyList()
 
@@ -142,40 +167,59 @@ class SleepOverviewViewModel(
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
-                val groupSize = group.size
-                val avgSleepingMinutes = group.sumOf { it.hours.toInt() * 60 + it.minutes.toInt() } / groupSize
+                val sumSleeps = group.sumOf { it.totalMinutes }
+                val daysInPeriod = daysInPeriodSelector(group)
+                if (daysInPeriod == 0) return@mapNotNull null
 
-                Sleep(
-                    id = Uuid.random(),
-                    profileId = group.first().profileId,
-                    dateUtc = representativeDateSelector(group),
-                    hours = avgSleepingMinutes.toUInt() / 60u,
-                    minutes = avgSleepingMinutes.toUInt() % 60u
+                val avgSleepingMinutes = (sumSleeps / daysInPeriod).roundToDecimals(2)
+
+                SleepOverview(
+                    date = representativeDateSelector(group),
+                    totalMinutes = avgSleepingMinutes,
                 )
             }
     }
 
     private fun mapWeek(sleeps: List<Sleep>): List<SleepOverview> {
+        val dailySleeps = aggregateDailySleeps(sleeps)
         return aggregateSleepsByPeriod(
-            sleeps = sleeps,
-            groupKeySelector = { it.dateUtc.isoWeekAndYear() },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfIsoWeek() }
+            sleeps = dailySleeps,
+            groupKeySelector = { it.date.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().date.firstDayOfIsoWeek() },
+            daysInPeriodSelector = { _ -> 7 }
         )
     }
 
     private fun mapMonth(sleeps: List<Sleep>): List<SleepOverview> {
+        val dailySleeps = aggregateDailySleeps(sleeps)
         return aggregateSleepsByPeriod(
-            sleeps = sleeps,
-            groupKeySelector = { it.dateUtc.year to it.dateUtc.month },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfMonth() }
+            sleeps = dailySleeps,
+            groupKeySelector = { it.date.year to it.date.month },
+            representativeDateSelector = { group -> group.first().date.firstDayOfMonth() },
+            daysInPeriodSelector = { group ->
+                val localDate = group.first().date
+                val firstDay = localDate.firstDayOfMonth()
+                val nextMonth = if (firstDay.monthNumber == 12) {
+                    LocalDate(firstDay.year + 1, 1, 1)
+                } else {
+                    LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
+                }
+                firstDay.daysUntil(nextMonth)
+            }
         )
     }
 
     private fun mapYear(sleeps: List<Sleep>): List<SleepOverview> {
+        val dailySleeps = aggregateDailySleeps(sleeps)
         return aggregateSleepsByPeriod(
-            sleeps = sleeps,
-            groupKeySelector = { it.dateUtc.year },
-            representativeDateSelector = { group -> group.first().dateUtc.firstDayOfYear() }
+            sleeps = dailySleeps,
+            groupKeySelector = { it.date.year },
+            representativeDateSelector = { group -> group.first().date.firstDayOfYear() },
+            daysInPeriodSelector = { group ->
+                val year = group.first().date.year
+                val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+                if (isLeap) 366 else 365
+            }
         )
     }
 
