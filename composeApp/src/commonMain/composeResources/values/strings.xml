@@ -780,4 +780,6 @@
     <string name="sleep_add_dialog_duration">Duration</string>
     <string name="sleep_add_dialog_save">Save</string>
     <string name="sleep_add_dialog_cancel">Cancel</string>
+    <string name="sleep_add_dialog_error_start_time">The start time has to be before the end time.</string>
+    <string name="sleep_add_dialog_error_end_time">The end time has to be after the start time.</string>
 </resources>
