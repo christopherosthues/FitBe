@@ -63,7 +63,6 @@ class AddBeverageDialogViewModel(
     }
 
     fun onNameChange(name: String) {
-
         val error = if (name.isBlank()) {
             Res.string.beverages_add_dialog_error_name_empty
         } else {

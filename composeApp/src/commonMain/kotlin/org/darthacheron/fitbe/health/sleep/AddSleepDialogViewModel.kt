@@ -1,17 +1,28 @@
 package org.darthacheron.fitbe.health.sleep
 
+import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.sleep_add_dialog_error_end_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_error_start_time
+import fitbe.composeapp.generated.resources.sleep_add_dialog_error_time_interval
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
+import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.StringResource
+import kotlin.uuid.ExperimentalUuidApi
 
-class AddSleepDialogViewModel : AddDialogViewModel<AddSleepDialogUiState>() {
+class AddSleepDialogViewModel(
+    private val settingsRepository: SettingsRepository,
+    private val sleepRepository: SleepRepository,
+) : AddDialogViewModel<AddSleepDialogUiState>() {
     override val uiState = MutableStateFlow(AddSleepDialogUiState())
 
     override fun dismissDialog() {
@@ -38,14 +49,36 @@ class AddSleepDialogViewModel : AddDialogViewModel<AddSleepDialogUiState>() {
         validateDateTimes()
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     private fun validateDateTimes() {
-        var startTimeError: StringResource? = null
-        var endTimeError: StringResource? = null
-        if (uiState.value.startDateTime >= uiState.value.endDateTime) {
-            startTimeError =  Res.string.sleep_add_dialog_error_start_time
-            endTimeError = Res.string.sleep_add_dialog_error_end_time
+        viewModelScope.launch {
+            var startTimeError: StringResource? = null
+            var endTimeError: StringResource? = null
+
+            val startDateTime = uiState.value.startDateTime
+            val endDateTime = uiState.value.endDateTime
+
+            if (startDateTime >= endDateTime) {
+                startTimeError = Res.string.sleep_add_dialog_error_start_time
+                endTimeError = Res.string.sleep_add_dialog_error_end_time
+            } else {
+                val startInstant = startDateTime.toInstant(TimeZone.currentSystemDefault())
+                val endInstant = endDateTime.toInstant(TimeZone.currentSystemDefault())
+                val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
+
+                val potentialOverlaps = sleepRepository.getSleepsBetween(startInstant, endInstant, profileId).first()
+                val hasActualOverlap = potentialOverlaps.any { existingSleep ->
+                    // Check for actual time collision: (StartA < EndB) and (EndA > StartB)
+                    startInstant < existingSleep.end && endInstant > existingSleep.start
+                }
+
+                if (hasActualOverlap) {
+                    startTimeError = Res.string.sleep_add_dialog_error_time_interval
+                    endTimeError = Res.string.sleep_add_dialog_error_time_interval
+                }
+            }
+
+            uiState.update { it.copy(startDateTimeError = startTimeError, endDateTimeError = endTimeError) }
         }
-        // TODO: check if there is already a sleep on the selected date and time
-        uiState.update { it.copy(startDateTimeError = startTimeError, endDateTimeError = endTimeError) }
     }
 }

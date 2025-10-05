@@ -92,7 +92,13 @@ fun AddSleepDialog(
                                 )
                             }
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = uiState.startDateTimeError != null,
+                        supportingText = {
+                            uiState.startDateTimeError?.let {
+                                Text(text = stringResource(it))
+                            }
+                        }
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
@@ -127,7 +133,13 @@ fun AddSleepDialog(
                                 )
                             }
                         },
-                        modifier = Modifier.padding(top = 16.dp).weight(1f)
+                        modifier = Modifier.padding(top = 16.dp).weight(1f),
+                        isError = uiState.endDateTimeError != null,
+                        supportingText = {
+                            uiState.endDateTimeError?.let {
+                                Text(text = stringResource(it))
+                            }
+                        }
                     )
                     Spacer(Modifier.width(8.dp))
                     OutlinedTextField(
