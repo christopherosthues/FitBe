@@ -21,6 +21,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.days
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -213,7 +214,7 @@ class SleepRepositoryTest {
         // --- WHEN ---
         val queryStart = LocalDate(2025, 10, 15).atStartOfDayIn(germanTimeZone)
         val queryEnd =
-            LocalDate(2025, 10, 16).atStartOfDayIn(germanTimeZone) // Query ends at midnight
+            LocalDate(2025, 10, 15).atStartOfDayIn(germanTimeZone) // Query ends at midnight
 
         // --- THEN ---
         repository.getSleepsBetween(queryStart, queryEnd, testProfileId).test {
@@ -227,7 +228,7 @@ class SleepRepositoryTest {
             val firstPart = sleeps.first()
             assertEquals(sleepStart, firstPart.start)
             assertEquals(
-                queryEnd,
+                queryEnd.plus(1.days),
                 firstPart.end,
                 "First part should end at the end of the query range"
             )
@@ -247,7 +248,7 @@ class SleepRepositoryTest {
 
         // --- WHEN ---
         val queryStart = LocalDate(2025, 10, 25).atStartOfDayIn(germanTimeZone)
-        val queryEnd = LocalDate(2025, 10, 27).atStartOfDayIn(germanTimeZone)
+        val queryEnd = LocalDate(2025, 10, 26).atStartOfDayIn(germanTimeZone)
 
         repository.getSleepsBetween(queryStart, queryEnd, testProfileId).test {
             val sleeps = awaitItem()
@@ -259,9 +260,9 @@ class SleepRepositoryTest {
             assertEquals(midnight, sleeps[1].start)
             assertEquals(sleepEnd, sleeps[1].end)
 
-            // Check duration of the second part, which is on the DST day. Should be 8 hours.
+            // Check duration of the second part, which is on the DST day. Should be 9 hours.
             val durationOnDstDay = sleeps[1].end - sleeps[1].start
-            assertTrue(durationOnDstDay.inWholeHours in 7..8, "Duration should be ~8 hours")
+            assertTrue(durationOnDstDay.inWholeHours in 8..9, "Duration should be ~9 hours")
 
             cancelAndIgnoreRemainingEvents()
         }
