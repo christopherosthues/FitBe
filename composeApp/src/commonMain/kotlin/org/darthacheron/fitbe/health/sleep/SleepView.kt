@@ -9,11 +9,11 @@ fun SleepView(
     healthViewModel: HealthViewModel,
     addSleepDialogViewModel: AddSleepDialogViewModel,
     sleepOverviewViewModel: SleepOverviewViewModel,
-//    sleepDayViewModel: SleepDayViewModel
+    sleepDailyViewModel: SleepDailyViewModel
 ) {
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { SleepOverviewView(sleepOverviewViewModel, addSleepDialogViewModel) },
-        detailView = { },
+        detailView = { SleepDailyView(sleepDailyViewModel, addSleepDialogViewModel) },
     )
 }

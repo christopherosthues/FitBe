@@ -8,11 +8,12 @@ import org.darthacheron.fitbe.health.componenets.HealthViewModel
 fun StepsView(
     healthViewModel: HealthViewModel,
     addStepsDialogViewModel: AddStepsDialogViewModel,
-    stepsOverviewViewModel: StepsOverviewViewModel
+    stepsOverviewViewModel: StepsOverviewViewModel,
+    stepsDailyViewModel: StepsDailyViewModel,
 ) {
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { StepsOverviewView(stepsOverviewViewModel, addStepsDialogViewModel) },
-        detailView = { },
+        detailView = { StepsDailyView(stepsDailyViewModel, addStepsDialogViewModel) },
     )
 }

@@ -8,11 +8,12 @@ import org.darthacheron.fitbe.health.componenets.HealthViewModel
 fun BodyWeightView(
     healthViewModel: HealthViewModel,
     addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel,
-    bodyWeightOverviewViewModel: WeightOverviewViewModel
+    bodyWeightOverviewViewModel: WeightOverviewViewModel,
+    bodyWeightDailyViewModel: BodyWeightDailyViewModel,
 ) {
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { WeightOverviewView(bodyWeightOverviewViewModel, addBodyWeightDialogViewModel) },
-        detailView = { },
+        detailView = { BodyWeightDailyView(bodyWeightDailyViewModel, addBodyWeightDialogViewModel) },
     )
 }
