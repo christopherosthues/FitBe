@@ -149,14 +149,14 @@ fun BottomBarNavGraph(
             val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
             val overviewViewModel = koinViewModel<BeverageOverviewViewModel>()
-            val dailyViewModel = koinViewModel<BeverageDailyViewModel>()
-            BeverageView(viewModel, dialogViewModel, overviewViewModel, dailyViewModel)
+            val detailViewModel = koinViewModel<BeverageDailyViewModel>()
+            BeverageView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
         }
         composable<Screen.BodyWeights> {
             val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddBodyWeightDialogViewModel>()
             val overviewViewModel = koinViewModel<WeightOverviewViewModel>()
-            val dailyViewModel = koinViewModel<BodyWeightDailyViewModel>()
+            val detailViewModel = koinViewModel<BodyWeightDailyViewModel>()
             BodyWeightView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
         }
         composable<Screen.WorkoutsOverview> {
