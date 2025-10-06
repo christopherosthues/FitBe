@@ -30,7 +30,7 @@ class HealthOverviewViewModel(
         get() = Screen.Health
 
     fun navigateToBeverageOverview() {
-        navHostController.navigate(Screen.BeveragesOverview)
+        navHostController.navigate(Screen.Beverages)
     }
 
     fun navigateToSleepOverview() {

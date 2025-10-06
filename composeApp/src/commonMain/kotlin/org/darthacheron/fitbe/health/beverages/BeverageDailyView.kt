@@ -33,15 +33,15 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
-fun BeverageView(
-    beverageDayViewModel: BeverageDayViewModel,
+fun BeverageDailyView(
+    beverageDailyViewModel: BeverageDailyViewModel,
     addBeverageDialogViewModel: AddBeverageDialogViewModel
 ) {
     LaunchedEffect(Unit) {
-        beverageDayViewModel.updateTopBarConfig()
+        beverageDailyViewModel.updateTopBarConfig()
     }
-    val beverages by beverageDayViewModel.todayIntake.collectAsState(initial = listOf())
-    val todayProgress by beverageDayViewModel.todayProgress.collectAsState()
+    val beverages by beverageDailyViewModel.todayIntake.collectAsState(initial = listOf())
+    val todayProgress by beverageDailyViewModel.todayProgress.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -91,7 +91,7 @@ fun BeverageView(
         AddBeverageDialog(
             viewModel = addBeverageDialogViewModel,
             onSave = { amount, name, unit, date ->
-                beverageDayViewModel.addBeverage(amount, name, unit, date)
+                beverageDailyViewModel.addBeverage(amount, name, unit, date)
                 showDialog = false
             },
             onDismiss = { showDialog = false }

@@ -22,18 +22,18 @@ import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentViewModel
 import org.darthacheron.fitbe.health.HealthOverviewView
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
-import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
-import org.darthacheron.fitbe.health.beverages.BeverageDayViewModel
+import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
+import org.darthacheron.fitbe.health.componenets.HealthViewModel
 import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
-import org.darthacheron.fitbe.health.sleep.SleepOverviewView
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
+import org.darthacheron.fitbe.health.sleep.SleepView
 import org.darthacheron.fitbe.health.steps.AddStepsDialogViewModel
-import org.darthacheron.fitbe.health.steps.StepsOverviewView
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
+import org.darthacheron.fitbe.health.steps.StepsView
 import org.darthacheron.fitbe.health.weight.AddBodyWeightDialogViewModel
-import org.darthacheron.fitbe.health.weight.WeightOverviewView
+import org.darthacheron.fitbe.health.weight.BodyWeightView
 import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.HomeViewModel
@@ -129,29 +129,29 @@ fun BottomBarNavGraph(
             TrainingEquipmentDetailView(id, viewModel)
         }
         composable<Screen.Sleeps> {
-            val viewModel = koinViewModel<SleepOverviewViewModel>()
+            val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddSleepDialogViewModel>()
-            SleepOverviewView(viewModel, dialogViewModel)
+            val overviewViewModel = koinViewModel<SleepOverviewViewModel>()
+            SleepView(viewModel, dialogViewModel, overviewViewModel)
         }
         composable<Screen.Steps> {
-            val viewModel = koinViewModel<StepsOverviewViewModel>()
+            val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddStepsDialogViewModel>()
-            StepsOverviewView(viewModel, dialogViewModel)
-        }
-        composable<Screen.BeveragesOverview> {
-            val viewModel = koinViewModel<BeverageOverviewViewModel>()
-            val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
-            BeverageOverviewView(viewModel, dialogViewModel)
+            val overviewViewModel = koinViewModel<StepsOverviewViewModel>()
+            StepsView(viewModel, dialogViewModel, overviewViewModel)
         }
         composable<Screen.Beverages> {
-            val viewModel = koinViewModel<BeverageDayViewModel>()
+            val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
-            BeverageView(viewModel, dialogViewModel)
+            val overviewViewModel = koinViewModel<BeverageOverviewViewModel>()
+            val dailyViewModel = koinViewModel<BeverageDailyViewModel>()
+            BeverageView(viewModel, dialogViewModel, overviewViewModel, dailyViewModel)
         }
         composable<Screen.BodyWeights> {
-            val viewModel = koinViewModel<WeightOverviewViewModel>()
+            val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddBodyWeightDialogViewModel>()
-            WeightOverviewView(viewModel, dialogViewModel)
+            val overviewViewModel = koinViewModel<WeightOverviewViewModel>()
+            BodyWeightView(viewModel, dialogViewModel, overviewViewModel)
         }
         composable<Screen.WorkoutsOverview> {
             val viewModel = koinViewModel<WorkoutTemplatesOverviewViewModel>(

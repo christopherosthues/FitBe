@@ -90,23 +90,6 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                 )
             }
 
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.TopEnd)) {
-                val viewStates = ViewState.entries.toTypedArray()
-                viewStates.forEachIndexed { index, viewState ->
-                    val isSelected = uiState.viewState == viewState
-                    SegmentedButton(
-                        onClick = { overviewViewModel.setViewState(viewState) },
-                        selected = isSelected,
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = viewStates.size
-                        ),
-                    ) {
-                        Icon(painter = painterResource(viewState.drawableResource()), contentDescription = null)
-                    }
-                }
-            }
-
             Row(
                 modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

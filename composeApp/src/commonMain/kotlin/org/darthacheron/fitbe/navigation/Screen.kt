@@ -44,9 +44,6 @@ sealed class Screen {
     data object Beverages : Screen()
 
     @Serializable
-    data object BeveragesOverview : Screen()
-
-    @Serializable
     data object BodyWeights : Screen()
 
     @Serializable
