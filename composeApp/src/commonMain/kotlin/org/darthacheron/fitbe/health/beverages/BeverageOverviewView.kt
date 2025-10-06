@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -44,7 +45,7 @@ fun BeverageOverviewView(
             val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
             val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
             PlotBeverages(
-                Modifier.padding(bottom = 64.dp),
+                Modifier.padding(top = 8.dp, bottom = 64.dp),
                 state.beverages,
                 dateRange,
                 state.dates,

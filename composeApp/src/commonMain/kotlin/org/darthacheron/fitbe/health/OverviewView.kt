@@ -11,6 +11,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,6 +88,23 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                     painter = painterResource(Res.drawable.ic_arrow_forward),
                     contentDescription = null
                 )
+            }
+
+            SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.TopEnd)) {
+                val viewStates = ViewState.entries.toTypedArray()
+                viewStates.forEachIndexed { index, viewState ->
+                    val isSelected = uiState.viewState == viewState
+                    SegmentedButton(
+                        onClick = { overviewViewModel.setViewState(viewState) },
+                        selected = isSelected,
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = viewStates.size
+                        ),
+                    ) {
+                        Icon(painter = painterResource(viewState.drawableResource()), contentDescription = null)
+                    }
+                }
             }
 
             Row(

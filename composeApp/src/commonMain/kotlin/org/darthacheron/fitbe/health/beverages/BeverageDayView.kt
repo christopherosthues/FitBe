@@ -3,23 +3,16 @@ package org.darthacheron.fitbe.health.beverages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,13 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_beverage
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
-import org.darthacheron.fitbe.components.DropdownSelection
-import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -44,14 +34,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 @Composable
 fun BeverageView(
-    beverageViewModel: BeverageViewModel,
+    beverageDayViewModel: BeverageDayViewModel,
     addBeverageDialogViewModel: AddBeverageDialogViewModel
 ) {
     LaunchedEffect(Unit) {
-        beverageViewModel.updateTopBarConfig()
+        beverageDayViewModel.updateTopBarConfig()
     }
-    val beverages by beverageViewModel.todayIntake.collectAsState(initial = listOf())
-    val todayProgress by beverageViewModel.todayProgress.collectAsState()
+    val beverages by beverageDayViewModel.todayIntake.collectAsState(initial = listOf())
+    val todayProgress by beverageDayViewModel.todayProgress.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
 
@@ -101,7 +91,7 @@ fun BeverageView(
         AddBeverageDialog(
             viewModel = addBeverageDialogViewModel,
             onSave = { amount, name, unit, date ->
-                beverageViewModel.addBeverage(amount, name, unit, date)
+                beverageDayViewModel.addBeverage(amount, name, unit, date)
                 showDialog = false
             },
             onDismiss = { showDialog = false }

@@ -25,7 +25,7 @@ import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewView
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
-import org.darthacheron.fitbe.health.beverages.BeverageViewModel
+import org.darthacheron.fitbe.health.beverages.BeverageDayViewModel
 import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewView
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
@@ -144,7 +144,7 @@ fun BottomBarNavGraph(
             BeverageOverviewView(viewModel, dialogViewModel)
         }
         composable<Screen.Beverages> {
-            val viewModel = koinViewModel<BeverageViewModel>()
+            val viewModel = koinViewModel<BeverageDayViewModel>()
             val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
             BeverageView(viewModel, dialogViewModel)
         }

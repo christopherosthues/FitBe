@@ -22,7 +22,7 @@ fun SleepOverviewView(
             val targetSleeps by viewModel.targetSleeps.collectAsState()
             val maxSleeps by viewModel.maxSleeps.collectAsState()
             PlotSleeps(
-                Modifier.padding(bottom = 64.dp),
+                Modifier.padding(top = 8.dp, bottom = 64.dp),
                 state.sleeps,
                 dateRange,
                 state.dates,

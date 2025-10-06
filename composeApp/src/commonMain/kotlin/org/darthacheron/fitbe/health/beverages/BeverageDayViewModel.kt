@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-class BeverageViewModel(
+class BeverageDayViewModel(
     private val repository: BeverageRepository,
     private val settingsRepository: SettingsRepository,
     private val profileRepository: ProfileRepository,

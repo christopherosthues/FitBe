@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -78,85 +79,87 @@ fun AddSleepDialog(
         text = {
             Column {
                 // Start Date & Time
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        value = uiState.startDateTime.date.toString(),
-                        onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_date)) },
-                        readOnly = true,
-                        trailingIcon = {
-                            IconButton(onClick = { showStartDatePicker = true }) {
-                                Icon(
-                                    painterResource(Res.drawable.ic_date_range),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        isError = uiState.startDateTimeError != null,
-                        supportingText = {
-                            uiState.startDateTimeError?.let {
-                                Text(text = stringResource(it))
-                            }
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        OutlinedTextField(
+                            value = uiState.startDateTime.date.toString(),
+                            onValueChange = {},
+                            label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_date)) },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(onClick = { showStartDatePicker = true }) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_date_range),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        OutlinedTextField(
+                            value = formatTime(uiState.startDateTime.time),
+                            onValueChange = {},
+                            label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_time)) },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(onClick = { showStartTimePicker = true }) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_access_time),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier.weight(0.75f)
+                        )
+                    }
+                    if (uiState.startDateTimeError != null) {
+                        uiState.startDateTimeError?.let {
+                            Text(text = stringResource(it), color = MaterialTheme.colorScheme.error)
                         }
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    OutlinedTextField(
-                        value = formatTime(uiState.startDateTime.time),
-                        onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_time)) },
-                        readOnly = true,
-                        trailingIcon = {
-                            IconButton(onClick = { showStartTimePicker = true }) {
-                                Icon(
-                                    painterResource(Res.drawable.ic_access_time),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier.weight(0.75f)
-                    )
+                    }
                 }
 
                 // End Date & Time
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedTextField(
-                        value = uiState.endDateTime.date.toString(),
-                        onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_date)) },
-                        readOnly = true,
-                        trailingIcon = {
-                            IconButton(onClick = { showEndDatePicker = true }) {
-                                Icon(
-                                    painterResource(Res.drawable.ic_date_range),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier.padding(top = 16.dp).weight(1f),
-                        isError = uiState.endDateTimeError != null,
-                        supportingText = {
-                            uiState.endDateTimeError?.let {
-                                Text(text = stringResource(it))
-                            }
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        OutlinedTextField(
+                            value = uiState.endDateTime.date.toString(),
+                            onValueChange = {},
+                            label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_date)) },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(onClick = { showEndDatePicker = true }) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_date_range),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier.padding(top = 16.dp).weight(1f),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        OutlinedTextField(
+                            value = formatTime(uiState.endDateTime.time),
+                            onValueChange = {},
+                            label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_time)) },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(onClick = { showEndTimePicker = true }) {
+                                    Icon(
+                                        painterResource(Res.drawable.ic_access_time),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier.padding(top = 16.dp).weight(0.75f)
+                        )
+                    }
+                    if (uiState.endDateTimeError != null) {
+                        uiState.endDateTimeError?.let {
+                            Text(text = stringResource(it), color = MaterialTheme.colorScheme.error)
                         }
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    OutlinedTextField(
-                        value = formatTime(uiState.endDateTime.time),
-                        onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_time)) },
-                        readOnly = true,
-                        trailingIcon = {
-                            IconButton(onClick = { showEndTimePicker = true }) {
-                                Icon(
-                                    painterResource(Res.drawable.ic_access_time),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier.padding(top = 16.dp).weight(0.75f)
-                    )
+                    }
                 }
 
                 // Duration
@@ -243,7 +246,6 @@ private fun formatTime(time: LocalTime): String {
     return "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
 }
 
-// Helper to format duration as "Xh Ym"
 fun formatDuration(duration: Duration): String {
     val hours = duration.toLong(DurationUnit.HOURS)
     val minutes = (duration.inWholeMinutes % 60)

@@ -19,7 +19,7 @@ fun StepsOverviewView(
             val targetSteps by stepsOverviewViewModel.targetSteps.collectAsState()
             val maxSteps by stepsOverviewViewModel.maxSteps.collectAsState()
             PlotSteps(
-                Modifier.padding(bottom = 64.dp),
+                Modifier.padding(top = 8.dp, bottom = 64.dp),
                 state.steps,
                 dateRange,
                 state.dates,

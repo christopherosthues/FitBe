@@ -22,7 +22,7 @@ fun WeightOverviewView(
             val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
             val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
             PlotBodyWeights(
-                Modifier.padding(bottom = 64.dp),
+                Modifier.padding(top = 8.dp, bottom = 64.dp),
                 state.bodyWeights,
                 dateRange,
                 state.dates,

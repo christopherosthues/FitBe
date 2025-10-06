@@ -31,6 +31,8 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
 
     val dateRangeFlow: StateFlow<DateRange> = dateRange
 
+    protected val viewStateFlow = MutableStateFlow(ViewState.Overview)
+
     protected val isLoading = MutableStateFlow(true)
     protected val errorMessage = MutableStateFlow<StringResource?>(null)
 
@@ -52,6 +54,10 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
 
     fun setRange(range: DateRange) {
         dateRange.value = range
+    }
+
+    fun setViewState(viewState: ViewState) {
+        viewStateFlow.value = viewState
     }
 
     fun clearErrorMessage() {
