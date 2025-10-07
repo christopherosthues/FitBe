@@ -40,10 +40,10 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
         Row {
             Column {
                 Text(
-                    text = dateRange.startDate.toLocalDateTime(TimeZone.UTC).date.toString()
+                    text = dateRange.startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                 )
                 Text(
-                    text = dateRange.endDate.toLocalDateTime(TimeZone.UTC).date.toString()
+                    text = dateRange.endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
                 )
             }
             Icon(

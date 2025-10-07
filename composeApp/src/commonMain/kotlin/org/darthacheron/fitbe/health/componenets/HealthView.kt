@@ -3,6 +3,8 @@ package org.darthacheron.fitbe.health.componenets
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -12,8 +14,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.ViewState
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HealthView(
@@ -30,20 +35,20 @@ fun HealthView(
             detailView()
         }
 
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.align(Alignment.TopEnd)) {
-            val viewStates = ViewState.entries.toTypedArray()
-            viewStates.forEachIndexed { index, viewState ->
-                val isSelected = uiState == viewState
-                SegmentedButton(
-                    onClick = { healthViewModel.setViewState(viewState) },
-                    selected = isSelected,
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = viewStates.size
-                    ),
-                ) {
-                    Icon(painter = painterResource(viewState.drawableResource()), contentDescription = null)
-                }
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+        ) {
+            SegmentedButton(
+                onClick = { healthViewModel.toggleViewState() },
+                selected = true,
+                shape = RectangleShape,
+                icon = { }
+            ) {
+                Icon(
+                    modifier = Modifier.size(20.dp),
+                    painter = painterResource(uiState.drawableResource()),
+                    contentDescription = stringResource(uiState.contentDescriptionStringResource())
+                )
             }
         }
     }

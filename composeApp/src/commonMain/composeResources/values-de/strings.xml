@@ -791,4 +791,8 @@
     <string name="sleep_add_dialog_error_start_time">Die Startzeit muss vor der Endzeit liegen.</string>
     <string name="sleep_add_dialog_error_end_time">Die Endzeit muss nach der Startzeit liegen.</string>
     <string name="sleep_add_dialog_error_time_interval">Das angegebene Zeitintervall überschneidet sich mit einem bereits eingetragenem Schlafintervall.</string>
+
+    <!-- Health view -->
+    <string name="health_view_content_description_overview">Übersichtsanzeige der Gesundheitsdaten</string>
+    <string name="health_view_content_description_detail">Tagesansicht der Gesundheitsdaten</string>
 </resources>

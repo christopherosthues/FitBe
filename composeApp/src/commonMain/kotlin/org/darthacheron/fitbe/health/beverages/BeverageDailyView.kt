@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,7 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.add_beverage
+import fitbe.composeapp.generated.resources.ic_add
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
+import org.darthacheron.fitbe.health.componenets.DateRangeControl
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -45,44 +49,62 @@ fun BeverageDailyView(
 
     var showDialog by remember { mutableStateOf(false) }
 
-    LazyColumn(
+    Box(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        contentAlignment = Alignment.Center
     ) {
-        stickyHeader {
-            Column(
-                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp).fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularWaveAnimationProgressIndicator(progress = { todayProgress.toFloat() })
-
-                TextButton(
-                    onClick = { showDialog = true },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = Color.White,
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.padding(top = 16.dp)
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
+            stickyHeader {
+                Column(
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 16.dp
+                    ).fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = stringResource(Res.string.add_beverage))
+                    CircularWaveAnimationProgressIndicator(progress = { todayProgress.toFloat() })
+                }
+            }
+            beverages.forEach {
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    ) {
+                        Icon(
+                            painterResource(it.unit.iconResource()),
+                            contentDescription = null,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Text(text = it.localizedString())
+                    }
                 }
             }
         }
-        beverages.forEach {
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                    Icon(
-                        painterResource(it.unit.iconResource()),
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                        Text(text = it.localizedString())
-                }
+
+        Row(
+            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            DateRangeControl(
+                dateRange,
+                overviewViewModel
+            )
+
+            FloatingActionButton(
+                onClick = { showDialog = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(16.dp),
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }
         }
     }
