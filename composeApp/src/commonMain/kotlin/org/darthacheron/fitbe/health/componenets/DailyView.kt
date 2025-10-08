@@ -1,8 +1,10 @@
 package org.darthacheron.fitbe.health.componenets
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,45 +67,52 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
         if (uiState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            detailView(uiState, date)
-
-            IconButton(
-                onClick = { dailyViewModel.movePast() },
-                modifier = Modifier.align(Alignment.CenterStart)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_back),
-                    contentDescription = null
-                )
-            }
-
-            IconButton(
-                onClick = { dailyViewModel.moveFuture() },
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_forward),
-                    contentDescription = null
-                )
-            }
-
-            Row(
-                modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                DateControl(
-                    date,
-                    dailyViewModel
-                )
-
-                FloatingActionButton(
-                    onClick = { showAddDialog = true },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(16.dp),
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                    IconButton(
+                        onClick = { dailyViewModel.movePast() },
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_arrow_back),
+                            contentDescription = null
+                        )
+                    }
+
+                    DateControl(
+                        date,
+                        dailyViewModel
+                    )
+
+                    IconButton(
+                        onClick = { dailyViewModel.moveFuture() },
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_arrow_forward),
+                            contentDescription = null
+                        )
+                    }
+
                 }
+
+                detailView(uiState, date)
+            }
+
+            FloatingActionButton(
+                onClick = { showAddDialog = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }
         }
     }

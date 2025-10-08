@@ -50,6 +50,7 @@ fun CircularWaveAnimationProgressIndicator(
         modifier = modifier.size(size),
         contentAlignment = Alignment.Center
     ) {
+        val color = MaterialTheme.colorScheme.tertiary
         Canvas(modifier = Modifier.matchParentSize()) {
             val totalSize = size.toPx()
             val stroke = strokeWidth.toPx()
@@ -85,7 +86,7 @@ fun CircularWaveAnimationProgressIndicator(
 
                 drawPath(
                     path = wavePath,
-                    color = Color.Cyan
+                    color = color,
                 )
             }
         }
@@ -93,7 +94,7 @@ fun CircularWaveAnimationProgressIndicator(
         CircularProgressIndicator(
             progress = progress,
             modifier = Modifier.matchParentSize(),
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             strokeWidth = strokeWidth,
             trackColor = ProgressIndicatorDefaults.circularIndeterminateTrackColor,
             strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap,
@@ -102,7 +103,7 @@ fun CircularWaveAnimationProgressIndicator(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.surfaceTint,
             fontWeight = FontWeight.Bold
         )
     }

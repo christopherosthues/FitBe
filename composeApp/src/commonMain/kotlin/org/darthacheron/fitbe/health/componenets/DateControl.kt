@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.health.componenets
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -31,10 +32,10 @@ fun <Error : UiStateError, State : UiState<Error>> DateControl(
     var showDateRangeDialog by remember { mutableStateOf(false) }
 
     TextButton(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(horizontal = 8.dp),
         onClick = { showDateRangeDialog = true },
     ) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = date.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
             )
