@@ -101,7 +101,6 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                             contentDescription = null
                         )
                     }
-
                 }
 
                 plot(uiState, dateRange)

@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
-import fitbe.composeapp.generated.resources.beverages_overview_error_loading
-import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
