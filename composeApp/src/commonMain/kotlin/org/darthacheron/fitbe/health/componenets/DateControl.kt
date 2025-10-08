@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.componenets
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -19,16 +18,15 @@ import fitbe.composeapp.generated.resources.ic_date_range
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.components.date.DateRangePickerModal
+import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
-    dateRange: DateRange,
-    overviewViewModel: OverviewViewModel<Error, State>,
+fun <Error : UiStateError, State : UiState<Error>> DateControl(
+    date: Instant,
+    dailyViewModel: DailyViewModel<Error, State>
 ) {
     var showDateRangeDialog by remember { mutableStateOf(false) }
 
@@ -37,14 +35,9 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
         onClick = { showDateRangeDialog = true },
     ) {
         Row {
-            Column {
-                Text(
-                    text = dateRange.startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                )
-                Text(
-                    text = dateRange.endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
-                )
-            }
+            Text(
+                text = date.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+            )
             Icon(
                 painterResource(Res.drawable.ic_date_range),
                 contentDescription = null,
@@ -54,13 +47,11 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
     }
 
     if (showDateRangeDialog) {
-        DateRangePickerModal(
-            onDateRangeSelected = { newDateRange, selectedDateUnit ->
-                if (newDateRange.first != null && newDateRange.second != null) {
-                    overviewViewModel.setRange(
-                        Instant.fromEpochMilliseconds(newDateRange.first!!),
-                        Instant.fromEpochMilliseconds(newDateRange.second!!),
-                        selectedDateUnit
+        DatePickerModal(
+            onDateSelected = { newDate ->
+                if (newDate != null) {
+                    dailyViewModel.setDate(
+                        Instant.fromEpochMilliseconds(newDate),
                     )
                 }
                 showDateRangeDialog = false

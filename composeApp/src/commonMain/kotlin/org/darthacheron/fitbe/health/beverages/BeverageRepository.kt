@@ -2,12 +2,10 @@ package org.darthacheron.fitbe.health.beverages
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -30,19 +28,6 @@ class BeverageRepository(private val beverageDao: BeverageDao) {
         ).map { list ->
             list.map { it.toBeverage() }
         }
-    }
-
-    fun getTodayBeverages(profileId: Uuid): Flow<List<Beverage>> {
-        val today: Instant = Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date.atStartOfDayIn(TimeZone.currentSystemDefault())
-        val dateSpan = toDateSpan(today, today)
-
-        return beverageDao.getBeverages(
-            start = dateSpan.first,
-            end = dateSpan.second,
-            profileId = profileId
-        ).map { entities -> entities.map { it.toBeverage() } }
     }
 
     fun getBeveragesForDate(date: LocalDate, profileId: Uuid): Flow<List<Beverage>> {

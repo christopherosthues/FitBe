@@ -2,34 +2,38 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.health.componenets.DailyViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 class BeverageDailyViewModel(
     private val repository: BeverageRepository,
-    private val settingsRepository: SettingsRepository,
-    private val profileRepository: ProfileRepository,
+    settingsRepository: SettingsRepository,
+    profileRepository: ProfileRepository,
     topBarManager: TopBarManager
-) : FitBeViewModel(topBarManager) {
+) : DailyViewModel<BeverageDailyError, BeverageDailyUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
         get() = Res.string.top_bar_title_beverages
 
@@ -39,7 +43,7 @@ class BeverageDailyViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    val targetBeverage: StateFlow<UInt> = settingsRepository.getSettingsFlow()
+    private val targetBeverage: StateFlow<UInt> = settingsRepository.getSettingsFlow()
         .flatMapLatest { settings ->
             val profileId = settings.selectedProfileId
             if (profileId != null) {
@@ -51,15 +55,44 @@ class BeverageDailyViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
-    val todayIntake: Flow<List<Beverage>> = settingsRepository.getSettingsFlow().flatMapLatest {
-        repository.getTodayBeverages(it.selectedProfileId!!)
+    private val beveragesFlow = date.flatMapLatest { date ->
+        settingsRepository.getSettingsFlow().flatMapLatest { settings ->
+            settings.selectedProfileId?.let {
+                repository.getBeveragesForDate(
+                    date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it
+                )
+            } ?: flowOf(emptyList())
+        }
+    }.onStart {
+        isLoading.value = true
+        errorMessage.value = null
+    }.catch {
+        isLoading.value = false
+        errorMessage.value = Res.string.beverages_overview_error_loading
+        emit(emptyList())
+    }.map { beverages ->
+        isLoading.value = false
+        beverages
     }
 
-    val todayProgress: StateFlow<Double> = combine(todayIntake, targetBeverage) {
-        todayIntake, targetBeverage ->
-        todayIntake.sumOf { it.unit.toMilliliter(it.amount) }.toDouble() / targetBeverage.toDouble()
-    }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
+    // TODO: translations
+
+    override val uiState: StateFlow<BeverageDailyUiState> = combine(
+        beveragesFlow, targetBeverage, isLoading, errorMessage
+    ) { beverages, target, isLoading, error ->
+        val progress = if (target > 0u) {
+            beverages.sumOf { it.unit.toMilliliter(it.amount) } / target.toDouble()
+        } else {
+            0.0
+        }
+        BeverageDailyUiState(
+            isLoading = isLoading,
+            beverages = beverages,
+            progress = progress,
+            error = BeverageDailyError(error)
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())
+
 
     @OptIn(ExperimentalUuidApi::class)
     fun addBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {

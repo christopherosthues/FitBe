@@ -1,35 +1,29 @@
-package org.darthacheron.fitbe.health
-
+package org.darthacheron.fitbe.health.componenets
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.components.date.DateUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
-import org.darthacheron.fitbe.utils.minusOne
-import org.darthacheron.fitbe.utils.plusOne
 import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Duration.Companion.days
 
-abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
+abstract class DailyViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
-    protected val dateRange = MutableStateFlow(
-        DateRange(
-            Clock.System.now().minus(6.days),
-            Clock.System.now(),
-            DateUnit.DAY
-        )
+    protected val date = MutableStateFlow(
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
     )
 
-    val dateRangeFlow: StateFlow<DateRange> = dateRange
+    val dateFlow: StateFlow<Instant> = date
 
     protected val isLoading = MutableStateFlow(true)
     protected val errorMessage = MutableStateFlow<StringResource?>(null)
@@ -37,21 +31,17 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
     abstract val uiState: StateFlow<State>
 
     fun movePast() {
-        val range = dateRangeFlow.value.minusOne()
-        setRange(range)
+        val range = dateFlow.value.minus(1.days)
+        setDate(range)
     }
 
     fun moveFuture() {
-        val range = dateRangeFlow.value.plusOne()
-        setRange(range)
+        val range = dateFlow.value.plus(1.days)
+        setDate(range)
     }
 
-    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
-        dateRange.value = DateRange(startDate, endDate, dateUnit)
-    }
-
-    fun setRange(range: DateRange) {
-        dateRange.value = range
+    fun setDate(dateInstant: Instant) {
+        date.value = dateInstant
     }
 
     fun clearErrorMessage() {

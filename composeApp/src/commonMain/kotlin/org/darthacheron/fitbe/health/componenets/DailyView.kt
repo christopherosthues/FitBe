@@ -1,4 +1,5 @@
-package org.darthacheron.fitbe.health
+package org.darthacheron.fitbe.health.componenets
+
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +12,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,24 +29,23 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import kotlinx.coroutines.launch
-import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.health.componenets.DateRangeControl
+import kotlinx.datetime.Instant
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun <Error : UiStateError, State : UiState<Error>> OverviewView(
-    overviewViewModel: OverviewViewModel<Error, State>,
-    plot: @Composable (state: State, dateRange: DateRange) -> Unit,
+fun <Error : UiStateError, State : UiState<Error>> DailyView(
+    dailyViewModel: DailyViewModel<Error, State>,
+    detailView: @Composable (state: State, date: Instant) -> Unit,
     addDialog: @Composable (() -> Unit) -> Unit
 ) {
     LaunchedEffect(Unit) {
-        overviewViewModel.updateTopBarConfig()
+        dailyViewModel.updateTopBarConfig()
     }
-    val uiState by overviewViewModel.uiState.collectAsState()
-    val dateRange by overviewViewModel.dateRangeFlow.collectAsState()
+    val uiState by dailyViewModel.uiState.collectAsState()
+    val date by dailyViewModel.dateFlow.collectAsState()
 
     var showAddDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -59,7 +56,7 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
         LaunchedEffect(it, message) {
             scope.launch {
                 snackbarHostState.showSnackbar(message)
-                overviewViewModel.clearErrorMessage()
+                dailyViewModel.clearErrorMessage()
             }
         }
     }
@@ -68,10 +65,10 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
         if (uiState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            plot(uiState, dateRange)
+            detailView(uiState, date)
 
             IconButton(
-                onClick = { overviewViewModel.movePast() },
+                onClick = { dailyViewModel.movePast() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Icon(
@@ -81,7 +78,7 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
             }
 
             IconButton(
-                onClick = { overviewViewModel.moveFuture() },
+                onClick = { dailyViewModel.moveFuture() },
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 Icon(
@@ -95,9 +92,9 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                DateRangeControl(
-                    dateRange,
-                    overviewViewModel
+                DateControl(
+                    date,
+                    dailyViewModel
                 )
 
                 FloatingActionButton(
@@ -115,3 +112,4 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
         addDialog { showAddDialog = false }
     }
 }
+
