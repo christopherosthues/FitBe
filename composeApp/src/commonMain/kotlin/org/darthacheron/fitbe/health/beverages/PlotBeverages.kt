@@ -53,6 +53,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.componenets.monthResourceString
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -104,7 +105,7 @@ fun PlotBeverages(
                             DateUnit.DAY -> labelDate.toString()
                             DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
                             DateUnit.MONTH -> {
-                                val monthResource = monthResourceString(labelDate)
+                                val monthResource = labelDate.monthResourceString()
                                 "${stringResource(monthResource)}/${labelDate.year}"
                             }
                             DateUnit.YEAR -> labelDate.year.toString()
@@ -200,24 +201,6 @@ fun PlotBeverages(
                 )
             }
         }
-    }
-}
-
-private fun monthResourceString(labelDate: LocalDate): StringResource {
-    return when (labelDate.month) {
-        Month.JANUARY -> Res.string.month_january
-        Month.FEBRUARY -> Res.string.month_february
-        Month.MARCH -> Res.string.month_march
-        Month.APRIL -> Res.string.month_april
-        Month.MAY -> Res.string.month_may
-        Month.JUNE -> Res.string.month_june
-        Month.JULY -> Res.string.month_july
-        Month.AUGUST -> Res.string.month_august
-        Month.SEPTEMBER -> Res.string.month_september
-        Month.OCTOBER -> Res.string.month_october
-        Month.NOVEMBER -> Res.string.month_november
-        Month.DECEMBER -> Res.string.month_december
-        else -> Res.string.month_january
     }
 }
 

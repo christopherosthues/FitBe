@@ -69,6 +69,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.componenets.monthResourceString
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.isoWeekAndYear
@@ -140,7 +141,7 @@ fun PlotBodyWeights(
                             DateUnit.DAY -> labelDate.toString()
                             DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
                             DateUnit.MONTH -> {
-                                val monthResource = monthResourceString(labelDate)
+                                val monthResource = labelDate.monthResourceString()
                                 "${stringResource(monthResource)}/${labelDate.year}"
                             }
                             DateUnit.YEAR -> labelDate.year.toString()
@@ -218,24 +219,24 @@ fun PlotBodyWeights(
                                             when (barIndex) {
                                                 0 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_bone_mass_value,
-                                                    bodyWeight.boneMass!!,
+                                                    bodyWeight.boneMass,
                                                     stringResource(settings.weightUnit.toStringResource())
                                                 )
 
                                                 1 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_muscle_mass_value,
-                                                    bodyWeight.muscleMass!!,
+                                                    bodyWeight.muscleMass,
                                                     stringResource(settings.weightUnit.toStringResource())
                                                 )
 
                                                 2 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_body_fat_value,
-                                                    bodyWeight.bodyFatPercentage!!
+                                                    bodyWeight.bodyFatPercentage
                                                 )
 
                                                 3 -> stringResource(
                                                     Res.string.body_weight_chart_annotation_body_water_value,
-                                                    bodyWeight.bodyWaterPercentage!!
+                                                    bodyWeight.bodyWaterPercentage
                                                 )
 
                                                 else -> stringResource(
@@ -264,25 +265,6 @@ fun PlotBodyWeights(
             }
         }
     }
-}
-
-private fun monthResourceString(labelDate: LocalDate): StringResource {
-    val monthResource = when (labelDate.month) {
-        Month.JANUARY -> Res.string.month_january
-        Month.FEBRUARY -> Res.string.month_february
-        Month.MARCH -> Res.string.month_march
-        Month.APRIL -> Res.string.month_april
-        Month.MAY -> Res.string.month_may
-        Month.JUNE -> Res.string.month_june
-        Month.JULY -> Res.string.month_july
-        Month.AUGUST -> Res.string.month_august
-        Month.SEPTEMBER -> Res.string.month_september
-        Month.OCTOBER -> Res.string.month_october
-        Month.NOVEMBER -> Res.string.month_november
-        Month.DECEMBER -> Res.string.month_december
-        else -> Res.string.month_january
-    }
-    return monthResource
 }
 
 @Suppress("MagicNumber")
