@@ -69,7 +69,7 @@ fun PlotSleeps(
     thumbnail: Boolean = false,
     targetSleepDuration: UInt? = null,
 ) {
-    ChartLayout(modifier = modifier.padding(horizontal = 16.dp),
+    ChartLayout(modifier = modifier.padding(horizontal = 8.dp),
         title = {
             if (thumbnail) {
                 Text(text = stringResource(Res.string.sleeps_chart_thumbnail_title))

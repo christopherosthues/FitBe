@@ -1,7 +1,9 @@
 package org.darthacheron.fitbe.health.componenets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,45 +66,53 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
         if (uiState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
-            plot(uiState, dateRange)
-
-            IconButton(
-                onClick = { overviewViewModel.movePast() },
-                modifier = Modifier.align(Alignment.CenterStart)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_back),
-                    contentDescription = null
-                )
-            }
-
-            IconButton(
-                onClick = { overviewViewModel.moveFuture() },
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_arrow_forward),
-                    contentDescription = null
-                )
-            }
-
-            Row(
-                modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                DateRangeControl(
-                    dateRange,
-                    overviewViewModel
-                )
-
-                FloatingActionButton(
-                    onClick = { showAddDialog = true },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(16.dp),
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                    IconButton(
+                        onClick = { overviewViewModel.movePast() },
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_arrow_back),
+                            contentDescription = null
+                        )
+                    }
+
+                    DateRangeControl(
+                        dateRange,
+                        overviewViewModel
+                    )
+
+                    IconButton(
+                        onClick = { overviewViewModel.moveFuture() },
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_arrow_forward),
+                            contentDescription = null
+                        )
+                    }
+
                 }
+
+                plot(uiState, dateRange)
+            }
+
+            FloatingActionButton(
+                onClick = { showAddDialog = true },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+            ) {
+                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }
         }
     }

@@ -33,7 +33,7 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
     var showDateRangeDialog by remember { mutableStateOf(false) }
 
     TextButton(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(horizontal = 8.dp),
         onClick = { showDateRangeDialog = true },
     ) {
         Row {
