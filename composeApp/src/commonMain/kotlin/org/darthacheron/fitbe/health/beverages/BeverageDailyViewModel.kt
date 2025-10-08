@@ -2,7 +2,10 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
+import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -68,7 +71,7 @@ class BeverageDailyViewModel(
         errorMessage.value = null
     }.catch {
         isLoading.value = false
-        errorMessage.value = Res.string.beverages_overview_error_loading
+        errorMessage.value = Res.string.beverages_daily_view_error_loading
         emit(emptyList())
     }.map { beverages ->
         isLoading.value = false
@@ -93,20 +96,28 @@ class BeverageDailyViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())
 
-
     @OptIn(ExperimentalUuidApi::class)
     fun addBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
         viewModelScope.launch {
-            val settings = settingsRepository.getSettings()
-            repository.addBeverage(
-                Beverage(
-                    amount = amount,
-                    beverage = name,
-                    unit = unit,
-                    date = date,
-                    profileId = settings.selectedProfileId!!
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.beverages_daily_view_error_saving
+                    return@launch
+                }
+                repository.addBeverage(
+                    Beverage(
+                        amount = amount,
+                        beverage = name,
+                        unit = unit,
+                        date = date,
+                        profileId = profileId
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.beverages_daily_view_error_saving
+            }
         }
     }
 }
