@@ -60,7 +60,6 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun PlotSleeps(
-//    sleeps: List<Point<LocalDate, Double>>
     modifier: Modifier = Modifier,
     sleeps: List<SleepOverview>,
     dateRange: DateRange,
