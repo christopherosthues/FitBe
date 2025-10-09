@@ -7,7 +7,5 @@ import kotlinx.datetime.toLocalDateTime
 object PastOrPresentSelectableYears : SelectableYears {
     private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-    override fun isYearSelectable(year: Year): Boolean {
-        return today.year >= year.value
-    }
+    override fun isYearSelectable(year: Year): Boolean = today.year >= year.value
 }

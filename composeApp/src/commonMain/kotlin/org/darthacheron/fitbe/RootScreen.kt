@@ -37,16 +37,20 @@ import org.jetbrains.compose.resources.stringResource
 fun RootScreen(
     topNavHostController: NavHostController,
     bottomBarNavController: NavHostController,
-    topBarManager: TopBarManager,
+    topBarManager: TopBarManager
 ) {
     val backStackEntry by bottomBarNavController.currentBackStackEntryAsState()
     val currentRoute by remember { derivedStateOf { backStackEntry?.destination?.route } }
 
     val topBarConfig by topBarManager.topBarConfigFlow.collectAsState(initial = TopBarConfig())
 
-    val currentDestinationRoute = currentRoute?.substringAfterLast(".")?.substringBefore("/")
-        ?.substringBefore("?")
-    val isMainBottomBarDestination = remember(currentRoute) {
+    val currentDestinationRoute =
+        currentRoute
+            ?.substringAfterLast(".")
+            ?.substringBefore("/")
+            ?.substringBefore("?")
+    val isMainBottomBarDestination =
+        remember(currentRoute) {
         bottomBarDestinations.any { currentDestinationRoute?.equals(it.screen.toString()) == true }
     }
 
@@ -55,7 +59,10 @@ fun RootScreen(
             TopAppBar(
                 title = {
                     val titleResource = topBarConfig.title
-                    val title = if (titleResource != null) stringResource(titleResource) else currentDestinationRoute ?: ""
+                    val title =
+                        if (titleResource != null)
+                            stringResource(titleResource)
+                        else currentDestinationRoute ?: ""
                     Text(text = title)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
@@ -88,7 +95,7 @@ fun RootScreen(
         },
         bottomBar = {
             NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             ) {
                 bottomBarDestinations.forEach { bottomBarDestination ->
                     val isSelected = topBarConfig.bottomBarSelected == bottomBarDestination.screen
@@ -106,14 +113,14 @@ fun RootScreen(
                         modifier = Modifier.height(55.dp),
                         label = {
                             Text(
-                                text = stringResource(bottomBarDestination.label),
+                                text = stringResource(bottomBarDestination.label)
                             )
                         },
                         icon = {
                             Icon(
                                 painter = painterResource(bottomBarDestination.icon),
                                 contentDescription = null,
-                                modifier = Modifier.size(24.dp),
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     )
@@ -124,7 +131,7 @@ fun RootScreen(
         BottomBarNavGraph(
             topNavHostController = topNavHostController,
             bottomBarNavHostController = bottomBarNavController,
-            paddingValues = paddingValues,
+            paddingValues = paddingValues
         )
     }
 }

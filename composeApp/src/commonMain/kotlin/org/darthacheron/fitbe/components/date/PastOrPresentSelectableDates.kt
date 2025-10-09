@@ -14,12 +14,13 @@ object PastOrPresentSelectableDates : SelectableDates {
     private val today = Clock.System.now().toLocalDateTime(timeZone).date
 
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-        val date = Instant.Companion.fromEpochMilliseconds(utcTimeMillis)
-            .toLocalDateTime(timeZone).date
+        val date =
+            Instant.Companion
+                .fromEpochMilliseconds(utcTimeMillis)
+                .toLocalDateTime(timeZone)
+                .date
         return date <= today
     }
 
-    override fun isSelectableYear(year: Int): Boolean {
-        return year <= today.year
-    }
+    override fun isSelectableYear(year: Int): Boolean = year <= today.year
 }

@@ -81,8 +81,7 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
     fun getInProgressWorkoutExecution(
         profileId: Uuid,
         exerciseId: Uuid
-    ): Flow<WorkoutExecutionEntity?> =
-        workoutExecutionDao.getInProgressWorkoutExecution(exerciseId, profileId)
+    ): Flow<WorkoutExecutionEntity?> = workoutExecutionDao.getInProgressWorkoutExecution(exerciseId, profileId)
 
     fun getAllWorkoutExecutionsForProfile(profileId: Uuid): Flow<List<WorkoutExecutionWithSetsEntity>> =
         workoutExecutionDao.getAllWorkoutExecutionsForProfile(profileId)

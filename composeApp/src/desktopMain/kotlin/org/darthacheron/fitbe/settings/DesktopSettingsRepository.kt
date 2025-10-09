@@ -1,20 +1,21 @@
 package org.darthacheron.fitbe.settings
 
+import java.io.File
+import java.util.Properties
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
-import org.darthacheron.fitbe.settings.BodyMeasurementUnit
-import java.util.Properties
-import java.io.File
 import org.darthacheron.fitbe.utils.DesktopPaths
-import kotlin.uuid.Uuid
 
 class DesktopSettingsRepository : SettingsRepository {
     private val settingsFlow = MutableStateFlow(Settings())
-    private val settingsFile = File(
-        DesktopPaths.getAppDataDir(), "${SettingsKeys.FILE_NAME}.properties"
-    )
+    private val settingsFile =
+        File(
+            DesktopPaths.getAppDataDir(),
+            "${SettingsKeys.FILE_NAME}.properties"
+        )
 
     init {
         loadSettings()
@@ -32,21 +33,26 @@ class DesktopSettingsRepository : SettingsRepository {
                 val selectedProfileIdStr = getProperty(SettingsKeys.SELECTED_PROFILE_ID)
                 val selectedProfileId = selectedProfileIdStr?.takeIf { it.isNotBlank() }?.let { Uuid.parse(it) }
 
-                val settings = Settings(
-                    weightUnit = getProperty(SettingsKeys.WEIGHT_UNIT)?.let {
-                        WeightUnit.valueOf(it)
-                    } ?: WeightUnit.KG,
-                    distanceUnit = getProperty(SettingsKeys.DISTANCE_UNIT)?.let {
-                        DistanceUnit.valueOf(it)
-                    } ?: DistanceUnit.KM,
-                    bodyMeasurementUnit = getProperty(SettingsKeys.BODY_MEASUREMENT_UNIT)?.let {
-                        BodyMeasurementUnit.valueOf(it)
-                    } ?: BodyMeasurementUnit.CM,
-                    themeMode = getProperty(SettingsKeys.THEME_MODE)?.let {
-                        ThemeMode.valueOf(it)
-                    } ?: ThemeMode.SYSTEM,
-                    selectedProfileId = selectedProfileId
-                )
+                val settings =
+                    Settings(
+                        weightUnit =
+                            getProperty(SettingsKeys.WEIGHT_UNIT)?.let {
+                                WeightUnit.valueOf(it)
+                            } ?: WeightUnit.KG,
+                        distanceUnit =
+                            getProperty(SettingsKeys.DISTANCE_UNIT)?.let {
+                                DistanceUnit.valueOf(it)
+                            } ?: DistanceUnit.KM,
+                        bodyMeasurementUnit =
+                            getProperty(SettingsKeys.BODY_MEASUREMENT_UNIT)?.let {
+                                BodyMeasurementUnit.valueOf(it)
+                            } ?: BodyMeasurementUnit.CM,
+                        themeMode =
+                            getProperty(SettingsKeys.THEME_MODE)?.let {
+                                ThemeMode.valueOf(it)
+                            } ?: ThemeMode.SYSTEM,
+                        selectedProfileId = selectedProfileId
+                    )
                 settingsFlow.value = settings
             }
         }.onFailure { it.printStackTrace() }
@@ -69,5 +75,6 @@ class DesktopSettingsRepository : SettingsRepository {
     }
 
     override fun getSettingsFlow(): Flow<Settings> = settingsFlow
+
     override suspend fun getSettings(): Settings = settingsFlow.value
 }

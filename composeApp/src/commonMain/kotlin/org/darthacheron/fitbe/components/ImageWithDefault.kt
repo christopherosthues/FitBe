@@ -15,7 +15,14 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun ImageWithDefault(imageUri: String?, imageResource: DrawableResource?, default: Boolean, contentDescription: String?, modifier: Modifier, defaultContentDescription: String?) {
+fun ImageWithDefault(
+    imageUri: String?,
+    imageResource: DrawableResource?,
+    default: Boolean,
+    contentDescription: String?,
+    modifier: Modifier,
+    defaultContentDescription: String?
+) {
     Box {
         FitBeImage(imageResource, imageUri, contentDescription, modifier)
 
@@ -23,10 +30,11 @@ fun ImageWithDefault(imageUri: String?, imageResource: DrawableResource?, defaul
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
                 contentDescription = defaultContentDescription,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-                    .size(24.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(8.dp)
+                        .size(24.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

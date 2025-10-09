@@ -31,11 +31,11 @@ fun App() {
             startUpService.initialize()
         }
         setSingletonImageLoaderFactory { context ->
-            ImageLoader.Builder(context)
+            ImageLoader
+                .Builder(context)
                 .components {
                     addPlatformFileSupport()
-                }
-                .build()
+                }.build()
         }
 
         // Apply theme at the root of the app

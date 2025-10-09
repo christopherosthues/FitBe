@@ -35,29 +35,34 @@ class AndroidSettingsRepository(
         }
     }
 
-    override fun getSettingsFlow(): Flow<Settings> = context.dataStore.data
-        .catch { exception ->
-            // Log the error and emit default settings
-            exception.printStackTrace()
-            emit(emptyPreferences())
-        }
-        .map { preferences ->
-            Settings(
-                weightUnit = preferences[PreferencesKeys.WEIGHT_UNIT]?.let {
-                    WeightUnit.valueOf(it)
-                } ?: WeightUnit.KG,
-                distanceUnit = preferences[PreferencesKeys.DISTANCE_UNIT]?.let {
-                    DistanceUnit.valueOf(it)
-                } ?: DistanceUnit.KM,
-                bodyMeasurementUnit = preferences[PreferencesKeys.BODY_MEASUREMENT_UNIT]?.let {
-                    BodyMeasurementUnit.valueOf(it)
-                } ?: BodyMeasurementUnit.CM,
-                themeMode = preferences[PreferencesKeys.THEME_MODE]?.let {
-                    ThemeMode.valueOf(it)
-                } ?: ThemeMode.SYSTEM,
-                selectedProfileId = preferences[PreferencesKeys.SELECTED_PROFILE_ID]?.takeIf { it.isNotBlank() }
-                    ?.let { Uuid.parse(it) }
-            )
-        }
+    override fun getSettingsFlow(): Flow<Settings> =
+        context.dataStore.data
+            .catch { exception ->
+                // Log the error and emit default settings
+                exception.printStackTrace()
+                emit(emptyPreferences())
+            }.map { preferences ->
+                Settings(
+                    weightUnit =
+                        preferences[PreferencesKeys.WEIGHT_UNIT]?.let {
+                            WeightUnit.valueOf(it)
+                        } ?: WeightUnit.KG,
+                    distanceUnit =
+                        preferences[PreferencesKeys.DISTANCE_UNIT]?.let {
+                            DistanceUnit.valueOf(it)
+                        } ?: DistanceUnit.KM,
+                    bodyMeasurementUnit =
+                        preferences[PreferencesKeys.BODY_MEASUREMENT_UNIT]?.let {
+                            BodyMeasurementUnit.valueOf(it)
+                        } ?: BodyMeasurementUnit.CM,
+                    themeMode =
+                        preferences[PreferencesKeys.THEME_MODE]?.let {
+                            ThemeMode.valueOf(it)
+                        } ?: ThemeMode.SYSTEM,
+                    selectedProfileId =
+                        preferences[PreferencesKeys.SELECTED_PROFILE_ID]
+                            ?.takeIf { it.isNotBlank() }
+                            ?.let { Uuid.parse(it) }
+                )
+            }
 }
-

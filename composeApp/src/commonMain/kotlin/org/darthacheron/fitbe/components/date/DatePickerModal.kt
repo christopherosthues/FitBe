@@ -24,16 +24,16 @@ fun DatePickerModal(
     onDismiss: () -> Unit,
     initialSelectedDateMillis: Long? =
         Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.UTC)
-        .toInstant(TimeZone.UTC)
-        .toEpochMilliseconds()
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .toInstant(TimeZone.UTC)
+            .toEpochMilliseconds()
 ) {
     val datePickerState =
         rememberDatePickerState(
-        initialSelectedDateMillis = initialSelectedDateMillis,
-        selectableDates = PastOrPresentSelectableDates
-    )
+            initialSelectedDateMillis = initialSelectedDateMillis,
+            selectableDates = PastOrPresentSelectableDates
+        )
 
     DatePickerDialog(
         onDismissRequest = onDismiss,

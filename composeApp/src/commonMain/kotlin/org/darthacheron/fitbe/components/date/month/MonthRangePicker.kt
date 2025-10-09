@@ -1,20 +1,26 @@
 package org.darthacheron.fitbe.components.date.month
 
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -22,87 +28,84 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.month_range_picker_april
 import fitbe.composeapp.generated.resources.month_range_picker_august
 import fitbe.composeapp.generated.resources.month_range_picker_content_description_current_month
-import fitbe.composeapp.generated.resources.month_range_picker_december
 import fitbe.composeapp.generated.resources.month_range_picker_content_description_end_headline
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_month_in_range
+import fitbe.composeapp.generated.resources.month_range_picker_content_description_start_headline
+import fitbe.composeapp.generated.resources.month_range_picker_december
 import fitbe.composeapp.generated.resources.month_range_picker_february
 import fitbe.composeapp.generated.resources.month_range_picker_january
 import fitbe.composeapp.generated.resources.month_range_picker_july
 import fitbe.composeapp.generated.resources.month_range_picker_june
 import fitbe.composeapp.generated.resources.month_range_picker_march
 import fitbe.composeapp.generated.resources.month_range_picker_may
-import fitbe.composeapp.generated.resources.month_range_picker_content_description_month_in_range
 import fitbe.composeapp.generated.resources.month_range_picker_november
 import fitbe.composeapp.generated.resources.month_range_picker_october
 import fitbe.composeapp.generated.resources.month_range_picker_september
-import fitbe.composeapp.generated.resources.month_range_picker_content_description_start_headline
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
+import fitbe.composeapp.generated.resources.Res
 import org.darthacheron.fitbe.components.date.month.MonthRangePickerDefaults.MonthNames
 import org.jetbrains.compose.resources.stringResource
 
-data class YearMonth(val year: Int, val month: Int) : Comparable<YearMonth> {
+data class YearMonth(
+    val year: Int,
+    val month: Int
+) : Comparable<YearMonth> {
     init {
         require(year in 1..9999) { "Year must be between 1 and 9999" }
         require(month in 1..12) { "Month must be between 1 and 12" }
     }
 
-    fun monthsUntil(other: YearMonth): Int {
-        return (other.year - this.year) * 12 + (other.month - this.month)
-    }
+    fun monthsUntil(other: YearMonth): Int = (other.year - this.year) * 12 + (other.month - this.month)
 
-    fun startDateMillis(): Long {
-        return LocalDateTime(year, month, 1, 0, 0, 0).toInstant(TimeZone.UTC).toEpochMilliseconds()
-    }
+    fun startDateMillis(): Long =
+        LocalDateTime(year, month, 1, 0, 0, 0)
+            .toInstant(TimeZone.UTC)
+            .toEpochMilliseconds()
 
     fun endDateMillis(): Long {
-        val lastDayOfMonth = when (month) {
-            1, 3, 5, 7, 8, 10, 12 -> 31
-            4, 6, 9, 11 -> 30
-            2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
-            else -> throw IllegalArgumentException("Invalid month: $month")
-        }
-        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59, 999).toInstant(TimeZone.UTC)
+        val lastDayOfMonth =
+            when (month) {
+                1, 3, 5, 7, 8, 10, 12 -> 31
+                4, 6, 9, 11 -> 30
+                2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
+                else -> throw IllegalArgumentException("Invalid month: $month")
+            }
+        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59, 999)
+            .toInstant(TimeZone.UTC)
             .toEpochMilliseconds()
     }
 
-    override fun compareTo(other: YearMonth): Int {
-        return when {
+    override fun compareTo(other: YearMonth): Int =
+        when {
             this.year != other.year -> this.year.compareTo(other.year)
             else -> this.month.compareTo(other.month)
         }
-    }
 
     override fun toString(): String = "$year-$month"
 }
@@ -111,12 +114,15 @@ class MonthRangePickerStateImpl(
     initialSelectedStartYearMonth: YearMonth?,
     initialSelectedEndYearMonth: YearMonth?,
     override val yearRange: IntRange,
-    override val selectableMonths: SelectableMonths,
+    override val selectableMonths: SelectableMonths
 ) : MonthRangePickerState {
     override var selectedStartMonth: YearMonth? by mutableStateOf(initialSelectedStartYearMonth)
     override var selectedEndMonth: YearMonth? by mutableStateOf(initialSelectedEndYearMonth)
 
-    override fun setSelection(startMonth: YearMonth?, endMonth: YearMonth?) {
+    override fun setSelection(
+        startMonth: YearMonth?,
+        endMonth: YearMonth?
+    ) {
         if (startMonth != null && endMonth != null) {
             require(startMonth <= endMonth) { "Start year month must be before or equal to end year month" }
             require(selectableMonths.isMonthSelectable(startMonth)) { "Start month is not selectable" }
@@ -136,7 +142,11 @@ interface MonthRangePickerState {
     val selectedEndMonth: YearMonth?
     val yearRange: IntRange
     val selectableMonths: SelectableMonths
-    fun setSelection(startMonth: YearMonth?, endMonth: YearMonth?)
+
+    fun setSelection(
+        startMonth: YearMonth?,
+        endMonth: YearMonth?
+    )
 }
 
 @Composable
@@ -163,7 +173,7 @@ fun MonthRangePicker(
         headline = headline,
         headlineTextStyle = MaterialTheme.typography.bodyMedium,
         headerMinHeight = 100.dp,
-        colors = colors,
+        colors = colors
     ) {
         MonthRangePickerContent(
             selectedStartYearMonth = state.selectedStartMonth,
@@ -188,8 +198,8 @@ fun rememberMonthRangePickerState(
     initialSelectedEndYearMonth: YearMonth? = null,
     yearRange: IntRange = MonthRangePickerDefaults.YearRange,
     selectableMonths: SelectableMonths = MonthRangePickerDefaults.AllDates
-): MonthRangePickerState {
-    return remember {
+): MonthRangePickerState =
+    remember {
         MonthRangePickerStateImpl(
             initialSelectedStartYearMonth = initialSelectedStartYearMonth,
             initialSelectedEndYearMonth = initialSelectedEndYearMonth,
@@ -197,7 +207,6 @@ fun rememberMonthRangePickerState(
             selectableMonths = selectableMonths
         )
     }
-}
 
 @Composable
 private fun MonthRangePickerContent(
@@ -206,22 +215,29 @@ private fun MonthRangePickerContent(
     onMonthRangeSelectionChange: (startYearMonth: YearMonth?, endYearMonth: YearMonth?) -> Unit,
     yearRange: IntRange,
     colors: MonthRangePickerColors,
-    selectableMonths: SelectableMonths,
+    selectableMonths: SelectableMonths
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val sortedYears = yearRange.toList().sorted()
 
     // Calculate the index of the current month
-    val currentYearMonth = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).let {
-        YearMonth(it.year, it.monthNumber)
-    }
+    val currentYearMonth =
+        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).let {
+            YearMonth(it.year, it.monthNumber)
+        }
     val currentYearMonthIndex = sortedYears.indexOf(currentYearMonth.year)
 
-    val orderedStart = if (selectedStartYearMonth != null && selectedEndYearMonth != null)
-        minOf(selectedStartYearMonth, selectedEndYearMonth) else null
-    val orderedEnd = if (selectedStartYearMonth != null && selectedEndYearMonth != null)
-        maxOf(selectedStartYearMonth, selectedEndYearMonth) else null
+    val orderedStart =
+        if (selectedStartYearMonth != null && selectedEndYearMonth != null)
+            minOf(selectedStartYearMonth, selectedEndYearMonth)
+        else
+            null
+    val orderedEnd =
+        if (selectedStartYearMonth != null && selectedEndYearMonth != null)
+            maxOf(selectedStartYearMonth, selectedEndYearMonth)
+        else
+            null
 
     ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -245,7 +261,8 @@ private fun MonthRangePickerContent(
                             ) {
                                 rowMonths.forEach { yearMonth ->
                                     val isInRange =
-                                        orderedStart != null && orderedEnd != null && yearMonth in orderedStart..orderedEnd
+                                        orderedStart != null && orderedEnd != null &&
+                                                yearMonth in orderedStart..orderedEnd
                                     val startYearMonthSelected = yearMonth == selectedStartYearMonth
                                     val endYearMonthSelected = yearMonth == selectedEndYearMonth
                                     val isSelected =
@@ -318,9 +335,8 @@ private fun MonthRangePickerContent(
 }
 
 @Composable
-fun formatYearMonth(yearMonth: YearMonth): String {
-    return "${stringResource(MonthNames[yearMonth.month - 1])} ${yearMonth.year}"
-}
+fun formatYearMonth(yearMonth: YearMonth): String =
+    "${stringResource(MonthNames[yearMonth.month - 1])} ${yearMonth.year}"
 
 @Composable
 private fun monthContentDescription(
@@ -358,17 +374,18 @@ private fun MonthButton(
     isCurrentYearMonth: Boolean,
     inRange: Boolean,
     description: String,
-    colors: MonthRangePickerColors,
+    colors: MonthRangePickerColors
 ) {
-    val backgroundModifier = if (inRange && !selected) {
-        Modifier
-            .background(
-                color = colors.monthInRangeContainerColor,
-                shape = RectangleShape
-            )
-    } else {
-        Modifier
-    }
+    val backgroundModifier =
+        if (inRange && !selected) {
+            Modifier
+                .background(
+                    color = colors.monthInRangeContainerColor,
+                    shape = RectangleShape
+                )
+        } else {
+            Modifier
+        }
 
     Surface(
         selected = selected,
@@ -379,8 +396,7 @@ private fun MonthButton(
                 .semantics(mergeDescendants = true) {
                     text = AnnotatedString(description)
                     role = Role.Button
-                }
-                .requiredSize(RecommendedSizeForAccessibility),
+                }.requiredSize(RecommendedSizeForAccessibility),
         enabled = enabled,
         shape = CircleShape,
         color =
@@ -389,17 +405,15 @@ private fun MonthButton(
                     selected = selected,
                     enabled = enabled,
                     animate = animateChecked
-                )
-                .value,
+                ).value,
         contentColor =
             colors
                 .monthContentColor(
                     isCurrentMonth = isCurrentYearMonth,
                     selected = selected,
                     inRange = inRange,
-                    enabled = enabled,
-                )
-                .value,
+                    enabled = enabled
+                ).value,
         border =
             if (isCurrentYearMonth && !selected) {
                 BorderStroke(
@@ -416,7 +430,7 @@ private fun MonthButton(
                     MonthRangePickerModalTokens.MonthStateLayerWidth,
                     MonthRangePickerModalTokens.MonthStateLayerHeight
                 ),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = stringResource(MonthNames[yearMonth.month - 1]),
@@ -444,9 +458,10 @@ private fun MonthEntryContainer(
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .defaultMinSize(minHeight = headerMinHeight)
-            .background(colors.containerColor)
+        modifier =
+            modifier
+                .defaultMinSize(minHeight = headerMinHeight)
+                .background(colors.containerColor)
     ) {
         if (title != null) {
             Box(modifier = Modifier.padding(MonthRangePickerTitlePadding)) {
@@ -457,9 +472,10 @@ private fun MonthEntryContainer(
         if (headline != null) {
             ProvideTextStyle(value = headlineTextStyle) {
                 Box(
-                    modifier = Modifier
-                        .padding(MonthRangePickerHeadlinePadding)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .padding(MonthRangePickerHeadlinePadding)
+                            .fillMaxWidth()
                 ) {
                     headline()
                 }
@@ -472,20 +488,21 @@ private fun MonthEntryContainer(
 
 object MonthRangePickerDefaults {
     val YearRange: IntRange = IntRange(2000, 2999)
-    val MonthNames = listOf(
-        Res.string.month_range_picker_january,
-        Res.string.month_range_picker_february,
-        Res.string.month_range_picker_march,
-        Res.string.month_range_picker_april,
-        Res.string.month_range_picker_may,
-        Res.string.month_range_picker_june,
-        Res.string.month_range_picker_july,
-        Res.string.month_range_picker_august,
-        Res.string.month_range_picker_september,
-        Res.string.month_range_picker_october,
-        Res.string.month_range_picker_november,
-        Res.string.month_range_picker_december,
-    )
+    val MonthNames =
+        listOf(
+            Res.string.month_range_picker_january,
+            Res.string.month_range_picker_february,
+            Res.string.month_range_picker_march,
+            Res.string.month_range_picker_april,
+            Res.string.month_range_picker_may,
+            Res.string.month_range_picker_june,
+            Res.string.month_range_picker_july,
+            Res.string.month_range_picker_august,
+            Res.string.month_range_picker_september,
+            Res.string.month_range_picker_october,
+            Res.string.month_range_picker_november,
+            Res.string.month_range_picker_december
+        )
 
     @Composable
     fun colors(
@@ -502,28 +519,27 @@ object MonthRangePickerDefaults {
         selectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary,
         currentMonthContentColor: Color = MaterialTheme.colorScheme.primary,
         currentMonthBorderColor: Color = MaterialTheme.colorScheme.primary,
-        disabledSelectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
-    ): MonthRangePickerColors = MonthRangePickerColors(
-        containerColor = containerColor,
-        titleContentColor = titleContentColor,
-        headlineContentColor = headlineContentColor,
-        monthContentColor = monthContentColor,
-        monthInSelectionRangeContentColor = monthInRangeContentColor,
-        selectedMonthContentColor = selectedMonthContentColor,
-        monthContainerColor = monthContainerColor,
-        monthInRangeContainerColor = monthInRangeContainerColor,
-        selectedMonthContainerColor = selectedMonthContainerColor,
-        currentMonthContentColor = currentMonthContentColor,
-        disabledSelectedMonthContentColor = disabledSelectedMonthContentColor,
-        disabledMonthContentColor = disabledMonthContentColor,
-        currentMonthBorderColor = currentMonthBorderColor,
-        disabledSelectedMonthContainerColor = disabledSelectedMonthContainerColor,
-    )
+        disabledSelectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA)
+    ): MonthRangePickerColors =
+        MonthRangePickerColors(
+            containerColor = containerColor,
+            titleContentColor = titleContentColor,
+            headlineContentColor = headlineContentColor,
+            monthContentColor = monthContentColor,
+            monthInSelectionRangeContentColor = monthInRangeContentColor,
+            selectedMonthContentColor = selectedMonthContentColor,
+            monthContainerColor = monthContainerColor,
+            monthInRangeContainerColor = monthInRangeContainerColor,
+            selectedMonthContainerColor = selectedMonthContainerColor,
+            currentMonthContentColor = currentMonthContentColor,
+            disabledSelectedMonthContentColor = disabledSelectedMonthContentColor,
+            disabledMonthContentColor = disabledMonthContentColor,
+            currentMonthBorderColor = currentMonthBorderColor,
+            disabledSelectedMonthContainerColor = disabledSelectedMonthContainerColor
+        )
 
     @Composable
-    fun MonthRangePickerTitle(
-        modifier: Modifier = Modifier
-    ) {
+    fun MonthRangePickerTitle(modifier: Modifier = Modifier) {
         Text(
             text = "Select Month Range",
             style = MaterialTheme.typography.titleMedium,
@@ -540,8 +556,11 @@ object MonthRangePickerDefaults {
         val headlineText =
             when {
                 selectedStartYearMonth == null && selectedEndYearMonth == null -> "No selection"
-                selectedStartYearMonth != null && selectedEndYearMonth == null -> "Start: ${selectedStartYearMonth.month}/${selectedStartYearMonth.year}"
-                else -> "Range: ${selectedStartYearMonth?.month}/${selectedStartYearMonth?.year} - ${selectedEndYearMonth?.month}/${selectedEndYearMonth?.year}"
+                selectedStartYearMonth != null && selectedEndYearMonth == null ->
+                    "Start: ${selectedStartYearMonth.month}/${selectedStartYearMonth.year}"
+
+                else -> "Range: ${selectedStartYearMonth?.month}/${selectedStartYearMonth?.year} - " +
+                        "${selectedEndYearMonth?.month}/${selectedEndYearMonth?.year}"
             }
 
         Text(

@@ -20,33 +20,40 @@ import fitbe.composeapp.generated.resources.ic_verified
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun ImagePlaceholder(isEditing: Boolean, default: Boolean, contentDescription: String) {
+fun ImagePlaceholder(
+    isEditing: Boolean,
+    default: Boolean,
+    contentDescription: String
+) {
     Box(
-        modifier = Modifier
-            .size(256.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
+        modifier =
+            Modifier
+                .size(256.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(Res.drawable.ic_launcher), // Replace with a more generic placeholder if available
-            contentDescription = null, // Decorative
-            modifier = Modifier.size(128.dp), // Smaller icon for placeholder
+            painter = painterResource(Res.drawable.ic_launcher),
+            contentDescription = null,
+            modifier = Modifier.size(128.dp),
             contentScale = ContentScale.Fit
         )
         Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .background(Color.Black.copy(alpha = 0.3f))
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .background(Color.Black.copy(alpha = 0.3f))
+                    .fillMaxSize()
         )
-        if (default && !isEditing) { // Show verified icon only when not editing and it's a default item
+        if (default && !isEditing) {
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
                 contentDescription = contentDescription,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-                    .size(24.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(8.dp)
+                        .size(24.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

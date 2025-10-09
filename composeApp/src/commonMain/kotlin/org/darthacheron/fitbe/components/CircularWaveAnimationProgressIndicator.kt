@@ -80,9 +80,10 @@ fun CircularWaveAnimationProgressIndicator(
                         var x = stroke
                         while (x <= innerDiameter + stroke) {
                             val y =
-                                waveTop + amplitude * sin(
-                                    (x / wavelength) * 2f * PI.toFloat() + phase
-                                )
+                                waveTop + amplitude *
+                                        sin(
+                                            (x / wavelength) * 2f * PI.toFloat() + phase
+                                        )
                             lineTo(x, y)
                             x += step
                         }

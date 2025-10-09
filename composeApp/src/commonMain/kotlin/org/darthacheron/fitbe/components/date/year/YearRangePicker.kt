@@ -1,22 +1,30 @@
 package org.darthacheron.fitbe.components.date.year
 
+import kotlinx.coroutines.launch
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,28 +33,28 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
@@ -55,33 +63,29 @@ import fitbe.composeapp.generated.resources.year_range_picker_content_descriptio
 import fitbe.composeapp.generated.resources.year_range_picker_content_description_end_headline
 import fitbe.composeapp.generated.resources.year_range_picker_content_description_start_headline
 import fitbe.composeapp.generated.resources.year_range_picker_content_description_year_in_range
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 
-data class Year(val value: Int) : Comparable<Year> {
+data class Year(
+    val value: Int
+) : Comparable<Year> {
     init {
         require(value in 1..9999) { "Year must be between 1 and 9999" }
     }
 
     fun until(other: Year): Int = other.value - this.value
 
-    fun startDateMillis(): Long {
-        return LocalDate(value, 1, 1).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
-    }
-
-    fun endDateMillis(): Long {
-        return LocalDateTime(value, 12, 31, 23, 59, 59, 999).toInstant(TimeZone.UTC)
+    fun startDateMillis(): Long =
+        LocalDate(value, 1, 1)
+            .atStartOfDayIn(TimeZone.UTC)
             .toEpochMilliseconds()
-    }
+
+    fun endDateMillis(): Long =
+        LocalDateTime(value, 12, 31, 23, 59, 59, 999)
+            .toInstant(TimeZone.UTC)
+            .toEpochMilliseconds()
 
     override fun compareTo(other: Year): Int = value.compareTo(other.value)
+
     override fun toString(): String = value.toString()
 }
 
@@ -89,12 +93,15 @@ class YearRangePickerStateImpl(
     initialSelectedStartYear: Year?,
     initialSelectedEndYear: Year?,
     override val yearRange: IntRange,
-    override val selectableYears: SelectableYears,
+    override val selectableYears: SelectableYears
 ) : YearRangePickerState {
     override var selectedStartYear: Year? by mutableStateOf(initialSelectedStartYear)
     override var selectedEndYear: Year? by mutableStateOf(initialSelectedEndYear)
 
-    override fun setSelection(startYear: Year?, endYear: Year?) {
+    override fun setSelection(
+        startYear: Year?,
+        endYear: Year?
+    ) {
         if (startYear != null && endYear != null) {
             require(startYear <= endYear) { "Start year must be before or equal to end year" }
             require(selectableYears.isYearSelectable(startYear)) { "Start year is not selectable" }
@@ -114,7 +121,11 @@ interface YearRangePickerState {
     val selectedEndYear: Year?
     val yearRange: IntRange
     val selectableYears: SelectableYears
-    fun setSelection(startYear: Year?, endYear: Year?)
+
+    fun setSelection(
+        startYear: Year?,
+        endYear: Year?
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -134,7 +145,7 @@ fun YearRangePicker(
             modifier = Modifier.padding(YearRangePickerHeadlinePadding)
         )
     },
-    colors: YearRangePickerColors = YearRangePickerDefaults.colors(),
+    colors: YearRangePickerColors = YearRangePickerDefaults.colors()
 ) {
     YearEntryContainer(
         modifier = modifier,
@@ -142,7 +153,7 @@ fun YearRangePicker(
         headline = headline,
         headlineTextStyle = MaterialTheme.typography.bodyMedium,
         headerMinHeight = 100.dp,
-        colors = colors,
+        colors = colors
     ) {
         YearRangePickerContent(
             selectedStartYear = state.selectedStartYear,
@@ -161,15 +172,14 @@ fun YearRangePicker(
     }
 }
 
-
 @Composable
 fun rememberYearRangePickerState(
     initialSelectedStartYear: Year? = null,
     initialSelectedEndYear: Year? = null,
     yearRange: IntRange = YearRangePickerDefaults.YearRange,
     selectableYears: SelectableYears = YearRangePickerDefaults.AllDates
-): YearRangePickerState {
-    return remember {
+): YearRangePickerState =
+    remember {
         YearRangePickerStateImpl(
             initialSelectedStartYear = initialSelectedStartYear,
             initialSelectedEndYear = initialSelectedEndYear,
@@ -177,7 +187,6 @@ fun rememberYearRangePickerState(
             selectableYears = selectableYears
         )
     }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -187,21 +196,30 @@ private fun YearRangePickerContent(
     onYearRangeSelectionChange: (startYear: Year?, endYear: Year?) -> Unit,
     yearRange: IntRange,
     colors: YearRangePickerColors,
-    selectableYears: SelectableYears,
+    selectableYears: SelectableYears
 ) {
     val allYears = yearRange.map { Year(it) }
-    val chunkedYears = allYears.chunked(ChunkedYears)
+    val chunkedYears = allYears.chunked(CHUNKED_YEARS)
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     // Calculate the index of the current year
-    val currentYear = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.year
+    val currentYear =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.currentSystemDefault()).date.year
     val currentYearIndex = allYears.indexOfFirst { it.value == currentYear }
 
-    val orderedStart = if (selectedStartYear != null && selectedEndYear != null)
-        minOf(selectedStartYear, selectedEndYear) else null
-    val orderedEnd = if (selectedStartYear != null && selectedEndYear != null)
-        maxOf(selectedStartYear, selectedEndYear) else null
+    val orderedStart =
+        if (selectedStartYear != null && selectedEndYear != null)
+            minOf(selectedStartYear, selectedEndYear)
+        else
+            null
+    val orderedEnd =
+        if (selectedStartYear != null && selectedEndYear != null)
+            maxOf(selectedStartYear, selectedEndYear)
+        else
+            null
 
     ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -276,15 +294,13 @@ private fun YearRangePickerContent(
     LaunchedEffect(Unit) {
         if (currentYearIndex != -1) {
             coroutineScope.launch {
-                listState.scrollToItem(currentYearIndex / ChunkedYears)
+                listState.scrollToItem(currentYearIndex / CHUNKED_YEARS)
             }
         }
     }
 }
 
-fun formatYear(year: Int): String {
-    return year.toString()
-}
+fun formatYear(year: Int): String = year.toString()
 
 @Composable
 private fun yearContentDescription(
@@ -320,17 +336,18 @@ private fun YearButton(
     inRange: Boolean,
     description: String,
     colors: YearRangePickerColors,
-    year: Year,
+    year: Year
 ) {
-    val backgroundModifier = if (inRange && !selected) {
-        Modifier
-            .background(
-                color = colors.yearInRangeContainerColor,
-                shape = RectangleShape
-            )
-    } else {
-        Modifier
-    }
+    val backgroundModifier =
+        if (inRange && !selected) {
+            Modifier
+                .background(
+                    color = colors.yearInRangeContainerColor,
+                    shape = RectangleShape
+                )
+        } else {
+            Modifier
+        }
 
     Surface(
         selected = selected,
@@ -345,8 +362,7 @@ private fun YearButton(
                 .semantics(mergeDescendants = true) {
                     text = AnnotatedString(description)
                     role = Role.Button
-                }
-                .requiredSize(RecommendedSizeForAccessibility),
+                }.requiredSize(RecommendedSizeForAccessibility),
         enabled = enabled,
         shape = CircleShape,
         color =
@@ -359,9 +375,8 @@ private fun YearButton(
                     isCurrentYear = isCurrentYear,
                     selected = selected,
                     inRange = inRange,
-                    enabled = enabled,
-                )
-                .value,
+                    enabled = enabled
+                ).value,
         border =
             if (isCurrentYear && !selected) {
                 BorderStroke(
@@ -378,13 +393,13 @@ private fun YearButton(
                     YearRangePickerModalTokens.YearStateLayerWidth,
                     YearRangePickerModalTokens.YearStateLayerHeight
                 ),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = year.toString(),
                 textAlign = TextAlign.Center,
                 // The semantics are set at the Day level.
-                modifier = Modifier.clearAndSetSemantics {},
+                modifier = Modifier.clearAndSetSemantics {}
             )
         }
     }
@@ -395,7 +410,6 @@ internal object YearRangePickerModalTokens {
     val YearStateLayerWidth = 40.0.dp
     val DateTodayContainerOutlineWidth = 1.0.dp
 }
-
 
 @Composable
 private fun YearEntryContainer(
@@ -408,9 +422,10 @@ private fun YearEntryContainer(
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .defaultMinSize(minHeight = headerMinHeight)
-            .background(colors.containerColor)
+        modifier =
+            modifier
+                .defaultMinSize(minHeight = headerMinHeight)
+                .background(colors.containerColor)
     ) {
         if (title != null) {
             Box(modifier = Modifier.padding(YearRangePickerTitlePadding)) {
@@ -421,9 +436,10 @@ private fun YearEntryContainer(
         if (headline != null) {
             ProvideTextStyle(value = headlineTextStyle) {
                 Box(
-                    modifier = Modifier
-                        .padding(YearRangePickerHeadlinePadding)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .padding(YearRangePickerHeadlinePadding)
+                            .fillMaxWidth()
                 ) {
                     headline()
                 }
@@ -445,35 +461,34 @@ object YearRangePickerDefaults {
         yearContentColor: Color = MaterialTheme.colorScheme.onSurface,
         yearInRangeContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         selectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary,
-        disabledSelectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DisabledAlpha),
+        disabledSelectedYearContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DISABLED_ALPHA),
         yearContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant, // TODO
         yearInRangeContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-        disabledYearContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledAlpha),
+        disabledYearContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
         selectedYearContainerColor: Color = MaterialTheme.colorScheme.primary,
         currentYearContentColor: Color = MaterialTheme.colorScheme.primary,
         currentYearBorderColor: Color = MaterialTheme.colorScheme.primary,
-        disabledSelectedYearContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DisabledAlpha),
-    ): YearRangePickerColors = YearRangePickerColors(
-        containerColor = containerColor,
-        titleContentColor = titleContentColor,
-        headlineContentColor = headlineContentColor,
-        yearContentColor = yearContentColor,
-        yearInSelectionRangeContentColor = yearInRangeContentColor,
-        selectedYearContentColor = selectedYearContentColor,
-        yearContainerColor = yearContainerColor,
-        yearInRangeContainerColor = yearInRangeContainerColor,
-        selectedYearContainerColor = selectedYearContainerColor,
-        currentYearContentColor = currentYearContentColor,
-        disabledSelectedYearContentColor = disabledSelectedYearContentColor,
-        disabledYearContentColor = disabledYearContentColor,
-        currentYearBorderColor = currentYearBorderColor,
-        disabledSelectedYearContainerColor = disabledSelectedYearContainerColor,
-    )
+        disabledSelectedYearContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA)
+    ): YearRangePickerColors =
+        YearRangePickerColors(
+            containerColor = containerColor,
+            titleContentColor = titleContentColor,
+            headlineContentColor = headlineContentColor,
+            yearContentColor = yearContentColor,
+            yearInSelectionRangeContentColor = yearInRangeContentColor,
+            selectedYearContentColor = selectedYearContentColor,
+            yearContainerColor = yearContainerColor,
+            yearInRangeContainerColor = yearInRangeContainerColor,
+            selectedYearContainerColor = selectedYearContainerColor,
+            currentYearContentColor = currentYearContentColor,
+            disabledSelectedYearContentColor = disabledSelectedYearContentColor,
+            disabledYearContentColor = disabledYearContentColor,
+            currentYearBorderColor = currentYearBorderColor,
+            disabledSelectedYearContainerColor = disabledSelectedYearContainerColor
+        )
 
     @Composable
-    fun YearRangePickerTitle(
-        modifier: Modifier = Modifier
-    ) {
+    fun YearRangePickerTitle(modifier: Modifier = Modifier) {
         Text(
             text = "Select Year Range",
             style = MaterialTheme.typography.titleMedium,
@@ -487,18 +502,20 @@ object YearRangePickerDefaults {
         selectedEndYear: Year?,
         modifier: Modifier = Modifier
     ) {
-        val headlineText = when {
-            selectedStartYear == null && selectedEndYear == null -> "No selection"
-            selectedStartYear != null && selectedEndYear == null -> "Start: ${selectedStartYear.value}"
-            else -> "Range: ${selectedStartYear?.value} - ${selectedEndYear?.value}"
-        }
+        val headlineText =
+            when {
+                selectedStartYear == null && selectedEndYear == null -> "No selection"
+                selectedStartYear != null && selectedEndYear == null -> "Start: ${selectedStartYear.value}"
+                else -> "Range: ${selectedStartYear?.value} - ${selectedEndYear?.value}"
+            }
 
         Text(
             text = headlineText,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.semantics {
-                liveRegion = LiveRegionMode.Polite
-            }
+            modifier =
+                modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                }
         )
     }
 
@@ -520,7 +537,7 @@ class YearRangePickerColors(
     val currentYearBorderColor: Color,
     val disabledSelectedYearContentColor: Color,
     val disabledYearContentColor: Color,
-    val disabledSelectedYearContainerColor: Color,
+    val disabledSelectedYearContainerColor: Color
 ) {
     @Composable
     internal fun yearContentColor(
@@ -544,7 +561,7 @@ class YearRangePickerColors(
             rememberUpdatedState(target)
         } else {
             // Animate the content color only when the day is not in a range.
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         }
     }
 
@@ -561,7 +578,7 @@ class YearRangePickerColors(
                 Color.Transparent
             }
         return if (animate) {
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         } else {
             rememberUpdatedState(target)
         }
@@ -572,6 +589,6 @@ private val YearRangePickerTitlePadding = PaddingValues(start = 16.dp, top = 16.
 private val YearRangePickerHeadlinePadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
 internal val RecommendedSizeForAccessibility = 48.dp
 
-const val DurationShort2 = 100.0
-internal const val DisabledAlpha = 0.38f
-private const val ChunkedYears = 5
+const val DURATION_SHORT_2 = 100.0
+internal const val DISABLED_ALPHA = 0.38f
+private const val CHUNKED_YEARS = 5

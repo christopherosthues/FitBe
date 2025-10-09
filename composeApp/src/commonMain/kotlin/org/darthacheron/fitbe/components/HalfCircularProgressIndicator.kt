@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HalfCircleProgressIndicator(
-    progress: Float, // 0f to 1f
+    progress: Float,
     modifier: Modifier = Modifier,
     color: Color = Color.Blue,
     backgroundColor: Color = Color.LightGray,
@@ -23,10 +23,11 @@ fun HalfCircleProgressIndicator(
         val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
         val arcRadius = size.minDimension / 2
 
-        val topLeft = Offset(
-            (size.width - arcRadius * 2) / 2,
-            (size.height - arcRadius) / 2
-        )
+        val topLeft =
+            Offset(
+                (size.width - arcRadius * 2) / 2,
+                (size.height - arcRadius) / 2
+            )
 
         // Draw background arc (semi-circle)
         drawArc(

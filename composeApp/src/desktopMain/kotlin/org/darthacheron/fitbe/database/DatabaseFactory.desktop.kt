@@ -8,11 +8,12 @@ actual class DatabaseFactory {
     actual fun create(): androidx.room.RoomDatabase.Builder<FitBeDatabase> {
         val os = System.getProperty("os.name").lowercase()
         val userHome = System.getProperty("user.home")
-        val appDataDir = when {
-            os.contains("win") -> File(System.getenv("APPDATA"), "FitBe")
-            os.contains("mac") -> File(userHome, "Library/Application Support/FitBe")
-            else -> File(userHome, ".local/share/FitBe")
-        }
+        val appDataDir =
+            when {
+                os.contains("win") -> File(System.getenv("APPDATA"), "FitBe")
+                os.contains("mac") -> File(userHome, "Library/Application Support/FitBe")
+                else -> File(userHome, ".local/share/FitBe")
+            }
 
         if (!appDataDir.exists()) {
             appDataDir.mkdirs()

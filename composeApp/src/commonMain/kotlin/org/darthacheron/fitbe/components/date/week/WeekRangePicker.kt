@@ -1,20 +1,33 @@
 package org.darthacheron.fitbe.components.date.week
 
+import kotlinx.coroutines.launch
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -22,28 +35,28 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.semantics.LiveRegionMode
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
@@ -51,31 +64,19 @@ import fitbe.composeapp.generated.resources.week_range_picker_content_descriptio
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_end_headline
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_start_headline
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_week_in_range
-import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
-import kotlinx.datetime.isoDayNumber
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
 
-data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
+data class YearWeek(
+    val year: Int,
+    val week: Int
+) : Comparable<YearWeek> {
     init {
         require(year in 1..9999) { "Year must be between 1 and 9999" }
         require(week in 1..53) { "Week must be between 1 and 53" }
     }
 
-    fun weeksUntil(other: YearWeek): Int {
-        return (other.year - this.year) * 52 + (other.week - this.week)
-    }
+    fun weeksUntil(other: YearWeek): Int = (other.year - this.year) * 52 + (other.week - this.week)
 
     fun startDateMillis(): Long {
         val date = LocalDate.fromYearWeek(year, week, DayOfWeek.MONDAY)
@@ -89,23 +90,31 @@ data class YearWeek(val year: Int, val week: Int) : Comparable<YearWeek> {
         return endDateTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
     }
 
-    override fun compareTo(other: YearWeek): Int {
-        return when {
+    override fun compareTo(other: YearWeek): Int =
+        when {
             this.year != other.year -> this.year.compareTo(other.year)
             else -> this.week.compareTo(other.week)
         }
-    }
 
     override fun toString(): String = "$year-W$week"
 }
 
-fun LocalDate.Companion.fromYearWeek(year: Int, week: Int, dayOfWeek: DayOfWeek): LocalDate {
+fun LocalDate.Companion.fromYearWeek(
+    year: Int,
+    week: Int,
+    dayOfWeek: DayOfWeek
+): LocalDate {
     val firstDayOfYear = LocalDate(year, 1, 1)
-    val firstThursday = if (firstDayOfYear.dayOfWeek <= DayOfWeek.THURSDAY) {
-        firstDayOfYear.plus(DatePeriod(days = DayOfWeek.THURSDAY.isoDayNumber - firstDayOfYear.dayOfWeek.isoDayNumber))
-    } else {
-        firstDayOfYear.plus(DatePeriod(days = 7 - (firstDayOfYear.dayOfWeek.isoDayNumber - DayOfWeek.THURSDAY.isoDayNumber)))
-    }
+    val firstThursday =
+        if (firstDayOfYear.dayOfWeek <= DayOfWeek.THURSDAY) {
+            firstDayOfYear.plus(
+                DatePeriod(days = DayOfWeek.THURSDAY.isoDayNumber - firstDayOfYear.dayOfWeek.isoDayNumber)
+            )
+        } else {
+            firstDayOfYear.plus(
+                DatePeriod(days = 7 - (firstDayOfYear.dayOfWeek.isoDayNumber - DayOfWeek.THURSDAY.isoDayNumber))
+            )
+        }
     val daysOffset = (week - 1) * 7 + (dayOfWeek.isoDayNumber - 1) - DayOfWeek.THURSDAY.isoDayNumber + 1
     return firstThursday.plus(DatePeriod(days = daysOffset))
 }
@@ -114,12 +123,15 @@ class WeekRangePickerStateImpl(
     initialSelectedStartWeek: YearWeek?,
     initialSelectedEndWeek: YearWeek?,
     override val yearRange: IntRange,
-    override val selectableWeeks: SelectableWeeks,
+    override val selectableWeeks: SelectableWeeks
 ) : WeekRangePickerState {
     override var selectedStartWeek: YearWeek? by mutableStateOf(initialSelectedStartWeek)
     override var selectedEndWeek: YearWeek? by mutableStateOf(initialSelectedEndWeek)
 
-    override fun setSelection(startWeek: YearWeek?, endWeek: YearWeek?) {
+    override fun setSelection(
+        startWeek: YearWeek?,
+        endWeek: YearWeek?
+    ) {
         if (startWeek != null && endWeek != null) {
             require(startWeek <= endWeek) { "Start week must be before or equal to end week" }
             require(selectableWeeks.isWeekSelectable(startWeek)) { "Start week is not selectable" }
@@ -139,7 +151,11 @@ interface WeekRangePickerState {
     val selectedEndWeek: YearWeek?
     val yearRange: IntRange
     val selectableWeeks: SelectableWeeks
-    fun setSelection(startWeek: YearWeek?, endWeek: YearWeek?)
+
+    fun setSelection(
+        startWeek: YearWeek?,
+        endWeek: YearWeek?
+    )
 }
 
 @Composable
@@ -166,7 +182,7 @@ fun WeekRangePicker(
         headline = headline,
         headlineTextStyle = MaterialTheme.typography.bodyMedium,
         headerMinHeight = 100.dp,
-        colors = colors,
+        colors = colors
     ) {
         WeekRangePickerContent(
             selectedStartYearWeek = state.selectedStartWeek,
@@ -180,7 +196,7 @@ fun WeekRangePicker(
             },
             yearRange = state.yearRange,
             colors = colors,
-            selectableWeeks = state.selectableWeeks,
+            selectableWeeks = state.selectableWeeks
         )
     }
 }
@@ -190,9 +206,9 @@ fun rememberWeekRangePickerState(
     initialSelectedStartYearWeek: YearWeek? = null,
     initialSelectedEndYearWeek: YearWeek? = null,
     yearRange: IntRange = WeekRangePickerDefaults.YearRange,
-    selectableWeeks: SelectableWeeks = WeekRangePickerDefaults.AllDates,
-): WeekRangePickerState {
-    return remember {
+    selectableWeeks: SelectableWeeks = WeekRangePickerDefaults.AllDates
+): WeekRangePickerState =
+    remember {
         WeekRangePickerStateImpl(
             initialSelectedStartWeek = initialSelectedStartYearWeek,
             initialSelectedEndWeek = initialSelectedEndYearWeek,
@@ -200,7 +216,6 @@ fun rememberWeekRangePickerState(
             selectableWeeks = selectableWeeks
         )
     }
-}
 
 @Composable
 private fun WeekRangePickerContent(
@@ -209,7 +224,7 @@ private fun WeekRangePickerContent(
     onWeekRangeSelectionChange: (startYearWeek: YearWeek?, endYearWeek: YearWeek?) -> Unit,
     yearRange: IntRange,
     colors: WeekRangePickerColors,
-    selectableWeeks: SelectableWeeks,
+    selectableWeeks: SelectableWeeks
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -222,10 +237,16 @@ private fun WeekRangePickerContent(
         }
     val currentYearWeekIndex = sortedYears.indexOf(currentYearWeek.year)
 
-    val orderedStart = if (selectedStartYearWeek != null && selectedEndYearWeek != null)
-        minOf(selectedStartYearWeek, selectedEndYearWeek) else null
-    val orderedEnd = if (selectedStartYearWeek != null && selectedEndYearWeek != null)
-        maxOf(selectedStartYearWeek, selectedEndYearWeek) else null
+    val orderedStart =
+        if (selectedStartYearWeek != null && selectedEndYearWeek != null)
+            minOf(selectedStartYearWeek, selectedEndYearWeek)
+        else
+            null
+    val orderedEnd =
+        if (selectedStartYearWeek != null && selectedEndYearWeek != null)
+            maxOf(selectedStartYearWeek, selectedEndYearWeek)
+        else
+            null
 
     ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -239,7 +260,7 @@ private fun WeekRangePickerContent(
                         )
 
                         val weeksInYear = getWeeksInYear(year)
-                        val chunkedWeeks = weeksInYear.chunked(ChunkedWeeks)
+                        val chunkedWeeks = weeksInYear.chunked(CHUNKED_WEEKS)
 
                         chunkedWeeks.forEach { weekRow ->
                             Row(
@@ -251,7 +272,6 @@ private fun WeekRangePickerContent(
                                     val yw = YearWeek(year, weekNum)
                                     val isInRange =
                                         orderedStart != null && orderedEnd != null && yw in orderedStart..orderedEnd
-
 
                                     val startYearWeekSelected = yw == selectedStartYearWeek
                                     val endYearWeekSelected = yw == selectedEndYearWeek
@@ -333,9 +353,7 @@ fun getWeeksInYear(year: Int): List<Int> {
     return (1..lastIsoWeek).toList()
 }
 
-fun formatYearWeek(yearWeek: YearWeek): String {
-    return "Week ${yearWeek.week} ${yearWeek.year}"
-}
+fun formatYearWeek(yearWeek: YearWeek): String = "Week ${yearWeek.week} ${yearWeek.year}"
 
 @Composable
 private fun weekContentDescription(
@@ -375,15 +393,16 @@ private fun WeekButton(
     description: String,
     colors: WeekRangePickerColors
 ) {
-    val backgroundModifier = if (inRange && !selected) {
-        Modifier
-            .background(
-                color = colors.weekInRangeContainerColor,
-                shape = RectangleShape
-            )
-    } else {
-        Modifier
-    }
+    val backgroundModifier =
+        if (inRange && !selected) {
+            Modifier
+                .background(
+                    color = colors.weekInRangeContainerColor,
+                    shape = RectangleShape
+                )
+        } else {
+            Modifier
+        }
 
     Surface(
         selected = selected,
@@ -394,8 +413,7 @@ private fun WeekButton(
                 .semantics(mergeDescendants = true) {
                     text = AnnotatedString(description)
                     role = Role.Button
-                }
-                .requiredSize(RecommendedSizeForAccessibility),
+                }.requiredSize(RecommendedSizeForAccessibility),
         enabled = enabled,
         shape = CircleShape,
         color =
@@ -404,17 +422,15 @@ private fun WeekButton(
                     selected = selected,
                     enabled = enabled,
                     animate = animateChecked
-                )
-                .value,
+                ).value,
         contentColor =
             colors
                 .weekContentColor(
                     isCurrentWeek = isCurrentYearWeek,
                     selected = selected,
                     inRange = inRange,
-                    enabled = enabled,
-                )
-                .value,
+                    enabled = enabled
+                ).value,
         border =
             if (isCurrentYearWeek && !selected) {
                 BorderStroke(
@@ -431,7 +447,7 @@ private fun WeekButton(
                     WeekRangePickerModalTokens.WeekStateLayerWidth,
                     WeekRangePickerModalTokens.WeekStateLayerHeight
                 ),
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "W${yearWeek.week}",
@@ -459,9 +475,10 @@ private fun WeekEntryContainer(
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .defaultMinSize(minHeight = headerMinHeight)
-            .background(colors.containerColor)
+        modifier =
+            modifier
+                .defaultMinSize(minHeight = headerMinHeight)
+                .background(colors.containerColor)
     ) {
         if (title != null) {
             Box(modifier = Modifier.padding(WeekRangePickerTitlePadding)) {
@@ -472,9 +489,10 @@ private fun WeekEntryContainer(
         if (headline != null) {
             ProvideTextStyle(value = headlineTextStyle) {
                 Box(
-                    modifier = Modifier
-                        .padding(WeekRangePickerHeadlinePadding)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .padding(WeekRangePickerHeadlinePadding)
+                            .fillMaxWidth()
                 ) {
                     headline()
                 }
@@ -496,35 +514,34 @@ object WeekRangePickerDefaults {
         weekContentColor: Color = MaterialTheme.colorScheme.onSurface,
         weekInRangeContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         selectedWeekContentColor: Color = MaterialTheme.colorScheme.onPrimary,
-        disabledSelectedWeekContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DisabledAlpha),
+        disabledSelectedWeekContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DISABLED_ALPHA),
         weekContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
         weekInRangeContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-        disabledWeekContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledAlpha),
+        disabledWeekContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
         selectedWeekContainerColor: Color = MaterialTheme.colorScheme.primary,
         currentWeekContentColor: Color = MaterialTheme.colorScheme.primary,
         currentWeekBorderColor: Color = MaterialTheme.colorScheme.primary,
-        disabledSelectedWeekContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DisabledAlpha),
-    ): WeekRangePickerColors = WeekRangePickerColors(
-        containerColor = containerColor,
-        titleContentColor = titleContentColor,
-        headlineContentColor = headlineContentColor,
-        weekContentColor = weekContentColor,
-        weekInSelectionRangeContentColor = weekInRangeContentColor,
-        selectedWeekContentColor = selectedWeekContentColor,
-        weekContainerColor = weekContainerColor,
-        weekInRangeContainerColor = weekInRangeContainerColor,
-        selectedWeekContainerColor = selectedWeekContainerColor,
-        currentWeekContentColor = currentWeekContentColor,
-        disabledSelectedWeekContentColor = disabledSelectedWeekContentColor,
-        disabledWeekContentColor = disabledWeekContentColor,
-        currentWeekBorderColor = currentWeekBorderColor,
-        disabledSelectedWeekContainerColor = disabledSelectedWeekContainerColor,
-    )
+        disabledSelectedWeekContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA)
+    ): WeekRangePickerColors =
+        WeekRangePickerColors(
+            containerColor = containerColor,
+            titleContentColor = titleContentColor,
+            headlineContentColor = headlineContentColor,
+            weekContentColor = weekContentColor,
+            weekInSelectionRangeContentColor = weekInRangeContentColor,
+            selectedWeekContentColor = selectedWeekContentColor,
+            weekContainerColor = weekContainerColor,
+            weekInRangeContainerColor = weekInRangeContainerColor,
+            selectedWeekContainerColor = selectedWeekContainerColor,
+            currentWeekContentColor = currentWeekContentColor,
+            disabledSelectedWeekContentColor = disabledSelectedWeekContentColor,
+            disabledWeekContentColor = disabledWeekContentColor,
+            currentWeekBorderColor = currentWeekBorderColor,
+            disabledSelectedWeekContainerColor = disabledSelectedWeekContainerColor
+        )
 
     @Composable
-    fun WeekRangePickerTitle(
-        modifier: Modifier = Modifier
-    ) {
+    fun WeekRangePickerTitle(modifier: Modifier = Modifier) {
         Text(
             text = "Select Week Range",
             style = MaterialTheme.typography.titleMedium,
@@ -538,18 +555,23 @@ object WeekRangePickerDefaults {
         selectedEndYearWeek: YearWeek?,
         modifier: Modifier = Modifier
     ) {
-        val headlineText = when {
-            selectedStartYearWeek == null && selectedEndYearWeek == null -> "No selection"
-            selectedStartYearWeek != null && selectedEndYearWeek == null -> "Start: W${selectedStartYearWeek.week}/${selectedStartYearWeek.year}"
-            else -> "Range: W${selectedStartYearWeek?.week}/${selectedStartYearWeek?.year} - W${selectedEndYearWeek?.week}/${selectedEndYearWeek?.year}"
-        }
+        val headlineText =
+            when {
+                selectedStartYearWeek == null && selectedEndYearWeek == null -> "No selection"
+                selectedStartYearWeek != null && selectedEndYearWeek == null ->
+                    "Start: W${selectedStartYearWeek.week}/${selectedStartYearWeek.year}"
+
+                else -> "Range: W${selectedStartYearWeek?.week}/${selectedStartYearWeek?.year} - " +
+                        "W${selectedEndYearWeek?.week}/${selectedEndYearWeek?.year}"
+            }
 
         Text(
             text = headlineText,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.semantics {
-                liveRegion = LiveRegionMode.Polite
-            }
+            modifier =
+                modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                }
         )
     }
 
@@ -571,7 +593,7 @@ class WeekRangePickerColors(
     val currentWeekBorderColor: Color,
     val disabledSelectedWeekContentColor: Color,
     val disabledWeekContentColor: Color,
-    val disabledSelectedWeekContainerColor: Color,
+    val disabledSelectedWeekContainerColor: Color
 ) {
     @Composable
     internal fun weekContentColor(
@@ -595,7 +617,7 @@ class WeekRangePickerColors(
             rememberUpdatedState(target)
         } else {
             // Animate the content color only when the day is not in a range.
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         }
     }
 
@@ -612,7 +634,7 @@ class WeekRangePickerColors(
                 Color.Transparent
             }
         return if (animate) {
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         } else {
             rememberUpdatedState(target)
         }
@@ -623,6 +645,6 @@ private val WeekRangePickerTitlePadding = PaddingValues(start = 16.dp, top = 16.
 private val WeekRangePickerHeadlinePadding =
     PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
 internal val RecommendedSizeForAccessibility = 48.dp
-const val DurationShort2 = 100.0
-internal const val DisabledAlpha = 0.38f
-private const val ChunkedWeeks = 4
+const val DURATION_SHORT_2 = 100.0
+internal const val DISABLED_ALPHA = 0.38f
+private const val CHUNKED_WEEKS = 4

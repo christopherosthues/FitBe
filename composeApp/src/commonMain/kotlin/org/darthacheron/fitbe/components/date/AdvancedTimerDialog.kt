@@ -31,11 +31,11 @@ fun AdvancedTimePickerDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     toggle: @Composable () -> Unit = {},
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
             shape = MaterialTheme.shapes.large,
@@ -47,24 +47,26 @@ fun AdvancedTimePickerDialog(
                     .background(
                         shape = MaterialTheme.shapes.large,
                         color = MaterialTheme.colorScheme.surface
-                    ),
+                    )
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp),
                     text = title,
                     style = MaterialTheme.typography.labelMedium
                 )
                 content()
                 Row(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .height(40.dp)
+                            .fillMaxWidth()
                 ) {
                     toggle()
                     Spacer(modifier = Modifier.weight(1f))

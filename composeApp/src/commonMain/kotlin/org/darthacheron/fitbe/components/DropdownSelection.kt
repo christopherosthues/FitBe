@@ -22,7 +22,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun <T>DropdownSelection(
+fun <T> DropdownSelection(
     initialState: Boolean,
     items: List<T>,
     isEnabled: Boolean = true,

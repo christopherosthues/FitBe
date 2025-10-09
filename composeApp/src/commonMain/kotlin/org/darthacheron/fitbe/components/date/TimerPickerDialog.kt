@@ -13,11 +13,12 @@ fun TimePickerDialog(
     onTimeSelected: (Int, Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val timePickerState = rememberTimePickerState(
-        initialHour = initialHour,
-        initialMinute = initialMinute,
-        is24Hour = true
-    )
+    val timePickerState =
+        rememberTimePickerState(
+            initialHour = initialHour,
+            initialMinute = initialMinute,
+            is24Hour = true
+        )
     AdvancedTimePickerDialog(
         onDismiss = onDismiss,
         onConfirm = { onTimeSelected(timePickerState.hour, timePickerState.minute) }
