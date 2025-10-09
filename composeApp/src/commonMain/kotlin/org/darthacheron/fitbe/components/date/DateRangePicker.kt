@@ -55,30 +55,34 @@ fun DateRangePickerModal(
     val dateUnits = DateUnit.entries
     var selectedDateUnit by remember { mutableStateOf(dateUnit) }
     val now = Clock.System.now()
-    val dateRangePickerState = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = now.toEpochMilliseconds(),
-        initialSelectedEndDateMillis = now.toEpochMilliseconds(),
-        initialDisplayMode = DisplayMode.Picker,
-        selectableDates = PastOrPresentSelectableDates
-    )
+    val dateRangePickerState =
+        rememberDateRangePickerState(
+            initialSelectedStartDateMillis = now.toEpochMilliseconds(),
+            initialSelectedEndDateMillis = now.toEpochMilliseconds(),
+            initialDisplayMode = DisplayMode.Picker,
+            selectableDates = PastOrPresentSelectableDates
+        )
     val initialWeek = now.toLocalDateTime(TimeZone.UTC).date.isoWeekAndYear()
-    val weekRangePickerState = rememberWeekRangePickerState(
-        initialSelectedStartYearWeek = YearWeek(initialWeek.first, initialWeek.second),
-        initialSelectedEndYearWeek = YearWeek(initialWeek.first, initialWeek.second),
-        selectableWeeks = PastOrPresentSelectableWeeks
-    )
+    val weekRangePickerState =
+        rememberWeekRangePickerState(
+            initialSelectedStartYearWeek = YearWeek(initialWeek.first, initialWeek.second),
+            initialSelectedEndYearWeek = YearWeek(initialWeek.first, initialWeek.second),
+            selectableWeeks = PastOrPresentSelectableWeeks
+        )
     val initialMonth = now.toLocalDateTime(TimeZone.UTC).date.monthNumber
     val initialYear = now.toLocalDateTime(TimeZone.UTC).date.year
-    val monthRangePickerState = rememberMonthRangePickerState(
-        initialSelectedStartYearMonth = YearMonth(initialYear, initialMonth),
-        initialSelectedEndYearMonth = YearMonth(initialYear, initialMonth),
-        selectableMonths = PastOrPresentSelectableMonths
-    )
-    val yearRangePickerState = rememberYearRangePickerState(
-        initialSelectedStartYear = Year(initialYear),
-        initialSelectedEndYear = Year(initialYear),
-        selectableYears = PastOrPresentSelectableYears
-    )
+    val monthRangePickerState =
+        rememberMonthRangePickerState(
+            initialSelectedStartYearMonth = YearMonth(initialYear, initialMonth),
+            initialSelectedEndYearMonth = YearMonth(initialYear, initialMonth),
+            selectableMonths = PastOrPresentSelectableMonths
+        )
+    val yearRangePickerState =
+        rememberYearRangePickerState(
+            initialSelectedStartYear = Year(initialYear),
+            initialSelectedEndYear = Year(initialYear),
+            selectableYears = PastOrPresentSelectableYears
+        )
 
     DatePickerDialog(
         modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -93,16 +97,22 @@ fun DateRangePickerModal(
                             startDateMillis = dateRangePickerState.selectedStartDateMillis
                             endDateMillis = dateRangePickerState.selectedEndDateMillis
                         }
+
                         DateUnit.WEEK -> {
-                            startDateMillis = weekRangePickerState.selectedStartWeek?.startDateMillis()
+                            startDateMillis =
+                                weekRangePickerState.selectedStartWeek?.startDateMillis()
                             endDateMillis = weekRangePickerState.selectedEndWeek?.endDateMillis()
                         }
+
                         DateUnit.MONTH -> {
-                            startDateMillis = monthRangePickerState.selectedStartMonth?.startDateMillis()
+                            startDateMillis =
+                                monthRangePickerState.selectedStartMonth?.startDateMillis()
                             endDateMillis = monthRangePickerState.selectedEndMonth?.endDateMillis()
                         }
+
                         DateUnit.YEAR -> {
-                            startDateMillis = yearRangePickerState.selectedStartYear?.startDateMillis()
+                            startDateMillis =
+                                yearRangePickerState.selectedStartYear?.startDateMillis()
                             endDateMillis = yearRangePickerState.selectedEndYear?.endDateMillis()
                         }
                     }
@@ -145,10 +155,11 @@ fun DateRangePickerModal(
                         title = null,
                         showModeToggle = false,
                         headline = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp)
-                            .padding(16.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(500.dp)
+                                .padding(16.dp)
                     )
                 }
 
@@ -156,7 +167,7 @@ fun DateRangePickerModal(
                     WeekRangePicker(
                         state = weekRangePickerState,
                         headline = null,
-                        title = null,
+                        title = null
                     )
                 }
 
@@ -164,7 +175,7 @@ fun DateRangePickerModal(
                     MonthRangePicker(
                         state = monthRangePickerState,
                         headline = null,
-                        title = null,
+                        title = null
                     )
                 }
 
@@ -172,7 +183,7 @@ fun DateRangePickerModal(
                     YearRangePicker(
                         state = yearRangePickerState,
                         headline = null,
-                        title = null,
+                        title = null
                     )
                 }
             }

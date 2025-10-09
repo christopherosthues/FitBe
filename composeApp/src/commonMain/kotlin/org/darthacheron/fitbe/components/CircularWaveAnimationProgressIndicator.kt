@@ -30,7 +30,7 @@ import kotlin.math.sin
 
 @Composable
 fun CircularWaveAnimationProgressIndicator(
-    progress: () -> Float, // 0f to 1f
+    progress: () -> Float,
     modifier: Modifier = Modifier,
     size: Dp = 150.dp,
     strokeWidth: Dp = 8.dp,
@@ -40,10 +40,12 @@ fun CircularWaveAnimationProgressIndicator(
     val phase by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 2 * PI.toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ), label = "wave_phase"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 2000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ),
+        label = "wave_phase"
     )
 
     Box(
@@ -59,9 +61,10 @@ fun CircularWaveAnimationProgressIndicator(
             val center = Offset(totalSize / 2f, totalSize / 2f)
 
             // Clip to circle
-            val clipPath = Path().apply {
-                addOval(Rect(center = center, radius = radius))
-            }
+            val clipPath =
+                Path().apply {
+                    addOval(Rect(center = center, radius = radius))
+                }
 
             clipPath(clipPath) {
                 val waveTop = totalSize - stroke - (innerDiameter * progress())
@@ -69,24 +72,28 @@ fun CircularWaveAnimationProgressIndicator(
                 val wavelength = innerDiameter / 1.5f
                 val step = 5f
 
-                val wavePath = Path().apply {
-                    moveTo(stroke, totalSize)            // Bottom-left corner
-                    lineTo(stroke, waveTop)              // Move up to start of wave
+                val wavePath =
+                    Path().apply {
+                        moveTo(stroke, totalSize)
+                        lineTo(stroke, waveTop)
 
-                    var x = stroke
-                    while (x <= innerDiameter + stroke) {
-                        val y = waveTop + amplitude * sin((x / wavelength) * 2f * PI.toFloat() + phase)
-                        lineTo(x, y)
-                        x += step
+                        var x = stroke
+                        while (x <= innerDiameter + stroke) {
+                            val y =
+                                waveTop + amplitude * sin(
+                                    (x / wavelength) * 2f * PI.toFloat() + phase
+                                )
+                            lineTo(x, y)
+                            x += step
+                        }
+
+                        lineTo(innerDiameter + stroke, totalSize)
+                        close()
                     }
-
-                    lineTo(innerDiameter + stroke, totalSize) // Bottom-right
-                    close()
-                }
 
                 drawPath(
                     path = wavePath,
-                    color = color,
+                    color = color
                 )
             }
         }
@@ -97,7 +104,7 @@ fun CircularWaveAnimationProgressIndicator(
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = strokeWidth,
             trackColor = ProgressIndicatorDefaults.circularIndeterminateTrackColor,
-            strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap,
+            strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap
         )
 
         Text(

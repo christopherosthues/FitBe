@@ -123,7 +123,10 @@ kotlin {
 }
 
 ktlint {
-    version.set(libs.versions.ktlint.lint.get())
+    version.set(
+        libs.versions.ktlint.lint
+            .get()
+    )
     debug.set(true)
     verbose.set(true)
     android.set(false)
@@ -151,12 +154,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 android {
     namespace = "org.darthacheron.fitbe"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "org.darthacheron.fitbe"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }

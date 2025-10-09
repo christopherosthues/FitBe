@@ -22,10 +22,15 @@ import org.jetbrains.compose.resources.stringResource
 fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit,
-    initialSelectedDateMillis: Long? = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-        .toInstant(TimeZone.UTC).toEpochMilliseconds()
+    initialSelectedDateMillis: Long? =
+        Clock.System
+        .now()
+        .toLocalDateTime(TimeZone.UTC)
+        .toInstant(TimeZone.UTC)
+        .toEpochMilliseconds()
 ) {
-    val datePickerState = rememberDatePickerState(
+    val datePickerState =
+        rememberDatePickerState(
         initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = PastOrPresentSelectableDates
     )

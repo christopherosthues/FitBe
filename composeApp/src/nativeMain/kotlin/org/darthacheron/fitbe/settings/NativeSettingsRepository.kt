@@ -77,8 +77,8 @@ class NativeSettingsRepository : SettingsRepository {
                     SettingsKeys.BODY_MEASUREMENT_UNIT to settings.bodyMeasurementUnit.name,
                     SettingsKeys.THEME_MODE to settings.themeMode.name,
                     SettingsKeys.SELECTED_PROFILE_ID to (
-                            settings.selectedProfileId?.toString() ?: ""
-                            )
+                        settings.selectedProfileId?.toString() ?: ""
+                    )
                 )
 
             (dict as NSDictionary).writeToFile(settingsFile, true)

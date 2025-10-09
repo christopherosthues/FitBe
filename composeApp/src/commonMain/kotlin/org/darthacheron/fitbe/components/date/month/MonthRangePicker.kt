@@ -235,7 +235,7 @@ private fun MonthRangePickerContent(
                         )
 
                         val months = (1..12).map { month -> YearMonth(year, month) }
-                        val chunkedMonths = months.chunked(ChunkedMonths)
+                        val chunkedMonths = months.chunked(CHUNKED_MONTHS)
 
                         chunkedMonths.forEach { rowMonths ->
                             Row(
@@ -495,14 +495,14 @@ object MonthRangePickerDefaults {
         monthContentColor: Color = MaterialTheme.colorScheme.onSurface,
         monthInRangeContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
         selectedMonthContentColor: Color = MaterialTheme.colorScheme.onPrimary,
-        disabledSelectedMonthContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DisabledAlpha),
+        disabledSelectedMonthContentColor: Color = MaterialTheme.colorScheme.onPrimary.copy(alpha = DISABLED_ALPHA),
         monthContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
         monthInRangeContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-        disabledMonthContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DisabledAlpha),
+        disabledMonthContentColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
         selectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary,
         currentMonthContentColor: Color = MaterialTheme.colorScheme.primary,
         currentMonthBorderColor: Color = MaterialTheme.colorScheme.primary,
-        disabledSelectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DisabledAlpha),
+        disabledSelectedMonthContainerColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
     ): MonthRangePickerColors = MonthRangePickerColors(
         containerColor = containerColor,
         titleContentColor = titleContentColor,
@@ -537,18 +537,20 @@ object MonthRangePickerDefaults {
         selectedEndYearMonth: YearMonth?,
         modifier: Modifier = Modifier
     ) {
-        val headlineText = when {
-            selectedStartYearMonth == null && selectedEndYearMonth == null -> "No selection"
-            selectedStartYearMonth != null && selectedEndYearMonth == null -> "Start: ${selectedStartYearMonth.month}/${selectedStartYearMonth.year}"
-            else -> "Range: ${selectedStartYearMonth?.month}/${selectedStartYearMonth?.year} - ${selectedEndYearMonth?.month}/${selectedEndYearMonth?.year}"
-        }
+        val headlineText =
+            when {
+                selectedStartYearMonth == null && selectedEndYearMonth == null -> "No selection"
+                selectedStartYearMonth != null && selectedEndYearMonth == null -> "Start: ${selectedStartYearMonth.month}/${selectedStartYearMonth.year}"
+                else -> "Range: ${selectedStartYearMonth?.month}/${selectedStartYearMonth?.year} - ${selectedEndYearMonth?.month}/${selectedEndYearMonth?.year}"
+            }
 
         Text(
             text = headlineText,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = modifier.semantics {
-                liveRegion = LiveRegionMode.Polite
-            }
+            modifier =
+                modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                }
         )
     }
 
@@ -570,7 +572,7 @@ class MonthRangePickerColors(
     val currentMonthBorderColor: Color,
     val disabledSelectedMonthContentColor: Color,
     val disabledMonthContentColor: Color,
-    val disabledSelectedMonthContainerColor: Color,
+    val disabledSelectedMonthContainerColor: Color
 ) {
     @Composable
     internal fun monthContentColor(
@@ -594,7 +596,7 @@ class MonthRangePickerColors(
             rememberUpdatedState(target)
         } else {
             // Animate the content color only when the day is not in a range.
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         }
     }
 
@@ -611,7 +613,7 @@ class MonthRangePickerColors(
                 Color.Transparent
             }
         return if (animate) {
-            animateColorAsState(target, tween(durationMillis = DurationShort2.toInt()))
+            animateColorAsState(target, tween(durationMillis = DURATION_SHORT_2.toInt()))
         } else {
             rememberUpdatedState(target)
         }
@@ -623,6 +625,6 @@ private val MonthRangePickerHeadlinePadding =
     PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
 internal val RecommendedSizeForAccessibility = 48.dp
 
-const val DurationShort2 = 100.0
-internal const val DisabledAlpha = 0.38f
-private const val ChunkedMonths = 4
+const val DURATION_SHORT_2 = 100.0
+internal const val DISABLED_ALPHA = 0.38f
+private const val CHUNKED_MONTHS = 4

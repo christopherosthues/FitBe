@@ -9,15 +9,17 @@ import fitbe.composeapp.generated.resources.date_unit_year
 import org.jetbrains.compose.resources.stringResource
 
 enum class DateUnit {
-    DAY, WEEK, MONTH, YEAR;
+    DAY,
+    WEEK,
+    MONTH,
+    YEAR;
 
     @Composable
-    fun localizedString(): String {
-        return when(this) {
+    fun localizedString(): String =
+        when (this) {
             DAY -> stringResource(Res.string.date_unit_day)
             WEEK -> stringResource(Res.string.date_unit_week)
             MONTH -> stringResource(Res.string.date_unit_month)
             YEAR -> stringResource(Res.string.date_unit_year)
         }
-    }
 }
