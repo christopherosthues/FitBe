@@ -1,6 +1,10 @@
 package org.darthacheron.fitbe.date.week
 
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
 import org.darthacheron.fitbe.components.date.week.YearWeek
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -8,7 +12,6 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class YearWeekTest {
-
     @Test
     fun testYearWeekInitialization() {
         val yearWeek = YearWeek(2023, 1)
@@ -71,7 +74,8 @@ class YearWeekTest {
     fun testEndDateMillisFirstWeekOfYear() {
         val yearWeek = YearWeek(2023, 1)
         val endDateMillis = yearWeek.endDateMillis()
-        val expectedDate = LocalDateTime(2023, 1, 8, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDateTime(2023, 1, 8, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
         assertEquals(expectedDate, endDateMillis)
     }
 
@@ -79,7 +83,8 @@ class YearWeekTest {
     fun testStartDateMillisLastWeekOfYear() {
         val yearWeek = YearWeek(2023, 52)
         val startDateMillis = yearWeek.startDateMillis()
-        val expectedDate = LocalDate(2023, 12, 25).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDate(2023, 12, 25).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
         assertEquals(expectedDate, startDateMillis)
     }
 
@@ -87,7 +92,10 @@ class YearWeekTest {
     fun testEndDateMillisLastWeekOfYear() {
         val yearWeek = YearWeek(2023, 52)
         val endDateMillis = yearWeek.endDateMillis()
-        val expectedDate = LocalDateTime(2023, 12, 31, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDateTime(2023, 12, 31, 23, 59, 59, 999)
+                .toInstant(TimeZone.UTC)
+                .toEpochMilliseconds()
         assertEquals(expectedDate, endDateMillis)
     }
 
@@ -103,7 +111,8 @@ class YearWeekTest {
     fun testEndDateMillisMiddleWeekOfYear() {
         val yearWeek = YearWeek(2023, 26)
         val endDateMillis = yearWeek.endDateMillis()
-        val expectedDate = LocalDateTime(2023, 7, 2, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDateTime(2023, 7, 2, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
         assertEquals(expectedDate, endDateMillis)
     }
 
@@ -119,7 +128,8 @@ class YearWeekTest {
     fun testEndDateMillisLeapYear() {
         val yearWeek = YearWeek(2024, 1)
         val endDateMillis = yearWeek.endDateMillis()
-        val expectedDate = LocalDateTime(2024, 1, 7, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDateTime(2024, 1, 7, 23, 59, 59, 999).toInstant(TimeZone.UTC).toEpochMilliseconds()
         assertEquals(expectedDate, endDateMillis)
     }
 
@@ -127,7 +137,8 @@ class YearWeekTest {
     fun testStartDateMillisYear2025() {
         val yearWeek = YearWeek(2025, 1)
         val startDateMillis = yearWeek.startDateMillis()
-        val expectedDate = LocalDate(2024, 12, 30).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+        val expectedDate =
+            LocalDate(2024, 12, 30).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
         assertEquals(expectedDate, startDateMillis)
     }
 

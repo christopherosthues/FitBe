@@ -9,11 +9,11 @@ fun StepsView(
     healthViewModel: HealthViewModel,
     addStepsDialogViewModel: AddStepsDialogViewModel,
     stepsOverviewViewModel: StepsOverviewViewModel,
-    stepsDailyViewModel: StepsDailyViewModel,
+    stepsDailyViewModel: StepsDailyViewModel
 ) {
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { StepsOverviewView(stepsOverviewViewModel, addStepsDialogViewModel) },
-        detailView = { StepsDailyView(stepsDailyViewModel, addStepsDialogViewModel) },
+        detailView = { StepsDailyView(stepsDailyViewModel, addStepsDialogViewModel) }
     )
 }

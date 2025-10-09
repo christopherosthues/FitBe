@@ -1,5 +1,8 @@
 package org.darthacheron.fitbe.db
 
-actual fun inMemoryDatabaseFactory(): androidx.room.RoomDatabase.Builder<org.darthacheron.fitbe.database.FitBeDatabase> {
+import androidx.room.RoomDatabase
+import org.darthacheron.fitbe.database.FitBeDatabase
+
+actual fun inMemoryDatabaseFactory(): RoomDatabase.Builder<FitBeDatabase> {
     TODO("Not yet implemented")
 }

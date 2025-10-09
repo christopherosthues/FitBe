@@ -16,16 +16,20 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class StepsRepository(private val stepsDao: StepsDao) {
-    fun getSteps(startDate: Instant,
-                 endDate: Instant,
-                 profileId: Uuid): Flow<List<Steps>> {
+    fun getSteps(
+        startDate: Instant,
+        endDate: Instant,
+        profileId: Uuid
+    ): Flow<List<Steps>> {
         val dateSpan = toDateSpan(startDate, endDate)
         return stepsDao.getStepsBetweenDates(
             start = dateSpan.first,
             end = dateSpan.second,
-            profileId = profileId)
-            .map { list -> list.map { it.toSteps() }
-        }
+            profileId = profileId
+        )
+            .map { list ->
+                list.map { it.toSteps() }
+            }
     }
 
     fun getTodaySteps(profileId: Uuid): Flow<Steps> {
@@ -41,11 +45,12 @@ class StepsRepository(private val stepsDao: StepsDao) {
         val startOfDay = date.atStartOfDayIn(TimeZone.currentSystemDefault())
         val dateSpan = toDateSpan(startOfDay, startOfDay)
 
-        return stepsDao.getStepsBetweenDates(
-            start = dateSpan.first,
-            end = dateSpan.second,
-            profileId = profileId
-        ).map { entities -> entities.map { it.toSteps() } }
+        return stepsDao
+            .getStepsBetweenDates(
+                start = dateSpan.first,
+                end = dateSpan.second,
+                profileId = profileId
+            ).map { entities -> entities.map { it.toSteps() } }
     }
 
     suspend fun addSteps(steps: Steps) {

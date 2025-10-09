@@ -10,13 +10,14 @@ import org.jetbrains.compose.resources.StringResource
  * Enum for theme selection.
  */
 enum class ThemeMode {
-    LIGHT, DARK, SYSTEM;
+    LIGHT,
+    DARK,
+    SYSTEM;
 
-    fun toStringResource(): StringResource {
-        return when(this) {
+    fun toStringResource(): StringResource =
+        when (this) {
             LIGHT -> Res.string.settings_theme_light
             DARK -> Res.string.settings_theme_dark
             SYSTEM -> Res.string.settings_theme_system
         }
-    }
 }

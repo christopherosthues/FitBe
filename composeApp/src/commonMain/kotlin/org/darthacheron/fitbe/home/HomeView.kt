@@ -5,13 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 
 @Composable
-fun HomeView(
-    homeViewModel: HomeViewModel
-) {
+fun HomeView(homeViewModel: HomeViewModel) {
     LaunchedEffect(Unit) {
         homeViewModel.updateTopBarConfig()
     }
-    Column() {
+    Column {
         // Your HomeView content here
     }
 }

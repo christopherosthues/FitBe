@@ -6,7 +6,6 @@ import androidx.room.Relation
 data class WorkoutExecutionWithSetsEntity(
     @Embedded
     val workoutExecution: WorkoutExecutionEntity,
-
     @Relation(
         parentColumn = "id",
         entityColumn = "workout_execution_id"

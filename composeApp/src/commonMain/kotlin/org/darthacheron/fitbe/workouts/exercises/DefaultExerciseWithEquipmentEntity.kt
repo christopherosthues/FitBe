@@ -9,19 +9,19 @@ import kotlin.uuid.ExperimentalUuidApi
 class DefaultExerciseWithEquipmentEntity(
     @Embedded val exercise: DefaultExerciseEntity,
     @Relation(
-        parentColumn = "id", // From ExerciseEntity (the @Embedded entity)
-        entityColumn = "id",   // From TrainingEquipmentEntity (the entity in the List)
+        parentColumn = "id",
+        entityColumn = "id",
         associateBy = Junction(
             value = DefaultExerciseEquipmentCrossRef::class,
-            parentColumn = "exerciseId", // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
-            entityColumn = "equipmentId" // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
+            parentColumn = "exerciseId",
+            entityColumn = "equipmentId"
         )
     )
     val equipmentList: List<DefaultTrainingEquipmentEntity>
 ) {
     @OptIn(ExperimentalUuidApi::class)
-    fun toExerciseWithEquipment(): ExerciseWithEquipment {
-        return ExerciseWithEquipment(
+    fun toExerciseWithEquipment(): ExerciseWithEquipment =
+        ExerciseWithEquipment(
             id = exercise.id,
             name = exercise.name,
             guide = exercise.guide,
@@ -33,5 +33,4 @@ class DefaultExerciseWithEquipmentEntity(
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
-    }
 }

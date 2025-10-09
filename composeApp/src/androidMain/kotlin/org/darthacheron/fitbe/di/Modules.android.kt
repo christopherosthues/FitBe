@@ -6,7 +6,8 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
-actual val platformModule = module {
-    single { DatabaseFactory(androidApplication()) }
-    single<SettingsRepository> { AndroidSettingsRepository(androidApplication()) }
-}
+actual val platformModule =
+    module {
+        single { DatabaseFactory(androidApplication()) }
+        single<SettingsRepository> { AndroidSettingsRepository(androidApplication()) }
+    }

@@ -48,9 +48,11 @@ class TrainingEquipmentViewModel(
     private val _equipmentListErrorMessage = MutableStateFlow<StringResource?>(null)
     private val _favoriteStateErrorMessage = MutableStateFlow<StringResource?>(null)
 
-    private val currentProfileIdFlow: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
-        .map { it.selectedProfileId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val currentProfileIdFlow: StateFlow<Uuid?> =
+        settingsRepository
+            .getSettingsFlow()
+            .map { it.selectedProfileId }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalEquipmentListFlow: StateFlow<List<TrainingEquipment>> =
         equipmentRepository.getAllEquipments()
@@ -88,7 +90,8 @@ class TrainingEquipmentViewModel(
                     }
                     .catch { e ->
                         _isLoadingFavorites.value = false
-                        _favoriteStateErrorMessage.value = Res.string.training_equipment_error_favorites
+                        _favoriteStateErrorMessage.value =
+                            Res.string.training_equipment_error_favorites
                         emit(emptySet())
                     }
             } else {
@@ -108,7 +111,11 @@ class TrainingEquipmentViewModel(
         _isLoadingEquipment,
         _isLoadingFavorites,
         _equipmentListErrorMessage
-    ) { equipment: List<TrainingEquipment>, favorites: Set<Uuid>, isLoadingEquip: Boolean, isLoadingFav: Boolean, equipError: StringResource? ->
+    ) { equipment: List<TrainingEquipment>,
+        favorites: Set<Uuid>,
+        isLoadingEquip: Boolean,
+        isLoadingFav: Boolean,
+        equipError: StringResource? ->
         Pair(
             Pair(equipment, favorites),
             Triple(isLoadingEquip, isLoadingFav, equipError)
@@ -130,7 +137,11 @@ class TrainingEquipmentViewModel(
             equipmentListError = equipError,
             favoriteStateError = favError
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TrainingEquipmentScreenUiState(isLoading = true))
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        TrainingEquipmentScreenUiState(isLoading = true)
+    )
 
 
     fun navigateToTrainingEquipmentDetail(id: Uuid?) {
@@ -145,7 +156,8 @@ class TrainingEquipmentViewModel(
                 try {
                     equipmentRepository.addFavorite(profileId, equipmentId)
                 } catch (e: Exception) {
-                    _favoriteStateErrorMessage.value = Res.string.training_equipment_error_toggle_favorite
+                    _favoriteStateErrorMessage.value =
+                        Res.string.training_equipment_error_toggle_favorite
                 }
             }
         }
@@ -159,7 +171,8 @@ class TrainingEquipmentViewModel(
                 try {
                     equipmentRepository.removeFavorite(profileId, equipmentId)
                 } catch (e: Exception) {
-                    _favoriteStateErrorMessage.value = Res.string.training_equipment_error_toggle_favorite
+                    _favoriteStateErrorMessage.value =
+                        Res.string.training_equipment_error_toggle_favorite
                 }
             }
         }

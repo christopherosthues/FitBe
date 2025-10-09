@@ -9,6 +9,4 @@ fun Double.roundToDecimals(decimals: Int): Double {
     return round(this * factor) / factor
 }
 
-fun Double.roundUpToNextTen(): Double {
-    return (ceil(this / 10).toInt() * 10).toDouble()
-}
+fun Double.roundUpToNextTen(): Double = (ceil(this / 10).toInt() * 10).toDouble()

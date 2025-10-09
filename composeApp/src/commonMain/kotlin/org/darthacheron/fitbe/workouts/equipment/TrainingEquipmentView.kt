@@ -78,11 +78,12 @@ fun TrainingEquipmentView(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val currentErrorMessage: StringResource? = uiState.equipmentListError ?: uiState.favoriteStateError
+    val currentErrorMessage: StringResource? =
+        uiState.equipmentListError ?: uiState.favoriteStateError
 
     currentErrorMessage?.let {
         val message = stringResource(it)
-        LaunchedEffect(it, message) { 
+        LaunchedEffect(it, message) {
             scope.launch {
                 snackbarHostState.showSnackbar(message)
                 viewModel.clearErrorMessage()
@@ -90,27 +91,33 @@ fun TrainingEquipmentView(
         }
     }
 
-    val localizedList: List<DisplayableTrainingEquipment> = uiState.rawEquipmentList.map {
-        DisplayableTrainingEquipment(
-            equipment = it,
-            localizedName = getEquipmentName(it.name, it.default) // Composable call
-        )
-    }
-    
-    val processedEquipmentList: List<DisplayableTrainingEquipment> = remember(uiState.rawEquipmentList, filterText, uiState.favoriteEquipmentIds) {
-        val filtered = if (filterText.isBlank()) {
-            localizedList
-        } else {
-            localizedList.filter {
-                it.localizedName.contains(filterText, ignoreCase = true)
-            }
+    val localizedList: List<DisplayableTrainingEquipment> =
+        uiState.rawEquipmentList.map {
+            DisplayableTrainingEquipment(
+                equipment = it,
+                localizedName = getEquipmentName(it.name, it.default) // Composable call
+            )
         }
 
-        filtered.sortedWith(
-            compareByDescending<DisplayableTrainingEquipment> { uiState.favoriteEquipmentIds.contains(it.equipment.id) }
-                .thenBy { it.localizedName }
-        )
-    }
+    val processedEquipmentList: List<DisplayableTrainingEquipment> =
+        remember(uiState.rawEquipmentList, filterText, uiState.favoriteEquipmentIds) {
+            val filtered = if (filterText.isBlank()) {
+                localizedList
+            } else {
+                localizedList.filter {
+                    it.localizedName.contains(filterText, ignoreCase = true)
+                }
+            }
+
+            filtered.sortedWith(
+                compareByDescending<DisplayableTrainingEquipment> {
+                    uiState.favoriteEquipmentIds.contains(
+                        it.equipment.id
+                    )
+                }
+                    .thenBy { it.localizedName }
+            )
+        }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -132,7 +139,7 @@ fun TrainingEquipmentView(
                     CircularProgressIndicator()
                 }
             } else if (processedEquipmentList.isEmpty() && filterText.isNotBlank()) {
-                 Text(text = stringResource(Res.string.training_equipment_no_filtered_equipments))
+                Text(text = stringResource(Res.string.training_equipment_no_filtered_equipments))
             } else if (uiState.rawEquipmentList.isEmpty() && uiState.equipmentListError == null) {
                 Text(text = stringResource(Res.string.training_equipment_no_equipments))
             } else {
@@ -143,16 +150,23 @@ fun TrainingEquipmentView(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(bottom = 80.dp)
                 ) {
-                    items(processedEquipmentList.size, key = { processedEquipmentList[it].equipment.id.toString() }) { index ->
+                    items(
+                        processedEquipmentList.size,
+                        key = { processedEquipmentList[it].equipment.id.toString() }) { index ->
                         val displayableEquipment = processedEquipmentList[index]
-                        val isFavorite = uiState.favoriteEquipmentIds.contains(displayableEquipment.equipment.id)
+                        val isFavorite =
+                            uiState.favoriteEquipmentIds.contains(displayableEquipment.equipment.id)
                         TrainingEquipmentCard(
                             equipment = displayableEquipment.equipment,
                             localizedName = displayableEquipment.localizedName, // Pass localized name
                             isFavorite = isFavorite,
                             onAddFavorite = { viewModel.addFavorite(displayableEquipment.equipment.id) },
                             onRemoveFavorite = { viewModel.removeFavorite(displayableEquipment.equipment.id) },
-                            onClick = { viewModel.navigateToTrainingEquipmentDetail(displayableEquipment.equipment.id) },
+                            onClick = {
+                                viewModel.navigateToTrainingEquipmentDetail(
+                                    displayableEquipment.equipment.id
+                                )
+                            },
                             modifier = Modifier
                         )
                     }
@@ -172,7 +186,7 @@ fun TrainingEquipmentView(
                 contentDescription = stringResource(Res.string.training_equipment_content_description_add)
             )
         }
-         SnackbarHost(
+        SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier.align(Alignment.BottomCenter)
         )
@@ -208,8 +222,9 @@ fun TrainingEquipmentCard(
                 imageUri = equipment.imageUri,
                 imageResource = getEquipmentImage(equipment.imageUri, equipment.default),
                 default = equipment.default,
-                contentDescription = null, // Image is decorative here, card has main content description
-                defaultContentDescription = stringResource(Res.string.training_equipment_content_description_default_equipment),
+                contentDescription = null,
+                defaultContentDescription =
+                    stringResource(Res.string.training_equipment_content_description_default_equipment),
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -218,8 +233,18 @@ fun TrainingEquipmentCard(
                 modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
             ) {
                 Icon(
-                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(Res.drawable.ic_favorite_border),
-                    contentDescription = stringResource(if (isFavorite) Res.string.training_equipment_content_description_card_remove_favorite else Res.string.training_equipment_content_description_card_add_favorite),
+                    painter =
+                        if (isFavorite)
+                            painterResource(Res.drawable.ic_favorite)
+                        else
+                            painterResource(Res.drawable.ic_favorite_border),
+                    contentDescription =
+                        stringResource(
+                            if (isFavorite)
+                                Res.string.training_equipment_content_description_card_remove_favorite
+                            else
+                                Res.string.training_equipment_content_description_card_add_favorite
+                        ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

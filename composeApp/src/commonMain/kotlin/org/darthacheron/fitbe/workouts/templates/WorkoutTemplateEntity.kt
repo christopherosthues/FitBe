@@ -14,24 +14,22 @@ data class WorkoutTemplateEntity(
     val imageUri: String? = null,
     val default: Boolean = false
 ) {
-    fun toWorkoutTemplate(): WorkoutTemplate {
-        return WorkoutTemplate(
+    fun toWorkoutTemplate(): WorkoutTemplate =
+        WorkoutTemplate(
             id = this.id,
             name = this.name,
             description = this.description,
             imageUri = this.imageUri,
             default = this.default
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun WorkoutTemplate.toWorkoutTemplateEntity(): WorkoutTemplateEntity {
-    return WorkoutTemplateEntity(
+fun WorkoutTemplate.toWorkoutTemplateEntity(): WorkoutTemplateEntity =
+    WorkoutTemplateEntity(
         id = this.id,
         name = this.name,
         description = this.description,
         imageUri = this.imageUri,
         default = this.default
     )
-}

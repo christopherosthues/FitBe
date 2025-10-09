@@ -5,7 +5,8 @@ import org.darthacheron.fitbe.settings.NativeSettingsRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.koin.dsl.module
 
-actual val platformModule = module {
-    single { DatabaseFactory() }
-    single<SettingsRepository> { NativeSettingsRepository() }
-}
+actual val platformModule =
+    module {
+        single { DatabaseFactory() }
+        single<SettingsRepository> { NativeSettingsRepository() }
+    }

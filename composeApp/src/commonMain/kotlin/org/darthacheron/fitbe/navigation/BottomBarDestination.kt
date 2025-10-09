@@ -18,31 +18,35 @@ sealed class BottomBarDestination(
     val label: StringResource,
     val icon: DrawableResource
 ) {
-    data object Home: BottomBarDestination(
+    data object Home : BottomBarDestination(
         screen = Screen.Home,
         label = Res.string.bottom_bar_home,
         icon = Res.drawable.ic_home
     )
-    data object ExercisesDashboard: BottomBarDestination(
+
+    data object ExercisesDashboard : BottomBarDestination(
         screen = Screen.ExercisesDashboard,
         label = Res.string.bottom_bar_exercises,
         icon = Res.drawable.ic_exercise
     )
-    data object Health: BottomBarDestination(
+
+    data object Health : BottomBarDestination(
         screen = Screen.Health,
         label = Res.string.bottom_bar_health,
         icon = Res.drawable.ic_health
     )
-    data object Profile: BottomBarDestination(
+
+    data object Profile : BottomBarDestination(
         screen = Screen.Profile,
         label = Res.string.bottom_bar_profile,
         icon = Res.drawable.ic_profile
     )
 }
 
-val bottomBarDestinations = listOf(
-    BottomBarDestination.Home,
-    BottomBarDestination.ExercisesDashboard,
-    BottomBarDestination.Health,
-    BottomBarDestination.Profile,
-)
+val bottomBarDestinations =
+    listOf(
+        BottomBarDestination.Home,
+        BottomBarDestination.ExercisesDashboard,
+        BottomBarDestination.Health,
+        BottomBarDestination.Profile
+    )

@@ -10,7 +10,7 @@ androidx-core = "1.17.0"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.4"
 androidx-testExt = "1.3.0"
-composeHotReload = "1.0.0-beta09"
+composeHotReload = "1.0.0-rc01"
 composeMultiplatform = "1.9.0"
 junit = "4.13.2"
 koin = "4.1.1"
@@ -22,12 +22,14 @@ kotlinx-datetime = "0.6.2"
 kotlinSerialization = "1.9.0"
 ksp = "2.2.20-2.0.2"
 sqlite = "2.6.1"
-room = "2.8.1"
+room = "2.8.2"
 koala-plot = "0.9.1"
 androidx-datastore = "1.1.7"
 filekit = "0.11.0"
 coreKtx = "1.7.0"
 turbine = "1.2.1"
+ktlint-gradle = "13.1.0"
+ktlint-lint = "1.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -86,3 +88,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }

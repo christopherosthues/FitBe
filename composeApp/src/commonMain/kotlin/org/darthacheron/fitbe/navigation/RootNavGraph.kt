@@ -34,7 +34,7 @@ fun RootNavGraph(
             RootScreen(
                 topNavHostController = navHostController,
                 bottomBarNavController = bottomBarNavController,
-                topBarManager = topBarManager,
+                topBarManager = topBarManager
             )
         }
         composable<Screen.Settings> {
@@ -44,17 +44,18 @@ fun RootNavGraph(
         composable<Screen.ExerciseExecution> { backStackEntry ->
             val workoutTemplateRoute: Screen.ExerciseExecution = backStackEntry.toRoute()
             val id = workoutTemplateRoute.id.toUuidOrNull()
-            val viewModel = koinViewModel<ExerciseExecutionViewModel>(
-                parameters = { parametersOf(navHostController) }
-            )
+            val viewModel =
+                koinViewModel<ExerciseExecutionViewModel>(
+                    parameters = { parametersOf(navHostController) }
+                )
             if (id == null) {
                 return@composable
             }
             ExerciseExecutionView(
                 id,
                 viewModel = viewModel,
-                topBarManager = topBarManager, // Added
-                onNavigateBack = { navHostController.navigateUp() } // Changed from onCancel
+                topBarManager = topBarManager,
+                onNavigateBack = { navHostController.navigateUp() }
             )
         }
     }

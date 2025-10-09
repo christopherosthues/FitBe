@@ -5,9 +5,7 @@ import io.github.koalaplot.core.line.StackedAreaPlotEntry
 class StackedAreaPlotDoubleDataAdapter<X>(
     private val xData: List<X>,
     private val yData: List<List<Double>>
-) :
-    AbstractList<StackedAreaPlotEntry<X, Double>>() {
-
+) : AbstractList<StackedAreaPlotEntry<X, Double>>() {
     init {
         if (xData.isNotEmpty()) {
             require(yData.isNotEmpty()) { "yData must not be empty if xData is not empty" }

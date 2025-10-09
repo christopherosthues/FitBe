@@ -9,8 +9,11 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecutionDao) {
-
-    suspend fun startNewWorkoutExecution(profileId: Uuid, exerciseId: Uuid, plannedSets: Int): Uuid {
+    suspend fun startNewWorkoutExecution(
+        profileId: Uuid,
+        exerciseId: Uuid,
+        plannedSets: Int
+    ): Uuid {
         val newExecution = WorkoutExecutionEntity(
             exerciseId = exerciseId,
             profileId = profileId,
@@ -37,21 +40,22 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
         restTimeSecondsAfterSet: Int? = null, // Optional
         notes: String? = null // Optional
     ) {
-        val workoutSet = WorkoutSetExecutionEntity(
-            workoutExecutionId = workoutExecutionId,
-            setNumber = setNumber,
-            status = status,
-            targetReps = targetReps,
-            targetWeightKg = targetWeightKg,
-            targetDurationSeconds = targetDurationSeconds,
-            targetDistanceKm = targetDistanceKm,
-            actualReps = actualReps,
-            actualWeightKg = actualWeightKg,
-            actualDurationSeconds = actualDurationSeconds,
-            actualDistanceKm = actualDistanceKm,
-            restTimeSecondsAfterSet = restTimeSecondsAfterSet,
-            notes = notes
-        )
+        val workoutSet =
+            WorkoutSetExecutionEntity(
+                workoutExecutionId = workoutExecutionId,
+                setNumber = setNumber,
+                status = status,
+                targetReps = targetReps,
+                targetWeightKg = targetWeightKg,
+                targetDurationSeconds = targetDurationSeconds,
+                targetDistanceKm = targetDistanceKm,
+                actualReps = actualReps,
+                actualWeightKg = actualWeightKg,
+                actualDurationSeconds = actualDurationSeconds,
+                actualDistanceKm = actualDistanceKm,
+                restTimeSecondsAfterSet = restTimeSecondsAfterSet,
+                notes = notes
+            )
         workoutExecutionDao.insertWorkoutSetExecution(workoutSet)
     }
 
@@ -60,7 +64,8 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
         newStatus: WorkoutExecutionStatus,
         endTime: Instant? = Clock.System.now() // Default to now if completing/cancelling
     ) {
-        val execution = workoutExecutionDao.getWorkoutExecutionWithSets(workoutExecutionId).firstOrNull()?.workoutExecution
+        val execution = workoutExecutionDao.getWorkoutExecutionWithSets(workoutExecutionId)
+            .firstOrNull()?.workoutExecution
         execution?.let {
             val updatedExecution = it.copy(
                 status = newStatus,
@@ -70,16 +75,15 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
         }
     }
 
-    fun getWorkoutExecutionWithSets(workoutExecutionId: Uuid): Flow<WorkoutExecutionWithSetsEntity?> {
-        return workoutExecutionDao.getWorkoutExecutionWithSets(workoutExecutionId)
-    }
+    fun getWorkoutExecutionWithSets(workoutExecutionId: Uuid): Flow<WorkoutExecutionWithSetsEntity?> =
+        workoutExecutionDao.getWorkoutExecutionWithSets(workoutExecutionId)
 
-    fun getInProgressWorkoutExecution(profileId: Uuid, exerciseId: Uuid): Flow<WorkoutExecutionEntity?> {
-        return workoutExecutionDao.getInProgressWorkoutExecution(exerciseId, profileId)
-    }
+    fun getInProgressWorkoutExecution(
+        profileId: Uuid,
+        exerciseId: Uuid
+    ): Flow<WorkoutExecutionEntity?> =
+        workoutExecutionDao.getInProgressWorkoutExecution(exerciseId, profileId)
 
-
-    fun getAllWorkoutExecutionsForProfile(profileId: Uuid): Flow<List<WorkoutExecutionWithSetsEntity>> {
-        return workoutExecutionDao.getAllWorkoutExecutionsForProfile(profileId)
-    }
+    fun getAllWorkoutExecutionsForProfile(profileId: Uuid): Flow<List<WorkoutExecutionWithSetsEntity>> =
+        workoutExecutionDao.getAllWorkoutExecutionsForProfile(profileId)
 }

@@ -20,13 +20,17 @@ sealed class Screen {
     data object ExercisesOverview : Screen()
 
     @Serializable
-    data class ExerciseDetail(val id: String?) : Screen()
+    data class ExerciseDetail(
+        val id: String?
+    ) : Screen()
 
     @Serializable
     data object TrainingEquipmentOverview : Screen()
 
     @Serializable
-    data class TrainingEquipmentDetail(val id: String?) : Screen()
+    data class TrainingEquipmentDetail(
+        val id: String?
+    ) : Screen()
 
     @Serializable
     data object Health : Screen()
@@ -53,14 +57,20 @@ sealed class Screen {
     data object ProgramOverview : Screen()
 
     @Serializable
-    data class ProgramDetail(val id: String?) : Screen()
+    data class ProgramDetail(
+        val id: String?
+    ) : Screen()
 
     @Serializable
     data object WorkoutsOverview : Screen()
 
     @Serializable
-    data class WorkoutTemplateDetail(val id: String?) : Screen()
+    data class WorkoutTemplateDetail(
+        val id: String?
+    ) : Screen()
 
     @Serializable
-    data class ExerciseExecution(val id: String) : Screen()
+    data class ExerciseExecution(
+        val id: String
+    ) : Screen()
 }

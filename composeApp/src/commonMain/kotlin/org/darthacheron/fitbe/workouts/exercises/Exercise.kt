@@ -17,37 +17,43 @@ open class Exercise(
     open val imageUri: String? = null,
     open val default: Boolean = false,
     open val recommendedFor: List<RecommendedFor>,
-    open val exerciseType: ExerciseType, // Added field
+    open val exerciseType: ExerciseType,
     open val dateUtc: LocalDate
 )
 
 @Composable
-internal fun getExerciseName(name: String, default: Boolean): String {
-    return if (default && exerciseList.any { it.key == name }) {
+internal fun getExerciseName(
+    name: String,
+    default: Boolean
+): String =
+    if (default && exerciseList.any { it.key == name }) {
         DefaultExerciseResProvider.exerciseNameMap[name]?.let {
             stringResource(it)
         } ?: name
     } else {
         name
     }
-}
 
 @Composable
-internal fun getExerciseGuide(guide: String, default: Boolean): String {
-    return if (default && exerciseList.any { it.key == guide }) {
+internal fun getExerciseGuide(
+    guide: String,
+    default: Boolean
+): String =
+    if (default && exerciseList.any { it.key == guide }) {
         DefaultExerciseResProvider.exerciseGuideMap[guide]?.let {
             stringResource(it)
         } ?: guide
     } else {
         guide
     }
-}
 
 @Composable
-internal fun getExerciseImage(imageUri: String?, default: Boolean): DrawableResource? {
-    return if (default && imageUri != null && imageUri.startsWith("default_exercise_")) {
+internal fun getExerciseImage(
+    imageUri: String?,
+    default: Boolean
+): DrawableResource? =
+    if (default && imageUri != null && imageUri.startsWith("default_exercise_")) {
         DefaultExerciseResProvider.exerciseImageMap[imageUri]
     } else {
         null
     }
-}

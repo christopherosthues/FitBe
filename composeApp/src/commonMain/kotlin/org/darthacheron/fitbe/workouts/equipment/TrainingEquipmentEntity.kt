@@ -18,26 +18,27 @@ data class TrainingEquipmentEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "image_uri") val imageUri: String? = null,
     val default: Boolean = false,
-    val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val dateUtc: LocalDate = Clock.System
+        .now()
+        .toLocalDateTime(TimeZone.UTC)
+        .date,
 ) {
-    fun toTrainingEquipment(): TrainingEquipment {
-        return TrainingEquipment(
+    fun toTrainingEquipment(): TrainingEquipment =
+        TrainingEquipment(
             id = id,
             name = name,
             imageUri = imageUri,
             default = default,
             dateUtc = dateUtc
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun TrainingEquipment.toTrainingEquipmentEntity(): TrainingEquipmentEntity {
-    return TrainingEquipmentEntity(
+fun TrainingEquipment.toTrainingEquipmentEntity(): TrainingEquipmentEntity =
+    TrainingEquipmentEntity(
         id = this.id,
         name = this.name,
         imageUri = this.imageUri,
         default = this.default,
         dateUtc = this.dateUtc
     )
-}

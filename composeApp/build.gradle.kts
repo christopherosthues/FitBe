@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -23,7 +24,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_21)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -34,13 +35,13 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm("desktop")
 
     room {
         schemaDirectory("$projectDir/schemas")
     }
-    
+
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
 //        outputModuleName.set("composeApp")
@@ -60,10 +61,10 @@ kotlin {
 //        }
 //        binaries.executable()
 //    }
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -111,7 +112,6 @@ kotlin {
             implementation(libs.kotlin.testJunit)
             implementation(libs.androidx.testExt.junit)
             implementation(libs.androidx.test.core.ktx)
-
         }
         androidUnitTest.dependencies {
         }
@@ -119,6 +119,26 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
+    }
+}
+
+ktlint {
+    version.set(libs.versions.ktlint.lint.get())
+    debug.set(true)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(true)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
     }
 }
 

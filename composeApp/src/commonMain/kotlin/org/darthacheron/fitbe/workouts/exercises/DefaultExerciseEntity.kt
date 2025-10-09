@@ -20,11 +20,15 @@ data class DefaultExerciseEntity(
     val targetMuscleGroups: List<MuscleGroup> = emptyList(),
     val imageUri: String? = null,
     val recommendedFor: List<RecommendedFor>,
-    val exerciseType: ExerciseType, // Added field
-    val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val exerciseType: ExerciseType,
+    val dateUtc: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .date,
 ) {
-    fun toExerciseEntity(): ExerciseEntity {
-        return ExerciseEntity(
+    fun toExerciseEntity(): ExerciseEntity =
+        ExerciseEntity(
             id = id,
             name = name,
             guide = guide,
@@ -35,10 +39,9 @@ data class DefaultExerciseEntity(
             exerciseType = exerciseType,
             dateUtc = dateUtc
         )
-    }
 
-    fun toExercise(): Exercise {
-        return Exercise(
+    fun toExercise(): Exercise =
+        Exercise(
             id = id,
             name = name,
             guide = guide,
@@ -49,19 +52,17 @@ data class DefaultExerciseEntity(
             exerciseType = exerciseType,
             dateUtc = dateUtc
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun ExerciseEntity.toDefaultExerciseEntity(): DefaultExerciseEntity {
-    return DefaultExerciseEntity(
+fun ExerciseEntity.toDefaultExerciseEntity(): DefaultExerciseEntity =
+    DefaultExerciseEntity(
         id = this.id,
         name = this.name,
         guide = this.guide,
         targetMuscleGroups = this.targetMuscleGroups,
         imageUri = this.imageUri,
         recommendedFor = this.recommendedFor,
-        exerciseType = this.exerciseType, // Added field
+        exerciseType = this.exerciseType,
         dateUtc = this.dateUtc
     )
-}

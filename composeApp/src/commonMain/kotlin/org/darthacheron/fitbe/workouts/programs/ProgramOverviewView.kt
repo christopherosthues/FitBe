@@ -121,74 +121,74 @@ fun ProgramOverviewView(viewModel: ProgramOverviewViewModel) {
             )
         }
 
-    Box (modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                OutlinedTextField(
-                    value = filterText,
-                    onValueChange = { viewModel.onFilterTextChanged(it) },
-                    label = { Text(stringResource(Res.string.program_overview_filter_label)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            OutlinedTextField(
+                value = filterText,
+                onValueChange = { viewModel.onFilterTextChanged(it) },
+                label = { Text(stringResource(Res.string.program_overview_filter_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
-                if (uiState.isLoading) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                } else if (processedProgramList.isEmpty() && filterText.isNotBlank()) {
-                    Text(text = stringResource(Res.string.program_overview_no_filtered_programs))
-                } else if (uiState.rawProgramList.isEmpty() && uiState.programListError == null) {
-                    Text(text = stringResource(Res.string.program_overview_no_programs))
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 200.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 80.dp)
-                    ) {
-                        items(
-                            processedProgramList.size,
-                            key = { processedProgramList[it].program.id }) { programIndex ->
-                            val displayableProgram = processedProgramList[programIndex]
-                            val isFavorite =
-                                uiState.favoriteProgramIds.contains(displayableProgram.program.id)
-                            ProgramCard(
-                                program = displayableProgram.program,
-                                localizedName = displayableProgram.localizedName,
-                                isFavorite = isFavorite,
-                                onAddFavorite = { viewModel.addFavorite(displayableProgram.program.id) },
-                                onRemoveFavorite = { viewModel.removeFavorite(displayableProgram.program.id) },
-                                onClick = {
-                                    viewModel.navigateToProgramDetail(
-                                        displayableProgram.program.id
-                                    )
-                                },
-                                modifier = Modifier
-                            )
-                        }
+            if (uiState.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (processedProgramList.isEmpty() && filterText.isNotBlank()) {
+                Text(text = stringResource(Res.string.program_overview_no_filtered_programs))
+            } else if (uiState.rawProgramList.isEmpty() && uiState.programListError == null) {
+                Text(text = stringResource(Res.string.program_overview_no_programs))
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 200.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 80.dp)
+                ) {
+                    items(
+                        processedProgramList.size,
+                        key = { processedProgramList[it].program.id }) { programIndex ->
+                        val displayableProgram = processedProgramList[programIndex]
+                        val isFavorite =
+                            uiState.favoriteProgramIds.contains(displayableProgram.program.id)
+                        ProgramCard(
+                            program = displayableProgram.program,
+                            localizedName = displayableProgram.localizedName,
+                            isFavorite = isFavorite,
+                            onAddFavorite = { viewModel.addFavorite(displayableProgram.program.id) },
+                            onRemoveFavorite = { viewModel.removeFavorite(displayableProgram.program.id) },
+                            onClick = {
+                                viewModel.navigateToProgramDetail(
+                                    displayableProgram.program.id
+                                )
+                            },
+                            modifier = Modifier
+                        )
                     }
                 }
             }
-
-            FloatingActionButton(
-                onClick = { viewModel.navigateToProgramDetail(null) },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_add),
-                    contentDescription = stringResource(Res.string.program_overview_content_description_add)
-                )
-            }
         }
+
+        FloatingActionButton(
+            onClick = { viewModel.navigateToProgramDetail(null) },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_add),
+                contentDescription = stringResource(Res.string.program_overview_content_description_add)
+            )
+        }
+    }
 }
 
 @Composable

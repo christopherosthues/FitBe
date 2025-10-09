@@ -38,19 +38,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.ic_photo_library // Added
-import fitbe.composeapp.generated.resources.ic_remove // Added
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_exercise // Placeholder
+import fitbe.composeapp.generated.resources.ic_photo_library
+import fitbe.composeapp.generated.resources.ic_remove
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_edit
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_image // Placeholder
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image // Placeholder
-import fitbe.composeapp.generated.resources.exercise_detail_content_description_select_image // Placeholder
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_image
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image
+import fitbe.composeapp.generated.resources.exercise_detail_content_description_select_image
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import org.darthacheron.fitbe.components.ImagePlaceholder // Added
+import org.darthacheron.fitbe.components.ImagePlaceholder
 import org.darthacheron.fitbe.components.ImageWithDefault
 import org.darthacheron.fitbe.workouts.exercises.getExerciseImage
 import org.darthacheron.fitbe.workouts.exercises.getExerciseName

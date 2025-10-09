@@ -34,22 +34,16 @@ data class WorkoutExecutionEntity(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Uuid = Uuid.random(),
-
     @ColumnInfo(name = "exercise_id")
     val exerciseId: Uuid,
-
     @ColumnInfo(name = "profile_id")
     val profileId: Uuid, // Assuming you have a profile system
-
     @ColumnInfo(name = "start_time_utc")
     val startTimeUtc: Instant,
-
     @ColumnInfo(name = "end_time_utc")
     val endTimeUtc: Instant? = null,
-
     @ColumnInfo(name = "status")
     val status: WorkoutExecutionStatus = WorkoutExecutionStatus.IN_PROGRESS,
-
     @ColumnInfo(name = "total_planned_sets")
     val totalPlannedSets: Int
 )

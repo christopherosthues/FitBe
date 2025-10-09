@@ -13,16 +13,17 @@ abstract class BottomNavigationBarViewModel(
     val topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
     override val actions: List<TopBarAction>
-        get() = listOf(
-            TopBarAction(
-                icon = Res.drawable.ic_settings,
-                contentDescription = Res.string.settings_content_description_title,
-                onClick = {
-                    topNavHostController.navigate(Screen.Settings)
-                },
-                isVisible = true
+        get() =
+            listOf(
+                TopBarAction(
+                    icon = Res.drawable.ic_settings,
+                    contentDescription = Res.string.settings_content_description_title,
+                    onClick = {
+                        topNavHostController.navigate(Screen.Settings)
+                    },
+                    isVisible = true
+                )
             )
-        )
 
     override val backNavigationIconVisible: Boolean?
         get() = false

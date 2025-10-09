@@ -12,26 +12,24 @@ private const val POUND_TO_KG = 0.453592
  * Enum for weight units.
  */
 enum class WeightUnit {
-    KG, POUND;
+    KG,
+    POUND;
 
-    fun toStringResource(): StringResource {
-        return when(this) {
+    fun toStringResource(): StringResource =
+        when (this) {
             KG -> Res.string.settings_kg
             POUND -> Res.string.settings_pound
         }
-    }
 
-    fun toKilogram(value: Double): Double {
-        return when(this) {
+    fun toKilogram(value: Double): Double =
+        when (this) {
             KG -> value
             POUND -> value * POUND_TO_KG
         }
-    }
 
-    fun toPound(value: Double): Double {
-        return when(this) {
+    fun toPound(value: Double): Double =
+        when (this) {
             KG -> value * KG_TO_POUND
             POUND -> value
         }
-    }
 }

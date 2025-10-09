@@ -26,7 +26,9 @@ class StartUpService(
                 if (profiles.isEmpty()) {
                     val defaultProfile = Profile()
                     profileRepository.upsertProfile(defaultProfile)
-                    settingsRepository.saveSettings(settings.copy(selectedProfileId = defaultProfile.id))
+                    settingsRepository.saveSettings(
+                        settings.copy(selectedProfileId = defaultProfile.id)
+                    )
                 }
 //                seedDatabase(database)
             } catch (exception: Exception) {

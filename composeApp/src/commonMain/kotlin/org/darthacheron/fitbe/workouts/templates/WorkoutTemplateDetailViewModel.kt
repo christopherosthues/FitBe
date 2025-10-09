@@ -6,9 +6,6 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_favorite
 import fitbe.composeapp.generated.resources.ic_favorite_border
 import fitbe.composeapp.generated.resources.top_bar_title_workout_template_detail
-// Placeholder for new string resources - these should be created
-// import fitbe.composeapp.generated.resources.workout_template_detail_content_description_add_favorite
-// import fitbe.composeapp.generated.resources.workout_template_detail_content_description_remove_favorite
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -51,9 +48,10 @@ class WorkoutTemplateDetailViewModel(
     private val _uiState = MutableStateFlow(WorkoutTemplateDetailUiState())
     val uiState: StateFlow<WorkoutTemplateDetailUiState> = _uiState.asStateFlow()
 
-    private val currentProfileId: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
-        .map { it.selectedProfileId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val currentProfileId: StateFlow<Uuid?> =
+        settingsRepository.getSettingsFlow()
+            .map { it.selectedProfileId }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val isFavoriteFlow: StateFlow<Boolean> =
         combine(
@@ -86,7 +84,7 @@ class WorkoutTemplateDetailViewModel(
             val favoriteAction = TopBarAction(
                 icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
                 // TODO: Replace with actual string resources
-                contentDescription = if (isCurrentlyFavorite) Res.string.top_bar_title_workout_template_detail else Res.string.top_bar_title_workout_template_detail, 
+                contentDescription = if (isCurrentlyFavorite) Res.string.top_bar_title_workout_template_detail else Res.string.top_bar_title_workout_template_detail,
                 onClick = { toggleFavorite() },
                 isVisible = currentTemplateId != null && currentProfId != null
             )
@@ -115,7 +113,7 @@ class WorkoutTemplateDetailViewModel(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    isEditing = true, 
+                    isEditing = true,
                     templateId = null,
                     name = "",
                     description = null,
@@ -133,7 +131,9 @@ class WorkoutTemplateDetailViewModel(
         _uiState.update { it.copy(isLoading = true, templateId = templateId, error = null) }
         viewModelScope.launch {
             try {
-                val templateWithDetails = workoutTemplateRepository.getWorkoutTemplateWithExercisesAndSets(templateId).firstOrNull()
+                val templateWithDetails =
+                    workoutTemplateRepository.getWorkoutTemplateWithExercisesAndSets(templateId)
+                        .firstOrNull()
 
                 if (templateWithDetails != null) {
                     val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->

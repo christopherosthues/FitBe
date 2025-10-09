@@ -46,7 +46,10 @@ class WeightOverviewViewModel(
     profileRepository: ProfileRepository,
     private val weightUnitConverter: WeightUnitConverter,
     topBarManager: TopBarManager
-) : OverviewViewModel<WeightOverviewError, WeightOverviewUiState>(settingsRepository, topBarManager) {
+) : OverviewViewModel<WeightOverviewError, WeightOverviewUiState>(
+    settingsRepository,
+    topBarManager
+) {
     override val title: StringResource
         get() = Res.string.top_bar_title_body_weights
 
@@ -91,20 +94,20 @@ class WeightOverviewViewModel(
             }
         }
     }
-    .onStart {
-        isLoading.value = true
-        errorMessage.value = null
-    }
-    .catch {
-        isLoading.value = false
-        errorMessage.value = Res.string.weight_overview_error_loading
-        emit(emptyList())
-    }
-    .map {
-        isLoading.value = false
-        it
-    }
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+        .onStart {
+            isLoading.value = true
+            errorMessage.value = null
+        }
+        .catch {
+            isLoading.value = false
+            errorMessage.value = Res.string.weight_overview_error_loading
+            emit(emptyList())
+        }
+        .map {
+            isLoading.value = false
+            it
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     override val uiState: StateFlow<WeightOverviewUiState> = combine(
         settings,
@@ -132,7 +135,10 @@ class WeightOverviewViewModel(
                 ?.roundToDecimals(2) ?: ProfileDefaults.MAX_BODY_WEIGHT
         }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
-    private fun mapDay(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeightOverview> {
+    private fun mapDay(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<BodyWeightOverview> {
         return aggregateBodyWeightsByPeriod(
             bodyWeights = bodyWeights,
             settings = settings,
@@ -159,7 +165,8 @@ class WeightOverviewViewModel(
                 val (totalMuscleMass, muscleMassCount) = group.fold(0.0 to 0) { acc, bw ->
                     bw.muscleMassInKg?.let { (acc.first + it) to (acc.second + 1) } ?: acc
                 }
-                val avgMuscleMassInKg = if (muscleMassCount > 0) totalMuscleMass / muscleMassCount else 0.0
+                val avgMuscleMassInKg =
+                    if (muscleMassCount > 0) totalMuscleMass / muscleMassCount else 0.0
 
                 val (totalBoneMass, boneMassCount) = group.fold(0.0 to 0) { acc, bw ->
                     bw.boneMassInKg?.let { (acc.first + it) to (acc.second + 1) } ?: acc
@@ -169,12 +176,14 @@ class WeightOverviewViewModel(
                 val (totalBodyFat, bodyFatCount) = group.fold(0.0 to 0) { acc, bw ->
                     bw.bodyFatPercentage?.let { (acc.first + it) to (acc.second + 1) } ?: acc
                 }
-                val avgBodyFatPercentage = if (bodyFatCount > 0) totalBodyFat / bodyFatCount else 0.0
+                val avgBodyFatPercentage =
+                    if (bodyFatCount > 0) totalBodyFat / bodyFatCount else 0.0
 
                 val (totalBodyWater, bodyWaterCount) = group.fold(0.0 to 0) { acc, bw ->
                     bw.bodyWaterInPercentage?.let { (acc.first + it) to (acc.second + 1) } ?: acc
                 }
-                val avgBodyWaterInPercentage = if (bodyWaterCount > 0) totalBodyWater / bodyWaterCount else 0.0
+                val avgBodyWaterInPercentage =
+                    if (bodyWaterCount > 0) totalBodyWater / bodyWaterCount else 0.0
 
                 BodyWeightOverview(
                     date = representativeDateSelector(group),
@@ -182,15 +191,26 @@ class WeightOverviewViewModel(
                         avgWeightInKg, WeightUnit.KG, settings.weightUnit
                     )?.roundToDecimals(2) ?: avgWeightInKg,
                     muscleMass =
-                        weightUnitConverter.convert(avgMuscleMassInKg, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2)!!,
-                    boneMass = weightUnitConverter.convert(avgBoneMassInKg, WeightUnit.KG, settings.weightUnit)?.roundToDecimals(2)!!,
+                        weightUnitConverter.convert(
+                            avgMuscleMassInKg,
+                            WeightUnit.KG,
+                            settings.weightUnit
+                        )?.roundToDecimals(2)!!,
+                    boneMass = weightUnitConverter.convert(
+                        avgBoneMassInKg,
+                        WeightUnit.KG,
+                        settings.weightUnit
+                    )?.roundToDecimals(2)!!,
                     bodyFatPercentage = avgBodyFatPercentage.roundToDecimals(2),
                     bodyWaterPercentage = avgBodyWaterInPercentage.roundToDecimals(2)
                 )
             }
     }
 
-    private fun mapWeek(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeightOverview> {
+    private fun mapWeek(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<BodyWeightOverview> {
         return aggregateBodyWeightsByPeriod(
             bodyWeights = bodyWeights,
             settings = settings,
@@ -199,16 +219,26 @@ class WeightOverviewViewModel(
         )
     }
 
-    private fun mapMonth(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeightOverview> {
+    private fun mapMonth(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<BodyWeightOverview> {
         return aggregateBodyWeightsByPeriod(
             bodyWeights = bodyWeights,
             settings = settings,
-            groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date.year to it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date.month },
+            groupKeySelector = {
+                it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date.year to it.date.toLocalDateTime(
+                    TimeZone.currentSystemDefault()
+                ).date.month
+            },
             representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfMonth() }
         )
     }
 
-    private fun mapYear(bodyWeights: List<BodyWeight>, settings: Settings): List<BodyWeightOverview> {
+    private fun mapYear(
+        bodyWeights: List<BodyWeight>,
+        settings: Settings
+    ): List<BodyWeightOverview> {
         return aggregateBodyWeightsByPeriod(
             bodyWeights = bodyWeights,
             settings = settings,

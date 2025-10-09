@@ -12,7 +12,8 @@ import org.darthacheron.fitbe.database.FitBeDatabase_Impl
  * you can provide a file path. `null` makes it purely in-memory.
  */
 actual fun inMemoryDatabaseFactory(): RoomDatabase.Builder<FitBeDatabase> {
-    return Room.inMemoryDatabaseBuilder<FitBeDatabase>(
-        factory = ::FitBeDatabase_Impl
-    ).setDriver(BundledSQLiteDriver()) // The Driver is from the sqlite-bundled artifact for JVM
+    return Room
+        .inMemoryDatabaseBuilder<FitBeDatabase>(
+            factory = ::FitBeDatabase_Impl
+        ).setDriver(BundledSQLiteDriver()) // The Driver is from the sqlite-bundled artifact for JVM
 }

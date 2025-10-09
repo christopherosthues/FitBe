@@ -88,7 +88,8 @@ class ExerciseExecutionViewModel(
     val elapsedTimeSeconds: StateFlow<Int> = _elapsedTimeSeconds.asStateFlow()
 
     private val _elapsedTimeSecondsForSetCompleted = MutableStateFlow(0)
-    val elapsedTimeSecondsForSetCompleted: StateFlow<Int> = _elapsedTimeSecondsForSetCompleted.asStateFlow()
+    val elapsedTimeSecondsForSetCompleted: StateFlow<Int> =
+        _elapsedTimeSecondsForSetCompleted.asStateFlow()
 
     private var timerJob: Job? = null
     private val _timerIsRunning = MutableStateFlow(false)
@@ -112,10 +113,42 @@ class ExerciseExecutionViewModel(
     private val _actualDistanceKm = MutableStateFlow<Double?>(null)
     val actualDistanceKm: StateFlow<Double?> = _actualDistanceKm.asStateFlow()
 
-    val showRepsField: StateFlow<Boolean> = exercise.flatMapLatest { ex -> flowOf(ex?.exerciseType in listOf(ExerciseType.WEIGHT_REPS, ExerciseType.REPS_ONLY, ExerciseType.WEIGHT_REPS_TIMED)) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showWeightField: StateFlow<Boolean> = exercise.flatMapLatest { ex -> flowOf(ex?.exerciseType in listOf(ExerciseType.WEIGHT_REPS, ExerciseType.WEIGHT_TIMED, ExerciseType.WEIGHT_REPS_TIMED)) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showDurationField: StateFlow<Boolean> = exercise.flatMapLatest { ex -> flowOf(ex?.exerciseType in listOf(ExerciseType.TIMED, ExerciseType.WEIGHT_TIMED, ExerciseType.WEIGHT_REPS_TIMED, ExerciseType.DISTANCE_TIMED)) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showDistanceField: StateFlow<Boolean> = exercise.flatMapLatest { ex -> flowOf(ex?.exerciseType in listOf(ExerciseType.DISTANCE, ExerciseType.DISTANCE_TIMED)) }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val showRepsField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
+        flowOf(
+            ex?.exerciseType in listOf(
+                ExerciseType.WEIGHT_REPS,
+                ExerciseType.REPS_ONLY,
+                ExerciseType.WEIGHT_REPS_TIMED
+            )
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val showWeightField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
+        flowOf(
+            ex?.exerciseType in listOf(
+                ExerciseType.WEIGHT_REPS,
+                ExerciseType.WEIGHT_TIMED,
+                ExerciseType.WEIGHT_REPS_TIMED
+            )
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val showDurationField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
+        flowOf(
+            ex?.exerciseType in listOf(
+                ExerciseType.TIMED,
+                ExerciseType.WEIGHT_TIMED,
+                ExerciseType.WEIGHT_REPS_TIMED,
+                ExerciseType.DISTANCE_TIMED
+            )
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val showDistanceField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
+        flowOf(
+            ex?.exerciseType in listOf(
+                ExerciseType.DISTANCE,
+                ExerciseType.DISTANCE_TIMED
+            )
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         viewModelScope.launch {
@@ -137,7 +170,11 @@ class ExerciseExecutionViewModel(
         }
     }
 
-    private fun updateTopBarConfiguration(phase: ExecutionPhase, currentSetVal: Int, totalSetsVal: Int?) {
+    private fun updateTopBarConfiguration(
+        phase: ExecutionPhase,
+        currentSetVal: Int,
+        totalSetsVal: Int?
+    ) {
         val titleRes = phase.toStringResource()
         val actions = mutableListOf<TopBarAction>()
         val backNavVisible = phase != ExecutionPhase.WORKOUT_COMPLETED
@@ -158,13 +195,25 @@ class ExerciseExecutionViewModel(
                     )
                 )
             }
-            ExecutionPhase.SET_COMPLETED_DIALOG -> { /* Dialog has its own cancel */ }
-            ExecutionPhase.WORKOUT_COMPLETED -> { /* No actions */ }
+
+            ExecutionPhase.SET_COMPLETED_DIALOG -> { /* Dialog has its own cancel */
+            }
+
+            ExecutionPhase.WORKOUT_COMPLETED -> { /* No actions */
+            }
         }
-        topBarManager.setConfig(TopBarConfig(title = titleRes, backNavigationIconVisible = backNavVisible, actions = actions))
+        topBarManager.setConfig(
+            TopBarConfig(
+                title = titleRes,
+                backNavigationIconVisible = backNavVisible,
+                actions = actions
+            )
+        )
     }
 
-    fun onTotalSetsChanged(sets: String) { _totalSetsInput.value = sets.filter { it.isDigit() } }
+    fun onTotalSetsChanged(sets: String) {
+        _totalSetsInput.value = sets.filter { it.isDigit() }
+    }
 
     fun confirmTotalSets() {
         val sets = _totalSetsInput.value.toIntOrNull()
@@ -172,7 +221,8 @@ class ExerciseExecutionViewModel(
             _totalSets.value = sets
             _currentSet.value = 1
             _currentPhase.value = ExecutionPhase.TARGET_INPUT
-        } else { /* TODO: Show error, e.g., via a StateFlow<String?> for errors */ }
+        } else { /* TODO: Show error, e.g., via a StateFlow<String?> for errors */
+        }
     }
 
     fun startExecutionPhase() {
@@ -186,11 +236,12 @@ class ExerciseExecutionViewModel(
                 return@launch
             }
             if (_currentWorkoutExecutionId.value == null) { // Start a new one only if not already started
-                 _currentWorkoutExecutionId.value = workoutExecutionRepository.startNewWorkoutExecution(
-                    profileId = profileId,
-                    exerciseId = currentExercise.id,
-                    plannedSets = currentPlannedSets
-                )
+                _currentWorkoutExecutionId.value =
+                    workoutExecutionRepository.startNewWorkoutExecution(
+                        profileId = profileId,
+                        exerciseId = currentExercise.id,
+                        plannedSets = currentPlannedSets
+                    )
             }
             _currentPhase.value = ExecutionPhase.EXECUTING
             _elapsedTimeSeconds.value = 0
@@ -282,10 +333,13 @@ class ExerciseExecutionViewModel(
                 actualWeightKg = _actualWeight.value,
                 actualDurationSeconds = _actualDurationSeconds.value, // User might have edited this in dialog
                 actualDistanceKm = _actualDistanceKm.value,
-                restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value ?: 0)) DEFAULT_REST_DURATION_SECONDS else null
+                restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value
+                        ?: 0)
+                ) DEFAULT_REST_DURATION_SECONDS else null
             )
 
-            _actualReps.value = null; _actualWeight.value = null; _actualDurationSeconds.value = null; _actualDistanceKm.value = null
+            _actualReps.value = null; _actualWeight.value = null; _actualDurationSeconds.value =
+            null; _actualDistanceKm.value = null
             _phaseBeforeDialog.value = null
 
             if (_currentSet.value < (_totalSets.value ?: 0)) {
@@ -328,7 +382,9 @@ class ExerciseExecutionViewModel(
                     actualWeightKg = null,
                     actualDurationSeconds = _elapsedTimeSeconds.value, // Could save how long it was active before skip
                     actualDistanceKm = null,
-                    restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value ?: 0)) DEFAULT_REST_DURATION_SECONDS else null
+                    restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value
+                            ?: 0)
+                    ) DEFAULT_REST_DURATION_SECONDS else null
                 )
 
                 if (_currentSet.value < (_totalSets.value ?: 0)) {
@@ -339,21 +395,43 @@ class ExerciseExecutionViewModel(
                     _currentPhase.value = ExecutionPhase.WORKOUT_COMPLETED
                 }
             } else if (_currentPhase.value == ExecutionPhase.EXECUTING) {
-                 // Case where execId is null but trying to skip, indicates an issue
-                 // TODO: Handle error - cannot skip set if workout session not started
+                // Case where execId is null but trying to skip, indicates an issue
+                // TODO: Handle error - cannot skip set if workout session not started
             }
         }
     }
 
-    fun onTargetRepsChanged(reps: String) { _targetReps.value = reps.toIntOrNull() }
-    fun onTargetWeightChanged(weight: String) { _targetWeight.value = weight.toDoubleOrNull() }
-    fun onTargetDurationChanged(duration: String) { _targetDurationSeconds.value = duration.toIntOrNull() }
-    fun onTargetDistanceChanged(distance: String) { _targetDistanceKm.value = distance.toDoubleOrNull() }
+    fun onTargetRepsChanged(reps: String) {
+        _targetReps.value = reps.toIntOrNull()
+    }
 
-    fun onActualRepsChanged(reps: String) { _actualReps.value = reps.toIntOrNull() }
-    fun onActualWeightChanged(weight: String) { _actualWeight.value = weight.toDoubleOrNull() }
-    fun onActualDurationChanged(duration: String) { _actualDurationSeconds.value = duration.toIntOrNull() }
-    fun onActualDistanceChanged(distance: String) { _actualDistanceKm.value = distance.toDoubleOrNull() }
+    fun onTargetWeightChanged(weight: String) {
+        _targetWeight.value = weight.toDoubleOrNull()
+    }
+
+    fun onTargetDurationChanged(duration: String) {
+        _targetDurationSeconds.value = duration.toIntOrNull()
+    }
+
+    fun onTargetDistanceChanged(distance: String) {
+        _targetDistanceKm.value = distance.toDoubleOrNull()
+    }
+
+    fun onActualRepsChanged(reps: String) {
+        _actualReps.value = reps.toIntOrNull()
+    }
+
+    fun onActualWeightChanged(weight: String) {
+        _actualWeight.value = weight.toDoubleOrNull()
+    }
+
+    fun onActualDurationChanged(duration: String) {
+        _actualDurationSeconds.value = duration.toIntOrNull()
+    }
+
+    fun onActualDistanceChanged(distance: String) {
+        _actualDistanceKm.value = distance.toDoubleOrNull()
+    }
 
     fun overallWorkoutSave() {
         viewModelScope.launch {
@@ -361,11 +439,14 @@ class ExerciseExecutionViewModel(
             if (execId != null) {
                 // Ensure last set is saved if workout is completed prematurely (e.g. from resting phase)
                 // This check might be redundant if all paths to WORKOUT_COMPLETED save the last set.
-                workoutExecutionRepository.updateWorkoutExecutionStatus(execId, WorkoutExecutionStatus.COMPLETED)
+                workoutExecutionRepository.updateWorkoutExecutionStatus(
+                    execId,
+                    WorkoutExecutionStatus.COMPLETED
+                )
                 _currentWorkoutExecutionId.value = null // Clear after successful save
             } else {
-                 // TODO: Handle case where workout ID is null but trying to save overall workout.
-                 // This could happen if user navigates away before starting any sets, or an error occurred.
+                // TODO: Handle case where workout ID is null but trying to save overall workout.
+                // This could happen if user navigates away before starting any sets, or an error occurred.
             }
         }
     }
@@ -375,15 +456,28 @@ class ExerciseExecutionViewModel(
             pauseTimer()
             val execId = _currentWorkoutExecutionId.value
             if (execId != null) {
-                workoutExecutionRepository.updateWorkoutExecutionStatus(execId, WorkoutExecutionStatus.CANCELLED)
+                workoutExecutionRepository.updateWorkoutExecutionStatus(
+                    execId,
+                    WorkoutExecutionStatus.CANCELLED
+                )
                 _currentWorkoutExecutionId.value = null
             }
             // Reset all states
             _currentPhase.value = ExecutionPhase.SET_COUNT_INPUT
-            _totalSetsInput.value = ""; _totalSets.value = null; _currentSet.value = 1; _elapsedTimeSeconds.value = 0
-            _phaseBeforeDialog.value = null; _elapsedTimeSecondsForSetCompleted.value = 0
-            _targetReps.value = null; _targetWeight.value = null; _targetDurationSeconds.value = null; _targetDistanceKm.value = null
-            _actualReps.value = null; _actualWeight.value = null; _actualDurationSeconds.value = null; _actualDistanceKm.value = null
+            _totalSetsInput.value = "";
+            _totalSets.value = null;
+            _currentSet.value = 1;
+            _elapsedTimeSeconds.value = 0
+            _phaseBeforeDialog.value = null;
+            _elapsedTimeSecondsForSetCompleted.value = 0
+            _targetReps.value = null;
+            _targetWeight.value = null;
+            _targetDurationSeconds.value = null;
+            _targetDistanceKm.value = null
+            _actualReps.value = null;
+            _actualWeight.value = null;
+            _actualDurationSeconds.value = null;
+            _actualDistanceKm.value = null
             // onNavigateBack() is called by the TopBarAction's onClick
         }
     }

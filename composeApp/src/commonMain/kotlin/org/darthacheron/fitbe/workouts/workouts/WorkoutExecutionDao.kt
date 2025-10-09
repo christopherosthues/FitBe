@@ -13,7 +13,6 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface WorkoutExecutionDao {
-
     @Upsert
     suspend fun upsertWorkoutExecution(workoutExecution: WorkoutExecutionEntity): Long
 

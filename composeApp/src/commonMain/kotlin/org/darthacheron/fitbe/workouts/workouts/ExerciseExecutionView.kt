@@ -154,19 +154,19 @@ fun SetCountInputPhase(viewModel: ExerciseExecutionViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(stringResource(Res.string.exercise_execution_enter_sets_prompt), style = MaterialTheme.typography.titleMedium)
+        Text(text = stringResource(Res.string.exercise_execution_enter_sets_prompt), style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = totalSetsInput,
             onValueChange = viewModel::onTotalSetsChanged,
-            label = { Text(stringResource(Res.string.exercise_execution_number_of_sets)) },
+            label = { Text(text = stringResource(Res.string.exercise_execution_number_of_sets)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.6f)
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = viewModel::confirmTotalSets) {
-            Text(stringResource(Res.string.exercise_execution_confirm_sets_button))
+            Text(text = stringResource(Res.string.exercise_execution_confirm_sets_button))
         }
     }
 }
@@ -188,13 +188,13 @@ fun TargetInputPhase(viewModel: ExerciseExecutionViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(exercise?.name ?: "", style = MaterialTheme.typography.headlineSmall)
-        Text(stringResource(Res.string.exercise_execution_set_targets_prompt), style = MaterialTheme.typography.titleMedium)
+        Text(text = exercise?.name ?: "", style = MaterialTheme.typography.headlineSmall)
+        Text(text = stringResource(Res.string.exercise_execution_set_targets_prompt), style = MaterialTheme.typography.titleMedium)
         if (showRepsField) {
             OutlinedTextField(
                 value = targetReps?.toString() ?: "", 
                 onValueChange = viewModel::onTargetRepsChanged, 
-                label = { Text(stringResource(Res.string.exercise_execution_reps)) }, 
+                label = { Text(text = stringResource(Res.string.exercise_execution_reps)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -204,7 +204,7 @@ fun TargetInputPhase(viewModel: ExerciseExecutionViewModel) {
             OutlinedTextField(
                 value = targetWeight?.toString() ?: "", 
                 onValueChange = viewModel::onTargetWeightChanged, 
-                label = { Text(stringResource(Res.string.exercise_execution_weight_kg)) }, 
+                label = { Text(text = stringResource(Res.string.exercise_execution_weight_kg)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -214,7 +214,7 @@ fun TargetInputPhase(viewModel: ExerciseExecutionViewModel) {
             OutlinedTextField(
                 value = targetDuration?.toString() ?: "", 
                 onValueChange = viewModel::onTargetDurationChanged, 
-                label = { Text(stringResource(Res.string.exercise_execution_duration_seconds)) }, 
+                label = { Text(text = stringResource(Res.string.exercise_execution_duration_seconds)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -224,7 +224,7 @@ fun TargetInputPhase(viewModel: ExerciseExecutionViewModel) {
             OutlinedTextField(
                 value = targetDistance?.toString() ?: "", 
                 onValueChange = viewModel::onTargetDistanceChanged, 
-                label = { Text(stringResource(Res.string.exercise_execution_distance_km)) }, 
+                label = { Text(text = stringResource(Res.string.exercise_execution_distance_km)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -232,7 +232,7 @@ fun TargetInputPhase(viewModel: ExerciseExecutionViewModel) {
         }
         Spacer(modifier = Modifier.height(16.dp)) 
         Button(onClick = viewModel::startExecutionPhase, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(Res.string.exercise_execution_start_workout_button))
+            Text(text = stringResource(Res.string.exercise_execution_start_workout_button))
         }
     }
 }
@@ -269,13 +269,13 @@ fun ExecutingPhase(viewModel: ExerciseExecutionViewModel) {
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
-            Text(formattedTime, style = MaterialTheme.typography.headlineSmall)
+            Text(text = formattedTime, style = MaterialTheme.typography.headlineSmall)
             Column(horizontalAlignment = Alignment.End) {
-                Text(stringResource(Res.string.exercise_execution_exercise_count, 1, 1), style = MaterialTheme.typography.bodyLarge)
-                Text(stringResource(Res.string.exercise_execution_set_count, currentSet, totalSets ?: 0), style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(Res.string.exercise_execution_exercise_count, 1, 1), style = MaterialTheme.typography.bodyLarge)
+                Text(text = stringResource(Res.string.exercise_execution_set_count, currentSet, totalSets ?: 0), style = MaterialTheme.typography.titleMedium)
             }
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
         Text(text = exercise?.name ?: "Loading...", style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
         Text(text = stringResource(Res.string.exercise_execution_target_display, exerciseTargetDisplay), style = MaterialTheme.typography.titleSmall, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
@@ -285,7 +285,7 @@ fun ExecutingPhase(viewModel: ExerciseExecutionViewModel) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = viewModel::completeSet, modifier = Modifier.fillMaxWidth().height(60.dp)) {
-            Text(stringResource(Res.string.exercise_execution_complete_set_button), style = MaterialTheme.typography.titleMedium)
+            Text(text = stringResource(Res.string.exercise_execution_complete_set_button), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
@@ -306,13 +306,13 @@ fun RestingPhase(viewModel: ExerciseExecutionViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(stringResource(Res.string.exercise_execution_rest_timer_label), style = MaterialTheme.typography.titleMedium)
-        Text(formattedRestTime, style = MaterialTheme.typography.displayLarge.copy(textAlign = TextAlign.Center))
+        Text(text = stringResource(Res.string.exercise_execution_rest_timer_label), style = MaterialTheme.typography.titleMedium)
+        Text(text = formattedRestTime, style = MaterialTheme.typography.displayLarge.copy(textAlign = TextAlign.Center))
         Spacer(modifier = Modifier.height(24.dp))
         Text(text = stringResource(Res.string.exercise_execution_next_set_info, nextSetNumber, exercise?.name ?: "Exercise"), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(32.dp))
         Button(onClick = viewModel::skipRestAndStartNextSet, modifier = Modifier.fillMaxWidth(0.8f).height(50.dp)) {
-            Text(stringResource(Res.string.exercise_execution_skip_rest_button))
+            Text(text = stringResource(Res.string.exercise_execution_skip_rest_button))
         }
     }
 }
@@ -330,14 +330,14 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
 
     AlertDialog(
         onDismissRequest = { viewModel.cancelLogActuals() },
-        title = { Text(stringResource(Res.string.exercise_execution_log_actuals_prompt_dialog_title, currentSetNumber)) },
+        title = { Text(text = stringResource(Res.string.exercise_execution_log_actuals_prompt_dialog_title, currentSetNumber)) },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 if (showRepsField) {
                     OutlinedTextField(
                         value = actualReps?.toString() ?: "", 
                         onValueChange = viewModel::onActualRepsChanged, 
-                        label = { Text(stringResource(Res.string.exercise_execution_reps)) }, 
+                        label = { Text(text = stringResource(Res.string.exercise_execution_reps)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -347,7 +347,7 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
                     OutlinedTextField(
                         value = actualWeight?.toString() ?: "", 
                         onValueChange = viewModel::onActualWeightChanged, 
-                        label = { Text(stringResource(Res.string.exercise_execution_weight_kg)) }, 
+                        label = { Text(text = stringResource(Res.string.exercise_execution_weight_kg)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -356,7 +356,7 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
                 OutlinedTextField(
                     value = setElapsedTime.toString(), 
                     onValueChange = viewModel::onActualDurationChanged, 
-                    label = { Text(stringResource(Res.string.exercise_execution_duration_seconds)) }, 
+                    label = { Text(text = stringResource(Res.string.exercise_execution_duration_seconds)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = if(showDistanceField) ImeAction.Next else ImeAction.Done),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
@@ -365,7 +365,7 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
                     OutlinedTextField(
                         value = actualDistance?.toString() ?: "", 
                         onValueChange = viewModel::onActualDistanceChanged, 
-                        label = { Text(stringResource(Res.string.exercise_execution_distance_km)) }, 
+                        label = { Text(text = stringResource(Res.string.exercise_execution_distance_km)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
@@ -375,12 +375,12 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
         },
         confirmButton = {
             Button(onClick = { viewModel.saveSetActualsAndProceed() }) {
-                Text(stringResource(Res.string.exercise_execution_save_set_button))
+                Text(text = stringResource(Res.string.exercise_execution_save_set_button))
             }
         },
         dismissButton = {
             TextButton(onClick = { viewModel.cancelLogActuals() }) {
-                Text(stringResource(Res.string.exercise_execution_cancel_button))
+                Text(text = stringResource(Res.string.exercise_execution_cancel_button))
             }
         }
     )
@@ -396,17 +396,10 @@ fun WorkoutCompletedPhase(viewModel: ExerciseExecutionViewModel, onNavigateBack:
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(stringResource(Res.string.exercise_execution_workout_completed_message), style = MaterialTheme.typography.headlineMedium)
+        Text(text = stringResource(Res.string.exercise_execution_workout_completed_message), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = onNavigateBack) {
-            Text(stringResource(Res.string.exercise_execution_finish_button))
+            Text(text = stringResource(Res.string.exercise_execution_finish_button))
         }
     }
 }
-
-// TODO: Add/Update necessary string resources:
-// Res.string.exercise_execution_target_display (e.g. "Target: %1$s")
-// Res.string.exercise_execution_log_actuals_prompt_dialog_title (e.g. "Log Set %1$d")
-// Res.drawable.ic_close (for cancel action in TopAppBar)
-// Res.string.abc_action_bar_up_description (or similar for back button content description)
-// Res.drawable.ic_back (for back button icon)
