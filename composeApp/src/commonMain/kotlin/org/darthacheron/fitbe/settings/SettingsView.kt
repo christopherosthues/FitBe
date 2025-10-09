@@ -1,8 +1,31 @@
 package org.darthacheron.fitbe.settings
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -37,11 +60,12 @@ fun SettingsView(
         }
     }
     val errorResId = uiState.error.generalError
-    val errorMessage = if (errorResId != null && uiState.error.hasGeneralError) {
-        stringResource(errorResId)
-    } else {
-        null
-    }
+    val errorMessage =
+        if (errorResId != null && uiState.error.hasGeneralError) {
+            stringResource(errorResId)
+        } else {
+            null
+        }
 
     LaunchedEffect(errorMessage) {
         if (errorMessage != null) {
@@ -50,7 +74,7 @@ fun SettingsView(
                     message = errorMessage,
                     duration = SnackbarDuration.Short
                 )
-                viewModel.clearError() // Clear error after showing
+                viewModel.clearError()
             }
         }
     }
@@ -61,7 +85,8 @@ fun SettingsView(
             TopAppBar(
                 title = { Text(stringResource(Res.string.top_bar_title_settings)) },
                 navigationIcon = {
-                    IconButton(onClick = {
+                    IconButton(
+                        onClick = {
                         viewModel.revertChanges() 
                         navHostController.navigateUp()
                     }) {
@@ -71,17 +96,17 @@ fun SettingsView(
                         )
                     }
                 },
-                actions = {} // No actions in the top bar
+                actions = {}
             )
         },
         floatingActionButton = {
             Column(
-                horizontalAlignment = Alignment.End, // Align FABs to the end of the Column
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Space between FABs
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                FloatingActionButton( // RESET FAB
+                FloatingActionButton(
                     onClick = { viewModel.resetToDefaults() },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer, // Visually differentiate
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 ) {
                     Icon(
@@ -96,17 +121,18 @@ fun SettingsView(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = stringResource(Res.string.profile_save) // Existing resource for save
+                        contentDescription = stringResource(Res.string.profile_save)
                     )
                 }
             }
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues) // This padding already considers FAB if Scaffold is set up for it
-                .padding(16.dp)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .fillMaxSize()
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))

@@ -5,5 +5,5 @@ import org.darthacheron.fitbe.health.componenets.Overview
 
 data class BeverageOverview(
     override val date: LocalDate,
-    val amountMl: UInt,
+    val amountMl: UInt
 ) : Overview

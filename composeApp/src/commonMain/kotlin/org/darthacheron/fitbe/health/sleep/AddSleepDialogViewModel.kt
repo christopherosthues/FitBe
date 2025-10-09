@@ -21,7 +21,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 class AddSleepDialogViewModel(
     private val settingsRepository: SettingsRepository,
-    private val sleepRepository: SleepRepository,
+    private val sleepRepository: SleepRepository
 ) : AddDialogViewModel<AddSleepDialogUiState>() {
     override val uiState = MutableStateFlow(AddSleepDialogUiState())
 
@@ -67,10 +67,11 @@ class AddSleepDialogViewModel(
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val potentialOverlaps = sleepRepository.getSleepsBetween(startInstant, endInstant, profileId).first()
-                val hasActualOverlap = potentialOverlaps.any { existingSleep ->
-                    // Check for actual time collision: (StartA < EndB) and (EndA > StartB)
-                    startInstant < existingSleep.end && endInstant > existingSleep.start
-                }
+                val hasActualOverlap =
+                    potentialOverlaps.any { existingSleep ->
+                        // Check for actual time collision: (StartA < EndB) and (EndA > StartB)
+                        startInstant < existingSleep.end && endInstant > existingSleep.start
+                    }
 
                 if (hasActualOverlap) {
                     startTimeError = Res.string.sleep_add_dialog_error_time_interval

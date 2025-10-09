@@ -28,7 +28,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 
-enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
+enum class FluidUnit(
+    private val conversionFactorToMilliliter: Double
+) {
     Cup(236.0),
     SmallGlass(150.0),
     NormalGlass(250.0),
@@ -38,13 +40,11 @@ enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
     Deciliter(100.0),
     Liter(1000.0);
 
-    fun toMilliliter(amount: Double): Double {
-        return conversionFactorToMilliliter * amount
-    }
+    fun toMilliliter(amount: Double): Double = conversionFactorToMilliliter * amount
 
     @Composable
-    fun localizedString(amount: Double): String {
-        return when (this) {
+    fun localizedString(amount: Double): String =
+        when (this) {
             Cup -> pluralStringResource(Res.plurals.fluid_unit_cup, quantity = roundAmount(amount))
             SmallGlass -> pluralStringResource(Res.plurals.fluid_unit_small_glass, quantity = roundAmount(amount))
             NormalGlass -> pluralStringResource(Res.plurals.fluid_unit_normal_glass, quantity = roundAmount(amount))
@@ -54,9 +54,8 @@ enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
             Deciliter -> stringResource(Res.string.fluid_unit_deciliter)
             Liter -> stringResource(Res.string.fluid_unit_liter)
         }
-    }
 
-    private fun roundAmount(amount: Double) : Int {
+    private fun roundAmount(amount: Double): Int {
         if (amount == 1.0) {
             return amount.toInt()
         } else if (amount > 1.0 && amount < 2.0) {
@@ -66,8 +65,8 @@ enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
         return amount.toInt()
     }
 
-    fun iconResource(): DrawableResource {
-        return when (this) {
+    fun iconResource(): DrawableResource =
+        when (this) {
             Cup -> Res.drawable.ic_cup
             SmallGlass -> Res.drawable.ic_glass_cup
             NormalGlass -> Res.drawable.ic_glass_cup
@@ -77,5 +76,4 @@ enum class FluidUnit(private val conversionFactorToMilliliter: Double) {
             Deciliter -> Res.drawable.ic_deciliter
             Liter -> Res.drawable.ic_liter
         }
-    }
 }

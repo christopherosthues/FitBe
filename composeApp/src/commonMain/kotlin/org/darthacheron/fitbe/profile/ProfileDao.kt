@@ -1,6 +1,9 @@
 package org.darthacheron.fitbe.profile
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -23,4 +26,3 @@ interface ProfileDao {
     @Delete
     suspend fun deleteProfile(profile: ProfileEntity)
 }
-

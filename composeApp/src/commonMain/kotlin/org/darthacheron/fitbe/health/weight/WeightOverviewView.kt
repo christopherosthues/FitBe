@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.weight
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +28,7 @@ fun WeightOverviewView(
                 state.settings,
                 maxBodyWeight,
                 false,
-                targetWeight,
+                targetWeight
             )
         },
         addDialog = { dismissDialog ->

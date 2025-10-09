@@ -25,7 +25,7 @@ fun StepsOverviewView(
                 state.dates,
                 maxSteps,
                 false,
-                targetSteps,
+                targetSteps
             )
         },
         addDialog = { dismissDialog ->

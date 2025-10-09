@@ -5,10 +5,8 @@ import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionStatus
 
 class WorkoutExecutionStatusConverter {
     @TypeConverter
-    fun fromWorkoutExecutionStatus(workoutExecutionStatus: WorkoutExecutionStatus): String =
-        workoutExecutionStatus.name
+    fun fromWorkoutExecutionStatus(workoutExecutionStatus: WorkoutExecutionStatus): String = workoutExecutionStatus.name
 
     @TypeConverter
-    fun toWorkoutExecutionStatus(value: String): WorkoutExecutionStatus =
-        WorkoutExecutionStatus.valueOf(value)
+    fun toWorkoutExecutionStatus(value: String): WorkoutExecutionStatus = WorkoutExecutionStatus.valueOf(value)
 }

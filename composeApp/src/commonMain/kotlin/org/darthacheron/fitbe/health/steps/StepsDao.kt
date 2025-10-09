@@ -27,25 +27,32 @@ interface StepsDao {
     ): Flow<List<StepsEntity>>
 
     // TODO: check call sites for correct dates
-    @Query("""
+    @Query(
+        """
         SELECT * FROM steps 
         WHERE profileId = :profileId
         AND dateUtc >= :start AND dateUtc < :end
         ORDER BY dateUtc ASC
-    """)
+        """
+    )
     fun getStepsBetweenDates(
         start: Instant,
         end: Instant,
         profileId: Uuid
     ): Flow<List<StepsEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM steps
         WHERE dateUtc = :today
         AND profileId = :profileId
         LIMIT 1
-    """)
-    fun getStepsForDate(today: String, profileId: Uuid): Flow<StepsEntity>
+        """
+    )
+    fun getStepsForDate(
+        today: String,
+        profileId: Uuid
+    ): Flow<StepsEntity>
 
     @Upsert
     suspend fun upsertSteps(steps: StepsEntity)

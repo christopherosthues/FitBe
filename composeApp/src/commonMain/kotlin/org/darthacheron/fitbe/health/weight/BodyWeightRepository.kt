@@ -8,24 +8,24 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class BodyWeightRepository(private val bodyWeightDao: BodyWeightDao) {
+class BodyWeightRepository(
+    private val bodyWeightDao: BodyWeightDao
+) {
     fun getBeverages(
         startDate: Instant,
         endDate: Instant,
         profileId: Uuid
     ): Flow<List<BodyWeight>> {
         val dateSpan = toDateSpan(startDate, endDate)
-        return bodyWeightDao.getBodyWeightsBetweenDates(
-            start = dateSpan.first,
-            end = dateSpan.second,
-            profileId = profileId
-        )
-            .map { list -> list.map { it.toBodyWeight() } }
+        return bodyWeightDao
+            .getBodyWeightsBetweenDates(
+                start = dateSpan.first,
+                end = dateSpan.second,
+                profileId = profileId
+            ).map { list -> list.map { it.toBodyWeight() } }
     }
 
-    suspend fun addBodyWeight(
-        bodyWeight: BodyWeight
-    ) {
+    suspend fun addBodyWeight(bodyWeight: BodyWeight) {
         bodyWeightDao.upsertBodyWeight(bodyWeight.toBodyWeightEntity())
     }
 }

@@ -17,8 +17,8 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.jetbrains.compose.resources.StringResource
 
-fun LocalDate.monthResourceString(): StringResource {
-    return when (this.month) {
+fun LocalDate.monthResourceString(): StringResource =
+    when (this.month) {
         Month.JANUARY -> Res.string.month_january
         Month.FEBRUARY -> Res.string.month_february
         Month.MARCH -> Res.string.month_march
@@ -33,4 +33,3 @@ fun LocalDate.monthResourceString(): StringResource {
         Month.DECEMBER -> Res.string.month_december
         else -> Res.string.month_january
     }
-}

@@ -21,7 +21,7 @@ class AddBeverageDialogViewModel(
     private val beverageRepository: BeverageRepository,
     private val settingsRepository: SettingsRepository,
     private val beverageValidator: BeverageValidator,
-    private val positiveDecimalValidator: PositiveDecimalValidator,
+    private val positiveDecimalValidator: PositiveDecimalValidator
 ) : AddDialogViewModel<AddBeverageDialogUiState>() {
     override val uiState = MutableStateFlow(AddBeverageDialogUiState())
 
@@ -40,11 +40,13 @@ class AddBeverageDialogViewModel(
             val amount = currentState.amount
             val amountAsDouble = amount.replace(',', '.').toDoubleOrNull()
 
-            var error = if (!positiveDecimalValidator.validate(amount) || !beverageValidator.validate(amountAsDouble)) {
-                Res.string.beverages_add_dialog_error_invalid_amount
-            } else {
-                null
-            }
+            var error =
+                if (!positiveDecimalValidator.validate(amount) ||
+                    !beverageValidator.validate(amountAsDouble)) {
+                    Res.string.beverages_add_dialog_error_invalid_amount
+                } else {
+                    null
+                }
 
             if (error == null && amountAsDouble != null) {
                 val selectedDate = currentState.date
@@ -63,11 +65,12 @@ class AddBeverageDialogViewModel(
     }
 
     fun onNameChange(name: String) {
-        val error = if (name.isBlank()) {
-            Res.string.beverages_add_dialog_error_name_empty
-        } else {
-            null
-        }
+        val error =
+            if (name.isBlank()) {
+                Res.string.beverages_add_dialog_error_name_empty
+            } else {
+                null
+            }
         uiState.update { it.copy(beverageName = name, beverageNameError = error) }
     }
 

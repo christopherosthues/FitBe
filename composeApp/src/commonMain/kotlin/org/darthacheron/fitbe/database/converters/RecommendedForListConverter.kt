@@ -5,13 +5,12 @@ import org.darthacheron.fitbe.workouts.exercises.RecommendedFor
 
 class RecommendedForListConverter {
     @TypeConverter
-    fun fromRecommendedForList(recommendedForList: List<RecommendedFor>?): String? {
-        return recommendedForList?.joinToString(",") { it.name }
-    }
+    fun fromRecommendedForList(recommendedForList: List<RecommendedFor>?): String? =
+        recommendedForList?.joinToString(",") { it.name }
 
     @TypeConverter
-    fun toRecommendedForList(data: String?): List<RecommendedFor>? {
-        return data?.split(",")?.mapNotNull {
+    fun toRecommendedForList(data: String?): List<RecommendedFor>? =
+        data?.split(",")?.mapNotNull {
             try {
                 RecommendedFor.valueOf(it)
             } catch (e: IllegalArgumentException) {
@@ -20,5 +19,4 @@ class RecommendedForListConverter {
                 null
             }
         }
-    }
 }

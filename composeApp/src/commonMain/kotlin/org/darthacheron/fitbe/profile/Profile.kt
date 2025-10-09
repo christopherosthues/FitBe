@@ -19,6 +19,9 @@ data class Profile(
     val targetSleepDuration: UInt? = ProfileDefaults.SLEEP_DURATION,
     val targetSteps: UInt? = ProfileDefaults.STEPS,
     var bodyHeight: Double? = ProfileDefaults.BODY_HEIGHT_IN_CM,
-    val dateOfBirth: LocalDate? = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val dateOfBirth: LocalDate? =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .date
 )
-

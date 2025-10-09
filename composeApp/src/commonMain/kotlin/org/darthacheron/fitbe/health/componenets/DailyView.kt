@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.componenets
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -101,7 +100,6 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
                             contentDescription = null
                         )
                     }
-
                 }
 
                 detailView(uiState, date)
@@ -110,7 +108,7 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
                 Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }
@@ -121,4 +119,3 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
         addDialog { showAddDialog = false }
     }
 }
-

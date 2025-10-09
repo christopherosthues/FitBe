@@ -21,7 +21,11 @@ interface SleepDao {
         ORDER BY startDateTime ASC
     """
     )
-    fun getSleepsBetween(start: Instant, end: Instant, profileId: Uuid): Flow<List<SleepEntity>>
+    fun getSleepsBetween(
+        start: Instant,
+        end: Instant,
+        profileId: Uuid
+    ): Flow<List<SleepEntity>>
 
     @Upsert()
     suspend fun upsertSleep(sleep: SleepEntity)

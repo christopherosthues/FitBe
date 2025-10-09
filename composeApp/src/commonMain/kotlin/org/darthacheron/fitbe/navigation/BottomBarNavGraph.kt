@@ -1,5 +1,7 @@
 package org.darthacheron.fitbe.navigation
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -9,8 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
@@ -60,15 +60,16 @@ import org.koin.core.parameter.parametersOf
 fun BottomBarNavGraph(
     topNavHostController: NavHostController,
     bottomBarNavHostController: NavHostController,
-    paddingValues: PaddingValues,
+    paddingValues: PaddingValues
 ) {
     NavHost(
         navController = bottomBarNavHostController,
         startDestination = Screen.BottomBarGraph,
-        modifier = Modifier.padding(
-            top = paddingValues.calculateTopPadding(),
-            bottom = paddingValues.calculateBottomPadding()
-        )
+        modifier =
+            Modifier.padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
+            )
     ) {
         navigation<Screen.BottomBarGraph>(
             startDestination = Screen.Home

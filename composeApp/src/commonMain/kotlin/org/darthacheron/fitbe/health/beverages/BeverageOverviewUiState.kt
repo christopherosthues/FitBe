@@ -7,5 +7,5 @@ class BeverageOverviewUiState(
     isLoading: Boolean = true,
     val beverages: List<BeverageOverview> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
-    error: BeverageOverviewError = BeverageOverviewError(),
+    error: BeverageOverviewError = BeverageOverviewError()
 ) : UiState<BeverageOverviewError>(isLoading, error)

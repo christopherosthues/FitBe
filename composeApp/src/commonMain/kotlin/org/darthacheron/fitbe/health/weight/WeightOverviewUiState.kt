@@ -13,4 +13,3 @@ class WeightOverviewUiState(
     val settings: Settings = Settings(),
     error: WeightOverviewError = WeightOverviewError()
 ) : UiState<WeightOverviewError>(isLoading, error)
-

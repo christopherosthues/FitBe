@@ -44,58 +44,68 @@ class BeverageDailyViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    private val targetBeverage: StateFlow<UInt> = settingsRepository.getSettingsFlow()
-        .flatMapLatest { settings ->
-            val profileId = settings.selectedProfileId
-            if (profileId != null) {
-                profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
-            } else {
-                flowOf(ProfileDefaults.BEVERAGE)
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
+    private val targetBeverage: StateFlow<UInt> =
+        settingsRepository.getSettingsFlow()
+            .flatMapLatest { settings ->
+                val profileId = settings.selectedProfileId
+                if (profileId != null) {
+                    profileRepository
+                        .getProfileFlowById(profileId)
+                        .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
+                } else {
+                    flowOf(ProfileDefaults.BEVERAGE)
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    private val beveragesFlow = date.flatMapLatest { date ->
-        settingsRepository.getSettingsFlow().flatMapLatest { settings ->
-            settings.selectedProfileId?.let {
-                repository.getBeveragesForDate(
-                    date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it
-                )
-            } ?: flowOf(emptyList())
+    private val beveragesFlow =
+        date.flatMapLatest { date ->
+            settingsRepository.getSettingsFlow().flatMapLatest { settings ->
+                settings.selectedProfileId?.let {
+                    repository.getBeveragesForDate(date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
+                } ?: flowOf(emptyList())
+            }
+        }.onStart {
+            isLoading.value = true
+            errorMessage.value = null
+        }.catch {
+            isLoading.value = false
+            errorMessage.value = Res.string.beverages_daily_view_error_loading
+            emit(emptyList())
+        }.map { beverages ->
+            isLoading.value = false
+            beverages
         }
-    }.onStart {
-        isLoading.value = true
-        errorMessage.value = null
-    }.catch {
-        isLoading.value = false
-        errorMessage.value = Res.string.beverages_daily_view_error_loading
-        emit(emptyList())
-    }.map { beverages ->
-        isLoading.value = false
-        beverages
-    }
 
     // TODO: translations
 
-    override val uiState: StateFlow<BeverageDailyUiState> = combine(
-        beveragesFlow, targetBeverage, isLoading, errorMessage
-    ) { beverages, target, isLoading, error ->
-        val progress = if (target > 0u) {
-            beverages.sumOf { it.unit.toMilliliter(it.amount) } / target.toDouble()
-        } else {
-            0.0
-        }
-        BeverageDailyUiState(
-            isLoading = isLoading,
-            beverages = beverages,
-            progress = progress,
-            error = BeverageDailyError(error)
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())
+    override val uiState: StateFlow<BeverageDailyUiState> =
+        combine(
+            beveragesFlow,
+            targetBeverage,
+            isLoading,
+            errorMessage
+        ) { beverages, target, isLoading, error ->
+            val progress =
+                if (target > 0u) {
+                    beverages.sumOf { it.unit.toMilliliter(it.amount) } / target.toDouble()
+                } else {
+                    0.0
+                }
+            BeverageDailyUiState(
+                isLoading = isLoading,
+                beverages = beverages,
+                progress = progress,
+                error = BeverageDailyError(error)
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
+    fun addBeverage(
+        amount: Double,
+        name: String,
+        unit: FluidUnit,
+        date: Instant
+    ) {
         viewModelScope.launch {
             try {
                 val profileId = settingsRepository.getSettings().selectedProfileId

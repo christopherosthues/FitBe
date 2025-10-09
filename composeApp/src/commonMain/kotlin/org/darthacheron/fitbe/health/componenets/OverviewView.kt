@@ -74,8 +74,10 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.Top,
-                    modifier = Modifier.fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
                 ) {
                     IconButton(
                         onClick = { overviewViewModel.movePast() },
@@ -109,7 +111,7 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
             FloatingActionButton(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
                 Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
             }

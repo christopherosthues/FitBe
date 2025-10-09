@@ -9,5 +9,5 @@ data class BodyWeightOverview(
     val muscleMass: Double,
     val boneMass: Double,
     val bodyFatPercentage: Double,
-    val bodyWaterPercentage: Double,
+    val bodyWaterPercentage: Double
 ) : Overview

@@ -32,7 +32,6 @@ class ProfileError(
         weightError: StringResource? = this.weightError,
         stepsError: StringResource? = this.stepsError,
         heightError: StringResource? = this.heightError
-    ): ProfileError {
-        return ProfileError(generalError, nameError, kcalError, beverageError, weightError, stepsError, heightError)
-    }
+    ): ProfileError =
+        ProfileError(generalError, nameError, kcalError, beverageError, weightError, stepsError, heightError)
 }

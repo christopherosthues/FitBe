@@ -33,28 +33,30 @@ data class BodyWeightEntity(
     val bodyFatPercentage: Double?,
     val muscleMassInKg: Double?,
     val boneMassInKg: Double?,
-    val bodyWaterInPercentage: Double?,
+    val bodyWaterInPercentage: Double?
 ) {
-    fun toBodyWeight(): BodyWeight = BodyWeight(
-        id = id,
-        weightInKg = weightInKg,
-        bodyFatPercentage = bodyFatPercentage,
-        muscleMassInKg = muscleMassInKg,
-        boneMassInKg = boneMassInKg,
-        bodyWaterInPercentage = bodyWaterInPercentage,
-        date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
-        profileId = profileId
-    )
+    fun toBodyWeight(): BodyWeight =
+        BodyWeight(
+            id = id,
+            weightInKg = weightInKg,
+            bodyFatPercentage = bodyFatPercentage,
+            muscleMassInKg = muscleMassInKg,
+            boneMassInKg = boneMassInKg,
+            bodyWaterInPercentage = bodyWaterInPercentage,
+            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
+            profileId = profileId
+        )
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun BodyWeight.toBodyWeightEntity(): BodyWeightEntity = BodyWeightEntity(
-    id = this.id,
-    weightInKg = this.weightInKg,
-    bodyFatPercentage = this.bodyFatPercentage,
-    muscleMassInKg = this.muscleMassInKg,
-    boneMassInKg = this.boneMassInKg,
-    bodyWaterInPercentage = this.bodyWaterInPercentage,
-    dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
-    profileId = this.profileId
-)
+fun BodyWeight.toBodyWeightEntity(): BodyWeightEntity =
+    BodyWeightEntity(
+        id = this.id,
+        weightInKg = this.weightInKg,
+        bodyFatPercentage = this.bodyFatPercentage,
+        muscleMassInKg = this.muscleMassInKg,
+        boneMassInKg = this.boneMassInKg,
+        bodyWaterInPercentage = this.bodyWaterInPercentage,
+        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
+        profileId = this.profileId
+    )

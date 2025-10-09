@@ -10,7 +10,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Entity(
     tableName = "profiles",
-    indices = [Index(value = ["name"], unique = true)] // Added unique index for name
+    indices = [Index(value = ["name"], unique = true)]
 )
 data class ProfileEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
@@ -22,25 +22,26 @@ data class ProfileEntity(
     val targetSleepDuration: Int?,
     val targetSteps: Int?,
     val bodyHeightInCm: Double?,
-    val dateOfBirth: LocalDate?,
+    val dateOfBirth: LocalDate?
 ) {
-    fun toProfile(): Profile = Profile(
-        id = id,
-        name = name,
-        gender = gender,
-        targetKcal = targetKcal?.toUInt(),
-        targetBeverageInMilliliter = targetBeverageInMilliliter?.toUInt(),
-        targetWeight = targetWeight,
-        targetSleepDuration = targetSleepDuration?.toUInt(),
-        targetSteps = targetSteps?.toUInt(),
-        bodyHeight = bodyHeightInCm,
-        dateOfBirth = dateOfBirth
-    )
+    fun toProfile(): Profile =
+        Profile(
+            id = id,
+            name = name,
+            gender = gender,
+            targetKcal = targetKcal?.toUInt(),
+            targetBeverageInMilliliter = targetBeverageInMilliliter?.toUInt(),
+            targetWeight = targetWeight,
+            targetSleepDuration = targetSleepDuration?.toUInt(),
+            targetSteps = targetSteps?.toUInt(),
+            bodyHeight = bodyHeightInCm,
+            dateOfBirth = dateOfBirth
+        )
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun Profile.toProfileEntity(): ProfileEntity {
-    return ProfileEntity(
+fun Profile.toProfileEntity(): ProfileEntity =
+    ProfileEntity(
         id = this.id,
         name = this.name,
         gender = this.gender,
@@ -50,7 +51,5 @@ fun Profile.toProfileEntity(): ProfileEntity {
         targetSleepDuration = this.targetSleepDuration?.toInt(),
         targetSteps = this.targetSteps?.toInt(),
         bodyHeightInCm = this.bodyHeight,
-        dateOfBirth = this.dateOfBirth,
+        dateOfBirth = this.dateOfBirth
     )
-}
-

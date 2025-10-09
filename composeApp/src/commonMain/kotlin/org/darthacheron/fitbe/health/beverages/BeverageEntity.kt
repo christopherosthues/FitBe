@@ -1,17 +1,16 @@
 package org.darthacheron.fitbe.health.beverages
 
+import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.Clock
-import kotlin.time.ExperimentalTime
-import kotlinx.datetime.Instant
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 import org.darthacheron.fitbe.profile.ProfileEntity
 
 @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
@@ -36,8 +35,8 @@ data class BeverageEntity(
     val unit: FluidUnit
 ) {
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
-    fun toBeverage(): Beverage {
-        return Beverage(
+    fun toBeverage(): Beverage =
+        Beverage(
             id = id,
             profileId = profileId,
             date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
@@ -45,12 +44,11 @@ data class BeverageEntity(
             beverage = beverage,
             unit = unit
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun Beverage.toBeverageEntity(): BeverageEntity {
-    return BeverageEntity(
+fun Beverage.toBeverageEntity(): BeverageEntity =
+    BeverageEntity(
         id = this.id,
         profileId = this.profileId,
         dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
@@ -58,4 +56,3 @@ fun Beverage.toBeverageEntity(): BeverageEntity {
         beverage = this.beverage,
         unit = this.unit
     )
-}

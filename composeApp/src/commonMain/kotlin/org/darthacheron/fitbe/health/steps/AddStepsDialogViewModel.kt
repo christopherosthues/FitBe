@@ -20,7 +20,7 @@ class AddStepsDialogViewModel(
     private val positiveNumberValidator: PositiveNumberValidator,
     private val stepsValidator: StepsValidator,
     private val settingsRepository: SettingsRepository,
-    private val stepsRepository: StepsRepository,
+    private val stepsRepository: StepsRepository
 ) : AddDialogViewModel<AddStepsDialogUiState>() {
     override val uiState = MutableStateFlow(AddStepsDialogUiState())
 
@@ -39,11 +39,12 @@ class AddStepsDialogViewModel(
             val steps = currentState.steps
             val stepsAsUInt = steps.replace(',', '.').toUIntOrNull()
 
-            var error = if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(stepsAsUInt)) {
-                Res.string.steps_add_dialog_error_invalid_steps
-            } else {
-                null
-            }
+            var error =
+                if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(stepsAsUInt)) {
+                    Res.string.steps_add_dialog_error_invalid_steps
+                } else {
+                    null
+                }
 
             if (error == null && stepsAsUInt != null) {
                 val selectedDate = currentState.date

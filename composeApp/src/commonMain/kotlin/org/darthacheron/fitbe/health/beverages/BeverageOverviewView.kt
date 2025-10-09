@@ -25,7 +25,7 @@ fun BeverageOverviewView(
                 state.dates,
                 maxBeverages,
                 false,
-                targetBeverages,
+                targetBeverages
             )
         },
         addDialog = { dismissDialog ->

@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.sleep
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 
@@ -13,4 +12,3 @@ fun SleepDailyView(
         sleepDailyViewModel.updateTopBarConfig()
     }
 }
-

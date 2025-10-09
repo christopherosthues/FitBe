@@ -34,15 +34,23 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
 
     TextButton(
         modifier = Modifier.padding(horizontal = 8.dp),
-        onClick = { showDateRangeDialog = true },
+        onClick = { showDateRangeDialog = true }
     ) {
         Row {
             Column {
                 Text(
-                    text = dateRange.startDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                    text =
+                        dateRange.startDate
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .date
+                            .toString()
                 )
                 Text(
-                    text = dateRange.endDate.toLocalDateTime(TimeZone.currentSystemDefault()).date.toString()
+                    text =
+                        dateRange.endDate
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .date
+                            .toString()
                 )
             }
             Icon(

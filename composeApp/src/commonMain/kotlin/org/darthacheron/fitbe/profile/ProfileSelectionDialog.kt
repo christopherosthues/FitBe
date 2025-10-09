@@ -49,30 +49,34 @@ fun ProfileSelectionDialog(
         title = { Text(text = stringResource(Res.string.profile_select)) },
         text = {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 300.dp) // Limit height to enable scrolling if needed
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 300.dp)
             ) {
                 itemsIndexed(profiles) { index, profile ->
                     val isSelected = tempSelectedIndex == index
                     val color = if (isSelected) Color.Blue else Color.Black
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = tempSelectedIndex == index,
-                                onClick = { tempSelectedIndex = index }
-                            )
-                            .padding(vertical = 4.dp)
-                            .border(2.dp, color, RoundedCornerShape(5.dp))
-                            .padding(vertical = 8.dp, horizontal = 16.dp)
-                            .clickable(
-                                onClick = { tempSelectedIndex = index }
-                            )
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = tempSelectedIndex == index,
+                                    onClick = { tempSelectedIndex = index }
+                                ).padding(vertical = 4.dp)
+                                .border(2.dp, color, RoundedCornerShape(5.dp))
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                                .clickable(
+                                    onClick = { tempSelectedIndex = index }
+                                )
                     ) {
                         Icon(
-                            painter = painterResource(if (isSelected) Res.drawable.ic_profile_selected else Res.drawable.ic_profile),
+                            painter =
+                                painterResource(
+                                    if (isSelected) Res.drawable.ic_profile_selected else Res.drawable.ic_profile
+                                ),
                             tint = color,
                             contentDescription = null
                         )

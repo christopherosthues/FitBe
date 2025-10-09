@@ -16,5 +16,4 @@ class SleepDailyViewModel(
 
     override val backNavigationIconVisible: Boolean?
         get() = true
-
 }

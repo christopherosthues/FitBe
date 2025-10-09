@@ -1,18 +1,23 @@
 package org.darthacheron.fitbe.database
 
+import kotlin.random.Random
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlinx.coroutines.flow.first
+import kotlinx.datetime.atTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.minus
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import kotlinx.coroutines.flow.first
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
-import kotlinx.datetime.minus
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.GenderConverter
@@ -25,16 +30,6 @@ import org.darthacheron.fitbe.database.converters.RecommendedForListConverter
 import org.darthacheron.fitbe.database.converters.UuidConverter
 import org.darthacheron.fitbe.database.converters.WorkoutExecutionStatusConverter
 import org.darthacheron.fitbe.database.converters.WorkoutSetStatusConverter
-import org.darthacheron.fitbe.workouts.equipment.DefaultTrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
-import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
-import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
-import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
-import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
-import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
-import org.darthacheron.fitbe.workouts.equipment.ProfileFavoriteEquipmentCrossRef
-import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEntity
-import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.health.beverages.BeverageDao
 import org.darthacheron.fitbe.health.beverages.BeverageEntity
 import org.darthacheron.fitbe.health.beverages.FluidUnit
@@ -46,22 +41,25 @@ import org.darthacheron.fitbe.health.weight.BodyWeightDao
 import org.darthacheron.fitbe.health.weight.BodyWeightEntity
 import org.darthacheron.fitbe.profile.ProfileDao
 import org.darthacheron.fitbe.profile.ProfileEntity
+import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.workouts.equipment.DefaultTrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
+import org.darthacheron.fitbe.workouts.equipment.ProfileFavoriteEquipmentCrossRef
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
+import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
+import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.workouts.exercises.ProfileFavoriteExerciseCrossRef
+import org.darthacheron.fitbe.workouts.programs.ProgramDao
 import org.darthacheron.fitbe.workouts.templates.DefaultWorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.ProfileFavoriteWorkoutTemplateCrossRef
-import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDao
-import org.darthacheron.fitbe.utils.roundToDecimals
-import org.darthacheron.fitbe.workouts.programs.ProgramDao
+import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateEntity
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionDao
 import org.darthacheron.fitbe.workouts.workouts.WorkoutExecutionEntity
 import org.darthacheron.fitbe.workouts.workouts.WorkoutSetExecutionEntity
-import kotlin.random.Random
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
-import kotlin.uuid.ExperimentalUuidApi
 
 @Database(
     entities = [
@@ -82,7 +80,7 @@ import kotlin.uuid.ExperimentalUuidApi
         TrainingEquipmentEntity::class,
         WorkoutExecutionEntity::class,
         WorkoutSetExecutionEntity::class,
-        WorkoutTemplateEntity::class,
+        WorkoutTemplateEntity::class
     ],
     version = 1
 )
@@ -98,7 +96,7 @@ import kotlin.uuid.ExperimentalUuidApi
     RecommendedForListConverter::class,
     UuidConverter::class,
     WorkoutExecutionStatusConverter::class,
-    WorkoutSetStatusConverter::class,
+    WorkoutSetStatusConverter::class
 )
 @ConstructedBy(FitBeDatabaseConstructor::class)
 abstract class FitBeDatabase : RoomDatabase() {
@@ -126,15 +124,20 @@ suspend fun seedDatabase(db: FitBeDatabase) {
     val bodyWeightDao = db.bodyWeightDao
     val stepsDao = db.stepsDao
 
-    val profile = profileDao.getAllProfiles().first().firstOrNull() ?: run {
-        println("Warning: No profile found to associate with seed data.")
-        return
-    }
+    val profile =
+        profileDao.getAllProfiles().first().firstOrNull() ?: run {
+            println("Warning: No profile found to associate with seed data.")
+            return
+        }
 
     val timeZone = TimeZone.currentSystemDefault()
     for (i in 0 until 730) {
-        val dateForLoop = Clock.System.now().toLocalDateTime(timeZone)
-            .date.minus(i, DateTimeUnit.DAY)
+        val dateForLoop =
+            Clock.System
+                .now()
+                .toLocalDateTime(timeZone)
+                .date
+                .minus(i, DateTimeUnit.DAY)
 
         // Determine sleep start and end times for the current loop iteration
         val sleepEndHour = Random.nextInt(5, 9) // Wake up between 5 AM and 8 AM
@@ -143,36 +146,48 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         val sleepDurationMinutes = Random.nextInt(0, 60)
 
         val endInstant = dateForLoop.atTime(sleepEndHour, sleepEndMinute).toInstant(timeZone)
-        val startInstant = endInstant
-            .minus(sleepDurationHours.hours)
-            .minus(sleepDurationMinutes.minutes)
+        val startInstant =
+            endInstant
+                .minus(sleepDurationHours.hours)
+                .minus(sleepDurationMinutes.minutes)
 
         // Create and insert the sleep entity
-        val sleep = SleepEntity(
-            profileId = profile.id,
-            startDateTime = startInstant,
-            endDateTime = endInstant
-        )
+        val sleep =
+            SleepEntity(
+                profileId = profile.id,
+                startDateTime = startInstant,
+                endDateTime = endInstant
+            )
         sleepDao.upsertSleep(sleep)
 
         for (j in 1..Random.nextInt(1, 5)) {
-            val beverage = BeverageEntity(
-                dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-                    .toInstant(TimeZone.UTC).minus((i - 1).days),
-                beverage = "",
-                amount = Random.nextInt(200, 1500).toDouble(),
-                unit = FluidUnit.Milliliter,
-                profileId = profile.id
-            )
+            val beverage =
+                BeverageEntity(
+                    dateUtc =
+                        Clock.System
+                            .now()
+                            .toLocalDateTime(TimeZone.UTC)
+                            .toInstant(TimeZone.UTC)
+                            .minus((i - 1).days),
+                    beverage = "",
+                    amount = Random.nextInt(200, 1500).toDouble(),
+                    unit = FluidUnit.Milliliter,
+                    profileId = profile.id
+                )
             beverageDao.upsertBeverage(beverage)
         }
 
-        val steps = StepsEntity(
-            steps = Random.nextInt(0, 20_000),
-            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-                .toInstant(TimeZone.UTC).minus((i - 1).days),
-            profileId = profile.id
-        )
+        val steps =
+            StepsEntity(
+                steps = Random.nextInt(0, 20_000),
+                dateUtc =
+                    Clock.System
+                        .now()
+                        .toLocalDateTime(TimeZone.UTC)
+                        .toInstant(TimeZone.UTC)
+                        .minus((i - 1).days),
+                profileId = profile.id
+            )
         stepsDao.upsertSteps(steps)
 
         var weightInKg = Random.nextDouble(55.0, 130.0).roundToDecimals(2)
@@ -186,16 +201,21 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         }
         val bodyFatPercentage = (bodyFatInKg / weightInKg) * 100
         val bodyWaterPercentage = (bodyWaterInKg / weightInKg) * 100
-        val bodyWeight = BodyWeightEntity(
-            dateUtc = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-                .toInstant(TimeZone.UTC).minus((i - 1).days),
-            muscleMassInKg = muscleMassInKg,
-            boneMassInKg = boneMassInKg,
-            bodyFatPercentage = bodyFatPercentage.roundToDecimals(2),
-            bodyWaterInPercentage = bodyWaterPercentage.roundToDecimals(2),
-            weightInKg = weightInKg,
-            profileId = profile.id
-        )
+        val bodyWeight =
+            BodyWeightEntity(
+                dateUtc =
+                    Clock.System
+                        .now()
+                        .toLocalDateTime(TimeZone.UTC)
+                        .toInstant(TimeZone.UTC)
+                        .minus((i - 1).days),
+                muscleMassInKg = muscleMassInKg,
+                boneMassInKg = boneMassInKg,
+                bodyFatPercentage = bodyFatPercentage.roundToDecimals(2),
+                bodyWaterInPercentage = bodyWaterPercentage.roundToDecimals(2),
+                weightInKg = weightInKg,
+                profileId = profile.id
+            )
         bodyWeightDao.upsertBodyWeight(bodyWeight)
     }
 }

@@ -16,11 +16,17 @@ interface BeverageDao {
     suspend fun upsertBeverage(intake: BeverageEntity)
 
     // TODO: check call sites for correct dates
-    @Query("""
+    @Query(
+        """
         SELECT * FROM beverages 
         WHERE profileId = :profileId
         AND dateUtc >= :start AND dateUtc < :end
         ORDER BY dateUtc ASC
-    """)
-    fun getBeverages(start: Instant, end: Instant, profileId: Uuid): Flow<List<BeverageEntity>>
+        """
+    )
+    fun getBeverages(
+        start: Instant,
+        end: Instant,
+        profileId: Uuid
+    ): Flow<List<BeverageEntity>>
 }

@@ -1,10 +1,10 @@
 package org.darthacheron.fitbe.profile
 
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.settings.Settings
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ProfileUiState(
@@ -15,7 +15,6 @@ class ProfileUiState(
     error: ProfileError = ProfileError(),
     val isEditing: Boolean = false,
     val editingProfileId: Uuid? = null,
-
     val inputName: String = "",
     val inputDateOfBirth: LocalDate? = null,
     val inputGender: Gender = ProfileDefaults.gender,
@@ -45,13 +44,24 @@ class ProfileUiState(
         inputTargetSteps: String = this.inputTargetSteps,
         inputBodyHeight: String = this.inputBodyHeight,
         currentSettings: Settings = this.currentSettings
-    ): ProfileUiState {
-        return ProfileUiState(
-            isLoading, currentProfile, currentProfileDisplay, allProfilesDisplay,
-            error, isEditing, editingProfileId, inputName, inputDateOfBirth,
-            inputGender, inputTargetKcal, inputTargetBeverage, inputTargetWeight,
-            inputTargetSleepDuration, inputTargetSteps, inputBodyHeight,
+    ): ProfileUiState =
+        ProfileUiState(
+            isLoading,
+            currentProfile,
+            currentProfileDisplay,
+            allProfilesDisplay,
+            error,
+            isEditing,
+            editingProfileId,
+            inputName,
+            inputDateOfBirth,
+            inputGender,
+            inputTargetKcal,
+            inputTargetBeverage,
+            inputTargetWeight,
+            inputTargetSleepDuration,
+            inputTargetSteps,
+            inputBodyHeight,
             currentSettings
         )
-    }
 }

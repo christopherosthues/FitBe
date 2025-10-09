@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -33,7 +32,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun HealthOverviewView(
     healthOverviewViewModel: HealthOverviewViewModel,
-    settingsRepository: SettingsRepository,
+    settingsRepository: SettingsRepository
 ) {
     LaunchedEffect(Unit) {
         healthOverviewViewModel.updateTopBarConfig()
@@ -47,9 +46,7 @@ fun HealthOverviewView(
                     Thumbnail(
                         onClick = { healthOverviewViewModel.navigateToBeverageOverview() },
                         content = {
-                            BeveragesOverview(
-                                healthOverviewViewModel.beverageOverviewViewModel,
-                            )
+                            BeveragesOverview(healthOverviewViewModel.beverageOverviewViewModel)
                         }
                     )
                 }
@@ -57,9 +54,7 @@ fun HealthOverviewView(
                     Thumbnail(
                         onClick = { healthOverviewViewModel.navigateToSleepOverview() },
                         content = {
-                            SleepsOverview(
-                                healthOverviewViewModel.sleepOverviewViewModel,
-                            )
+                            SleepsOverview(healthOverviewViewModel.sleepOverviewViewModel)
                         }
                     )
                 }
@@ -90,7 +85,10 @@ fun HealthOverviewView(
 }
 
 @Composable
-private fun Thumbnail(onClick: () -> Unit, content: @Composable () -> Unit) {
+private fun Thumbnail(
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
     Surface(
         shadowElevation = 2.dp,
         modifier = Modifier.padding(16.dp).height(250.dp).clickable(onClick = onClick),
@@ -109,14 +107,12 @@ private fun BeveragesOverview(beverageOverviewViewModel: BeverageOverviewViewMod
         dateRange = dateRange,
         dates = uiState.dates,
         maxBeverages = maxBeverages,
-        thumbnail = true,
+        thumbnail = true
     )
 }
 
 @Composable
-private fun StepsOverview(
-    stepsOverviewViewModel: StepsOverviewViewModel,
-) {
+private fun StepsOverview(stepsOverviewViewModel: StepsOverviewViewModel) {
     val uiState by stepsOverviewViewModel.uiState.collectAsState()
     val maxSteps by stepsOverviewViewModel.maxSteps.collectAsState()
     val dateRange by stepsOverviewViewModel.dateRangeFlow.collectAsState()
@@ -126,14 +122,12 @@ private fun StepsOverview(
         dateRange = dateRange,
         dates = uiState.dates,
         maxSteps = maxSteps,
-        thumbnail = true,
+        thumbnail = true
     )
 }
 
 @Composable
-private fun SleepsOverview(
-    sleepsViewModel: SleepOverviewViewModel,
-) {
+private fun SleepsOverview(sleepsViewModel: SleepOverviewViewModel) {
     val uiState by sleepsViewModel.uiState.collectAsState()
     val maxSleeps by sleepsViewModel.maxSleeps.collectAsState()
     val dateRange by sleepsViewModel.dateRangeFlow.collectAsState()
@@ -143,14 +137,14 @@ private fun SleepsOverview(
         dateRange = dateRange,
         dates = uiState.dates,
         maxSleeps = maxSleeps,
-        thumbnail = true,
+        thumbnail = true
     )
 }
 
 @Composable
 private fun BodyWeightOverView(
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
-    settings: Settings,
+    settings: Settings
 ) {
     val uiState by bodyWeightOverviewViewModel.uiState.collectAsState()
     val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
@@ -162,6 +156,6 @@ private fun BodyWeightOverView(
         dates = uiState.dates,
         settings = settings,
         maxWeight = maxBodyWeight,
-        thumbnail = true,
+        thumbnail = true
     )
 }

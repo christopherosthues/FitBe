@@ -21,12 +21,14 @@ class SettingsUiState(
         currentThemeMode: ThemeMode = this.currentThemeMode,
         persistedSettings: Settings = this.persistedSettings,
         error: SettingsError = this.error
-    ): SettingsUiState = SettingsUiState(
-        isLoading = isLoading,
-        currentWeightUnit = currentWeightUnit,
-        currentDistanceUnit = currentDistanceUnit,
-        currentBodyMeasurementUnit = currentBodyMeasurementUnit,
-        currentThemeMode = currentThemeMode,
-        persistedSettings = persistedSettings,
-        error = error)
+    ): SettingsUiState =
+        SettingsUiState(
+            isLoading = isLoading,
+            currentWeightUnit = currentWeightUnit,
+            currentDistanceUnit = currentDistanceUnit,
+            currentBodyMeasurementUnit = currentBodyMeasurementUnit,
+            currentThemeMode = currentThemeMode,
+            persistedSettings = persistedSettings,
+            error = error
+        )
 }

@@ -27,12 +27,14 @@ interface BodyWeightDao {
     ): Flow<List<BodyWeightEntity>>
 
     // TODO: check call sites for correct dates
-    @Query("""
+    @Query(
+        """
         SELECT * FROM body_weights 
         WHERE profileId = :profileId
         AND dateUtc >= :start AND dateUtc < :end
         ORDER BY dateUtc ASC
-    """)
+        """
+    )
     fun getBodyWeightsBetweenDates(
         start: Instant,
         end: Instant,

@@ -1,13 +1,11 @@
 package org.darthacheron.fitbe.health.componenets
 
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,7 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 fun HealthView(
     healthViewModel: HealthViewModel,
     overviewView: @Composable () -> Unit,
-    detailView: @Composable () -> Unit,
+    detailView: @Composable () -> Unit
 ) {
     val uiState by healthViewModel.viewStateFlow.collectAsState()
 
@@ -53,4 +51,3 @@ fun HealthView(
         }
     }
 }
-

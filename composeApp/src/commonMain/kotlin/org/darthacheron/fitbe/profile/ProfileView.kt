@@ -74,9 +74,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileView(
-    profileViewModel: ProfileViewModel
-) {
+fun ProfileView(profileViewModel: ProfileViewModel) {
     LaunchedEffect(Unit) {
         profileViewModel.updateTopBarConfig()
     }
@@ -104,10 +102,11 @@ fun ProfileView(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState())
             ) {
                 if (uiState.currentProfileDisplay != null || uiState.editingProfileId == null && uiState.isEditing) {
                     Row(
@@ -361,7 +360,7 @@ fun ProfileView(
                             profileViewModel.deleteProfile(it)
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    containerColor = MaterialTheme.colorScheme.errorContainer
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
@@ -429,6 +428,7 @@ fun ProfileView(
     }
 }
 
-private fun sleepDurationText(sleepDuration: UInt?): String = "${
-    sleepDuration?.div(60u)?.toString()?.padStart(2, '0') ?: "--"
-}:${sleepDuration?.mod(60u)?.toString()?.padStart(2, '0') ?: "--"}"
+private fun sleepDurationText(sleepDuration: UInt?): String =
+    "${
+        sleepDuration?.div(60u)?.toString()?.padStart(2, '0') ?: "--"
+    }:${sleepDuration?.mod(60u)?.toString()?.padStart(2, '0') ?: "--"}"

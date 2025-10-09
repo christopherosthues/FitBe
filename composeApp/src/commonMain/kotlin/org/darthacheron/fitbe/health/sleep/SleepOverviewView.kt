@@ -28,7 +28,7 @@ fun SleepOverviewView(
                 state.dates,
                 maxSleeps,
                 false,
-                targetSleeps,
+                targetSleeps
             )
         },
         addDialog = { dismissDialog ->

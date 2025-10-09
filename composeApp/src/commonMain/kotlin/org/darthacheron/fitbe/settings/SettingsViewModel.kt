@@ -36,7 +36,8 @@ class SettingsViewModel(
 
     init {
         viewModelScope.launch {
-            repository.getSettingsFlow()
+            repository
+                .getSettingsFlow()
                 .catch { e ->
                     // Log error e
                     _uiState.update {
@@ -45,8 +46,7 @@ class SettingsViewModel(
                             error = SettingsError(generalErrorMessage = Res.string.settings_error_loading)
                         )
                     }
-                }
-                .collect { loadedSettings ->
+                }.collect { loadedSettings ->
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -55,7 +55,7 @@ class SettingsViewModel(
                             currentBodyMeasurementUnit = loadedSettings.bodyMeasurementUnit,
                             currentThemeMode = loadedSettings.themeMode,
                             persistedSettings = loadedSettings,
-                            error = SettingsError() // Clear error on successful load
+                            error = SettingsError()
                         )
                     }
                 }
@@ -83,13 +83,14 @@ class SettingsViewModel(
         viewModelScope.launch {
             try {
                 val currentState = _uiState.value
-                val settingsToSave = Settings(
-                    weightUnit = currentState.currentWeightUnit,
-                    distanceUnit = currentState.currentDistanceUnit,
-                    bodyMeasurementUnit = currentState.currentBodyMeasurementUnit,
-                    themeMode = currentState.currentThemeMode,
-                    selectedProfileId = currentState.persistedSettings.selectedProfileId // Preserve selectedProfileId
-                )
+                val settingsToSave =
+                    Settings(
+                        weightUnit = currentState.currentWeightUnit,
+                        distanceUnit = currentState.currentDistanceUnit,
+                        bodyMeasurementUnit = currentState.currentBodyMeasurementUnit,
+                        themeMode = currentState.currentThemeMode,
+                        selectedProfileId = currentState.persistedSettings.selectedProfileId
+                    )
                 repository.saveSettings(settingsToSave)
                 _uiState.update {
                     it.copy(
@@ -99,7 +100,6 @@ class SettingsViewModel(
                 }
                 onSuccess()
             } catch (e: Exception) {
-                // Log error e
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -111,17 +111,13 @@ class SettingsViewModel(
     }
 
     fun resetToDefaults() {
-        val defaultSettings = Settings() // Creates a settings object with default values
+        val defaultSettings = Settings()
         _uiState.update {
             it.copy(
                 currentWeightUnit = defaultSettings.weightUnit,
                 currentDistanceUnit = defaultSettings.distanceUnit,
                 currentBodyMeasurementUnit = defaultSettings.bodyMeasurementUnit,
                 currentThemeMode = defaultSettings.themeMode
-                // persistedSettings.selectedProfileId remains unchanged on client,
-                // but if defaults also imply null profile, that needs to be handled
-                // if resetToDefaults should also reset selectedProfileId in backend.
-                // For now, only resetting the displayed fields.
             )
         }
     }

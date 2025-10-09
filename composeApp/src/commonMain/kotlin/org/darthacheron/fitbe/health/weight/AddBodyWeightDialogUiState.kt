@@ -13,18 +13,23 @@ data class AddBodyWeightDialogUiState(
     val muscleMass: String = "",
     val boneMass: String = "",
     val bodyWaterInPercentage: String = "",
-    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val date: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date,
     val weightError: StringResource? = null,
     val bodyFatError: StringResource? = null,
     val muscleMassError: StringResource? = null,
     val boneMassError: StringResource? = null,
-    val bodyWaterError: StringResource? = null,
+    val bodyWaterError: StringResource? = null
 ) : DialogUiState {
     override val canSave: Boolean
-        get() = weightError == null &&
-                bodyFatError == null &&
-                muscleMassError == null &&
-                boneMassError == null &&
-                bodyWaterError == null &&
-                weight.isNotBlank()
+        get() =
+            weightError == null &&
+            bodyFatError == null &&
+            muscleMassError == null &&
+            boneMassError == null &&
+            bodyWaterError == null &&
+            weight.isNotBlank()
 }

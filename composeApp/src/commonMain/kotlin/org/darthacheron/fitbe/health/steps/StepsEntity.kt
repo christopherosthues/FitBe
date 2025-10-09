@@ -29,24 +29,22 @@ data class StepsEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val steps: Int,
-    val dateUtc: Instant,
+    val dateUtc: Instant
 ) {
-    fun toSteps(): Steps {
-        return Steps(
+    fun toSteps(): Steps =
+        Steps(
             id = id,
             profileId = profileId,
             steps = steps.toUInt(),
-            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
+            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault())
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun Steps.toStepsEntity(): StepsEntity {
-    return StepsEntity(
+fun Steps.toStepsEntity(): StepsEntity =
+    StepsEntity(
         id = this.id,
         profileId = this.profileId,
         steps = this.steps.toInt(),
-        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
+        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
     )
-}

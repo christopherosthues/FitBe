@@ -68,28 +68,31 @@ fun PlotBeverages(
     dates: List<LocalDate>,
     maxBeverages: UInt,
     thumbnail: Boolean = false,
-    targetBeverages: UInt? = null,
+    targetBeverages: UInt? = null
 ) {
-    ChartLayout(modifier = modifier.padding(horizontal = 8.dp),
+    ChartLayout(
+        modifier = modifier.padding(horizontal = 8.dp),
         title = {
             if (thumbnail) {
                 Text(text = stringResource(Res.string.beverages_chart_thumbnail_title))
             }
-        }) {
-        val maxConfigurableLabels = 7
-        val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
-            emptySet()
-        } else if (dates.size <= maxConfigurableLabels) {
-            dates.toSet()
-        } else {
-            val selectedDates = mutableSetOf<LocalDate>()
-            for (i in 0 until maxConfigurableLabels) {
-                val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
-                val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
-                selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
-            }
-            selectedDates
         }
+    ) {
+        val maxConfigurableLabels = 7
+        val actualDatesForLabels: Set<LocalDate> =
+            if (dates.isEmpty()) {
+                emptySet()
+            } else if (dates.size <= maxConfigurableLabels) {
+                dates.toSet()
+            } else {
+                val selectedDates = mutableSetOf<LocalDate>()
+                for (i in 0 until maxConfigurableLabels) {
+                    val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
+                    val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
+                    selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
+                }
+                selectedDates
+            }
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
@@ -108,6 +111,7 @@ fun PlotBeverages(
                                 val monthResource = labelDate.monthResourceString()
                                 "${stringResource(monthResource)}/${labelDate.year}"
                             }
+
                             DateUnit.YEAR -> labelDate.year.toString()
                         },
                         color = MaterialTheme.colorScheme.onBackground,
@@ -128,7 +132,7 @@ fun PlotBeverages(
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
+                        maxLines = 1
                     )
                 }
             },
@@ -143,17 +147,18 @@ fun PlotBeverages(
                         )
                     }
                 }
-            },
+            }
         ) {
             if (dates.size > 1) {
                 AreaPlot(
                     data = beverages.map { Point(it.date, it.amountMl.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(MaterialTheme.colorScheme.primary),
+                            strokeWidth = 2.dp
+                        )
                 )
             } else if (dates.size == 1) {
                 val beveragesChartData = toVerticalBarData(beverages)
@@ -163,7 +168,7 @@ fun PlotBeverages(
                     bar = { index ->
                         DefaultVerticalBar(
                             brush = SolidColor(Color(0xFFCC6666)),
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             if (!thumbnail) {
                                 Surface(
@@ -173,39 +178,46 @@ fun PlotBeverages(
                                     modifier = modifier.padding(8.dp)
                                 ) {
                                     Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(text = stringResource(Res.string.beverages_chart_annotation_beverage_value, beveragesChartData[index].y.yMax))
+                                        Text(
+                                            text =
+                                                stringResource(
+                                                    Res.string.beverages_chart_annotation_beverage_value,
+                                                    beveragesChartData[index].y.yMax
+                                                )
+                                        )
                                     }
                                 }
                             }
                         }
-                    },
+                    }
                 )
             }
             if (beverages.isNotEmpty()) {
                 LinePlot(
                     data = beverages.map { Point(it.date, it.amountMl.toInt()) },
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(MaterialTheme.colorScheme.primary),
+                            strokeWidth = 2.dp
+                        )
                 )
             }
 
             if (targetBeverages != null && targetBeverages > 0u) {
                 LinePlot(
                     data = dates.map { Point(it, targetBeverages.toInt()) },
-                    lineStyle = LineStyle(
-                        brush = SolidColor(Color(0xFFED7D31)),
-                        strokeWidth = 2.dp,
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(Color(0xFFED7D31)),
+                            strokeWidth = 2.dp
+                        )
                 )
             }
         }
     }
 }
 
-private fun toVerticalBarData(steps: List<BeverageOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> {
-    return steps.map {
+private fun toVerticalBarData(steps: List<BeverageOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> =
+    steps.map {
         DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.amountMl.toInt()))
     }
-}

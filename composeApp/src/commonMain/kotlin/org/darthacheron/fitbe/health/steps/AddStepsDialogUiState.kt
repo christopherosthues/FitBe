@@ -8,9 +8,13 @@ import org.darthacheron.fitbe.health.componenets.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
 data class AddStepsDialogUiState(
-    val date: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val date: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date,
     val steps: String = "",
-    val stepsError: StringResource? = null,
+    val stepsError: StringResource? = null
 ) : DialogUiState {
     override val canSave: Boolean
         get() = stepsError == null && steps.isNotBlank()

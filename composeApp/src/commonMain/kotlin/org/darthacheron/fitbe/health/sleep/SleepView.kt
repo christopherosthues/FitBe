@@ -14,6 +14,6 @@ fun SleepView(
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { SleepOverviewView(sleepOverviewViewModel, addSleepDialogViewModel) },
-        detailView = { SleepDailyView(sleepDailyViewModel, addSleepDialogViewModel) },
+        detailView = { SleepDailyView(sleepDailyViewModel, addSleepDialogViewModel) }
     )
 }

@@ -9,11 +9,11 @@ fun BodyWeightView(
     healthViewModel: HealthViewModel,
     addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel,
     bodyWeightOverviewViewModel: WeightOverviewViewModel,
-    bodyWeightDailyViewModel: BodyWeightDailyViewModel,
+    bodyWeightDailyViewModel: BodyWeightDailyViewModel
 ) {
     HealthView(
         healthViewModel = healthViewModel,
         overviewView = { WeightOverviewView(bodyWeightOverviewViewModel, addBodyWeightDialogViewModel) },
-        detailView = { BodyWeightDailyView(bodyWeightDailyViewModel, addBodyWeightDialogViewModel) },
+        detailView = { BodyWeightDailyView(bodyWeightDailyViewModel, addBodyWeightDialogViewModel) }
     )
 }

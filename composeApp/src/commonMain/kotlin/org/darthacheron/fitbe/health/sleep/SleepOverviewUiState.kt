@@ -9,4 +9,3 @@ class SleepOverviewUiState(
     val dates: List<LocalDate> = emptyList(),
     error: SleepOverviewError = SleepOverviewError()
 ) : UiState<SleepOverviewError>(isLoading, error)
-

@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.componenets
 
-
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
@@ -21,13 +20,14 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
-    protected val dateRange = MutableStateFlow(
-        DateRange(
-            Clock.System.now().minus(6.days),
-            Clock.System.now(),
-            DateUnit.DAY
+    protected val dateRange =
+        MutableStateFlow(
+            DateRange(
+                Clock.System.now().minus(6.days),
+                Clock.System.now(),
+                DateUnit.DAY
+            )
         )
-    )
 
     val dateRangeFlow: StateFlow<DateRange> = dateRange
 
@@ -46,7 +46,11 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
         setRange(range)
     }
 
-    fun setRange(startDate: Instant, endDate: Instant, dateUnit: DateUnit) {
+    fun setRange(
+        startDate: Instant,
+        endDate: Instant,
+        dateUnit: DateUnit
+    ) {
         dateRange.value = DateRange(startDate, endDate, dateUnit)
     }
 
