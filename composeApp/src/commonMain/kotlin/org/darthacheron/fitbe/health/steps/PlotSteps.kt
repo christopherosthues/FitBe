@@ -67,28 +67,31 @@ fun PlotSteps(
     dates: List<LocalDate>,
     maxSteps: UInt,
     thumbnail: Boolean = false,
-    targetSteps: UInt? = null,
+    targetSteps: UInt? = null
 ) {
-    ChartLayout(modifier = modifier.padding(horizontal = 8.dp),
+    ChartLayout(
+        modifier = modifier.padding(horizontal = 8.dp),
         title = {
             if (thumbnail) {
                 Text(text = stringResource(Res.string.steps_chart_thumbnail_title))
             }
-        }) {
-        val maxConfigurableLabels = 7
-        val actualDatesForLabels: Set<LocalDate> = if (dates.isEmpty()) {
-            emptySet()
-        } else if (dates.size <= maxConfigurableLabels) {
-            dates.toSet()
-        } else {
-            val selectedDates = mutableSetOf<LocalDate>()
-            for (i in 0 until maxConfigurableLabels) {
-                val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
-                val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
-                selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
-            }
-            selectedDates
         }
+    ) {
+        val maxConfigurableLabels = 7
+        val actualDatesForLabels: Set<LocalDate> =
+            if (dates.isEmpty()) {
+                emptySet()
+            } else if (dates.size <= maxConfigurableLabels) {
+                dates.toSet()
+            } else {
+                val selectedDates = mutableSetOf<LocalDate>()
+                for (i in 0 until maxConfigurableLabels) {
+                    val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
+                    val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
+                    selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
+                }
+                selectedDates
+            }
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
@@ -100,15 +103,16 @@ fun PlotSteps(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        text = when (dateRange.dateUnit) {
-                            DateUnit.DAY -> labelDate.toString()
-                            DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
-                            DateUnit.MONTH -> {
-                                val monthResource = labelDate.monthResourceString()
-                                "${stringResource(monthResource)}/${labelDate.year}"
-                            }
-                            DateUnit.YEAR -> labelDate.year.toString()
-                        },
+                        text =
+                            when (dateRange.dateUnit) {
+                                DateUnit.DAY -> labelDate.toString()
+                                DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
+                                DateUnit.MONTH -> {
+                                    val monthResource = labelDate.monthResourceString()
+                                    "${stringResource(monthResource)}/${labelDate.year}"
+                                }
+                                DateUnit.YEAR -> labelDate.year.toString()
+                            },
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
@@ -127,7 +131,7 @@ fun PlotSteps(
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
+                        maxLines = 1
                     )
                 }
             },
@@ -142,17 +146,18 @@ fun PlotSteps(
                         )
                     }
                 }
-            },
+            }
         ) {
             if (dates.size > 1) {
                 AreaPlot(
                     data = stepsData.map { Point(it.date, it.steps.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(MaterialTheme.colorScheme.primary),
+                            strokeWidth = 2.dp
+                        )
                 )
             } else if (dates.size == 1) {
                 val stepsChartData = toVerticalBarData(stepsData)
@@ -162,7 +167,7 @@ fun PlotSteps(
                     bar = { index ->
                         DefaultVerticalBar(
                             brush = SolidColor(Color(0xFFCC6666)),
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             if (!thumbnail) {
                                 Surface(
@@ -177,34 +182,35 @@ fun PlotSteps(
                                 }
                             }
                         }
-                    },
+                    }
                 )
             }
             if (stepsData.isNotEmpty()) {
                 LinePlot(
                     data = stepsData.map { Point(it.date, it.steps.toInt()) },
-                    lineStyle = LineStyle(
-                        brush = SolidColor(MaterialTheme.colorScheme.primary),
-                        strokeWidth = 2.dp
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(MaterialTheme.colorScheme.primary),
+                            strokeWidth = 2.dp
+                        )
                 )
             }
 
             if (targetSteps != null && targetSteps > 0u) {
                 LinePlot(
                     data = dates.map { Point(it, targetSteps.toInt()) },
-                    lineStyle = LineStyle(
-                        brush = SolidColor(Color(0xFFED7D31)),
-                        strokeWidth = 2.dp,
-                    ),
+                    lineStyle =
+                        LineStyle(
+                            brush = SolidColor(Color(0xFFED7D31)),
+                            strokeWidth = 2.dp
+                        )
                 )
             }
         }
     }
 }
 
-private fun toVerticalBarData(steps: List<StepsOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> {
-    return steps.map {
+private fun toVerticalBarData(steps: List<StepsOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> =
+    steps.map {
         DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.steps.toInt()))
     }
-}

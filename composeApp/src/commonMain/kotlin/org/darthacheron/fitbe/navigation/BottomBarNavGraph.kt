@@ -1,23 +1,21 @@
 package org.darthacheron.fitbe.navigation
 
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import org.darthacheron.fitbe.health.HealthOverviewView
+import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
 import org.darthacheron.fitbe.health.componenets.HealthViewModel
-import org.darthacheron.fitbe.health.HealthOverviewView
-import org.darthacheron.fitbe.health.HealthOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
 import org.darthacheron.fitbe.health.sleep.SleepDailyViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
@@ -35,6 +33,8 @@ import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.darthacheron.fitbe.workouts.ExercisesDashboardView
+import org.darthacheron.fitbe.workouts.ExercisesDashboardViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailView
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentDetailViewModel
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentView
@@ -43,8 +43,6 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailView
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDetailViewModel
 import org.darthacheron.fitbe.workouts.exercises.ExercisesView
 import org.darthacheron.fitbe.workouts.exercises.ExercisesViewModel
-import org.darthacheron.fitbe.workouts.ExercisesDashboardView
-import org.darthacheron.fitbe.workouts.ExercisesDashboardViewModel
 import org.darthacheron.fitbe.workouts.programs.ProgramOverviewView
 import org.darthacheron.fitbe.workouts.programs.ProgramOverviewViewModel
 import org.darthacheron.fitbe.workouts.templates.WorkoutTemplateDetailView
@@ -54,6 +52,8 @@ import org.darthacheron.fitbe.workouts.templates.WorkoutTemplatesOverviewViewMod
 import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable

@@ -26,13 +26,12 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_body_fat
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_body_water
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_bone_mass
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_cancel
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_muscle_mass
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_save
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_title
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_total_weight
-import fitbe.composeapp.generated.resources.body_weight_add_dialog_cancel
-import fitbe.composeapp.generated.resources.body_weight_add_dialog_save
 import fitbe.composeapp.generated.resources.ic_date_range
-import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -93,24 +92,28 @@ fun AddBodyWeightDialog(
                             showDatePicker = false
                         },
                         onDismiss = { showDatePicker = false },
-                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(
-                            TimeZone.UTC).toEpochMilliseconds()
+                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                     )
                 }
 
                 TextField(
                     value = uiState.weight,
                     onValueChange = viewModel::onWeightChange,
-                    label = { Text(text = stringResource(
-                        Res.string.body_weight_add_dialog_total_weight,
-                        stringResource(settings.weightUnit.toStringResource())
-                    )) },
+                    label = {
+                        Text(
+                            text =
+                                stringResource(
+                                    Res.string.body_weight_add_dialog_total_weight,
+                                    stringResource(settings.weightUnit.toStringResource())
+                                )
+                        )
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     isError = uiState.weightError != null,
                     supportingText = {
                         uiState.weightError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
                 TextField(
                     value = uiState.bodyFatInPercentage,
@@ -121,7 +124,7 @@ fun AddBodyWeightDialog(
                     isError = uiState.bodyFatError != null,
                     supportingText = {
                         uiState.bodyFatError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
                 TextField(
                     value = uiState.muscleMass,
@@ -139,7 +142,7 @@ fun AddBodyWeightDialog(
                     isError = uiState.muscleMassError != null,
                     supportingText = {
                         uiState.muscleMassError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
                 TextField(
                     value = uiState.boneMass,
@@ -157,7 +160,7 @@ fun AddBodyWeightDialog(
                     isError = uiState.boneMassError != null,
                     supportingText = {
                         uiState.boneMassError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
                 TextField(
                     value = uiState.bodyWaterInPercentage,
@@ -168,7 +171,7 @@ fun AddBodyWeightDialog(
                     isError = uiState.bodyWaterError != null,
                     supportingText = {
                         uiState.bodyWaterError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
             }
         },
@@ -197,6 +200,6 @@ fun AddBodyWeightDialog(
             }) {
                 Text(stringResource(Res.string.body_weight_add_dialog_cancel))
             }
-        },
+        }
     )
 }

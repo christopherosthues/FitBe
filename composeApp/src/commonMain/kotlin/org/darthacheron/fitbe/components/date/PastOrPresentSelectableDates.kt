@@ -11,7 +11,11 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 object PastOrPresentSelectableDates : SelectableDates {
     private val timeZone = TimeZone.Companion.currentSystemDefault()
-    private val today = Clock.System.now().toLocalDateTime(timeZone).date
+    private val today =
+        Clock.System
+            .now()
+            .toLocalDateTime(timeZone)
+            .date
 
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         val date =

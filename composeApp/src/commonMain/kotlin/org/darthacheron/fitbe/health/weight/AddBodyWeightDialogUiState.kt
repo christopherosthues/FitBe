@@ -27,9 +27,9 @@ data class AddBodyWeightDialogUiState(
     override val canSave: Boolean
         get() =
             weightError == null &&
-            bodyFatError == null &&
-            muscleMassError == null &&
-            boneMassError == null &&
-            bodyWaterError == null &&
-            weight.isNotBlank()
+                bodyFatError == null &&
+                muscleMassError == null &&
+                boneMassError == null &&
+                bodyWaterError == null &&
+                weight.isNotBlank()
 }

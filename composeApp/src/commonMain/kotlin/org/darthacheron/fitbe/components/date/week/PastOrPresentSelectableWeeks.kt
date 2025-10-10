@@ -11,7 +11,7 @@ object PastOrPresentSelectableWeeks : SelectableWeeks {
     override fun isWeekSelectable(yearWeek: YearWeek): Boolean {
         val isoWeekAndYear = today.date.isoWeekAndYear()
         return isoWeekAndYear.first > yearWeek.year ||
-                isoWeekAndYear.first == yearWeek.year &&
-                isoWeekAndYear.second >= yearWeek.week
+            isoWeekAndYear.first == yearWeek.year &&
+            isoWeekAndYear.second >= yearWeek.week
     }
 }

@@ -26,12 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_add_dialog_title
 import fitbe.composeapp.generated.resources.beverages_add_dialog_amount
-import fitbe.composeapp.generated.resources.beverages_add_dialog_name
-import fitbe.composeapp.generated.resources.beverages_add_dialog_unit
 import fitbe.composeapp.generated.resources.beverages_add_dialog_cancel
+import fitbe.composeapp.generated.resources.beverages_add_dialog_name
 import fitbe.composeapp.generated.resources.beverages_add_dialog_save
+import fitbe.composeapp.generated.resources.beverages_add_dialog_title
+import fitbe.composeapp.generated.resources.beverages_add_dialog_unit
 import fitbe.composeapp.generated.resources.ic_date_range
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -71,14 +71,16 @@ fun AddBeverageDialog(
                         onDateSelected = { millis ->
                             millis?.let {
                                 val selectedDate =
-                                    Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                                    Instant
+                                        .fromEpochMilliseconds(it)
+                                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                                        .date
                                 viewModel.onDateChange(selectedDate)
                             }
                             showDatePicker = false
                         },
                         onDismiss = { showDatePicker = false },
-                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(
-                            TimeZone.UTC).toEpochMilliseconds()
+                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                     )
                 }
 

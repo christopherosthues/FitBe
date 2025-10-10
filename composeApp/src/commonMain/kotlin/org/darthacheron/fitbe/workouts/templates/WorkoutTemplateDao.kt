@@ -91,5 +91,8 @@ interface WorkoutTemplateDao {
                           WHERE profileId = :profileId AND workoutTemplateId = :workoutTemplateId)
         """
     )
-    fun isFavorite(profileId: Uuid, workoutTemplateId: Uuid): Flow<Boolean>
+    fun isFavorite(
+        profileId: Uuid,
+        workoutTemplateId: Uuid
+    ): Flow<Boolean>
 }

@@ -19,8 +19,7 @@ class ProfileRepository(
 
     suspend fun getProfileById(id: Uuid): Profile? = profileDao.getProfileFlowById(id).first()?.toProfile()
 
-    suspend fun getProfileFlowById(id: Uuid): Flow<Profile?> =
-        profileDao.getProfileFlowById(id).map { it?.toProfile() }
+    suspend fun getProfileFlowById(id: Uuid): Flow<Profile?> = profileDao.getProfileFlowById(id).map { it?.toProfile() }
 
     suspend fun getProfileByName(name: String): Profile? = profileDao.getProfileByName(name)?.toProfile()
 

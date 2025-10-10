@@ -37,7 +37,10 @@ interface WorkoutExecutionDao {
         ORDER BY start_time_utc DESC LIMIT 1
         """
     )
-    fun getInProgressWorkoutExecution(exerciseId: Uuid, profileId: Uuid): Flow<WorkoutExecutionEntity?>
+    fun getInProgressWorkoutExecution(
+        exerciseId: Uuid,
+        profileId: Uuid
+    ): Flow<WorkoutExecutionEntity?>
 
     @Query(
         """

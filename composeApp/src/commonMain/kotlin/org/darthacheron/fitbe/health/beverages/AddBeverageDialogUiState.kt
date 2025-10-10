@@ -11,7 +11,8 @@ data class AddBeverageDialogUiState(
     val date: LocalDate =
         Clock.System
             .now()
-            .toLocalDateTime(TimeZone.currentSystemDefault()).date,
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date,
     val amount: String = "",
     val beverageName: String = "",
     val selectedUnit: FluidUnit = FluidUnit.Milliliter,

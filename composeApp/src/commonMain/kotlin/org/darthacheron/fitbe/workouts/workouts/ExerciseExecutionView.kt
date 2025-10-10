@@ -265,7 +265,7 @@ fun ExecutingPhase(viewModel: ExerciseExecutionViewModel) {
             val minutes = elapsedTimeSeconds / 60
             val seconds = elapsedTimeSeconds % 60
             "${minutes.toString().padStart(2, '0')}:" +
-                    seconds.toString().padStart(2, '0')
+                seconds.toString().padStart(2, '0')
         }
     val exerciseTargetDisplay =
         remember(exercise, targetReps, targetWeight, targetDuration, targetDistanceKm) {
@@ -366,7 +366,11 @@ fun RestingPhase(viewModel: ExerciseExecutionViewModel) {
         Text(text = formattedRestTime, style = MaterialTheme.typography.displayLarge.copy(textAlign = TextAlign.Center))
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = stringResource(Res.string.exercise_execution_next_set_info, nextSetNumber, exercise?.name ?: "Exercise"),
+            text =
+                stringResource(
+                    Res.string.exercise_execution_next_set_info,
+                    nextSetNumber, exercise?.name ?: "Exercise"
+                ),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
@@ -435,7 +439,7 @@ fun ActualsInputDialog(viewModel: ExerciseExecutionViewModel) {
                     keyboardOptions =
                         KeyboardOptions(
                             keyboardType = KeyboardType.Number,
-                            imeAction = if(showDistanceField) ImeAction.Next else ImeAction.Done
+                            imeAction = if (showDistanceField) ImeAction.Next else ImeAction.Done
                         ),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()

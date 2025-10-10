@@ -31,10 +31,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.*
+import fitbe.composeapp.generated.resources.ic_back
+import fitbe.composeapp.generated.resources.ic_reset
+import fitbe.composeapp.generated.resources.ic_save
+import fitbe.composeapp.generated.resources.profile_save
+import fitbe.composeapp.generated.resources.settings_body_measurement_unit
+import fitbe.composeapp.generated.resources.settings_content_description_back
+import fitbe.composeapp.generated.resources.settings_distance_unit
+import fitbe.composeapp.generated.resources.settings_reset
+import fitbe.composeapp.generated.resources.settings_theme
+import fitbe.composeapp.generated.resources.settings_weight_unit
+import fitbe.composeapp.generated.resources.top_bar_title_settings
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

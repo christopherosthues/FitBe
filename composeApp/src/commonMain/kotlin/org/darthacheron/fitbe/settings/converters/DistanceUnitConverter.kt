@@ -8,10 +8,9 @@ class DistanceUnitConverter {
         value: Double,
         from: DistanceUnit,
         to: DistanceUnit
-    ): Double {
-        return when (to) {
+    ): Double =
+        when (to) {
             DistanceUnit.KM -> from.toKilometer(value)
             DistanceUnit.MILES -> from.toMiles(value)
         }.roundToDecimals(1)
-    }
 }

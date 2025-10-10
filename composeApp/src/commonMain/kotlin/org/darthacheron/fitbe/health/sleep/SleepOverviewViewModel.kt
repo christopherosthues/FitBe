@@ -58,27 +58,30 @@ class SleepOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    val targetSleeps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
-        .flatMapLatest { settings ->
-            val profileId = settings.selectedProfileId
-            if (profileId != null) {
-                profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetSleepDuration }
-            } else {
-                flowOf(null)
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val targetSleeps: StateFlow<UInt?> =
+        settingsRepository
+            .getSettingsFlow()
+            .flatMapLatest { settings ->
+                val profileId = settings.selectedProfileId
+                if (profileId != null) {
+                    profileRepository
+                        .getProfileFlowById(profileId)
+                        .map { profile -> profile?.targetSleepDuration }
+                } else {
+                    flowOf(null)
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
     private val sleepsDataFlow: StateFlow<List<SleepOverview>> =
         combine(dateRange, settingsRepository.getSettingsFlow()) { range, settings ->
             settings.selectedProfileId?.let {
-                Pair(settings, range.dateUnit) to sleepRepository.getSleepsBetween(
-                    range.startDate,
-                    range.endDate,
-                    it
-                )
+                Pair(settings, range.dateUnit) to
+                    sleepRepository.getSleepsBetween(
+                        range.startDate,
+                        range.endDate,
+                        it
+                    )
             } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
         }.flatMapLatest { (settingsDateUnit, sleepsFlow) ->
             sleepsFlow.map { sleeps ->
@@ -89,21 +92,17 @@ class SleepOverviewViewModel(
                     DateUnit.YEAR -> mapYear(sleeps)
                 }
             }
-        }
-            .onStart {
-                isLoading.value = true
-                errorMessage.value = null
-            }
-            .catch {
-                isLoading.value = false
-                errorMessage.value = Res.string.weight_overview_error_loading
-                emit(emptyList())
-            }
-            .map {
-                isLoading.value = false
-                it
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+        }.onStart {
+            isLoading.value = true
+            errorMessage.value = null
+        }.catch {
+            isLoading.value = false
+            errorMessage.value = Res.string.weight_overview_error_loading
+            emit(emptyList())
+        }.map {
+            isLoading.value = false
+            it
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 //        }.flatMapLatest { it }
 //            .map { s ->
 //                s.map { value ->
@@ -114,38 +113,40 @@ class SleepOverviewViewModel(
 //                }
 //            }
 
-    override val uiState: StateFlow<SleepOverviewUiState> = combine(
-        sleepsDataFlow,
-        isLoading,
-        errorMessage
-    ) { sleeps, isLoading, errorMessage ->
-        SleepOverviewUiState(
-            isLoading = isLoading,
-            sleeps = sleeps,
-            dates = sleeps.map { it.date },
-            error = SleepOverviewError(errorMessage)
+    override val uiState: StateFlow<SleepOverviewUiState> =
+        combine(
+            sleepsDataFlow,
+            isLoading,
+            errorMessage
+        ) { sleeps, isLoading, errorMessage ->
+            SleepOverviewUiState(
+                isLoading = isLoading,
+                sleeps = sleeps,
+                dates = sleeps.map { it.date },
+                error = SleepOverviewError(errorMessage)
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = SleepOverviewUiState(isLoading = true)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = SleepOverviewUiState(isLoading = true)
-    )
 
-    val maxSleeps: StateFlow<UInt> = uiState.map { it.sleeps }
-        .map { sleeps ->
-            sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
-        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
+    val maxSleeps: StateFlow<UInt> =
+        uiState
+            .map { it.sleeps }
+            .map { sleeps ->
+                sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
-    private fun mapDay(sleeps: List<Sleep>): List<SleepOverview> {
-        return aggregateDailySleeps(sleeps)
-    }
+    private fun mapDay(sleeps: List<Sleep>): List<SleepOverview> = aggregateDailySleeps(sleeps)
 
     private fun aggregateDailySleeps(sleeps: List<Sleep>): List<SleepOverview> {
         if (sleeps.isEmpty()) {
             return emptyList()
         }
 
-        return sleeps.groupBy { it.start.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+        return sleeps
+            .groupBy { it.start.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, group) ->
                 SleepOverview(
                     date,
@@ -162,7 +163,8 @@ class SleepOverviewViewModel(
     ): List<SleepOverview> {
         if (sleeps.isEmpty()) return emptyList()
 
-        return sleeps.groupBy(groupKeySelector)
+        return sleeps
+            .groupBy(groupKeySelector)
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
@@ -174,7 +176,7 @@ class SleepOverviewViewModel(
 
                 SleepOverview(
                     date = representativeDateSelector(group),
-                    totalMinutes = avgSleepingMinutes,
+                    totalMinutes = avgSleepingMinutes
                 )
             }
     }
@@ -198,11 +200,12 @@ class SleepOverviewViewModel(
             daysInPeriodSelector = { group ->
                 val localDate = group.first().date
                 val firstDay = localDate.firstDayOfMonth()
-                val nextMonth = if (firstDay.monthNumber == 12) {
-                    LocalDate(firstDay.year + 1, 1, 1)
-                } else {
-                    LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
-                }
+                val nextMonth =
+                    if (firstDay.monthNumber == 12) {
+                        LocalDate(firstDay.year + 1, 1, 1)
+                    } else {
+                        LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
+                    }
                 firstDay.daysUntil(nextMonth)
             }
         )
@@ -223,7 +226,10 @@ class SleepOverviewViewModel(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addSleep(startDateTime: Instant, endDateTime: Instant) {
+    fun addSleep(
+        startDateTime: Instant,
+        endDateTime: Instant
+    ) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             sleepRepository.addSleep(
@@ -231,7 +237,7 @@ class SleepOverviewViewModel(
                     id = Uuid.random(),
                     profileId = settings.selectedProfileId!!,
                     start = startDateTime,
-                    end = endDateTime,
+                    end = endDateTime
                 )
             )
         }

@@ -23,14 +23,18 @@ fun toDateSpan(
 ): Pair<Instant, Instant> {
     val startOfDay = start.toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
     val endOfDay =
-        end.toLocalDateTime(timeZone).date.plus(1, DateTimeUnit.DAY).atStartOfDayIn(timeZone)
+        end
+            .toLocalDateTime(timeZone)
+            .date
+            .plus(1, DateTimeUnit.DAY)
+            .atStartOfDayIn(timeZone)
 
     return Pair(startOfDay, endOfDay)
 }
 
 fun LocalDate.isoWeekAndYear(): Pair<Int, Int> {
     // ISO 8601: Monday = 1, Sunday = 7
-    val dayOfWeek = this.dayOfWeek.isoDayNumber  // 1..7
+    val dayOfWeek = this.dayOfWeek.isoDayNumber // 1..7
 
     // Find the nearest Thursday to determine the ISO week-based year
     val nearestThursday = this.plus(DatePeriod(days = 4 - dayOfWeek)) // 4 = Thursday
@@ -57,23 +61,20 @@ fun LocalDate.firstDayOfIsoWeek(): LocalDate {
     return this.minus(DatePeriod(days = dayOfWeek - 1))
 }
 
-fun LocalDate.firstDayOfMonth(): LocalDate {
-    return LocalDate(this.year, this.monthNumber, 1)
-}
+fun LocalDate.firstDayOfMonth(): LocalDate = LocalDate(this.year, this.monthNumber, 1)
 
 fun Instant.lastDayOfMonth(): Instant {
     val date = this.toLocalDateTime(TimeZone.UTC).date
-    val firstOfNextMonth = if (date.monthNumber == 12) {
-        LocalDate(date.year + 1, 1, 1)
-    } else {
-        LocalDate(date.year, date.monthNumber + 1, 1)
-    }
+    val firstOfNextMonth =
+        if (date.monthNumber == 12) {
+            LocalDate(date.year + 1, 1, 1)
+        } else {
+            LocalDate(date.year, date.monthNumber + 1, 1)
+        }
     return firstOfNextMonth.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
 }
 
-fun LocalDate.firstDayOfYear(): LocalDate {
-    return LocalDate(this.year, 1, 1)
-}
+fun LocalDate.firstDayOfYear(): LocalDate = LocalDate(this.year, 1, 1)
 
 fun DateRange.plusOne(): DateRange {
     val startDate = this.startDate.toLocalDateTime(this.timeZone)
@@ -93,8 +94,11 @@ fun DateRange.plusOne(): DateRange {
 
         DateUnit.MONTH -> {
             newStartDate = startDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone)
-            newEndDate = endDate.date.plus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone)
-                .lastDayOfMonth()
+            newEndDate =
+                endDate.date
+                    .plus(DatePeriod(months = 1))
+                    .atStartOfDayIn(this.timeZone)
+                    .lastDayOfMonth()
         }
 
         DateUnit.YEAR -> {
@@ -124,10 +128,11 @@ fun DateRange.minusOne(): DateRange {
         DateUnit.MONTH -> {
             newStartDate =
                 startDate.date.minus(DatePeriod(months = 1)).atStartOfDayIn(this.timeZone)
-            newEndDate = endDate.date
-                .minus(DatePeriod(months = 1))
-                .atStartOfDayIn(this.timeZone)
-                .lastDayOfMonth()
+            newEndDate =
+                endDate.date
+                    .minus(DatePeriod(months = 1))
+                    .atStartOfDayIn(this.timeZone)
+                    .lastDayOfMonth()
         }
 
         DateUnit.YEAR -> {

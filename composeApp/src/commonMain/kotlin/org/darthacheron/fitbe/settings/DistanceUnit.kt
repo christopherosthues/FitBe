@@ -16,19 +16,19 @@ enum class DistanceUnit {
     MILES;
 
     fun toResourceString(): StringResource =
-        when(this) {
+        when (this) {
             KM -> Res.string.settings_km
             MILES -> Res.string.settings_miles
         }
 
     fun toKilometer(value: Double): Double =
-        when(this){
+        when (this) {
             KM -> value
             MILES -> value * MILES_TO_KM
         }
 
     fun toMiles(value: Double): Double =
-        when(this){
+        when (this) {
             KM -> value
             MILES -> value * KM_TO_MILES
         }

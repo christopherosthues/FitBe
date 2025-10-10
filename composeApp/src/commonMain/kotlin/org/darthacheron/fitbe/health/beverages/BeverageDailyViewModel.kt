@@ -45,7 +45,8 @@ class BeverageDailyViewModel(
         get() = Screen.Health
 
     private val targetBeverage: StateFlow<UInt> =
-        settingsRepository.getSettingsFlow()
+        settingsRepository
+            .getSettingsFlow()
             .flatMapLatest { settings ->
                 val profileId = settings.selectedProfileId
                 if (profileId != null) {
@@ -58,23 +59,24 @@ class BeverageDailyViewModel(
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
     private val beveragesFlow =
-        date.flatMapLatest { date ->
-            settingsRepository.getSettingsFlow().flatMapLatest { settings ->
-                settings.selectedProfileId?.let {
-                    repository.getBeveragesForDate(date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
-                } ?: flowOf(emptyList())
+        date
+            .flatMapLatest { date ->
+                settingsRepository.getSettingsFlow().flatMapLatest { settings ->
+                    settings.selectedProfileId?.let {
+                        repository.getBeveragesForDate(date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
+                    } ?: flowOf(emptyList())
+                }
+            }.onStart {
+                isLoading.value = true
+                errorMessage.value = null
+            }.catch {
+                isLoading.value = false
+                errorMessage.value = Res.string.beverages_daily_view_error_loading
+                emit(emptyList())
+            }.map { beverages ->
+                isLoading.value = false
+                beverages
             }
-        }.onStart {
-            isLoading.value = true
-            errorMessage.value = null
-        }.catch {
-            isLoading.value = false
-            errorMessage.value = Res.string.beverages_daily_view_error_loading
-            emit(emptyList())
-        }.map { beverages ->
-            isLoading.value = false
-            beverages
-        }
 
     // TODO: translations
 

@@ -42,7 +42,8 @@ class AddBeverageDialogViewModel(
 
             var error =
                 if (!positiveDecimalValidator.validate(amount) ||
-                    !beverageValidator.validate(amountAsDouble)) {
+                    !beverageValidator.validate(amountAsDouble)
+                ) {
                     Res.string.beverages_add_dialog_error_invalid_amount
                 } else {
                     null

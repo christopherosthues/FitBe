@@ -11,13 +11,8 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 class LocalTimeConverter {
     @TypeConverter
-    fun fromLocalTime(time: LocalTime): String {
-        return time.toString()
-    }
+    fun fromLocalTime(time: LocalTime): String = time.toString()
 
     @TypeConverter
-    fun toLocalTime(timeString: String): LocalTime {
-        return LocalTime.parse(timeString)
-    }
+    fun toLocalTime(timeString: String): LocalTime = LocalTime.parse(timeString)
 }
-

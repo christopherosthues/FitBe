@@ -46,10 +46,11 @@ fun SaveCancelFloatingActionButtonRow(
             FloatingActionButton(
                 onClick = { onSave() },
                 containerColor =
-                    if (!isLoading && !hasError)
+                    if (!isLoading && !hasError) {
                         MaterialTheme.colorScheme.primary
-                    else
+                    } else {
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                    }
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_save),

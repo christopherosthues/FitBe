@@ -32,7 +32,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class WorkoutTemplateDetailViewModel(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
-    private val settingsRepository: SettingsRepository, // Added SettingsRepository
+    private val settingsRepository: SettingsRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
@@ -40,7 +40,7 @@ class WorkoutTemplateDetailViewModel(
         get() = Res.string.top_bar_title_workout_template_detail
 
     override val bottomBarSelected: Screen?
-        get() = Screen.ExercisesDashboard // Or Screen.WorkoutsDashboard
+        get() = Screen.ExercisesDashboard
 
     override val backNavigationIconVisible: Boolean?
         get() = true
@@ -49,7 +49,8 @@ class WorkoutTemplateDetailViewModel(
     val uiState: StateFlow<WorkoutTemplateDetailUiState> = _uiState.asStateFlow()
 
     private val currentProfileId: StateFlow<Uuid?> =
-        settingsRepository.getSettingsFlow()
+        settingsRepository
+            .getSettingsFlow()
             .map { it.selectedProfileId }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
@@ -70,7 +71,7 @@ class WorkoutTemplateDetailViewModel(
         viewModelScope.launch {
             isFavoriteFlow.collect { isFav ->
                 _uiState.update { it.copy(isFavorite = isFav) }
-                updateTopBarConfig() // Update top bar when favorite status changes
+                updateTopBarConfig()
             }
         }
     }
@@ -81,13 +82,19 @@ class WorkoutTemplateDetailViewModel(
             val currentProfId = currentProfileId.value
             val isCurrentlyFavorite = _uiState.value.isFavorite
 
-            val favoriteAction = TopBarAction(
-                icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
-                // TODO: Replace with actual string resources
-                contentDescription = if (isCurrentlyFavorite) Res.string.top_bar_title_workout_template_detail else Res.string.top_bar_title_workout_template_detail,
-                onClick = { toggleFavorite() },
-                isVisible = currentTemplateId != null && currentProfId != null
-            )
+            val favoriteAction =
+                TopBarAction(
+                    icon = if (isCurrentlyFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border,
+                    // TODO: Replace with actual string resources
+                    contentDescription =
+                        if (isCurrentlyFavorite) {
+                            Res.string.top_bar_title_workout_template_detail
+                        } else {
+                            Res.string.top_bar_title_workout_template_detail
+                        },
+                    onClick = { toggleFavorite() },
+                    isVisible = currentTemplateId != null && currentProfId != null
+                )
             // TODO: Add other actions like Edit, Save, Delete etc.
             return listOf(favoriteAction)
         }
@@ -132,18 +139,20 @@ class WorkoutTemplateDetailViewModel(
         viewModelScope.launch {
             try {
                 val templateWithDetails =
-                    workoutTemplateRepository.getWorkoutTemplateWithExercisesAndSets(templateId)
+                    workoutTemplateRepository
+                        .getWorkoutTemplateWithExercisesAndSets(templateId)
                         .firstOrNull()
 
                 if (templateWithDetails != null) {
-                    val detailedExercises = templateWithDetails.exercises.map { exerciseWithSets ->
-                        WorkoutTemplateExerciseWithDetails(
-                            exercise = exerciseWithSets.exercise,
-                            exerciseOrder = exerciseWithSets.exerciseOrder,
+                    val detailedExercises =
+                        templateWithDetails.exercises.map { exerciseWithSets ->
+                            WorkoutTemplateExerciseWithDetails(
+                                exercise = exerciseWithSets.exercise,
+                                exerciseOrder = exerciseWithSets.exerciseOrder
 //                            notes = exerciseWithSets.exercise.notes,
 //                            sets = exerciseWithSets.sets.map { it.toWorkoutTemplateSet() }
-                        )
-                    }
+                            )
+                        }
                     _uiState.update {
                         it.copy(
                             name = templateWithDetails.name,
@@ -160,7 +169,8 @@ class WorkoutTemplateDetailViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = Res.string.top_bar_title_workout_template_detail // TODO: Add a specific "template not found" error string
+                            error = Res.string.top_bar_title_workout_template_detail
+                            // TODO: Add a specific "template not found" error string
                         )
                     }
                 }
@@ -168,7 +178,8 @@ class WorkoutTemplateDetailViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = Res.string.top_bar_title_workout_template_detail // TODO: Add a specific error string for loading failure
+                        error = Res.string.top_bar_title_workout_template_detail
+                        // TODO: Add a specific error string for loading failure
                     )
                 }
             }

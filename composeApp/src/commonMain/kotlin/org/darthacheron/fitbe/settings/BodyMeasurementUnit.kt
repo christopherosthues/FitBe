@@ -13,19 +13,19 @@ enum class BodyMeasurementUnit {
     INCH;
 
     fun toStringResource(): StringResource =
-        when(this) {
+        when (this) {
             CM -> Res.string.settings_cm
             INCH -> Res.string.settings_inch
         }
 
     fun toCentimeters(value: Double): Double =
-        when(this) {
+        when (this) {
             CM -> value
             INCH -> value * INCH_TO_CM
         }
 
     fun toInch(value: Double): Double =
-        when(this) {
+        when (this) {
             CM -> value * CM_TO_INCH
             INCH -> value
         }

@@ -51,8 +51,8 @@ fun RootScreen(
             ?.substringBefore("?")
     val isMainBottomBarDestination =
         remember(currentRoute) {
-        bottomBarDestinations.any { currentDestinationRoute?.equals(it.screen.toString()) == true }
-    }
+            bottomBarDestinations.any { currentDestinationRoute?.equals(it.screen.toString()) == true }
+        }
 
     Scaffold(
         topBar = {
@@ -60,9 +60,11 @@ fun RootScreen(
                 title = {
                     val titleResource = topBarConfig.title
                     val title =
-                        if (titleResource != null)
+                        if (titleResource != null) {
                             stringResource(titleResource)
-                        else currentDestinationRoute ?: ""
+                        } else {
+                            currentDestinationRoute ?: ""
+                        }
                     Text(text = title)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),

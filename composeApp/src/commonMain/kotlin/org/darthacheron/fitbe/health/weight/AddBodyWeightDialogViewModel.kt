@@ -29,14 +29,14 @@ class AddBodyWeightDialogViewModel(
     private val positiveDecimalValidator: PositiveDecimalValidator,
     private val bodyWeightValidator: BodyWeightValidator,
     private val percentageValidator: PercentageValidator,
-    private val settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository
 ) : AddDialogViewModel<AddBodyWeightDialogUiState>() {
     val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
 
     override val uiState = MutableStateFlow(AddBodyWeightDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update { AddBodyWeightDialogUiState()}
+        uiState.update { AddBodyWeightDialogUiState() }
     }
 
     fun onDateChange(date: LocalDate) {
@@ -57,14 +57,17 @@ class AddBodyWeightDialogViewModel(
             val weightUnit = settings.weightUnit
 
             val weightAsDouble = weight.replace(',', '.').toDoubleOrNull()
-            val error = if (!positiveDecimalValidator.validate(weight) || !bodyWeightValidator.validate(weightAsDouble, weightUnit)) {
-                when (settings.weightUnit) {
-                    WeightUnit.KG -> Res.string.body_weight_add_dialog_error_total_weight_kg
-                    WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_total_weight_lb
+            val error =
+                if (!positiveDecimalValidator.validate(weight) ||
+                    !bodyWeightValidator.validate(weightAsDouble, weightUnit)
+                ) {
+                    when (settings.weightUnit) {
+                        WeightUnit.KG -> Res.string.body_weight_add_dialog_error_total_weight_kg
+                        WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_total_weight_lb
+                    }
+                } else {
+                    null
                 }
-            } else {
-                null
-            }
             uiState.update { it.copy(weightError = error) }
         }
     }
@@ -79,10 +82,7 @@ class AddBodyWeightDialogViewModel(
     private fun validateBodyFat(bodyFat: String) {
         val bodyFatAsDouble = bodyFat.replace(',', '.').toDoubleOrNull()
         val error =
-            if (!positiveDecimalValidator.validate(bodyFat) || !percentageValidator.validate(
-                    bodyFatAsDouble
-                )
-            ) {
+            if (!positiveDecimalValidator.validate(bodyFat) || !percentageValidator.validate(bodyFatAsDouble)) {
                 Res.string.body_weight_add_dialog_error_body_fat
             } else {
                 null
@@ -90,7 +90,6 @@ class AddBodyWeightDialogViewModel(
 
         uiState.update { it.copy(bodyFatError = error) }
     }
-
 
     fun onMuscleMassChange(muscleMass: String) {
         uiState.update { it.copy(muscleMass = muscleMass) }
@@ -105,14 +104,17 @@ class AddBodyWeightDialogViewModel(
             val weightUnit = settings.weightUnit
 
             val muscleMassAsDouble = muscleMass.replace(',', '.').toDoubleOrNull()
-            val error = if (!positiveDecimalValidator.validate(muscleMass) || !bodyWeightValidator.validate(muscleMassAsDouble, weightUnit)) {
-                when (settings.weightUnit) {
-                    WeightUnit.KG -> Res.string.body_weight_add_dialog_error_muscle_mass_kg
-                    WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_muscle_mass_lb
+            val error =
+                if (!positiveDecimalValidator.validate(muscleMass) ||
+                    !bodyWeightValidator.validate(muscleMassAsDouble, weightUnit)
+                ) {
+                    when (settings.weightUnit) {
+                        WeightUnit.KG -> Res.string.body_weight_add_dialog_error_muscle_mass_kg
+                        WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_muscle_mass_lb
+                    }
+                } else {
+                    null
                 }
-            } else {
-                null
-            }
             uiState.update { it.copy(muscleMassError = error) }
         }
     }
@@ -130,14 +132,17 @@ class AddBodyWeightDialogViewModel(
             val weightUnit = settings.weightUnit
 
             val boneMassAsDouble = boneMass.replace(',', '.').toDoubleOrNull()
-            val error = if (!positiveDecimalValidator.validate(boneMass) || !bodyWeightValidator.validate(boneMassAsDouble, weightUnit)) {
-                when (settings.weightUnit) {
-                    WeightUnit.KG -> Res.string.body_weight_add_dialog_error_bone_mass_kg
-                    WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_bone_mass_lb
+            val error =
+                if (!positiveDecimalValidator.validate(boneMass) ||
+                    !bodyWeightValidator.validate(boneMassAsDouble, weightUnit)
+                ) {
+                    when (settings.weightUnit) {
+                        WeightUnit.KG -> Res.string.body_weight_add_dialog_error_bone_mass_kg
+                        WeightUnit.POUND -> Res.string.body_weight_add_dialog_error_bone_mass_lb
+                    }
+                } else {
+                    null
                 }
-            } else {
-                null
-            }
             uiState.update { it.copy(boneMassError = error) }
         }
     }
@@ -151,10 +156,7 @@ class AddBodyWeightDialogViewModel(
     private fun validateBodyWater(bodyWater: String) {
         val bodyWaterAsDouble = bodyWater.replace(',', '.').toDoubleOrNull()
         val error =
-            if (!positiveDecimalValidator.validate(bodyWater) || !percentageValidator.validate(
-                    bodyWaterAsDouble
-                )
-            ) {
+            if (!positiveDecimalValidator.validate(bodyWater) || !percentageValidator.validate(bodyWaterAsDouble)) {
                 Res.string.body_weight_add_dialog_error_body_water
             } else {
                 null
@@ -184,16 +186,16 @@ class AddBodyWeightDialogViewModel(
             val fatMass = (bodyFatPercentage / 100.0) * totalWeight
             val bodyWaterMass = (bodyWaterPercentage / 100.0) * totalWeight
 
-
             // Sum of the component masses. Body water is a sub-component of the others,
             // so it's not included in this top-level sum check.
             val componentSum = fatMass + muscleMass + boneMass + bodyWaterMass
 
-            val error = if (componentSum > totalWeight) {
-                Res.string.body_weight_add_dialog_error_total_weight_sum
-            } else {
-                null
-            }
+            val error =
+                if (componentSum > totalWeight) {
+                    Res.string.body_weight_add_dialog_error_total_weight_sum
+                } else {
+                    null
+                }
 
             // Update the error state for all component fields involved in the sum.
             // This provides clear feedback to the user about which values are part of the issue.

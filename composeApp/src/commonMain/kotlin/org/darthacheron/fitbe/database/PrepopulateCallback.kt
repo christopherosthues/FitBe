@@ -8,10 +8,10 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
-import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.equipment.toDefaultTrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
@@ -743,10 +743,11 @@ internal val exerciseList: List<ExerciseSeedData> =
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
-            equipmentKeys = listOf(
-                "default_training_equipment_pull_up_bar",
-                "default_training_equipment_resistance_bands"
-            )
+            equipmentKeys =
+                listOf(
+                    "default_training_equipment_pull_up_bar",
+                    "default_training_equipment_resistance_bands"
+                )
         ),
         ExerciseSeedData(
             key = "default_exercise_negative_pull_ups",

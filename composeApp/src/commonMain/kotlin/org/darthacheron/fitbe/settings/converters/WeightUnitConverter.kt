@@ -8,13 +8,13 @@ class WeightUnitConverter {
         value: Double?,
         from: WeightUnit,
         to: WeightUnit
-    ): Double? {
-        return if (value == null)
+    ): Double? =
+        if (value == null) {
             null
-        else
+        } else {
             when (to) {
                 WeightUnit.KG -> from.toKilogram(value)
                 WeightUnit.POUND -> from.toPound(value)
             }.roundToDecimals(1)
-    }
+        }
 }

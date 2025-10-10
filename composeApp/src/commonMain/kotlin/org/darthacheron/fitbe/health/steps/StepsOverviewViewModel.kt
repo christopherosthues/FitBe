@@ -51,88 +51,92 @@ class StepsOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    val targetSteps: StateFlow<UInt?> = settingsRepository.getSettingsFlow()
-        .flatMapLatest { settings ->
-            val profileId = settings.selectedProfileId
-            if (profileId != null) {
-                profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetSteps }
-            } else {
-                flowOf(ProfileDefaults.STEPS)
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+    val targetSteps: StateFlow<UInt?> =
+        settingsRepository
+            .getSettingsFlow()
+            .flatMapLatest { settings ->
+                val profileId = settings.selectedProfileId
+                if (profileId != null) {
+                    profileRepository
+                        .getProfileFlowById(profileId)
+                        .map { profile -> profile?.targetSteps }
+                } else {
+                    flowOf(ProfileDefaults.STEPS)
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
-    private val stepsDataFlow: StateFlow<List<StepsOverview>> = combine(
-        dateRange,
-        settingsRepository.getSettingsFlow()
-    ) { range, settings ->
-        settings.selectedProfileId?.let { profileId ->
-            Pair(settings, range.dateUnit) to stepsRepository.getSteps(
-                range.startDate,
-                range.endDate,
-                profileId
+    private val stepsDataFlow: StateFlow<List<StepsOverview>> =
+        combine(
+            dateRange,
+            settingsRepository.getSettingsFlow()
+        ) { range, settings ->
+            settings.selectedProfileId?.let { profileId ->
+                Pair(settings, range.dateUnit) to
+                    stepsRepository.getSteps(
+                        range.startDate,
+                        range.endDate,
+                        profileId
+                    )
+            } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
+        }.flatMapLatest { (settingsDateUnit, stepsSource) ->
+            stepsSource.map { steps ->
+                when (settingsDateUnit.second) {
+                    DateUnit.DAY -> mapDay(steps)
+                    DateUnit.WEEK -> mapWeek(steps)
+                    DateUnit.MONTH -> mapMonth(steps)
+                    DateUnit.YEAR -> mapYear(steps)
+                }
+            }
+        }.onStart {
+            isLoading.value = true
+            errorMessage.value = null
+        }.catch {
+            isLoading.value = false
+            errorMessage.value = Res.string.steps_overview_error_loading
+            emit(emptyList())
+        }.map { steps ->
+            isLoading.value = false
+            steps
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    override val uiState: StateFlow<StepsOverviewUiState> =
+        combine(
+            stepsDataFlow,
+            isLoading,
+            errorMessage
+        ) { steps, isLoading, errorMessage ->
+            StepsOverviewUiState(
+                isLoading = isLoading,
+                steps = steps,
+                dates = steps.map { it.date },
+                error = StepsOverviewError(errorMessage)
             )
-        } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
-    }.flatMapLatest { (settingsDateUnit, stepsSource) ->
-        stepsSource.map { steps ->
-            when (settingsDateUnit.second) {
-                DateUnit.DAY -> mapDay(steps)
-                DateUnit.WEEK -> mapWeek(steps)
-                DateUnit.MONTH -> mapMonth(steps)
-                DateUnit.YEAR -> mapYear(steps)
-            }
-        }
-    }
-    .onStart {
-        isLoading.value = true
-        errorMessage.value = null
-    }
-    .catch {
-        isLoading.value = false
-        errorMessage.value = Res.string.steps_overview_error_loading
-        emit(emptyList())
-    }
-    .map { steps ->
-        isLoading.value = false
-        steps
-    }
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    override val uiState: StateFlow<StepsOverviewUiState> = combine(
-        stepsDataFlow,
-        isLoading,
-        errorMessage
-    ) { steps, isLoading, errorMessage ->
-        StepsOverviewUiState(
-            isLoading = isLoading,
-            steps = steps,
-            dates = steps.map { it.date },
-            error = StepsOverviewError(errorMessage)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = StepsOverviewUiState(isLoading = true)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = StepsOverviewUiState(isLoading = true)
-    )
 
-    val maxSteps: StateFlow<UInt> = uiState
-        .map { it.steps }
-        .map { stepsList ->
-            if (stepsList.isEmpty()) ProfileDefaults.STEPS else stepsList.maxOfOrNull { it.steps } ?: ProfileDefaults.STEPS
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+    val maxSteps: StateFlow<UInt> =
+        uiState
+            .map { it.steps }
+            .map { stepsList ->
+                if (stepsList.isEmpty()) {
+                    ProfileDefaults.STEPS
+                } else {
+                    stepsList.maxOfOrNull { it.steps } ?: ProfileDefaults.STEPS
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
-    private fun mapDay(steps: List<Steps>): List<StepsOverview> {
-        return aggregateDailySteps(steps)
-    }
+    private fun mapDay(steps: List<Steps>): List<StepsOverview> = aggregateDailySteps(steps)
 
     private fun aggregateDailySteps(steps: List<Steps>): List<StepsOverview> {
         if (steps.isEmpty()) {
             return emptyList()
         }
 
-        return steps.groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+        return steps
+            .groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, group) ->
                 StepsOverview(
                     date = date,
@@ -149,7 +153,8 @@ class StepsOverviewViewModel(
     ): List<StepsOverview> {
         if (dailySteps.isEmpty()) return emptyList()
 
-        return dailySteps.groupBy(groupKeySelector)
+        return dailySteps
+            .groupBy(groupKeySelector)
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
@@ -166,9 +171,7 @@ class StepsOverviewViewModel(
             }
     }
 
-    private fun mapWeek(
-        stepList: List<Steps>,
-    ): List<StepsOverview> {
+    private fun mapWeek(stepList: List<Steps>): List<StepsOverview> {
         val dailySteps = aggregateDailySteps(stepList)
         return aggregateAverageStepsByPeriod(
             dailySteps = dailySteps,
@@ -189,11 +192,12 @@ class StepsOverviewViewModel(
             daysInPeriodSelector = { group ->
                 val localDate = group.first().date
                 val firstDay = localDate.firstDayOfMonth()
-                val nextMonth = if (firstDay.monthNumber == 12) {
-                    LocalDate(firstDay.year + 1, 1, 1)
-                } else {
-                    LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
-                }
+                val nextMonth =
+                    if (firstDay.monthNumber == 12) {
+                        LocalDate(firstDay.year + 1, 1, 1)
+                    } else {
+                        LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
+                    }
                 firstDay.daysUntil(nextMonth)
             }
         )
@@ -213,7 +217,10 @@ class StepsOverviewViewModel(
         )
     }
 
-    fun addSteps(date: LocalDate, steps: UInt) {
+    fun addSteps(
+        date: LocalDate,
+        steps: UInt
+    ) {
         viewModelScope.launch {
             val settings = settingsRepository.getSettings()
             settings.selectedProfileId?.let { profileId ->

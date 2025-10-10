@@ -52,89 +52,93 @@ class BeverageOverviewViewModel(
     override val bottomBarSelected: Screen?
         get() = Screen.Health
 
-    val targetBeverages: StateFlow<UInt> = settingsRepository.getSettingsFlow()
-        .flatMapLatest { settings ->
-            val profileId = settings.selectedProfileId
-            if (profileId != null) {
-                profileRepository.getProfileFlowById(profileId)
-                    .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
-            } else {
-                flowOf(ProfileDefaults.BEVERAGE)
-            }
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
+    val targetBeverages: StateFlow<UInt> =
+        settingsRepository
+            .getSettingsFlow()
+            .flatMapLatest { settings ->
+                val profileId = settings.selectedProfileId
+                if (profileId != null) {
+                    profileRepository
+                        .getProfileFlowById(profileId)
+                        .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
+                } else {
+                    flowOf(ProfileDefaults.BEVERAGE)
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    private val beveragesFlow: StateFlow<List<BeverageOverview>> = combine(
-        dateRange,
-        settingsRepository.getSettingsFlow()
-    ) { range, settings ->
-        settings.selectedProfileId?.let { profileId ->
-            Pair(settings, range.dateUnit) to beverageRepository.getBeveragesOverview(
-                range.startDate,
-                range.endDate,
-                profileId
-            )
-        } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
-    }.flatMapLatest { (settingsDateUnit, beveragesSource) ->
-        beveragesSource.map { beverages ->
-            val beveragesInMl = beverages.map { it.copy(amount = it.unit.toMilliliter(it.amount)) }
-            when (settingsDateUnit.second) {
-                DateUnit.DAY -> mapDay(beveragesInMl)
-                DateUnit.WEEK -> mapWeek(beveragesInMl)
-                DateUnit.MONTH -> mapMonth(beveragesInMl)
-                DateUnit.YEAR -> mapYear(beveragesInMl)
+    private val beveragesFlow: StateFlow<List<BeverageOverview>> =
+        combine(
+            dateRange,
+            settingsRepository.getSettingsFlow()
+        ) { range, settings ->
+            settings.selectedProfileId?.let { profileId ->
+                Pair(settings, range.dateUnit) to
+                    beverageRepository.getBeveragesOverview(
+                        range.startDate,
+                        range.endDate,
+                        profileId
+                    )
+            } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
+        }.flatMapLatest { (settingsDateUnit, beveragesSource) ->
+            beveragesSource.map { beverages ->
+                val beveragesInMl = beverages.map { it.copy(amount = it.unit.toMilliliter(it.amount)) }
+                when (settingsDateUnit.second) {
+                    DateUnit.DAY -> mapDay(beveragesInMl)
+                    DateUnit.WEEK -> mapWeek(beveragesInMl)
+                    DateUnit.MONTH -> mapMonth(beveragesInMl)
+                    DateUnit.YEAR -> mapYear(beveragesInMl)
+                }
             }
-        }
-    }
-        .onStart {
+        }.onStart {
             isLoading.value = true
             errorMessage.value = null
-        }
-        .catch {
+        }.catch {
             isLoading.value = false
             errorMessage.value = Res.string.beverages_overview_error_loading
             emit(emptyList())
-        }
-        .map { beverages ->
+        }.map { beverages ->
             isLoading.value = false
             beverages
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    override val uiState: StateFlow<BeverageOverviewUiState> = combine(
-        beveragesFlow,
-        isLoading,
-        errorMessage,
-    ) { beverages, isLoading, errorMessage ->
-        BeverageOverviewUiState(
-            isLoading = isLoading,
-            beverages = beverages,
-            dates = beverages.map { it.date },
-            error = BeverageOverviewError(errorMessage),
+    override val uiState: StateFlow<BeverageOverviewUiState> =
+        combine(
+            beveragesFlow,
+            isLoading,
+            errorMessage
+        ) { beverages, isLoading, errorMessage ->
+            BeverageOverviewUiState(
+                isLoading = isLoading,
+                beverages = beverages,
+                dates = beverages.map { it.date },
+                error = BeverageOverviewError(errorMessage)
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = BeverageOverviewUiState(isLoading = true)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = BeverageOverviewUiState(isLoading = true)
-    )
 
-    val maxBeverages: StateFlow<UInt> = uiState
-        .map { it.beverages }
-        .map { beverages ->
-            if (beverages.isEmpty()) ProfileDefaults.BEVERAGE else beverages.maxOfOrNull { it.amountMl }
-                ?: ProfileDefaults.BEVERAGE
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
+    val maxBeverages: StateFlow<UInt> =
+        uiState
+            .map { it.beverages }
+            .map { beverages ->
+                if (beverages.isEmpty()) {
+                    ProfileDefaults.BEVERAGE
+                } else {
+                    beverages.maxOfOrNull { it.amountMl } ?: ProfileDefaults.BEVERAGE
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> {
-        return beverages.groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
+    private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> =
+        beverages
+            .groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, beverageEntries) ->
                 BeverageOverview(
                     date,
                     beverageEntries.sumOf { it.amount }.toUInt()
                 )
             }
-    }
 
     private fun <K> aggregateBeveragesByPeriod(
         beverages: List<Beverage>,
@@ -143,7 +147,8 @@ class BeverageOverviewViewModel(
     ): List<BeverageOverview> {
         if (beverages.isEmpty()) return emptyList()
 
-        return beverages.groupBy(groupKeySelector)
+        return beverages
+            .groupBy(groupKeySelector)
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
@@ -151,38 +156,68 @@ class BeverageOverviewViewModel(
 
                 BeverageOverview(
                     date = representativeDateSelector(group),
-                    amountMl = avgAmount.roundToInt().toUInt(),
+                    amountMl = avgAmount.roundToInt().toUInt()
                 )
             }
     }
 
-    private fun mapWeek(
-        beverages: List<Beverage>,
-    ): List<BeverageOverview> {
-        return aggregateBeveragesByPeriod(
+    private fun mapWeek(beverages: List<Beverage>): List<BeverageOverview> =
+        aggregateBeveragesByPeriod(
             beverages = beverages,
-            groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date.isoWeekAndYear() },
-            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfIsoWeek() }
+            groupKeySelector = {
+                it
+                    .date
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+                    .isoWeekAndYear()
+            },
+            representativeDateSelector = { group ->
+                group
+                    .first()
+                    .date
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+                    .firstDayOfIsoWeek()
+            }
         )
-    }
 
-    private fun mapMonth(beverages: List<Beverage>): List<BeverageOverview> {
-        return aggregateBeveragesByPeriod(
+    private fun mapMonth(beverages: List<Beverage>): List<BeverageOverview> =
+        aggregateBeveragesByPeriod(
             beverages = beverages,
-            groupKeySelector = { val date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date; date.year to date.month },
-            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfMonth() }
+            groupKeySelector = {
+                val date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date
+                date.year to date.month
+            },
+            representativeDateSelector = { group ->
+                group
+                    .first()
+                    .date
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+                    .firstDayOfMonth()
+            }
         )
-    }
 
-    private fun mapYear(beverages: List<Beverage>): List<BeverageOverview> {
-        return aggregateBeveragesByPeriod(
+    private fun mapYear(beverages: List<Beverage>): List<BeverageOverview> =
+        aggregateBeveragesByPeriod(
             beverages = beverages,
             groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).year },
-            representativeDateSelector = { group -> group.first().date.toLocalDateTime(TimeZone.currentSystemDefault()).date.firstDayOfYear() }
+            representativeDateSelector = { group ->
+                group
+                    .first()
+                    .date
+                    .toLocalDateTime(TimeZone.currentSystemDefault())
+                    .date
+                    .firstDayOfYear()
+            }
         )
-    }
 
-    fun saveBeverage(amount: Double, name: String, unit: FluidUnit, date: Instant) {
+    fun saveBeverage(
+        amount: Double,
+        name: String,
+        unit: FluidUnit,
+        date: Instant
+    ) {
         viewModelScope.launch {
             try {
                 val profileId = settingsRepository.getSettings().selectedProfileId

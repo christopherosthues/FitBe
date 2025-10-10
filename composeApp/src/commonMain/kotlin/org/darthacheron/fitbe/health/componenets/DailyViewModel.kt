@@ -19,12 +19,13 @@ abstract class DailyViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
-    protected val date = MutableStateFlow(
-        Clock.System
-            .now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .toInstant(TimeZone.currentSystemDefault())
-    )
+    protected val date =
+        MutableStateFlow(
+            Clock.System
+                .now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .toInstant(TimeZone.currentSystemDefault())
+        )
 
     val dateFlow: StateFlow<Instant> = date
 

@@ -67,11 +67,14 @@ fun AddSleepDialog(
     var showEndDatePicker by remember { mutableStateOf(false) }
     var showEndTimePicker by remember { mutableStateOf(false) }
 
-    val duration = remember(uiState.startDateTime, uiState.endDateTime) {
-        val diff = uiState.endDateTime.toInstant(TimeZone.currentSystemDefault())
-            .minus(uiState.startDateTime.toInstant(TimeZone.currentSystemDefault()))
-        if (diff.isNegative()) Duration.ZERO else diff
-    }
+    val duration =
+        remember(uiState.startDateTime, uiState.endDateTime) {
+            val diff =
+                uiState.endDateTime
+                    .toInstant(TimeZone.currentSystemDefault())
+                    .minus(uiState.startDateTime.toInstant(TimeZone.currentSystemDefault()))
+            if (diff.isNegative()) Duration.ZERO else diff
+        }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -94,7 +97,7 @@ fun AddSleepDialog(
                                     )
                                 }
                             },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
                         )
                         Spacer(Modifier.width(8.dp))
                         OutlinedTextField(
@@ -136,7 +139,7 @@ fun AddSleepDialog(
                                     )
                                 }
                             },
-                            modifier = Modifier.padding(top = 16.dp).weight(1f),
+                            modifier = Modifier.padding(top = 16.dp).weight(1f)
                         )
                         Spacer(Modifier.width(8.dp))
                         OutlinedTextField(
@@ -196,8 +199,11 @@ fun AddSleepDialog(
         DatePickerModal(
             onDateSelected = { millis ->
                 millis?.let {
-                    val date = Instant.fromEpochMilliseconds(it)
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    val date =
+                        Instant
+                            .fromEpochMilliseconds(it)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .date
                     viewModel.onStartDateChange(date)
                 }
                 showStartDatePicker = false
@@ -220,8 +226,11 @@ fun AddSleepDialog(
         DatePickerModal(
             onDateSelected = { millis ->
                 millis?.let {
-                    val date = Instant.fromEpochMilliseconds(it)
-                        .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                    val date =
+                        Instant
+                            .fromEpochMilliseconds(it)
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .date
                     viewModel.onEndDateChange(date)
                 }
                 showEndDatePicker = false
@@ -242,9 +251,8 @@ fun AddSleepDialog(
     }
 }
 
-private fun formatTime(time: LocalTime): String {
-    return "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
-}
+private fun formatTime(time: LocalTime): String =
+    "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
 
 fun formatDuration(duration: Duration): String {
     val hours = duration.toLong(DurationUnit.HOURS)

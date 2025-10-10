@@ -1,33 +1,20 @@
 package org.darthacheron.fitbe.components.date.week
 
-import kotlinx.coroutines.launch
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.isoDayNumber
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -35,28 +22,28 @@ import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
@@ -64,6 +51,19 @@ import fitbe.composeapp.generated.resources.week_range_picker_content_descriptio
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_end_headline
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_start_headline
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_week_in_range
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
 
@@ -238,15 +238,17 @@ private fun WeekRangePickerContent(
     val currentYearWeekIndex = sortedYears.indexOf(currentYearWeek.year)
 
     val orderedStart =
-        if (selectedStartYearWeek != null && selectedEndYearWeek != null)
+        if (selectedStartYearWeek != null && selectedEndYearWeek != null) {
             minOf(selectedStartYearWeek, selectedEndYearWeek)
-        else
+        } else {
             null
+        }
     val orderedEnd =
-        if (selectedStartYearWeek != null && selectedEndYearWeek != null)
+        if (selectedStartYearWeek != null && selectedEndYearWeek != null) {
             maxOf(selectedStartYearWeek, selectedEndYearWeek)
-        else
+        } else {
             null
+        }
 
     ProvideTextStyle(value = MaterialTheme.typography.bodyLarge) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -561,7 +563,8 @@ object WeekRangePickerDefaults {
                 selectedStartYearWeek != null && selectedEndYearWeek == null ->
                     "Start: W${selectedStartYearWeek.week}/${selectedStartYearWeek.year}"
 
-                else -> "Range: W${selectedStartYearWeek?.week}/${selectedStartYearWeek?.year} - " +
+                else ->
+                    "Range: W${selectedStartYearWeek?.week}/${selectedStartYearWeek?.year} - " +
                         "W${selectedEndYearWeek?.week}/${selectedEndYearWeek?.year}"
             }
 

@@ -8,13 +8,13 @@ class BodyMeasurementUnitConverter {
         value: Double?,
         from: BodyMeasurementUnit,
         to: BodyMeasurementUnit
-    ): Double? {
-        return if (value == null)
+    ): Double? =
+        if (value == null) {
             null
-        else
+        } else {
             when (to) {
                 BodyMeasurementUnit.CM -> from.toCentimeters(value)
                 BodyMeasurementUnit.INCH -> from.toInch(value)
             }.roundToDecimals(1)
-    }
+        }
 }

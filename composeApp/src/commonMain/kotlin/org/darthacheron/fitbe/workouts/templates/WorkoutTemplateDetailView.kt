@@ -115,10 +115,11 @@ fun WorkoutTemplateDetailView(
                                 imageUri = uiState.imageUri,
                                 imageResource = getWorkoutImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.exercise_detail_content_description_image),
+                                contentDescription =
+                                    stringResource(Res.string.exercise_detail_content_description_image),
                                 defaultContentDescription =
                                     stringResource(Res.string.exercise_detail_content_description_default_exercise),
-                                modifier = Modifier.size(150.dp) // Adjusted size for template image
+                                modifier = Modifier.size(150.dp)
                             )
                             if (uiState.isEditing) {
                                 IconButton(
@@ -287,12 +288,13 @@ private fun ExerciseItemCard(
                 ) {
                     items(exercise.sets) { setInfo ->
                         AssistChip(
-                            onClick = { /* Non-interactive for now */ },
+                            onClick = { },
                             label = {
                                 Text(
-                                    text = "${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, " +
-                                            "Weight: ${setInfo.targetWeightKg ?: "-"} kg, " +
-                                            "Time: ${setInfo.targetDurationSeconds ?: "-"}s"
+                                    text =
+                                        "${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, " +
+                                        "Weight: ${setInfo.targetWeightKg ?: "-"} kg, " +
+                                        "Time: ${setInfo.targetDurationSeconds ?: "-"}s"
                                 )
                             }
                         )

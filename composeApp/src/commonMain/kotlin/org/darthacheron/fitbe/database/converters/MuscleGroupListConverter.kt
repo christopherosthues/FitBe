@@ -5,8 +5,7 @@ import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
 
 class MuscleGroupListConverter {
     @TypeConverter
-    fun fromMuscleGroupList(muscleGroups: List<MuscleGroup>?): String? =
-        muscleGroups?.joinToString(",") { it.name }
+    fun fromMuscleGroupList(muscleGroups: List<MuscleGroup>?): String? = muscleGroups?.joinToString(",") { it.name }
 
     @TypeConverter
     fun toMuscleGroupList(muscleGroupsString: String?): List<MuscleGroup>? =

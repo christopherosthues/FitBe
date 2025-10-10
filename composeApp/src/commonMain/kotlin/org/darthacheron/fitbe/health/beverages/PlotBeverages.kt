@@ -104,16 +104,17 @@ fun PlotBeverages(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        text = when (dateRange.dateUnit) {
-                            DateUnit.DAY -> labelDate.toString()
-                            DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
-                            DateUnit.MONTH -> {
-                                val monthResource = labelDate.monthResourceString()
-                                "${stringResource(monthResource)}/${labelDate.year}"
-                            }
+                        text =
+                            when (dateRange.dateUnit) {
+                                DateUnit.DAY -> labelDate.toString()
+                                DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
+                                DateUnit.MONTH -> {
+                                    val monthResource = labelDate.monthResourceString()
+                                    "${stringResource(monthResource)}/${labelDate.year}"
+                                }
 
-                            DateUnit.YEAR -> labelDate.year.toString()
-                        },
+                                DateUnit.YEAR -> labelDate.year.toString()
+                            },
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 2.dp),

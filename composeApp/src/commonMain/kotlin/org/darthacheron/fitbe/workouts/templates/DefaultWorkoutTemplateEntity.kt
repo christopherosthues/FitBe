@@ -32,7 +32,7 @@ data class DefaultWorkoutTemplateEntity(
             imageUri = imageUri,
             default = true
         )
-    }
+}
 
 @OptIn(ExperimentalUuidApi::class)
 fun WorkoutTemplateEntity.toDefaultWorkoutTemplateEntity(entity: WorkoutTemplateEntity): DefaultWorkoutTemplateEntity {

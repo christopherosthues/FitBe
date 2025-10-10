@@ -1,10 +1,10 @@
 package org.darthacheron.fitbe.profile
 
+import kotlinx.datetime.LocalDate
+import org.darthacheron.fitbe.settings.Settings
+import org.darthacheron.fitbe.ui.UiState
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.ui.UiState
-import org.darthacheron.fitbe.settings.Settings
 
 @OptIn(ExperimentalUuidApi::class)
 class ProfileUiState(

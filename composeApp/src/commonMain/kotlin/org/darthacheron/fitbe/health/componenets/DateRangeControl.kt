@@ -28,7 +28,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
     dateRange: DateRange,
-    overviewViewModel: OverviewViewModel<Error, State>,
+    overviewViewModel: OverviewViewModel<Error, State>
 ) {
     var showDateRangeDialog by remember { mutableStateOf(false) }
 

@@ -117,52 +117,56 @@ class ExerciseExecutionViewModel(
     val actualDistanceKm: StateFlow<Double?> = _actualDistanceKm.asStateFlow()
 
     val showRepsField: StateFlow<Boolean> =
-        exercise.flatMapLatest { ex ->
-            flowOf(
-                ex?.exerciseType in
+        exercise
+            .flatMapLatest { ex ->
+                flowOf(
+                    ex?.exerciseType in
                         listOf(
                             ExerciseType.WEIGHT_REPS,
                             ExerciseType.REPS_ONLY,
                             ExerciseType.WEIGHT_REPS_TIMED
                         )
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+                )
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val showWeightField: StateFlow<Boolean> =
-        exercise.flatMapLatest { ex ->
-            flowOf(
-                ex?.exerciseType in
+        exercise
+            .flatMapLatest { ex ->
+                flowOf(
+                    ex?.exerciseType in
                         listOf(
                             ExerciseType.WEIGHT_REPS,
                             ExerciseType.WEIGHT_TIMED,
                             ExerciseType.WEIGHT_REPS_TIMED
                         )
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+                )
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val showDurationField: StateFlow<Boolean> =
-        exercise.flatMapLatest { ex ->
-            flowOf(
-                ex?.exerciseType in
+        exercise
+            .flatMapLatest { ex ->
+                flowOf(
+                    ex?.exerciseType in
                         listOf(
                             ExerciseType.TIMED,
                             ExerciseType.WEIGHT_TIMED,
                             ExerciseType.WEIGHT_REPS_TIMED,
                             ExerciseType.DISTANCE_TIMED
                         )
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+                )
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val showDistanceField: StateFlow<Boolean> =
-        exercise.flatMapLatest { ex ->
-            flowOf(
-                ex?.exerciseType in
+        exercise
+            .flatMapLatest { ex ->
+                flowOf(
+                    ex?.exerciseType in
                         listOf(
                             ExerciseType.DISTANCE,
                             ExerciseType.DISTANCE_TIMED
                         )
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+                )
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         viewModelScope.launch {
@@ -284,7 +288,8 @@ class ExerciseExecutionViewModel(
             viewModelScope.launch {
                 while (_elapsedTimeSeconds.value > 0 &&
                     _timerIsRunning.value &&
-                    _currentPhase.value == ExecutionPhase.RESTING) {
+                    _currentPhase.value == ExecutionPhase.RESTING
+                ) {
                     delay(1000)
                     _elapsedTimeSeconds.value -= 1
                 }
@@ -353,10 +358,11 @@ class ExerciseExecutionViewModel(
                 actualDurationSeconds = _actualDurationSeconds.value, // User might have edited this in dialog
                 actualDistanceKm = _actualDistanceKm.value,
                 restTimeSecondsAfterSet =
-                    if (_currentSet.value < (_totalSets.value ?: 0))
+                    if (_currentSet.value < (_totalSets.value ?: 0)) {
                         DEFAULT_REST_DURATION_SECONDS
-                    else
+                    } else {
                         null
+                    }
             )
 
             _actualReps.value = null
@@ -379,15 +385,15 @@ class ExerciseExecutionViewModel(
         // This might need more thought regarding saved sets if we allow going back to re-do a saved set.
         // For now, it only works if current set > 1 and in EXECUTING phase (before saving current set)
         if (_currentPhase.value == ExecutionPhase.EXECUTING && _currentSet.value > 1) {
-            pauseTimer() // Pause current set timer
+            pauseTimer()
             // TODO: Potentially mark current timed set data as invalid or unsaved if any tracking started.
             _currentSet.value -= 1
-            _elapsedTimeSeconds.value = 0 // Reset timer for the previous set (now current)
-            startTimer() // Restart timer for the (now current) previous set
+            _elapsedTimeSeconds.value = 0
+            startTimer()
         }
     }
 
-    fun nextSet() { // Called when "Next Set" button in ExecutingPhase is clicked
+    fun nextSet() {
         viewModelScope.launch {
             val execId = _currentWorkoutExecutionId.value
             if (execId != null && _currentPhase.value == ExecutionPhase.EXECUTING) {
@@ -401,15 +407,16 @@ class ExerciseExecutionViewModel(
                     targetWeightKg = _targetWeight.value,
                     targetDurationSeconds = _targetDurationSeconds.value,
                     targetDistanceKm = _targetDistanceKm.value,
-                    actualReps = null, // No actuals for skipped set
+                    actualReps = null,
                     actualWeightKg = null,
-                    actualDurationSeconds = _elapsedTimeSeconds.value, // Could save how long it was active before skip
+                    actualDurationSeconds = _elapsedTimeSeconds.value,
                     actualDistanceKm = null,
                     restTimeSecondsAfterSet =
-                        if (_currentSet.value < (_totalSets.value ?: 0))
+                        if (_currentSet.value < (_totalSets.value ?: 0)) {
                             DEFAULT_REST_DURATION_SECONDS
-                        else
+                        } else {
                             null
+                        }
                 )
 
                 if (_currentSet.value < (_totalSets.value ?: 0)) {

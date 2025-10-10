@@ -22,11 +22,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.steps_add_dialog_cancel
+import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import fitbe.composeapp.generated.resources.steps_add_dialog_steps
 import fitbe.composeapp.generated.resources.steps_add_dialog_title
-import fitbe.composeapp.generated.resources.steps_add_dialog_cancel
-import fitbe.composeapp.generated.resources.steps_error_count
-import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -71,8 +70,7 @@ fun AddStepsDialog(
                             showDatePicker = false
                         },
                         onDismiss = { showDatePicker = false },
-                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(
-                            TimeZone.UTC).toEpochMilliseconds()
+                        initialSelectedDateMillis = uiState.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
                     )
                 }
 
@@ -85,7 +83,7 @@ fun AddStepsDialog(
                     isError = uiState.stepsError != null,
                     supportingText = {
                         uiState.stepsError?.let { Text(text = stringResource(it)) }
-                    },
+                    }
                 )
             }
         },
@@ -113,4 +111,3 @@ fun AddStepsDialog(
         }
     )
 }
-
