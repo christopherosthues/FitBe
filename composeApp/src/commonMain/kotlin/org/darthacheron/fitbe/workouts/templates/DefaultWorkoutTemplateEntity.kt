@@ -13,29 +13,26 @@ data class DefaultWorkoutTemplateEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid,
     @ColumnInfo(name = "name") val name: String,
     val description: String? = null,
-    val imageUri: String? = null // Added imageUri field
+    val imageUri: String? = null
 ) {
-    fun toWorkoutTemplateEntity(): WorkoutTemplateEntity {
-        return WorkoutTemplateEntity(
+    fun toWorkoutTemplateEntity(): WorkoutTemplateEntity =
+        WorkoutTemplateEntity(
             id = id,
             name = name,
             description = description,
-            imageUri = imageUri, // Added imageUri
+            imageUri = imageUri,
             default = true
         )
-    }
 
-    fun toWorkoutTemplate(): WorkoutTemplate {
-        return WorkoutTemplate(
+    fun toWorkoutTemplate(): WorkoutTemplate =
+        WorkoutTemplate(
             id = id,
             name = name,
             description = description,
-            imageUri = imageUri, // Added imageUri
+            imageUri = imageUri,
             default = true
-            // exercises will be loaded separately
         )
     }
-}
 
 @OptIn(ExperimentalUuidApi::class)
 fun WorkoutTemplateEntity.toDefaultWorkoutTemplateEntity(entity: WorkoutTemplateEntity): DefaultWorkoutTemplateEntity {
@@ -44,6 +41,6 @@ fun WorkoutTemplateEntity.toDefaultWorkoutTemplateEntity(entity: WorkoutTemplate
         id = entity.id,
         name = entity.name,
         description = entity.description,
-        imageUri = entity.imageUri // Added imageUri
+        imageUri = entity.imageUri
     )
 }

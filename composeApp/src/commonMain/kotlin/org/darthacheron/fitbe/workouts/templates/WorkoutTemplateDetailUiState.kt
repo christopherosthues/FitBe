@@ -16,7 +16,7 @@ data class WorkoutTemplateDetailUiState(
     val isLoading: Boolean = false,
     val isEditing: Boolean = false,
     val error: StringResource? = null,
-    val isFavorite: Boolean = false,
+    val isFavorite: Boolean = false
     // TODO: Add persistedDefault values if reset functionality is needed for templates
     // val persistedDefaultName: String? = null,
     // val persistedDefaultDescription: String? = null,

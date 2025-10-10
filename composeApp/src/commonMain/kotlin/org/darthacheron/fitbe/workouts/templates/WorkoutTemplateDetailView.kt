@@ -38,14 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.ic_photo_library
-import fitbe.composeapp.generated.resources.ic_remove
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_default_exercise
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_edit
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_image
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_remove_image
 import fitbe.composeapp.generated.resources.exercise_detail_content_description_select_image
 import fitbe.composeapp.generated.resources.ic_arrow_forward
+import fitbe.composeapp.generated.resources.ic_photo_library
+import fitbe.composeapp.generated.resources.ic_remove
 import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -68,15 +68,16 @@ fun WorkoutTemplateDetailView(
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
-    val galleryLauncher = rememberFilePickerLauncher(
-        type = FileKitType.Image,
-        mode = FileKitMode.Single,
-        onResult = {
-            if (it != null && uiState.isEditing) {
-                viewModel.onImageUriChange(it.absolutePath())
+    val galleryLauncher =
+        rememberFilePickerLauncher(
+            type = FileKitType.Image,
+            mode = FileKitMode.Single,
+            onResult = {
+                if (it != null && uiState.isEditing) {
+                    viewModel.onImageUriChange(it.absolutePath())
+                }
             }
-        }
-    )
+        )
 
     LaunchedEffect(workoutTemplateId) {
         viewModel.loadWorkoutTemplate(workoutTemplateId)
@@ -94,15 +95,18 @@ fun WorkoutTemplateDetailView(
             )
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 72.dp, start = 16.dp, end = 16.dp, top = 16.dp)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(bottom = 72.dp, start = 16.dp, end = 16.dp, top = 16.dp)
             ) {
                 // Top static info
                 Column(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box {
@@ -111,8 +115,9 @@ fun WorkoutTemplateDetailView(
                                 imageUri = uiState.imageUri,
                                 imageResource = getWorkoutImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.exercise_detail_content_description_image), // TODO: Change to workout_template_content_description_image
-                                defaultContentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise), // TODO: Change to workout_template_content_description_default_image
+                                contentDescription = stringResource(Res.string.exercise_detail_content_description_image),
+                                defaultContentDescription =
+                                    stringResource(Res.string.exercise_detail_content_description_default_exercise),
                                 modifier = Modifier.size(150.dp) // Adjusted size for template image
                             )
                             if (uiState.isEditing) {
@@ -123,26 +128,29 @@ fun WorkoutTemplateDetailView(
                                 ) {
                                     Icon(
                                         painter = painterResource(Res.drawable.ic_remove),
-                                        contentDescription = stringResource(Res.string.exercise_detail_content_description_remove_image) // TODO: Change to workout_template_content_description_remove_image
+                                        contentDescription =
+                                            stringResource(Res.string.exercise_detail_content_description_remove_image)
                                     )
                                 }
                             }
                         } else {
                             ImagePlaceholder(
                                 isEditing = uiState.isEditing,
-                                default = uiState.default, // You might want a specific placeholder for templates
-                                contentDescription = stringResource(Res.string.exercise_detail_content_description_default_exercise), // TODO: Change to workout_template_content_description_default_image
+                                default = uiState.default,
+                                contentDescription =
+                                    stringResource(Res.string.exercise_detail_content_description_default_exercise)
                             )
                         }
                         if (uiState.isEditing) {
                             IconButton(
                                 onClick = { galleryLauncher.launch() },
-                                modifier = Modifier.align(Alignment.BottomEnd), // Changed to BottomEnd for better placement
+                                modifier = Modifier.align(Alignment.BottomEnd),
                                 enabled = uiState.isEditing
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_photo_library),
-                                    contentDescription = stringResource(Res.string.exercise_detail_content_description_select_image) // TODO: Change to workout_template_content_description_select_image
+                                    contentDescription =
+                                        stringResource(Res.string.exercise_detail_content_description_select_image)
                                 )
                             }
                         }
@@ -168,10 +176,11 @@ fun WorkoutTemplateDetailView(
                         onClick = { /* Non-functional for this dummy view */ },
                         label = { Text("Workout Type/Focus") }, // Dummy info
                         enabled = false,
-                        colors = AssistChipDefaults.assistChipColors(
-                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
+                        colors =
+                            AssistChipDefaults.assistChipColors(
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
@@ -182,7 +191,7 @@ fun WorkoutTemplateDetailView(
 
                 PrimaryTabRow(
                     selectedTabIndex = selectedTabIndex,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal=16.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 ) {
                     tabs.forEachIndexed { index, title ->
                         Tab(
@@ -215,13 +224,15 @@ fun WorkoutTemplateDetailView(
 
 @Composable
 private fun ExercisesTabContent(
-    exercises: List<WorkoutTemplateExerciseWithDetails>, isEditing: Boolean,
+    exercises: List<WorkoutTemplateExerciseWithDetails>,
+    isEditing: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         exercises.forEach { exerciseDetail ->
@@ -233,14 +244,18 @@ private fun ExercisesTabContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEditing: Boolean) {
+private fun ExerciseItemCard(
+    exercise: WorkoutTemplateExerciseWithDetails,
+    isEditing: Boolean
+) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             ImageWithDefault(
@@ -258,7 +273,7 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
                     text = getExerciseName(exercise.exercise.name, exercise.exercise.default),
                     style = MaterialTheme.typography.titleMedium
                 )
-                if (exercise.notes != null && exercise.notes.isNotBlank()){
+                if (exercise.notes != null && exercise.notes.isNotBlank()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = exercise.notes,
@@ -273,7 +288,13 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
                     items(exercise.sets) { setInfo ->
                         AssistChip(
                             onClick = { /* Non-interactive for now */ },
-                            label = { Text("${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, Weight: ${setInfo.targetWeightKg ?: "-"} kg, Time: ${setInfo.targetDurationSeconds ?: "-"}s") }
+                            label = {
+                                Text(
+                                    text = "${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, " +
+                                            "Weight: ${setInfo.targetWeightKg ?: "-"} kg, " +
+                                            "Time: ${setInfo.targetDurationSeconds ?: "-"}s"
+                                )
+                            }
                         )
                     }
                 }
@@ -286,7 +307,11 @@ private fun ExerciseItemCard(exercise: WorkoutTemplateExerciseWithDetails, isEdi
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_arrow_forward),
-                        contentDescription = stringResource(Res.string.exercise_detail_content_description_edit, getExerciseName(exercise.exercise.name, exercise.exercise.default)), // TODO: Make specific string resource
+                        contentDescription =
+                            stringResource(
+                                Res.string.exercise_detail_content_description_edit,
+                                getExerciseName(exercise.exercise.name, exercise.exercise.default)
+                            ) // TODO: Make specific string resource
                     )
                 }
             }

@@ -35,8 +35,8 @@ enum class MuscleGroup {
     GLUTES,
     OTHER;
 
-    fun toStringResource(): StringResource {
-        return when (this) {
+    fun toStringResource(): StringResource =
+        when (this) {
             CHEST -> Res.string.muscle_group_chest
             BACK -> Res.string.muscle_group_back
             SHOULDERS -> Res.string.muscle_group_shoulders
@@ -53,5 +53,4 @@ enum class MuscleGroup {
             ADDUCTORS -> Res.string.muscle_group_adductors
             OTHER -> Res.string.muscle_group_other
         }
-    }
 }

@@ -1,8 +1,8 @@
 package org.darthacheron.fitbe.workouts.exercises
 
-import kotlin.uuid.ExperimentalUuidApi
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipment
+import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)

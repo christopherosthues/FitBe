@@ -10,19 +10,20 @@ import kotlin.uuid.ExperimentalUuidApi
 data class ExerciseWithEquipmentEntity(
     @Embedded val exercise: ExerciseEntity,
     @Relation(
-        parentColumn = "id", // From ExerciseEntity (the @Embedded entity)
-        entityColumn = "id",   // From TrainingEquipmentEntity (the entity in the List)
-        associateBy = Junction(
-            value = ExerciseEquipmentCrossRef::class,
-            parentColumn = "exerciseId", // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
-            entityColumn = "equipmentId" // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
-        )
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy =
+            Junction(
+                value = ExerciseEquipmentCrossRef::class,
+                parentColumn = "exerciseId",
+                entityColumn = "equipmentId"
+            )
     )
     val equipmentList: List<TrainingEquipmentEntity>
 ) {
     @OptIn(ExperimentalUuidApi::class)
-    fun toExerciseWithEquipment(): ExerciseWithEquipment {
-        return ExerciseWithEquipment(
+    fun toExerciseWithEquipment(): ExerciseWithEquipment =
+        ExerciseWithEquipment(
             id = exercise.id,
             name = exercise.name,
             guide = exercise.guide,
@@ -34,23 +35,22 @@ data class ExerciseWithEquipmentEntity(
             dateUtc = exercise.dateUtc,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun toExerciseWithEquipmentEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity {
-    return ExerciseWithEquipmentEntity(
-        exercise = ExerciseEntity(
-            id = exerciseWithEquipment.id,
-            name = exerciseWithEquipment.name,
-            guide = exerciseWithEquipment.guide,
-            targetMuscleGroups = exerciseWithEquipment.targetMuscleGroups,
-            imageUri = exerciseWithEquipment.imageUri,
-            default = exerciseWithEquipment.default,
-            recommendedFor = exerciseWithEquipment.recommendedFor,
-            exerciseType = exerciseWithEquipment.exerciseType,
-            dateUtc = exerciseWithEquipment.dateUtc
-        ),
+fun toExerciseWithEquipmentEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity =
+    ExerciseWithEquipmentEntity(
+        exercise =
+            ExerciseEntity(
+                id = exerciseWithEquipment.id,
+                name = exerciseWithEquipment.name,
+                guide = exerciseWithEquipment.guide,
+                targetMuscleGroups = exerciseWithEquipment.targetMuscleGroups,
+                imageUri = exerciseWithEquipment.imageUri,
+                default = exerciseWithEquipment.default,
+                recommendedFor = exerciseWithEquipment.recommendedFor,
+                exerciseType = exerciseWithEquipment.exerciseType,
+                dateUtc = exerciseWithEquipment.dateUtc
+            ),
         equipmentList = exerciseWithEquipment.equipmentList.map { it.toTrainingEquipmentEntity() }
     )
-}

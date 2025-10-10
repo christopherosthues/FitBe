@@ -19,5 +19,12 @@ data class ExerciseError(
     val exerciseTypeError: StringResource? = null
 ) {
     val hasError: Boolean
-        get() = hasGeneralError || hasNameError || hasGuideError || hasMuscleGroupError || hasEquipmentError || hasRecommendedForError || hasExerciseTypeError
+        get() =
+            hasGeneralError ||
+            hasNameError ||
+            hasGuideError ||
+            hasMuscleGroupError ||
+            hasEquipmentError ||
+            hasRecommendedForError ||
+            hasExerciseTypeError
 }

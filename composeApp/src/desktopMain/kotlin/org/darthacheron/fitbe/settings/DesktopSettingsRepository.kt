@@ -1,13 +1,13 @@
 package org.darthacheron.fitbe.settings
 
-import java.io.File
-import java.util.Properties
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import org.darthacheron.fitbe.utils.DesktopPaths
+import java.io.File
+import java.util.Properties
+import kotlin.uuid.Uuid
 
 class DesktopSettingsRepository : SettingsRepository {
     private val settingsFlow = MutableStateFlow(Settings())

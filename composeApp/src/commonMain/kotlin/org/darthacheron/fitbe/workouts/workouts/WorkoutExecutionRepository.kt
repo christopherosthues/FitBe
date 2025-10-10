@@ -8,19 +8,22 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecutionDao) {
+class WorkoutExecutionRepository(
+    private val workoutExecutionDao: WorkoutExecutionDao
+) {
     suspend fun startNewWorkoutExecution(
         profileId: Uuid,
         exerciseId: Uuid,
         plannedSets: Int
     ): Uuid {
-        val newExecution = WorkoutExecutionEntity(
-            exerciseId = exerciseId,
-            profileId = profileId,
-            startTimeUtc = Clock.System.now(),
-            status = WorkoutExecutionStatus.IN_PROGRESS,
-            totalPlannedSets = plannedSets
-        )
+        val newExecution =
+            WorkoutExecutionEntity(
+                exerciseId = exerciseId,
+                profileId = profileId,
+                startTimeUtc = Clock.System.now(),
+                status = WorkoutExecutionStatus.IN_PROGRESS,
+                totalPlannedSets = plannedSets
+            )
         workoutExecutionDao.upsertWorkoutExecution(newExecution)
         return newExecution.id
     }
@@ -37,8 +40,8 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
         actualWeightKg: Double?,
         actualDurationSeconds: Int?,
         actualDistanceKm: Double?,
-        restTimeSecondsAfterSet: Int? = null, // Optional
-        notes: String? = null // Optional
+        restTimeSecondsAfterSet: Int? = null,
+        notes: String? = null
     ) {
         val workoutSet =
             WorkoutSetExecutionEntity(
@@ -62,15 +65,19 @@ class WorkoutExecutionRepository(private val workoutExecutionDao: WorkoutExecuti
     suspend fun updateWorkoutExecutionStatus(
         workoutExecutionId: Uuid,
         newStatus: WorkoutExecutionStatus,
-        endTime: Instant? = Clock.System.now() // Default to now if completing/cancelling
+        endTime: Instant? = Clock.System.now()
     ) {
-        val execution = workoutExecutionDao.getWorkoutExecutionWithSets(workoutExecutionId)
-            .firstOrNull()?.workoutExecution
+        val execution =
+            workoutExecutionDao
+                .getWorkoutExecutionWithSets(workoutExecutionId)
+                .firstOrNull()
+                ?.workoutExecution
         execution?.let {
-            val updatedExecution = it.copy(
-                status = newStatus,
-                endTimeUtc = if (newStatus == WorkoutExecutionStatus.IN_PROGRESS) null else endTime
-            )
+            val updatedExecution =
+                it.copy(
+                    status = newStatus,
+                    endTimeUtc = if (newStatus == WorkoutExecutionStatus.IN_PROGRESS) null else endTime
+                )
             workoutExecutionDao.upsertWorkoutExecution(updatedExecution)
         }
     }

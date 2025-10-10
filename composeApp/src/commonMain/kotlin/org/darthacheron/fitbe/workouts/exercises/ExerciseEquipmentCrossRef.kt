@@ -10,7 +10,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Entity(
     tableName = "exercise_equipment_cross_ref",
-    primaryKeys = ["exerciseId", "equipmentId"], // Composite primary key
+    primaryKeys = ["exerciseId", "equipmentId"],
     foreignKeys = [
         ForeignKey(
             entity = ExerciseEntity::class,

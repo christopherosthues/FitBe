@@ -90,38 +90,40 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
         }
     }
 
-    val localizedList: List<DisplayableWorkoutTemplate> = uiState.rawWorkoutTemplateList.map {
-        DisplayableWorkoutTemplate(
-            workoutTemplate = it,
-            localizedName = getWorkoutName(it.name, it.default)
-        )
-    }
+    val localizedList: List<DisplayableWorkoutTemplate> =
+        uiState.rawWorkoutTemplateList.map {
+            DisplayableWorkoutTemplate(
+                workoutTemplate = it,
+                localizedName = getWorkoutName(it.name, it.default)
+            )
+        }
 
     val processedWorkoutTemplateList: List<DisplayableWorkoutTemplate> =
         remember(uiState.rawWorkoutTemplateList, filterText, uiState.favoriteWorkoutTemplateIds) {
-            val filtered = if (filterText.isBlank()) {
-                localizedList
-            } else {
-                localizedList.filter {
-                    it.localizedName.contains(filterText, ignoreCase = true)
+            val filtered =
+                if (filterText.isBlank()) {
+                    localizedList
+                } else {
+                    localizedList.filter {
+                        it.localizedName.contains(filterText, ignoreCase = true)
+                    }
                 }
-            }
 
             filtered.sortedWith(
                 compareByDescending<DisplayableWorkoutTemplate> {
                     uiState.favoriteWorkoutTemplateIds.contains(
                         it.workoutTemplate.id
                     )
-                }
-                    .thenBy { it.localizedName }
+                }.thenBy { it.localizedName }
             )
         }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
         ) {
             OutlinedTextField(
                 value = filterText,
@@ -150,7 +152,8 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
                 ) {
                     items(
                         processedWorkoutTemplateList.size,
-                        key = { processedWorkoutTemplateList[it].workoutTemplate.id }) { templateIndex ->
+                        key = { processedWorkoutTemplateList[it].workoutTemplate.id }
+                    ) { templateIndex ->
                         val displayableTemplate = processedWorkoutTemplateList[templateIndex]
                         val isFavorite =
                             uiState.favoriteWorkoutTemplateIds.contains(displayableTemplate.workoutTemplate.id)
@@ -174,9 +177,10 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
 
         FloatingActionButton(
             onClick = { viewModel.navigateToWorkoutTemplateDetail(null) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
@@ -190,26 +194,28 @@ fun WorkoutTemplatesOverviewView(viewModel: WorkoutTemplatesOverviewViewModel) {
 @Composable
 fun WorkoutTemplateCard(
     workoutTemplate: WorkoutTemplate,
-    localizedName: String, // Use passed localized name
+    localizedName: String,
     isFavorite: Boolean,
     onAddFavorite: () -> Unit,
     onRemoveFavorite: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardContentDescription = stringResource(
-        Res.string.workout_template_content_description_card,
-        localizedName // Use localized name for content description
-    )
+    val cardContentDescription =
+        stringResource(
+            Res.string.workout_template_content_description_card,
+            localizedName
+        )
 
     Card(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .height(200.dp)
-            .width(200.dp)
-            .clickable(onClick = onClick)
-            .semantics { this.contentDescription = cardContentDescription },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(16.dp))
+                .height(200.dp)
+                .width(200.dp)
+                .clickable(onClick = onClick)
+                .semantics { this.contentDescription = cardContentDescription },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             ImageWithDefault(
@@ -217,7 +223,8 @@ fun WorkoutTemplateCard(
                 imageResource = getWorkoutImage(workoutTemplate.imageUri, workoutTemplate.default),
                 default = workoutTemplate.default,
                 contentDescription = null,
-                defaultContentDescription = stringResource(Res.string.workout_template_content_description_default_workout_template),
+                defaultContentDescription =
+                    stringResource(Res.string.workout_template_content_description_default_workout_template),
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -226,32 +233,43 @@ fun WorkoutTemplateCard(
                 modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
             ) {
                 Icon(
-                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(
-                        Res.drawable.ic_favorite_border
-                    ),
-                    contentDescription = stringResource(if (isFavorite) Res.string.workout_template_content_description_card_remove_favorite else Res.string.workout_template_content_description_card_add_favorite),
+                    painter =
+                        if (isFavorite) {
+                            painterResource(Res.drawable.ic_favorite)
+                        } else {
+                            painterResource(Res.drawable.ic_favorite_border)
+                        },
+                    contentDescription =
+                        stringResource(
+                            if (isFavorite) {
+                                Res.string.workout_template_content_description_card_remove_favorite
+                            } else {
+                                Res.string.workout_template_content_description_card_add_favorite
+                            }
+                        ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(
-                                bottomStart = 16.dp,
-                                bottomEnd = 16.dp,
-                                topStart = 0.dp,
-                                topEnd = 0.dp
-                            )
-                        )
-                        .background(Color.Black.copy(alpha = 0.6f))
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = 16.dp,
+                                    bottomEnd = 16.dp,
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp
+                                )
+                            ).background(Color.Black.copy(alpha = 0.6f))
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -268,18 +286,20 @@ fun WorkoutTemplateCard(
                             onClick = { }, // Non-interactive, for display only
                             label = {
                                 Text(
-                                    text = stringResource(
-                                        Res.string.workout_template_exercises,
-                                        workoutTemplate.exercises.size
-                                    )
+                                    text =
+                                        stringResource(
+                                            Res.string.workout_template_exercises,
+                                            workoutTemplate.exercises.size
+                                        )
                                 )
                             },
-                            enabled = false, // Visually appears as a chip but not interactive
-                            colors = SuggestionChipDefaults.suggestionChipColors(
-                                disabledContainerColor = chipColors.containerColor,
-                                disabledLabelColor = chipColors.labelColor,
-                            ),
-                            modifier = Modifier.height(24.dp) // Adjust height as needed
+                            enabled = false,
+                            colors =
+                                SuggestionChipDefaults.suggestionChipColors(
+                                    disabledContainerColor = chipColors.containerColor,
+                                    disabledLabelColor = chipColors.labelColor
+                                ),
+                            modifier = Modifier.height(24.dp)
                         )
                     }
                 }

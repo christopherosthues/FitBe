@@ -30,9 +30,19 @@ interface WorkoutExecutionDao {
     @Query("SELECT * FROM workout_executions WHERE profile_id = :profileId ORDER BY start_time_utc DESC")
     fun getAllWorkoutExecutionsForProfile(profileId: Uuid): Flow<List<WorkoutExecutionWithSetsEntity>>
 
-    @Query("SELECT * FROM workout_executions WHERE exercise_id = :exerciseId AND profile_id = :profileId AND status = 'IN_PROGRESS' ORDER BY start_time_utc DESC LIMIT 1")
+    @Query(
+        """
+        SELECT * FROM workout_executions
+        WHERE exercise_id = :exerciseId AND profile_id = :profileId AND status = 'IN_PROGRESS'
+        ORDER BY start_time_utc DESC LIMIT 1
+        """
+    )
     fun getInProgressWorkoutExecution(exerciseId: Uuid, profileId: Uuid): Flow<WorkoutExecutionEntity?>
 
-    @Query("SELECT * FROM workout_set_executions WHERE workout_execution_id = :workoutExecutionId ORDER BY set_number ASC")
+    @Query(
+        """
+        SELECT * FROM workout_set_executions WHERE workout_execution_id = :workoutExecutionId ORDER BY set_number ASC
+        """
+    )
     fun getSetsForWorkoutExecution(workoutExecutionId: Uuid): Flow<List<WorkoutSetExecutionEntity>>
 }

@@ -13,21 +13,21 @@ import kotlin.uuid.Uuid
     primaryKeys = ["profileId", "exerciseId"],
     foreignKeys = [
         ForeignKey(
-            entity = ProfileEntity::class, // Assuming ProfileEntity.kt exists
-            parentColumns = ["id"], // Assuming 'id' is the primary key in ProfileEntity
+            entity = ProfileEntity::class,
+            parentColumns = ["id"],
             childColumns = ["profileId"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = ExerciseEntity::class,
-            parentColumns = ["id"], // Assuming 'id' is the primary key in ExerciseEntity
+            parentColumns = ["id"],
             childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["exerciseId"])] // Index for faster queries by exercise
+    indices = [Index(value = ["exerciseId"])]
 )
 data class ProfileFavoriteExerciseCrossRef(
-    val profileId: Uuid, // Or whatever type your ProfileEntity ID is
-    val exerciseId: Uuid // Or whatever type your ExerciseEntity ID is
+    val profileId: Uuid,
+    val exerciseId: Uuid
 )

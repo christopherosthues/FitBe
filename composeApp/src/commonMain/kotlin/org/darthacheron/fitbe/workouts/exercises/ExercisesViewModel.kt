@@ -51,101 +51,97 @@ class ExercisesViewModel(
     private val _favoriteStateErrorMessage = MutableStateFlow<StringResource?>(null)
 
     private val _selectedMuscleGroups = MutableStateFlow<Set<MuscleGroup>>(emptySet())
-    val selectedMuscleGroups: StateFlow<Set<MuscleGroup>> = _selectedMuscleGroups.asStateFlow()
-
     private val _selectedRecommendedForItems = MutableStateFlow<Set<RecommendedFor>>(emptySet())
-    val selectedRecommendedForItems: StateFlow<Set<RecommendedFor>> = _selectedRecommendedForItems.asStateFlow()
-
     private val _selectedExerciseTypes = MutableStateFlow<Set<ExerciseType>>(emptySet())
-    val selectedExerciseTypes: StateFlow<Set<ExerciseType>> = _selectedExerciseTypes.asStateFlow()
 
-    private val currentProfileIdFlow: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
-        .map { it.selectedProfileId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val currentProfileIdFlow: StateFlow<Uuid?> =
+        settingsRepository
+            .getSettingsFlow()
+            .map { it.selectedProfileId }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalExercisesFlow: StateFlow<List<Exercise>> =
-        exerciseRepository.getAllExercises()
+        exerciseRepository
+            .getAllExercises()
             .onStart {
                 _isLoadingExercises.value = true
                 _exerciseListErrorMessage.value = null
-            }
-            .map { exercises ->
+            }.map { exercises ->
                 _isLoadingExercises.value = false
                 exercises
-            }
-            .catch { e ->
+            }.catch { e ->
                 // Log.e("ExercisesViewModel", "Error loading exercises", e)
                 _isLoadingExercises.value = false
                 _exerciseListErrorMessage.value = Res.string.exercises_error_loading
                 emit(emptyList())
-            }
-            .stateIn(
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
 
-    private val internalFavoritesFlow: StateFlow<Set<Uuid>> = currentProfileIdFlow
-        .flatMapLatest { profileId ->
-            if (profileId != null) {
-                exerciseRepository.getFavoriteExerciseIds(profileId)
-                    .map { it.toSet() }
-                    .onStart {
-                        _isLoadingFavorites.value = true
-                        _favoriteStateErrorMessage.value = null // Clear specific favorite error on new load attempt
-                    }
-                    .map { favIds ->
-                        _isLoadingFavorites.value = false
-                        favIds
-                    }
-                    .catch { e ->
-                        // Log.e("ExercisesViewModel", "Error loading favorite exercises", e)
-                        _isLoadingFavorites.value = false
-                        _favoriteStateErrorMessage.value = Res.string.exercises_error_favorites
-                        emit(emptySet())
-                    }
-            } else {
-                _isLoadingFavorites.value = false
-                flowOf(emptySet())
-            }
+    private val internalFavoritesFlow: StateFlow<Set<Uuid>> =
+        currentProfileIdFlow
+            .flatMapLatest { profileId ->
+                if (profileId != null) {
+                    exerciseRepository
+                        .getFavoriteExerciseIds(profileId)
+                        .map { it.toSet() }
+                        .onStart {
+                            _isLoadingFavorites.value = true
+                            _favoriteStateErrorMessage.value = null
+                        }
+                        .map { favIds ->
+                            _isLoadingFavorites.value = false
+                            favIds
+                        }
+                        .catch { e ->
+                            // Log.e("ExercisesViewModel", "Error loading favorite exercises", e)
+                            _isLoadingFavorites.value = false
+                            _favoriteStateErrorMessage.value = Res.string.exercises_error_favorites
+                            emit(emptySet())
+                        }
+                } else {
+                    _isLoadingFavorites.value = false
+                    flowOf(emptySet())
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptySet()
+            )
+
+    private val baseUiDataFlow: Flow<BaseUiData> =
+        combine(
+            internalExercisesFlow,
+            internalFavoritesFlow,
+            _isLoadingExercises,
+            _isLoadingFavorites,
+            _exerciseListErrorMessage
+        ) { exercises, favorites, isLoadingEx, isLoadingFav, exerciseError ->
+            BaseUiData(exercises, favorites, isLoadingEx, isLoadingFav, exerciseError)
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptySet()
-        )
 
-    // Combine the first 5 flows into a temporary data structure
-    private val baseUiDataFlow: Flow<BaseUiData> = combine(
-        internalExercisesFlow,      // Flow 1: List<Exercise>
-        internalFavoritesFlow,       // Flow 2: Set<Uuid>
-        _isLoadingExercises,         // Flow 3: Boolean
-        _isLoadingFavorites,         // Flow 4: Boolean
-        _exerciseListErrorMessage    // Flow 5: StringResource?
-    ) { exercises, favorites, isLoadingEx, isLoadingFav, exerciseError ->
-        BaseUiData(exercises, favorites, isLoadingEx, isLoadingFav, exerciseError)
-    }
+    val uiState: StateFlow<ExercisesScreenUiState> =
+        combine(
+            baseUiDataFlow,
+            _favoriteStateErrorMessage,
+            _selectedMuscleGroups,
+            _selectedRecommendedForItems,
+            _selectedExerciseTypes
+        ) { baseData, favError, muscleGroups, recommendedForItems, exerciseTypes ->
+            ExercisesScreenUiState(
+                isLoading = baseData.isLoadingExercises || baseData.isLoadingFavorites,
+                rawExercises = baseData.exercises,
+                favoriteExerciseIds = baseData.favorites,
+                exerciseListError = baseData.exerciseListError,
+                favoriteStateError = favError,
+                selectedMuscleGroups = muscleGroups,
+                selectedRecommendedForItems = recommendedForItems,
+                selectedExerciseTypes = exerciseTypes
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExercisesScreenUiState(isLoading = true))
 
-    val uiState: StateFlow<ExercisesScreenUiState> = combine(
-        baseUiDataFlow,             // Combined Flow 1
-        _favoriteStateErrorMessage,  // Flow 2
-        _selectedMuscleGroups,        // Flow 3
-        _selectedRecommendedForItems,     // Flow 4
-        _selectedExerciseTypes        // Flow 5
-    ) { baseData, favError, muscleGroups, recommendedForItems, exerciseTypes ->
-        ExercisesScreenUiState(
-            isLoading = baseData.isLoadingExercises || baseData.isLoadingFavorites,
-            rawExercises = baseData.exercises,
-            favoriteExerciseIds = baseData.favorites,
-            exerciseListError = baseData.exerciseListError,
-            favoriteStateError = favError,
-            selectedMuscleGroups = muscleGroups,
-            selectedRecommendedForItems = recommendedForItems,
-            selectedExerciseTypes = exerciseTypes
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExercisesScreenUiState(isLoading = true))
-
-    // Helper data class for the first combine operation
     private data class BaseUiData(
         val exercises: List<Exercise>,
         val favorites: Set<Uuid>,
@@ -162,7 +158,7 @@ class ExercisesViewModel(
         viewModelScope.launch {
             val profileId = currentProfileIdFlow.value
             if (profileId != null) {
-                _favoriteStateErrorMessage.value = null // Clear previous toggle error
+                _favoriteStateErrorMessage.value = null
                 try {
                     val isCurrentlyFavorite = uiState.value.favoriteExerciseIds.contains(exerciseId)
                     if (isCurrentlyFavorite) {
@@ -199,7 +195,7 @@ class ExercisesViewModel(
     fun removeExerciseTypeFilter(exerciseType: ExerciseType) {
         _selectedExerciseTypes.value = _selectedExerciseTypes.value - exerciseType
     }
-    
+
     fun clearAllFilters() {
         _selectedMuscleGroups.value = emptySet()
         _selectedRecommendedForItems.value = emptySet()

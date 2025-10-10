@@ -7,7 +7,7 @@ import kotlin.uuid.Uuid
 data class Program(
     val id: Uuid = Uuid.random(),
     val name: String,
-    val imageUri: String? = null, // Added imageUri field
+    val imageUri: String? = null,
     val default: Boolean = false,
     // This will be populated by joining with WorkoutTemplateExercise and WorkoutTemplateSet
     val workouts: List<String> = emptyList()

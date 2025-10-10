@@ -10,13 +10,10 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-// Import for the relationship data class
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface WorkoutTemplateDao {
-
-    // WorkoutTemplateEntity operations
     @Upsert
     suspend fun upsertWorkoutTemplate(workoutTemplate: WorkoutTemplateEntity)
 
@@ -88,6 +85,11 @@ interface WorkoutTemplateDao {
     @Query("SELECT workoutTemplateId FROM profile_favorite_workout_template_cross_ref WHERE profileId = :profileId")
     fun getFavoriteWorkoutTemplateIds(profileId: Uuid): Flow<List<Uuid>>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM profile_favorite_workout_template_cross_ref WHERE profileId = :profileId AND workoutTemplateId = :workoutTemplateId)")
+    @Query(
+        """
+            SELECT EXISTS(SELECT 1 FROM profile_favorite_workout_template_cross_ref
+                          WHERE profileId = :profileId AND workoutTemplateId = :workoutTemplateId)
+        """
+    )
     fun isFavorite(profileId: Uuid, workoutTemplateId: Uuid): Flow<Boolean>
 }

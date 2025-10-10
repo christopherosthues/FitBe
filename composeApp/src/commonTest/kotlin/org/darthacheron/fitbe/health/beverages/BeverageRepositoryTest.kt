@@ -228,13 +228,14 @@ class BeverageRepositoryTest {
 
     // Helper function to quickly seed the database with a BeverageEntity
     private suspend fun seedBeverage(utcInstant: Instant) {
-        val entity = BeverageEntity(
-            profileId = testProfileId,
-            dateUtc = utcInstant,
-            amount = 250.0,
-            beverage = "Water",
-            unit = FluidUnit.Milliliter
-        )
+        val entity =
+            BeverageEntity(
+                profileId = testProfileId,
+                dateUtc = utcInstant,
+                amount = 250.0,
+                beverage = "Water",
+                unit = FluidUnit.Milliliter
+            )
         beverageDao.upsertBeverage(entity)
     }
 
@@ -244,6 +245,5 @@ class BeverageRepositoryTest {
     }
 
     // Helper to convert LocalDate to Instant at the start of that day in a specific timezone
-    private fun LocalDate.toInstantAtStartOfDay(timeZone: TimeZone): Instant =
-        this.atStartOfDayIn(timeZone)
+    private fun LocalDate.toInstantAtStartOfDay(timeZone: TimeZone): Instant = this.atStartOfDayIn(timeZone)
 }

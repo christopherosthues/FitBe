@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_workout_overview
+import fitbe.composeapp.generated.resources.workout_overview_error_loading_workouts
 import fitbe.composeapp.generated.resources.workout_template_error_favorites
 import fitbe.composeapp.generated.resources.workout_template_error_toggle_favorite
-import fitbe.composeapp.generated.resources.workout_overview_error_loading_workouts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,9 +32,8 @@ class WorkoutTemplatesOverviewViewModel(
     private val workoutTemplateRepository: WorkoutTemplateRepository,
     private val navHostController: NavHostController,
     topBarManager: TopBarManager,
-    settingsRepository: SettingsRepository,
+    settingsRepository: SettingsRepository
 ) : FilterableViewModel(topBarManager) {
-
     override val title: StringResource
         get() = Res.string.top_bar_title_workout_overview
     override val bottomBarSelected: Screen?
@@ -47,91 +46,92 @@ class WorkoutTemplatesOverviewViewModel(
     private val _workoutTemplateListErrorMessage = MutableStateFlow<StringResource?>(null)
     private val _favoriteStateErrorMessage = MutableStateFlow<StringResource?>(null)
 
-    private val currentProfileIdFlow: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
-        .map { it.selectedProfileId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val currentProfileIdFlow: StateFlow<Uuid?> =
+        settingsRepository
+            .getSettingsFlow()
+            .map { it.selectedProfileId }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalWorkoutTemplatesFlow: StateFlow<List<WorkoutTemplate>> =
-        workoutTemplateRepository.getAllWorkoutTemplatesWithExercises()
+        workoutTemplateRepository
+            .getAllWorkoutTemplatesWithExercises()
             .onStart {
                 _isLoadingWorkoutTemplates.value = true
                 _workoutTemplateListErrorMessage.value = null
-            }
-            .map { templates ->
+            }.map { templates ->
                 _isLoadingWorkoutTemplates.value = false
                 templates
-            }
-            .catch { e ->
+            }.catch { e ->
                 _isLoadingWorkoutTemplates.value = false
                 _workoutTemplateListErrorMessage.value = Res.string.workout_overview_error_loading_workouts
                 emit(emptyList())
-            }
-            .stateIn(
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
 
-    private val internalFavoritesFlow: StateFlow<Set<Uuid>> = currentProfileIdFlow
-        .flatMapLatest { profileId ->
-            if (profileId != null) {
-                workoutTemplateRepository.getFavoriteWorkoutTemplateIds(profileId)
-                    .map { it.toSet() }
-                    .onStart {
-                        _isLoadingFavorites.value = true
-                        _favoriteStateErrorMessage.value = null
-                    }
-                    .map { favIds ->
-                        _isLoadingFavorites.value = false
-                        favIds
-                    }
-                    .catch { e ->
-                        _isLoadingFavorites.value = false
-                        _favoriteStateErrorMessage.value = Res.string.workout_template_error_favorites
-                        emit(emptySet())
-                    }
-            } else {
-                _isLoadingFavorites.value = false
-                flowOf(emptySet())
-            }
-        }
-        .stateIn(
+    private val internalFavoritesFlow: StateFlow<Set<Uuid>> =
+        currentProfileIdFlow
+            .flatMapLatest { profileId ->
+                if (profileId != null) {
+                    workoutTemplateRepository
+                        .getFavoriteWorkoutTemplateIds(profileId)
+                        .map { it.toSet() }
+                        .onStart {
+                            _isLoadingFavorites.value = true
+                            _favoriteStateErrorMessage.value = null
+                        }.map { favIds ->
+                            _isLoadingFavorites.value = false
+                            favIds
+                        }.catch { e ->
+                            _isLoadingFavorites.value = false
+                            _favoriteStateErrorMessage.value = Res.string.workout_template_error_favorites
+                            emit(emptySet())
+                        }
+                } else {
+                    _isLoadingFavorites.value = false
+                    flowOf(emptySet())
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptySet()
+            )
+
+    private val _errorMessagesFlow =
+        combine(
+            _workoutTemplateListErrorMessage,
+            _favoriteStateErrorMessage
+        ) { listError, favError ->
+            Pair(listError, favError)
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptySet()
+            initialValue = Pair<StringResource?, StringResource?>(null, null)
         )
 
-    private val _errorMessagesFlow = combine(
-        _workoutTemplateListErrorMessage,
-        _favoriteStateErrorMessage
-    ) { listError, favError ->
-        Pair(listError, favError)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Pair<StringResource?, StringResource?>(null, null)
-    )
-
-    val uiState: StateFlow<WorkoutTemplatesUiState> = combine(
-        internalWorkoutTemplatesFlow,
-        internalFavoritesFlow,
-        _isLoadingWorkoutTemplates,
-        _isLoadingFavorites,
-        _errorMessagesFlow
-    ) { templates, favorites, isLoadingTemplates, isLoadingFavs, errorMessages ->
-        val (listError, favError) = errorMessages
-        WorkoutTemplatesUiState(
-            isLoading = isLoadingTemplates || isLoadingFavs,
-            rawWorkoutTemplateList = templates,
-            favoriteWorkoutTemplateIds = favorites,
-            workoutTemplateListError = listError,
-            favoriteStateError = favError
+    val uiState: StateFlow<WorkoutTemplatesUiState> =
+        combine(
+            internalWorkoutTemplatesFlow,
+            internalFavoritesFlow,
+            _isLoadingWorkoutTemplates,
+            _isLoadingFavorites,
+            _errorMessagesFlow
+        ) { templates, favorites, isLoadingTemplates, isLoadingFavs, errorMessages ->
+            val (listError, favError) = errorMessages
+            WorkoutTemplatesUiState(
+                isLoading = isLoadingTemplates || isLoadingFavs,
+                rawWorkoutTemplateList = templates,
+                favoriteWorkoutTemplateIds = favorites,
+                workoutTemplateListError = listError,
+                favoriteStateError = favError
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = WorkoutTemplatesUiState(isLoading = true)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = WorkoutTemplatesUiState(isLoading = true)
-    )
 
     fun navigateToWorkoutTemplateDetail(templateId: Uuid?) {
         navHostController.navigate(Screen.WorkoutTemplateDetail(templateId.toString()))

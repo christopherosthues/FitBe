@@ -22,10 +22,14 @@ data class ExerciseEntity(
     val default: Boolean = false,
     val recommendedFor: List<RecommendedFor>,
     val exerciseType: ExerciseType,
-    val dateUtc: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val dateUtc: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .date
 ) {
-    fun toExercise(): Exercise {
-        return Exercise(
+    fun toExercise(): Exercise =
+        Exercise(
             id = id,
             name = name,
             guide = guide,
@@ -36,12 +40,11 @@ data class ExerciseEntity(
             exerciseType = exerciseType,
             dateUtc = dateUtc
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun Exercise.toExerciseEntity(): ExerciseEntity {
-    return ExerciseEntity(
+fun Exercise.toExerciseEntity(): ExerciseEntity =
+    ExerciseEntity(
         id = this.id,
         name = this.name,
         guide = this.guide,
@@ -52,4 +55,3 @@ fun Exercise.toExerciseEntity(): ExerciseEntity {
         exerciseType = this.exerciseType,
         dateUtc = this.dateUtc
     )
-}

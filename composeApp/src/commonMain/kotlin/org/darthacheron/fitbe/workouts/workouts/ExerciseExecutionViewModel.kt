@@ -37,10 +37,15 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 enum class ExecutionPhase {
-    SET_COUNT_INPUT, TARGET_INPUT, EXECUTING, RESTING, SET_COMPLETED_DIALOG, WORKOUT_COMPLETED;
+    SET_COUNT_INPUT,
+    TARGET_INPUT,
+    EXECUTING,
+    RESTING,
+    SET_COMPLETED_DIALOG,
+    WORKOUT_COMPLETED;
 
-    fun toStringResource(): StringResource {
-        return when (this) {
+    fun toStringResource(): StringResource =
+        when (this) {
             SET_COUNT_INPUT -> Res.string.exercise_execution_title_set_sets
             TARGET_INPUT -> Res.string.exercise_execution_title_set_targets
             EXECUTING -> Res.string.exercise_execution_title_set_progress
@@ -48,7 +53,6 @@ enum class ExecutionPhase {
             SET_COMPLETED_DIALOG -> Res.string.exercise_execution_title_log_set
             WORKOUT_COMPLETED -> Res.string.exercise_execution_title_completed
         }
-    }
 }
 
 private const val DEFAULT_REST_DURATION_SECONDS = 60
@@ -61,7 +65,6 @@ class ExerciseExecutionViewModel(
     private val settingsRepository: SettingsRepository,
     private val topBarManager: TopBarManager
 ) : ViewModel() {
-
     private val _exercise = MutableStateFlow<Exercise?>(null)
     val exercise: StateFlow<Exercise?> = _exercise.asStateFlow()
 
@@ -113,42 +116,53 @@ class ExerciseExecutionViewModel(
     private val _actualDistanceKm = MutableStateFlow<Double?>(null)
     val actualDistanceKm: StateFlow<Double?> = _actualDistanceKm.asStateFlow()
 
-    val showRepsField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
-        flowOf(
-            ex?.exerciseType in listOf(
-                ExerciseType.WEIGHT_REPS,
-                ExerciseType.REPS_ONLY,
-                ExerciseType.WEIGHT_REPS_TIMED
+    val showRepsField: StateFlow<Boolean> =
+        exercise.flatMapLatest { ex ->
+            flowOf(
+                ex?.exerciseType in
+                        listOf(
+                            ExerciseType.WEIGHT_REPS,
+                            ExerciseType.REPS_ONLY,
+                            ExerciseType.WEIGHT_REPS_TIMED
+                        )
             )
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showWeightField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
-        flowOf(
-            ex?.exerciseType in listOf(
-                ExerciseType.WEIGHT_REPS,
-                ExerciseType.WEIGHT_TIMED,
-                ExerciseType.WEIGHT_REPS_TIMED
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val showWeightField: StateFlow<Boolean> =
+        exercise.flatMapLatest { ex ->
+            flowOf(
+                ex?.exerciseType in
+                        listOf(
+                            ExerciseType.WEIGHT_REPS,
+                            ExerciseType.WEIGHT_TIMED,
+                            ExerciseType.WEIGHT_REPS_TIMED
+                        )
             )
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showDurationField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
-        flowOf(
-            ex?.exerciseType in listOf(
-                ExerciseType.TIMED,
-                ExerciseType.WEIGHT_TIMED,
-                ExerciseType.WEIGHT_REPS_TIMED,
-                ExerciseType.DISTANCE_TIMED
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val showDurationField: StateFlow<Boolean> =
+        exercise.flatMapLatest { ex ->
+            flowOf(
+                ex?.exerciseType in
+                        listOf(
+                            ExerciseType.TIMED,
+                            ExerciseType.WEIGHT_TIMED,
+                            ExerciseType.WEIGHT_REPS_TIMED,
+                            ExerciseType.DISTANCE_TIMED
+                        )
             )
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
-    val showDistanceField: StateFlow<Boolean> = exercise.flatMapLatest { ex ->
-        flowOf(
-            ex?.exerciseType in listOf(
-                ExerciseType.DISTANCE,
-                ExerciseType.DISTANCE_TIMED
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val showDistanceField: StateFlow<Boolean> =
+        exercise.flatMapLatest { ex ->
+            flowOf(
+                ex?.exerciseType in
+                        listOf(
+                            ExerciseType.DISTANCE,
+                            ExerciseType.DISTANCE_TIMED
+                        )
             )
-        )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
         viewModelScope.launch {
@@ -196,10 +210,10 @@ class ExerciseExecutionViewModel(
                 )
             }
 
-            ExecutionPhase.SET_COMPLETED_DIALOG -> { /* Dialog has its own cancel */
+            ExecutionPhase.SET_COMPLETED_DIALOG -> {
             }
 
-            ExecutionPhase.WORKOUT_COMPLETED -> { /* No actions */
+            ExecutionPhase.WORKOUT_COMPLETED -> {
             }
         }
         topBarManager.setConfig(
@@ -221,7 +235,8 @@ class ExerciseExecutionViewModel(
             _totalSets.value = sets
             _currentSet.value = 1
             _currentPhase.value = ExecutionPhase.TARGET_INPUT
-        } else { /* TODO: Show error, e.g., via a StateFlow<String?> for errors */
+        } else {
+            // TODO: Show error, e.g., via a StateFlow<String?> for errors
         }
     }
 
@@ -253,26 +268,30 @@ class ExerciseExecutionViewModel(
         if (_timerIsRunning.value && _currentPhase.value == ExecutionPhase.EXECUTING) return
         _timerIsRunning.value = true
         timerJob?.cancel()
-        timerJob = viewModelScope.launch {
-            while (_timerIsRunning.value && _currentPhase.value == ExecutionPhase.EXECUTING) {
-                delay(1000)
-                _elapsedTimeSeconds.value += 1
+        timerJob =
+            viewModelScope.launch {
+                while (_timerIsRunning.value && _currentPhase.value == ExecutionPhase.EXECUTING) {
+                    delay(1000)
+                    _elapsedTimeSeconds.value += 1
+                }
             }
-        }
     }
 
     private fun startRestTimer() {
         _timerIsRunning.value = true
         timerJob?.cancel()
-        timerJob = viewModelScope.launch {
-            while (_elapsedTimeSeconds.value > 0 && _timerIsRunning.value && _currentPhase.value == ExecutionPhase.RESTING) {
-                delay(1000)
-                _elapsedTimeSeconds.value -= 1
+        timerJob =
+            viewModelScope.launch {
+                while (_elapsedTimeSeconds.value > 0 &&
+                    _timerIsRunning.value &&
+                    _currentPhase.value == ExecutionPhase.RESTING) {
+                    delay(1000)
+                    _elapsedTimeSeconds.value -= 1
+                }
+                if (_elapsedTimeSeconds.value == 0 && _currentPhase.value == ExecutionPhase.RESTING) {
+                    proceedToNextSetExecution()
+                }
             }
-            if (_elapsedTimeSeconds.value == 0 && _currentPhase.value == ExecutionPhase.RESTING) {
-                proceedToNextSetExecution()
-            }
-        }
     }
 
     fun skipRestAndStartNextSet() {
@@ -333,13 +352,17 @@ class ExerciseExecutionViewModel(
                 actualWeightKg = _actualWeight.value,
                 actualDurationSeconds = _actualDurationSeconds.value, // User might have edited this in dialog
                 actualDistanceKm = _actualDistanceKm.value,
-                restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value
-                        ?: 0)
-                ) DEFAULT_REST_DURATION_SECONDS else null
+                restTimeSecondsAfterSet =
+                    if (_currentSet.value < (_totalSets.value ?: 0))
+                        DEFAULT_REST_DURATION_SECONDS
+                    else
+                        null
             )
 
-            _actualReps.value = null; _actualWeight.value = null; _actualDurationSeconds.value =
-            null; _actualDistanceKm.value = null
+            _actualReps.value = null
+            _actualWeight.value = null
+            _actualDurationSeconds.value = null
+            _actualDistanceKm.value = null
             _phaseBeforeDialog.value = null
 
             if (_currentSet.value < (_totalSets.value ?: 0)) {
@@ -382,9 +405,11 @@ class ExerciseExecutionViewModel(
                     actualWeightKg = null,
                     actualDurationSeconds = _elapsedTimeSeconds.value, // Could save how long it was active before skip
                     actualDistanceKm = null,
-                    restTimeSecondsAfterSet = if (_currentSet.value < (_totalSets.value
-                            ?: 0)
-                    ) DEFAULT_REST_DURATION_SECONDS else null
+                    restTimeSecondsAfterSet =
+                        if (_currentSet.value < (_totalSets.value ?: 0))
+                            DEFAULT_REST_DURATION_SECONDS
+                        else
+                            null
                 )
 
                 if (_currentSet.value < (_totalSets.value ?: 0)) {
@@ -464,19 +489,19 @@ class ExerciseExecutionViewModel(
             }
             // Reset all states
             _currentPhase.value = ExecutionPhase.SET_COUNT_INPUT
-            _totalSetsInput.value = "";
-            _totalSets.value = null;
-            _currentSet.value = 1;
+            _totalSetsInput.value = ""
+            _totalSets.value = null
+            _currentSet.value = 1
             _elapsedTimeSeconds.value = 0
-            _phaseBeforeDialog.value = null;
+            _phaseBeforeDialog.value = null
             _elapsedTimeSecondsForSetCompleted.value = 0
-            _targetReps.value = null;
-            _targetWeight.value = null;
-            _targetDurationSeconds.value = null;
+            _targetReps.value = null
+            _targetWeight.value = null
+            _targetDurationSeconds.value = null
             _targetDistanceKm.value = null
-            _actualReps.value = null;
-            _actualWeight.value = null;
-            _actualDurationSeconds.value = null;
+            _actualReps.value = null
+            _actualWeight.value = null
+            _actualDurationSeconds.value = null
             _actualDistanceKm.value = null
             // onNavigateBack() is called by the TopBarAction's onClick
         }

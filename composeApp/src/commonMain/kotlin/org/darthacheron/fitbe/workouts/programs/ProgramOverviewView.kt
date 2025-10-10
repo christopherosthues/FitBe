@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.workouts.programs
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -94,38 +93,40 @@ fun ProgramOverviewView(viewModel: ProgramOverviewViewModel) {
         }
     }
 
-    val localizedList: List<DisplayableProgram> = uiState.rawProgramList.map {
-        DisplayableProgram(
-            program = it,
-            localizedName = getWorkoutName(it.name, it.default)
-        )
-    }
+    val localizedList: List<DisplayableProgram> =
+        uiState.rawProgramList.map {
+            DisplayableProgram(
+                program = it,
+                localizedName = getWorkoutName(it.name, it.default)
+            )
+        }
 
     val processedProgramList: List<DisplayableProgram> =
         remember(uiState.rawProgramList, filterText, uiState.favoriteProgramIds) {
-            val filtered = if (filterText.isBlank()) {
-                localizedList
-            } else {
-                localizedList.filter {
-                    it.localizedName.contains(filterText, ignoreCase = true)
+            val filtered =
+                if (filterText.isBlank()) {
+                    localizedList
+                } else {
+                    localizedList.filter {
+                        it.localizedName.contains(filterText, ignoreCase = true)
+                    }
                 }
-            }
 
             filtered.sortedWith(
                 compareByDescending<DisplayableProgram> {
                     uiState.favoriteProgramIds.contains(
                         it.program.id
                     )
-                }
-                    .thenBy { it.localizedName }
+                }.thenBy { it.localizedName }
             )
         }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
         ) {
             OutlinedTextField(
                 value = filterText,
@@ -154,7 +155,8 @@ fun ProgramOverviewView(viewModel: ProgramOverviewViewModel) {
                 ) {
                     items(
                         processedProgramList.size,
-                        key = { processedProgramList[it].program.id }) { programIndex ->
+                        key = { processedProgramList[it].program.id }
+                    ) { programIndex ->
                         val displayableProgram = processedProgramList[programIndex]
                         val isFavorite =
                             uiState.favoriteProgramIds.contains(displayableProgram.program.id)
@@ -178,9 +180,10 @@ fun ProgramOverviewView(viewModel: ProgramOverviewViewModel) {
 
         FloatingActionButton(
             onClick = { viewModel.navigateToProgramDetail(null) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
@@ -194,26 +197,28 @@ fun ProgramOverviewView(viewModel: ProgramOverviewViewModel) {
 @Composable
 fun ProgramCard(
     program: Program,
-    localizedName: String, // Use passed localized name
+    localizedName: String,
     isFavorite: Boolean,
     onAddFavorite: () -> Unit,
     onRemoveFavorite: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardContentDescription = stringResource(
-        Res.string.program_overview_content_description_card,
-        localizedName // Use localized name for content description
-    )
+    val cardContentDescription =
+        stringResource(
+            Res.string.program_overview_content_description_card,
+            localizedName
+        )
 
     Card(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .height(200.dp)
-            .width(200.dp)
-            .clickable(onClick = onClick)
-            .semantics { this.contentDescription = cardContentDescription },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(16.dp))
+                .height(200.dp)
+                .width(200.dp)
+                .clickable(onClick = onClick)
+                .semantics { this.contentDescription = cardContentDescription },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             ImageWithDefault(
@@ -221,7 +226,8 @@ fun ProgramCard(
                 imageResource = getWorkoutImage(program.imageUri, program.default),
                 default = program.default,
                 contentDescription = null,
-                defaultContentDescription = stringResource(Res.string.program_overview_content_description_default_program),
+                defaultContentDescription =
+                    stringResource(Res.string.program_overview_content_description_default_program),
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -230,32 +236,43 @@ fun ProgramCard(
                 modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
             ) {
                 Icon(
-                    painter = if (isFavorite) painterResource(Res.drawable.ic_favorite) else painterResource(
-                        Res.drawable.ic_favorite_border
-                    ),
-                    contentDescription = stringResource(if (isFavorite) Res.string.program_overview_content_description_card_remove_favorite else Res.string.program_overview_content_description_card_add_favorite),
+                    painter =
+                        if (isFavorite) {
+                            painterResource(Res.drawable.ic_favorite)
+                        } else {
+                            painterResource(Res.drawable.ic_favorite_border)
+                        },
+                    contentDescription =
+                        stringResource(
+                            if (isFavorite){
+                                Res.string.program_overview_content_description_card_remove_favorite
+                            } else {
+                                Res.string.program_overview_content_description_card_add_favorite
+                            }
+                        ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(
-                                bottomStart = 16.dp,
-                                bottomEnd = 16.dp,
-                                topStart = 0.dp,
-                                topEnd = 0.dp
-                            )
-                        )
-                        .background(Color.Black.copy(alpha = 0.6f))
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = 16.dp,
+                                    bottomEnd = 16.dp,
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp
+                                )
+                            ).background(Color.Black.copy(alpha = 0.6f))
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -265,25 +282,27 @@ fun ProgramCard(
                             text = localizedName,
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
-                            modifier = Modifier.padding(bottom = 4.dp) // Adjusted padding
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
                         val chipColors = SuggestionChipDefaults.suggestionChipColors()
                         SuggestionChip(
-                            onClick = { }, // Non-interactive, for display only
+                            onClick = { },
                             label = {
                                 Text(
-                                    text = stringResource(
-                                        Res.string.program_overview_workouts,
-                                        program.workouts.size
-                                    )
+                                    text =
+                                        stringResource(
+                                            Res.string.program_overview_workouts,
+                                            program.workouts.size
+                                        )
                                 )
                             },
-                            enabled = false, // Visually appears as a chip but not interactive
-                            colors = SuggestionChipDefaults.suggestionChipColors(
-                                disabledContainerColor = chipColors.containerColor,
-                                disabledLabelColor = chipColors.labelColor,
-                            ),
-                            modifier = Modifier.height(24.dp) // Adjust height as needed
+                            enabled = false,
+                            colors =
+                                SuggestionChipDefaults.suggestionChipColors(
+                                    disabledContainerColor = chipColors.containerColor,
+                                    disabledLabelColor = chipColors.labelColor,
+                                ),
+                            modifier = Modifier.height(24.dp)
                         )
                     }
                 }

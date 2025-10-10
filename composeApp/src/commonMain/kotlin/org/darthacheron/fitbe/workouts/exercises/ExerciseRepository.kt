@@ -6,9 +6,11 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class ExerciseRepository(private val exerciseDao: ExerciseDao) {
+class ExerciseRepository(
+    private val exerciseDao: ExerciseDao
+) {
     fun getAllExercises(): Flow<List<Exercise>> =
-        exerciseDao.getAllExercises().map { it.map { e ->  e.toExercise() } }
+        exerciseDao.getAllExercises().map { it.map { e -> e.toExercise() } }
 
     fun getExerciseById(exerciseId: Uuid): Flow<Exercise?> =
         exerciseDao.getExerciseById(exerciseId).map { it?.toExercise() }
@@ -34,23 +36,28 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
         exerciseDao.resetExerciseToDefault(exerciseId)
     }
 
-    suspend fun updateExerciseEquipmentLinks(exerciseId: Uuid, equipmentIds: List<Uuid>) {
+    suspend fun updateExerciseEquipmentLinks(
+        exerciseId: Uuid,
+        equipmentIds: List<Uuid>
+    ) {
         exerciseDao.updateExerciseEquipmentLinks(exerciseId, equipmentIds)
     }
 
-    fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>> {
-        return exerciseDao.getFavoriteExerciseIds(profileId)
-    }
+    fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>> = exerciseDao.getFavoriteExerciseIds(profileId)
 
-    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean> {
-        return exerciseDao.isFavorite(profileId, exerciseId)
-    }
+    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean> = exerciseDao.isFavorite(profileId, exerciseId)
 
-    suspend fun addFavorite(profileId: Uuid, exerciseId: Uuid) {
+    suspend fun addFavorite(
+        profileId: Uuid,
+        exerciseId: Uuid
+    ) {
         exerciseDao.addFavorite(ProfileFavoriteExerciseCrossRef(profileId, exerciseId))
     }
 
-    suspend fun removeFavorite(profileId: Uuid, exerciseId: Uuid) {
+    suspend fun removeFavorite(
+        profileId: Uuid,
+        exerciseId: Uuid
+    ) {
         exerciseDao.removeFavorite(ProfileFavoriteExerciseCrossRef(profileId, exerciseId))
     }
 }

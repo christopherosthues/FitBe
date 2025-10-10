@@ -12,6 +12,6 @@ data class WorkoutTemplateSet(
     val targetWeightKg: Double? = null,
     val targetDistanceKm: Double? = null,
     val targetDurationSeconds: Long? = null,
-    val targetRestDurationSeconds: Int? = null, // Recommended rest time after this set
-    val notes: String? = null // e.g., RPE
+    val targetRestDurationSeconds: Int? = null,
+    val notes: String? = null
 )

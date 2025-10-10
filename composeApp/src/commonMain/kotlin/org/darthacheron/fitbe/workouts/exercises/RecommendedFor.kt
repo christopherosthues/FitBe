@@ -9,10 +9,9 @@ enum class RecommendedFor {
     Warmup,
     Workout;
 
-    fun toStringResource(): StringResource {
-        return when (this) {
+    fun toStringResource(): StringResource =
+        when (this) {
             Warmup -> Res.string.recommended_for_warmup
             Workout -> Res.string.recommended_for_workout
         }
-    }
 }

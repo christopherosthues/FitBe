@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.workouts.programs
 
-
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
@@ -47,91 +46,92 @@ class ProgramOverviewViewModel(
     private val _programListErrorMessage = MutableStateFlow<StringResource?>(null)
     private val _favoriteStateErrorMessage = MutableStateFlow<StringResource?>(null)
 
-    private val currentProfileIdFlow: StateFlow<Uuid?> = settingsRepository.getSettingsFlow()
-        .map { it.selectedProfileId }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val currentProfileIdFlow: StateFlow<Uuid?> =
+        settingsRepository
+            .getSettingsFlow()
+            .map { it.selectedProfileId }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalProgramsFlow: StateFlow<List<Program>> =
-        programRepository.getAllProgramsWithWorkouts()
+        programRepository
+            .getAllProgramsWithWorkouts()
             .onStart {
                 _isLoadingPrograms.value = true
                 _programListErrorMessage.value = null
-            }
-            .map { templates ->
+            }.map { templates ->
                 _isLoadingPrograms.value = false
                 templates
-            }
-            .catch { e ->
+            }.catch { e ->
                 _isLoadingPrograms.value = false
                 _programListErrorMessage.value = Res.string.program_overview_error_loading_programs
                 emit(emptyList())
-            }
-            .stateIn(
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
 
-    private val internalFavoritesFlow: StateFlow<Set<Uuid>> = currentProfileIdFlow
-        .flatMapLatest { profileId ->
-            if (profileId != null) {
-                programRepository.getFavoriteProgramIds(profileId)
-                    .map { it.toSet() }
-                    .onStart {
-                        _isLoadingFavorites.value = true
-                        _favoriteStateErrorMessage.value = null
-                    }
-                    .map { favIds ->
-                        _isLoadingFavorites.value = false
-                        favIds
-                    }
-                    .catch { e ->
-                        _isLoadingFavorites.value = false
-                        _favoriteStateErrorMessage.value = Res.string.program_overview_error_favorites
-                        emit(emptySet())
-                    }
-            } else {
-                _isLoadingFavorites.value = false
-                flowOf(emptySet())
-            }
-        }
-        .stateIn(
+    private val internalFavoritesFlow: StateFlow<Set<Uuid>> =
+        currentProfileIdFlow
+            .flatMapLatest { profileId ->
+                if (profileId != null) {
+                    programRepository
+                        .getFavoriteProgramIds(profileId)
+                        .map { it.toSet() }
+                        .onStart {
+                            _isLoadingFavorites.value = true
+                            _favoriteStateErrorMessage.value = null
+                        }.map { favIds ->
+                            _isLoadingFavorites.value = false
+                            favIds
+                        }.catch { e ->
+                            _isLoadingFavorites.value = false
+                            _favoriteStateErrorMessage.value = Res.string.program_overview_error_favorites
+                            emit(emptySet())
+                        }
+                } else {
+                    _isLoadingFavorites.value = false
+                    flowOf(emptySet())
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptySet()
+            )
+
+    private val _errorMessagesFlow =
+        combine(
+            _programListErrorMessage,
+            _favoriteStateErrorMessage
+        ) { listError, favError ->
+            Pair(listError, favError)
+        }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptySet()
+            initialValue = Pair<StringResource?, StringResource?>(null, null)
         )
 
-    private val _errorMessagesFlow = combine(
-        _programListErrorMessage,
-        _favoriteStateErrorMessage
-    ) { listError, favError ->
-        Pair(listError, favError)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Pair<StringResource?, StringResource?>(null, null)
-    )
-
-    val uiState: StateFlow<ProgramsUiState> = combine(
-        internalProgramsFlow,
-        internalFavoritesFlow,
-        _isLoadingPrograms,
-        _isLoadingFavorites,
-        _errorMessagesFlow
-    ) { programs, favorites, isLoadingPrograms, isLoadingFavs, errorMessages ->
-        val (listError, favError) = errorMessages
-        ProgramsUiState(
-            isLoading = isLoadingPrograms || isLoadingFavs,
-            rawProgramList = programs,
-            favoriteProgramIds = favorites,
-            programListError = listError,
-            favoriteStateError = favError
+    val uiState: StateFlow<ProgramsUiState> =
+        combine(
+            internalProgramsFlow,
+            internalFavoritesFlow,
+            _isLoadingPrograms,
+            _isLoadingFavorites,
+            _errorMessagesFlow
+        ) { programs, favorites, isLoadingPrograms, isLoadingFavs, errorMessages ->
+            val (listError, favError) = errorMessages
+            ProgramsUiState(
+                isLoading = isLoadingPrograms || isLoadingFavs,
+                rawProgramList = programs,
+                favoriteProgramIds = favorites,
+                programListError = listError,
+                favoriteStateError = favError
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ProgramsUiState(isLoading = true)
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = ProgramsUiState(isLoading = true)
-    )
 
     fun navigateToProgramDetail(programId: Uuid?) {
         navHostController.navigate(Screen.ProgramDetail(programId.toString()))
