@@ -14,7 +14,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
-interface ExerciseDao { 
+interface ExerciseDao {
     @Upsert
     suspend fun upsertExercise(exercise: ExerciseEntity): Long
 
@@ -43,7 +43,8 @@ interface ExerciseDao {
         if (defaultExercise != null) {
             upsertExercise(defaultExercise.toExerciseEntity())
             // Also reset equipment links for default exercises if needed
-            val defaultEquipmentLinks = getDefaultExerciseWithEquipment(exerciseId).firstOrNull()?.equipmentList?.map { it.id } ?: emptyList()
+            val defaultEquipmentLinks =
+                getDefaultExerciseWithEquipment(exerciseId).firstOrNull()?.equipmentList?.map { it.id } ?: emptyList()
             updateExerciseEquipmentLinks(exerciseId, defaultEquipmentLinks)
         }
     }
@@ -56,12 +57,16 @@ interface ExerciseDao {
     suspend fun insertCrossRefs(crossRefs: List<ExerciseEquipmentCrossRef>)
 
     @Transaction
-    suspend fun updateExerciseEquipmentLinks(exerciseId: Uuid, newEquipmentIds: List<Uuid>) {
+    suspend fun updateExerciseEquipmentLinks(
+        exerciseId: Uuid,
+        newEquipmentIds: List<Uuid>
+    ) {
         deleteCrossRefsByExerciseId(exerciseId)
         if (newEquipmentIds.isNotEmpty()) {
-            val newCrossRefs = newEquipmentIds.map { equipmentId ->
-                ExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = equipmentId)
-            }
+            val newCrossRefs =
+                newEquipmentIds.map { equipmentId ->
+                    ExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = equipmentId)
+                }
             insertCrossRefs(newCrossRefs)
         }
     }
@@ -75,7 +80,7 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM exercises")
     fun getAllExercises(): Flow<List<ExerciseEntity>>
-    
+
     @Query("SELECT * FROM default_exercises")
     suspend fun getAllDefaultExercisesSuspend(): List<DefaultExerciseEntity>
 
@@ -89,6 +94,14 @@ interface ExerciseDao {
     @Query("SELECT exerciseId FROM profile_favorite_exercise_cross_ref WHERE profileId = :profileId")
     fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>>
 
-    @Query("SELECT EXISTS(SELECT 1 FROM profile_favorite_exercise_cross_ref WHERE profileId = :profileId AND exerciseId = :exerciseId)")
-    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean>
+    @Query(
+        """
+        SELECT EXISTS(SELECT 1 FROM profile_favorite_exercise_cross_ref
+                        WHERE profileId = :profileId AND exerciseId = :exerciseId)
+        """
+    )
+    fun isFavorite(
+        profileId: Uuid,
+        exerciseId: Uuid
+    ): Flow<Boolean>
 }

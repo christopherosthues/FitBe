@@ -18,10 +18,11 @@ data class TrainingEquipmentEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "image_uri") val imageUri: String? = null,
     val default: Boolean = false,
-    val dateUtc: LocalDate = Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.UTC)
-        .date,
+    val dateUtc: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .date
 ) {
     fun toTrainingEquipment(): TrainingEquipment =
         TrainingEquipment(

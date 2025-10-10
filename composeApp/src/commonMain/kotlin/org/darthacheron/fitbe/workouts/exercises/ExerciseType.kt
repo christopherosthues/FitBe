@@ -39,4 +39,3 @@ enum class ExerciseType {
             OTHER -> Res.string.exercise_type_other
         }
 }
-

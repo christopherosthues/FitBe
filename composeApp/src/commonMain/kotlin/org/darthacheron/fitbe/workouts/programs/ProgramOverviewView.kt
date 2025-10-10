@@ -244,7 +244,7 @@ fun ProgramCard(
                         },
                     contentDescription =
                         stringResource(
-                            if (isFavorite){
+                            if (isFavorite) {
                                 Res.string.program_overview_content_description_card_remove_favorite
                             } else {
                                 Res.string.program_overview_content_description_card_add_favorite
@@ -300,7 +300,7 @@ fun ProgramCard(
                             colors =
                                 SuggestionChipDefaults.suggestionChipColors(
                                     disabledContainerColor = chipColors.containerColor,
-                                    disabledLabelColor = chipColors.labelColor,
+                                    disabledLabelColor = chipColors.labelColor
                                 ),
                             modifier = Modifier.height(24.dp)
                         )

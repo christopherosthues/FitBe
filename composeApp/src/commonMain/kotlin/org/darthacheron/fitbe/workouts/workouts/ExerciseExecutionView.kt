@@ -369,7 +369,8 @@ fun RestingPhase(viewModel: ExerciseExecutionViewModel) {
             text =
                 stringResource(
                     Res.string.exercise_execution_next_set_info,
-                    nextSetNumber, exercise?.name ?: "Exercise"
+                    nextSetNumber,
+                    exercise?.name ?: "Exercise"
                 ),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center

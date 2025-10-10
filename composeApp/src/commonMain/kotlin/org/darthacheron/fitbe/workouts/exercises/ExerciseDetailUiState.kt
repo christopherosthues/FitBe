@@ -27,4 +27,19 @@ data class ExerciseDetailUiState(
     val persistedDefaultExerciseType: ExerciseType? = null,
     val isModifiedFromPersistedDefault: Boolean = false,
     val isFavorite: Boolean = false
-)
+) {
+    val canResetToDefault: Boolean
+        get() = isEditing && exerciseId != null && default && isModifiedFromPersistedDefault
+
+    val canDelete: Boolean
+        get() = !isEditing && exerciseId != null && !default
+
+    val canCancelEditing: Boolean
+        get() = isEditing && exerciseId != null
+
+    val canEdit: Boolean
+        get() = !isEditing && exerciseId != null
+
+    val canStartWorkout: Boolean
+        get() = !isEditing && exerciseId != null
+}

@@ -1,30 +1,45 @@
 package org.darthacheron.fitbe.workouts.exercises
 
 import org.jetbrains.compose.resources.StringResource
+import kotlin.math.exp
 
 data class ExerciseError(
-    val hasGeneralError: Boolean = false,
     val generalError: StringResource? = null,
-    val hasNameError: Boolean = false,
     val nameError: StringResource? = null,
-    val hasGuideError: Boolean = false,
     val guideError: StringResource? = null,
-    val hasMuscleGroupError: Boolean = false,
     val muscleGroupError: StringResource? = null,
-    val hasRecommendedForError: Boolean = false,
     val recommendedForError: StringResource? = null,
-    val hasEquipmentError: Boolean = false,
     val equipmentError: StringResource? = null,
-    val hasExerciseTypeError: Boolean = false,
     val exerciseTypeError: StringResource? = null
 ) {
+    val hasGeneralError: Boolean
+        get() = generalError != null
+
+    val hasNameError: Boolean
+        get() = nameError != null
+
+    val hasGuideError: Boolean
+        get() = guideError != null
+
+    val hasMuscleGroupError: Boolean
+        get() = muscleGroupError != null
+
+    val hasRecommendedForError: Boolean
+        get() = recommendedForError != null
+
+    val hasEquipmentError: Boolean
+        get() = equipmentError != null
+
+    val hasExerciseTypeError: Boolean
+        get() = exerciseTypeError != null
+
     val hasError: Boolean
         get() =
             hasGeneralError ||
-            hasNameError ||
-            hasGuideError ||
-            hasMuscleGroupError ||
-            hasEquipmentError ||
-            hasRecommendedForError ||
-            hasExerciseTypeError
+                hasNameError ||
+                hasGuideError ||
+                hasMuscleGroupError ||
+                hasEquipmentError ||
+                hasRecommendedForError ||
+                hasExerciseTypeError
 }

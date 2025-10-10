@@ -66,9 +66,7 @@ data class DisplayableTrainingEquipment(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun TrainingEquipmentView(
-    viewModel: TrainingEquipmentViewModel
-) {
+fun TrainingEquipmentView(viewModel: TrainingEquipmentViewModel) {
     LaunchedEffect(Unit) {
         viewModel.updateTopBarConfig()
     }
@@ -101,29 +99,30 @@ fun TrainingEquipmentView(
 
     val processedEquipmentList: List<DisplayableTrainingEquipment> =
         remember(uiState.rawEquipmentList, filterText, uiState.favoriteEquipmentIds) {
-            val filtered = if (filterText.isBlank()) {
-                localizedList
-            } else {
-                localizedList.filter {
-                    it.localizedName.contains(filterText, ignoreCase = true)
+            val filtered =
+                if (filterText.isBlank()) {
+                    localizedList
+                } else {
+                    localizedList.filter {
+                        it.localizedName.contains(filterText, ignoreCase = true)
+                    }
                 }
-            }
 
             filtered.sortedWith(
                 compareByDescending<DisplayableTrainingEquipment> {
                     uiState.favoriteEquipmentIds.contains(
                         it.equipment.id
                     )
-                }
-                    .thenBy { it.localizedName }
+                }.thenBy { it.localizedName }
             )
         }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
         ) {
             OutlinedTextField(
                 value = filterText,
@@ -151,8 +150,9 @@ fun TrainingEquipmentView(
                     contentPadding = PaddingValues(bottom = 80.dp)
                 ) {
                     items(
-                        processedEquipmentList.size,
-                        key = { processedEquipmentList[it].equipment.id.toString() }) { index ->
+                        count = processedEquipmentList.size,
+                        key = { processedEquipmentList[it].equipment.id.toString() }
+                    ) { index ->
                         val displayableEquipment = processedEquipmentList[index]
                         val isFavorite =
                             uiState.favoriteEquipmentIds.contains(displayableEquipment.equipment.id)
@@ -176,9 +176,10 @@ fun TrainingEquipmentView(
 
         FloatingActionButton(
             onClick = { viewModel.navigateToTrainingEquipmentDetail(null) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
@@ -196,26 +197,28 @@ fun TrainingEquipmentView(
 @Composable
 fun TrainingEquipmentCard(
     equipment: TrainingEquipment,
-    localizedName: String, // Use passed localized name
+    localizedName: String,
     isFavorite: Boolean,
     onAddFavorite: () -> Unit,
     onRemoveFavorite: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardContentDescription = stringResource(
-        Res.string.training_equipment_content_description_card,
-        localizedName // Use localized name for content description
-    )
+    val cardContentDescription =
+        stringResource(
+            Res.string.training_equipment_content_description_card,
+            localizedName
+        )
 
     Card(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .height(200.dp)
-            .width(200.dp)
-            .clickable(onClick = onClick)
-            .semantics { this.contentDescription = cardContentDescription },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(16.dp))
+                .height(200.dp)
+                .width(200.dp)
+                .clickable(onClick = onClick)
+                .semantics { this.contentDescription = cardContentDescription },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             ImageWithDefault(
@@ -234,42 +237,45 @@ fun TrainingEquipmentCard(
             ) {
                 Icon(
                     painter =
-                        if (isFavorite)
+                        if (isFavorite) {
                             painterResource(Res.drawable.ic_favorite)
-                        else
-                            painterResource(Res.drawable.ic_favorite_border),
+                        } else {
+                            painterResource(Res.drawable.ic_favorite_border)
+                        },
                     contentDescription =
                         stringResource(
-                            if (isFavorite)
+                            if (isFavorite) {
                                 Res.string.training_equipment_content_description_card_remove_favorite
-                            else
+                            } else {
                                 Res.string.training_equipment_content_description_card_add_favorite
+                            }
                         ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(
-                                bottomStart = 16.dp,
-                                bottomEnd = 16.dp,
-                                topStart = 0.dp,
-                                topEnd = 0.dp
-                            )
-                        )
-                        .background(Color.Black.copy(alpha = 0.6f))
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = 16.dp,
+                                    bottomEnd = 16.dp,
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp
+                                )
+                            ).background(Color.Black.copy(alpha = 0.6f))
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = localizedName, // Display localized name
+                        text = localizedName,
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.White,
                         modifier = Modifier.align(Alignment.Center).padding(vertical = 8.dp)

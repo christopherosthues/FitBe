@@ -25,7 +25,7 @@ data class DefaultExerciseEntity(
         Clock.System
             .now()
             .toLocalDateTime(TimeZone.UTC)
-            .date,
+            .date
 ) {
     fun toExerciseEntity(): ExerciseEntity =
         ExerciseEntity(

@@ -85,9 +85,7 @@ data class DisplayableExercise(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun ExercisesView(
-    exercisesViewModel: ExercisesViewModel,
-) {
+fun ExercisesView(exercisesViewModel: ExercisesViewModel) {
     LaunchedEffect(Unit) {
         exercisesViewModel.updateTopBarConfig()
     }
@@ -103,70 +101,77 @@ fun ExercisesView(
 
     currentErrorMessage?.let {
         val message = stringResource(it)
-        LaunchedEffect(it, message) { // Re-launch if error message (or its resolved string) changes
+        LaunchedEffect(it, message) {
             scope.launch {
                 snackbarHostState.showSnackbar(message)
-                exercisesViewModel.clearErrorMessage() // Clears all errors
+                exercisesViewModel.clearErrorMessage()
             }
         }
     }
 
-    val localizedExercises = uiState.rawExercises.map {
-        DisplayableExercise(
-            exercise = it,
-            localizedName = getExerciseName(it.name, it.default) // Composable call
-        )
-    }
-
-    val processedExercises = remember(
-        uiState.rawExercises,
-        filterText,
-        uiState.favoriteExerciseIds,
-        uiState.selectedMuscleGroups,
-        uiState.selectedRecommendedForItems,
-        uiState.selectedExerciseTypes
-    ) {
-        var tempFilteredList = localizedExercises
-
-        if (filterText.isNotBlank()) {
-            tempFilteredList = tempFilteredList.filter {
-                it.localizedName.contains(filterText, ignoreCase = true)
-            }
+    val localizedExercises =
+        uiState.rawExercises.map {
+            DisplayableExercise(
+                exercise = it,
+                localizedName = getExerciseName(it.name, it.default)
+            )
         }
 
-        if (uiState.selectedMuscleGroups.isNotEmpty()) {
-            tempFilteredList = tempFilteredList.filter { displayableExercise ->
-                uiState.selectedMuscleGroups.any { selectedMuscleGroup ->
-                    displayableExercise.exercise.targetMuscleGroups.contains(selectedMuscleGroup)
-                }
+    val processedExercises =
+        remember(
+            uiState.rawExercises,
+            filterText,
+            uiState.favoriteExerciseIds,
+            uiState.selectedMuscleGroups,
+            uiState.selectedRecommendedForItems,
+            uiState.selectedExerciseTypes
+        ) {
+            var tempFilteredList = localizedExercises
+
+            if (filterText.isNotBlank()) {
+                tempFilteredList =
+                    tempFilteredList.filter {
+                        it.localizedName.contains(filterText, ignoreCase = true)
+                    }
             }
+
+            if (uiState.selectedMuscleGroups.isNotEmpty()) {
+                tempFilteredList =
+                    tempFilteredList.filter { displayableExercise ->
+                        uiState.selectedMuscleGroups.any { selectedMuscleGroup ->
+                            displayableExercise.exercise.targetMuscleGroups.contains(selectedMuscleGroup)
+                        }
+                    }
+            }
+
+            if (uiState.selectedRecommendedForItems.isNotEmpty()) {
+                tempFilteredList =
+                    tempFilteredList.filter { displayableExercise ->
+                        uiState.selectedRecommendedForItems.any { selectedRecommendedFor ->
+                            displayableExercise.exercise.recommendedFor.contains(selectedRecommendedFor)
+                        }
+                    }
+            }
+
+            if (uiState.selectedExerciseTypes.isNotEmpty()) {
+                tempFilteredList =
+                    tempFilteredList.filter { displayableExercise ->
+                        uiState.selectedExerciseTypes.contains(displayableExercise.exercise.exerciseType)
+                    }
+            }
+
+            tempFilteredList.sortedWith(
+                compareByDescending<DisplayableExercise> { uiState.favoriteExerciseIds.contains(it.exercise.id) }
+                    .thenBy { it.localizedName }
+            )
         }
 
-        if (uiState.selectedRecommendedForItems.isNotEmpty()) {
-            tempFilteredList = tempFilteredList.filter { displayableExercise ->
-                uiState.selectedRecommendedForItems.any { selectedRecommendedFor ->
-                    displayableExercise.exercise.recommendedFor.contains(selectedRecommendedFor)
-                }
-            }
-        }
-
-        if (uiState.selectedExerciseTypes.isNotEmpty()) {
-            tempFilteredList = tempFilteredList.filter { displayableExercise ->
-                uiState.selectedExerciseTypes.contains(displayableExercise.exercise.exerciseType)
-            }
-        }
-
-        tempFilteredList.sortedWith(
-            compareByDescending<DisplayableExercise> { uiState.favoriteExerciseIds.contains(it.exercise.id) }
-                .thenBy { it.localizedName }
-        )
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) { // Main container Box
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp) // Apply padding directly to the content Column
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
@@ -176,13 +181,16 @@ fun ExercisesView(
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = { showFilterDialog = true }) {
-                    Icon(painterResource(Res.drawable.ic_filter), contentDescription = "Open Filters") // TODO: StringResource
+                    Icon(painterResource(Res.drawable.ic_filter), contentDescription = "Open Filters")
                 }
             }
             Spacer(Modifier.height(8.dp))
 
             // Display Applied Filters as Chips
-            if (uiState.selectedMuscleGroups.isNotEmpty() || uiState.selectedRecommendedForItems.isNotEmpty() || uiState.selectedExerciseTypes.isNotEmpty()) {
+            if (uiState.selectedMuscleGroups.isNotEmpty() ||
+                uiState.selectedRecommendedForItems.isNotEmpty() ||
+                uiState.selectedExerciseTypes.isNotEmpty()
+            ) {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -215,7 +223,14 @@ fun ExercisesView(
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
-            } else if (processedExercises.isEmpty() && (filterText.isNotBlank() || uiState.selectedMuscleGroups.isNotEmpty() || uiState.selectedRecommendedForItems.isNotEmpty() || uiState.selectedExerciseTypes.isNotEmpty())) {
+            } else if (processedExercises.isEmpty() &&
+                (
+                    filterText.isNotBlank() ||
+                    uiState.selectedMuscleGroups.isNotEmpty() ||
+                    uiState.selectedRecommendedForItems.isNotEmpty() ||
+                    uiState.selectedExerciseTypes.isNotEmpty()
+                )
+            ) {
                 Text(text = stringResource(Res.string.exercise_no_filtered_exercises))
             } else if (uiState.rawExercises.isEmpty() && uiState.exerciseListError == null) {
                 Text(text = stringResource(Res.string.exercise_no_exercises))
@@ -236,10 +251,11 @@ fun ExercisesView(
                             isFavorite = isFavorite,
                             onToggleFavorite = { exercisesViewModel.toggleFavorite(displayableExercise.exercise.id) },
                             onClick = { exercisesViewModel.navigateToExerciseDetail(displayableExercise.exercise.id) },
-                            contentDescription = stringResource(
-                                Res.string.exercise_content_description_card,
-                                displayableExercise.localizedName
-                            )
+                            contentDescription =
+                                stringResource(
+                                    Res.string.exercise_content_description_card,
+                                    displayableExercise.localizedName
+                                )
                         )
                     }
                 }
@@ -249,9 +265,10 @@ fun ExercisesView(
         FloatingActionButton(
             onClick = { exercisesViewModel.navigateToExerciseDetail(null) },
             containerColor = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_add),
@@ -276,7 +293,7 @@ fun ExercisesView(
                 onClearAllFilters = {
                     exercisesViewModel.clearAllFilters()
                     // Optionally close dialog on clear, or let user apply empty state
-                    // showFilterDialog = false 
+                    // showFilterDialog = false
                 },
                 onDismiss = { showFilterDialog = false }
             )
@@ -286,7 +303,10 @@ fun ExercisesView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RemovableFilterChip(text: String, onRemove: () -> Unit) {
+fun RemovableFilterChip(
+    text: String,
+    onRemove: () -> Unit
+) {
     InputChip(
         selected = true, // Chips are only shown when selected
         onClick = { /* Could be used for other interactions if needed */ },
@@ -301,7 +321,6 @@ fun RemovableFilterChip(text: String, onRemove: () -> Unit) {
         }
     )
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -385,10 +404,11 @@ fun <T> FilterSection(
         items.forEach { item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onItemToggle(item, !selectedItems.contains(item)) }
-                    .padding(vertical = 4.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onItemToggle(item, !selectedItems.contains(item)) }
+                        .padding(vertical = 4.dp)
             ) {
                 Checkbox(
                     checked = selectedItems.contains(item),
@@ -401,7 +421,6 @@ fun <T> FilterSection(
     }
 }
 
-
 @Composable
 fun ExerciseCard(
     exercise: Exercise,
@@ -413,17 +432,19 @@ fun ExerciseCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .height(200.dp)
-            .width(200.dp)
-            .clickable(onClick = onClick)
-            .semantics { this.contentDescription = contentDescription },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier =
+            modifier
+                .clip(RoundedCornerShape(16.dp))
+                .height(200.dp)
+                .width(200.dp)
+                .clickable(onClick = onClick)
+                .semantics { this.contentDescription = contentDescription },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .fillMaxSize()
         ) {
             ImageWithDefault(
                 imageUri = exercise.imageUri,
@@ -439,30 +460,45 @@ fun ExerciseCard(
                 modifier = Modifier.align(Alignment.TopEnd).padding(4.dp)
             ) {
                 Icon(
-                    painter = painterResource(if (isFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border),
-                    contentDescription = stringResource(if (isFavorite) Res.string.exercise_content_description_card_remove_favorite else Res.string.exercise_content_description_card_add_favorite),
+                    painter =
+                        painterResource(
+                            if (isFavorite) {
+                                Res.drawable.ic_favorite
+                            } else {
+                                Res.drawable.ic_favorite_border
+                            }
+                        ),
+                    contentDescription =
+                        stringResource(
+                            if (isFavorite) {
+                                Res.string.exercise_content_description_card_remove_favorite
+                            } else {
+                                Res.string.exercise_content_description_card_add_favorite
+                            }
+                        ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(
-                            RoundedCornerShape(
-                                bottomStart = 16.dp,
-                                bottomEnd = 16.dp,
-                                topStart = 0.dp,
-                                topEnd = 0.dp
-                            )
-                        )
-                        .background(Color.Black.copy(alpha = 0.6f))
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .clip(
+                                RoundedCornerShape(
+                                    bottomStart = 16.dp,
+                                    bottomEnd = 16.dp,
+                                    topStart = 0.dp,
+                                    topEnd = 0.dp
+                                )
+                            ).background(Color.Black.copy(alpha = 0.6f))
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Column {
                         Text(
@@ -474,7 +510,7 @@ fun ExerciseCard(
                         )
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             val chipColors = SuggestionChipDefaults.suggestionChipColors()
                             exercise.targetMuscleGroups.take(2).forEach {
@@ -482,10 +518,11 @@ fun ExerciseCard(
                                     onClick = { },
                                     label = { Text(text = stringResource(it.toStringResource())) },
                                     enabled = false,
-                                    colors = SuggestionChipDefaults.suggestionChipColors(
-                                        disabledContainerColor = chipColors.containerColor,
-                                        disabledLabelColor = chipColors.labelColor,
-                                    ),
+                                    colors =
+                                        SuggestionChipDefaults.suggestionChipColors(
+                                            disabledContainerColor = chipColors.containerColor,
+                                            disabledLabelColor = chipColors.labelColor
+                                        ),
                                     modifier = Modifier.height(24.dp)
                                 )
                             }

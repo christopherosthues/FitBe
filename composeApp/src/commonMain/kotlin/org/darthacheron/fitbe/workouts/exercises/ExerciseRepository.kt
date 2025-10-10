@@ -9,8 +9,7 @@ import kotlin.uuid.Uuid
 class ExerciseRepository(
     private val exerciseDao: ExerciseDao
 ) {
-    fun getAllExercises(): Flow<List<Exercise>> =
-        exerciseDao.getAllExercises().map { it.map { e -> e.toExercise() } }
+    fun getAllExercises(): Flow<List<Exercise>> = exerciseDao.getAllExercises().map { it.map { e -> e.toExercise() } }
 
     fun getExerciseById(exerciseId: Uuid): Flow<Exercise?> =
         exerciseDao.getExerciseById(exerciseId).map { it?.toExercise() }
@@ -45,7 +44,10 @@ class ExerciseRepository(
 
     fun getFavoriteExerciseIds(profileId: Uuid): Flow<List<Uuid>> = exerciseDao.getFavoriteExerciseIds(profileId)
 
-    fun isFavorite(profileId: Uuid, exerciseId: Uuid): Flow<Boolean> = exerciseDao.isFavorite(profileId, exerciseId)
+    fun isFavorite(
+        profileId: Uuid,
+        exerciseId: Uuid
+    ): Flow<Boolean> = exerciseDao.isFavorite(profileId, exerciseId)
 
     suspend fun addFavorite(
         profileId: Uuid,

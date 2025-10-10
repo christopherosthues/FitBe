@@ -1,12 +1,12 @@
 package org.darthacheron.fitbe.utils
 
-import kotlin.test.assertEquals
-import kotlin.test.Test
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class DateUtilsSpecs {
     @Test

@@ -55,94 +55,94 @@ class TrainingEquipmentViewModel(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val internalEquipmentListFlow: StateFlow<List<TrainingEquipment>> =
-        equipmentRepository.getAllEquipments()
+        equipmentRepository
+            .getAllEquipments()
             .onStart {
                 _isLoadingEquipment.value = true
                 _equipmentListErrorMessage.value = null
-            }
-            .map { equipment ->
+            }.map { equipment ->
                 _isLoadingEquipment.value = false
                 equipment
-            }
-            .catch { e ->
+            }.catch { e ->
                 _isLoadingEquipment.value = false
                 _equipmentListErrorMessage.value = Res.string.training_equipment_error_loading
                 emit(emptyList())
-            }
-            .stateIn(
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
 
-    private val internalFavoritesFlow: StateFlow<Set<Uuid>> = currentProfileIdFlow
-        .flatMapLatest { profileId ->
-            if (profileId != null) {
-                equipmentRepository.getFavoriteEquipmentIds(profileId)
-                    .map { it.toSet() }
-                    .onStart {
-                        _isLoadingFavorites.value = true
-                        _favoriteStateErrorMessage.value = null
-                    }
-                    .map { favIds ->
-                        _isLoadingFavorites.value = false
-                        favIds
-                    }
-                    .catch { e ->
-                        _isLoadingFavorites.value = false
-                        _favoriteStateErrorMessage.value =
-                            Res.string.training_equipment_error_favorites
-                        emit(emptySet())
-                    }
-            } else {
-                _isLoadingFavorites.value = false
-                flowOf(emptySet())
-            }
+    private val internalFavoritesFlow: StateFlow<Set<Uuid>> =
+        currentProfileIdFlow
+            .flatMapLatest { profileId ->
+                if (profileId != null) {
+                    equipmentRepository
+                        .getFavoriteEquipmentIds(profileId)
+                        .map { it.toSet() }
+                        .onStart {
+                            _isLoadingFavorites.value = true
+                            _favoriteStateErrorMessage.value = null
+                        }.map { favIds ->
+                            _isLoadingFavorites.value = false
+                            favIds
+                        }.catch { e ->
+                            _isLoadingFavorites.value = false
+                            _favoriteStateErrorMessage.value =
+                                Res.string.training_equipment_error_favorites
+                            emit(emptySet())
+                        }
+                } else {
+                    _isLoadingFavorites.value = false
+                    flowOf(emptySet())
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptySet()
+            )
+
+    private val combinedFiveFlows =
+        combine(
+            internalEquipmentListFlow,
+            internalFavoritesFlow,
+            _isLoadingEquipment,
+            _isLoadingFavorites,
+            _equipmentListErrorMessage
+        ) { equipment: List<TrainingEquipment>,
+            favorites: Set<Uuid>,
+            isLoadingEquip: Boolean,
+            isLoadingFav: Boolean,
+            equipError: StringResource?
+            ->
+            Pair(
+                Pair(equipment, favorites),
+                Triple(isLoadingEquip, isLoadingFav, equipError)
+            )
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptySet()
+
+    val uiState: StateFlow<TrainingEquipmentScreenUiState> =
+        combinedFiveFlows.combine(
+            _favoriteStateErrorMessage
+        ) { intermediateData: Pair<Pair<List<TrainingEquipment>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>,
+            favError: StringResource?
+            ->
+            val (pair1, triple1) = intermediateData
+            val (equipment, favorites) = pair1
+            val (isLoadingEquip, isLoadingFav, equipError) = triple1
+
+            TrainingEquipmentScreenUiState(
+                isLoading = isLoadingEquip || isLoadingFav,
+                rawEquipmentList = equipment,
+                favoriteEquipmentIds = favorites,
+                equipmentListError = equipError,
+                favoriteStateError = favError
+            )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            TrainingEquipmentScreenUiState(isLoading = true)
         )
-
-    private val combinedFiveFlows = combine(
-        internalEquipmentListFlow,
-        internalFavoritesFlow,
-        _isLoadingEquipment,
-        _isLoadingFavorites,
-        _equipmentListErrorMessage
-    ) { equipment: List<TrainingEquipment>,
-        favorites: Set<Uuid>,
-        isLoadingEquip: Boolean,
-        isLoadingFav: Boolean,
-        equipError: StringResource? ->
-        Pair(
-            Pair(equipment, favorites),
-            Triple(isLoadingEquip, isLoadingFav, equipError)
-        )
-    }
-
-    val uiState: StateFlow<TrainingEquipmentScreenUiState> = combinedFiveFlows.combine(
-        _favoriteStateErrorMessage
-    ) { intermediateData: Pair<Pair<List<TrainingEquipment>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>,
-        favError: StringResource? ->
-        val (pair1, triple1) = intermediateData
-        val (equipment, favorites) = pair1
-        val (isLoadingEquip, isLoadingFav, equipError) = triple1
-
-        TrainingEquipmentScreenUiState(
-            isLoading = isLoadingEquip || isLoadingFav,
-            rawEquipmentList = equipment,
-            favoriteEquipmentIds = favorites,
-            equipmentListError = equipError,
-            favoriteStateError = favError
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        TrainingEquipmentScreenUiState(isLoading = true)
-    )
-
 
     fun navigateToTrainingEquipmentDetail(id: Uuid?) {
         navHostController.navigate(Screen.TrainingEquipmentDetail(id?.toString()))

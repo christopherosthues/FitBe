@@ -90,12 +90,10 @@ class ExercisesViewModel(
                         .onStart {
                             _isLoadingFavorites.value = true
                             _favoriteStateErrorMessage.value = null
-                        }
-                        .map { favIds ->
+                        }.map { favIds ->
                             _isLoadingFavorites.value = false
                             favIds
-                        }
-                        .catch { e ->
+                        }.catch { e ->
                             // Log.e("ExercisesViewModel", "Error loading favorite exercises", e)
                             _isLoadingFavorites.value = false
                             _favoriteStateErrorMessage.value = Res.string.exercises_error_favorites

@@ -11,11 +11,12 @@ class DefaultExerciseWithEquipmentEntity(
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
-        associateBy = Junction(
-            value = DefaultExerciseEquipmentCrossRef::class,
-            parentColumn = "exerciseId",
-            entityColumn = "equipmentId"
-        )
+        associateBy =
+            Junction(
+                value = DefaultExerciseEquipmentCrossRef::class,
+                parentColumn = "exerciseId",
+                entityColumn = "equipmentId"
+            )
     )
     val equipmentList: List<DefaultTrainingEquipmentEntity>
 ) {

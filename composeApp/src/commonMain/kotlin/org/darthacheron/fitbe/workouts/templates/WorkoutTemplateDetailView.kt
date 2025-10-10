@@ -293,8 +293,8 @@ private fun ExerciseItemCard(
                                 Text(
                                     text =
                                         "${setInfo.setOrder}. Reps: ${setInfo.targetRepetitions ?: "-"}, " +
-                                        "Weight: ${setInfo.targetWeightKg ?: "-"} kg, " +
-                                        "Time: ${setInfo.targetDurationSeconds ?: "-"}s"
+                                            "Weight: ${setInfo.targetWeightKg ?: "-"} kg, " +
+                                            "Time: ${setInfo.targetDurationSeconds ?: "-"}s"
                                 )
                             }
                         )
