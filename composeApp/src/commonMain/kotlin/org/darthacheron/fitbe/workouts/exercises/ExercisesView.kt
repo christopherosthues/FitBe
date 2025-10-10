@@ -226,9 +226,9 @@ fun ExercisesView(exercisesViewModel: ExercisesViewModel) {
             } else if (processedExercises.isEmpty() &&
                 (
                     filterText.isNotBlank() ||
-                    uiState.selectedMuscleGroups.isNotEmpty() ||
-                    uiState.selectedRecommendedForItems.isNotEmpty() ||
-                    uiState.selectedExerciseTypes.isNotEmpty()
+                        uiState.selectedMuscleGroups.isNotEmpty() ||
+                        uiState.selectedRecommendedForItems.isNotEmpty() ||
+                        uiState.selectedExerciseTypes.isNotEmpty()
                 )
             ) {
                 Text(text = stringResource(Res.string.exercise_no_filtered_exercises))

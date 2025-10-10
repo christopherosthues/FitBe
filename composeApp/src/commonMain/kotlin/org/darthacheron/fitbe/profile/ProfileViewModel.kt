@@ -116,11 +116,12 @@ class ProfileViewModel(
                 }
             val displayCurrentProfile =
                 currentDomainProfile?.copy(
-                    targetWeight = weightUnitConverter.convert(
-                        currentDomainProfile.targetWeight,
-                        WeightUnit.KG,
-                        settings.weightUnit
-                    ),
+                    targetWeight =
+                        weightUnitConverter.convert(
+                            currentDomainProfile.targetWeight,
+                            WeightUnit.KG,
+                            settings.weightUnit
+                        ),
                     bodyHeight =
                         bodyMeasurementUnitConverter.convert(
                             currentDomainProfile.bodyHeight,
@@ -252,10 +253,8 @@ class ProfileViewModel(
         _uiState.update {
             val settings = it.currentSettings
             val error =
-                if (!positiveDecimalValidator.validate(weight) || !bodyWeightValidator.validate(
-                        weight.toDoubleOrNull(),
-                        settings.weightUnit
-                    )
+                if (!positiveDecimalValidator.validate(weight) ||
+                    !bodyWeightValidator.validate(weight.toDoubleOrNull(), settings.weightUnit)
                 ) {
                     it.error.copy(
                         weightError =
@@ -275,7 +274,8 @@ class ProfileViewModel(
     fun onTargetStepsChanged(steps: String) =
         _uiState.update {
             val error =
-                if (!positiveNumberValidator.validate(steps) || !stepsValidator.validate(steps.toUIntOrNull())
+                if (!positiveNumberValidator.validate(steps) ||
+                    !stepsValidator.validate(steps.toUIntOrNull())
                 ) {
                     it.error.copy(stepsError = Res.string.profile_error_steps)
                 } else {
@@ -365,7 +365,11 @@ class ProfileViewModel(
                         heightError = null
                     ),
                 inputName = currentDisplay?.name ?: ProfileDefaults.NAME,
-                inputDateOfBirth = currentDisplay?.dateOfBirth ?: Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+                inputDateOfBirth =
+                    currentDisplay?.dateOfBirth ?: Clock.System
+                        .now()
+                        .toLocalDateTime(TimeZone.UTC)
+                        .date,
                 inputGender = currentDisplay?.gender ?: ProfileDefaults.gender,
                 inputTargetKcal = currentDisplay?.targetKcal.toUintString(),
                 inputTargetBeverage = currentDisplay?.targetBeverageInMilliliter.toUintString(),

@@ -36,11 +36,11 @@ fun WeightOverviewView(
                 addBodyWeightDialogViewModel,
                 onSave = {
                     date,
-                        weightInKg,
-                        bodyFatPercentage,
-                        muscleMassInKg,
-                        boneMassInKg,
-                        bodyWaterInPercentage
+                    weightInKg,
+                    bodyFatPercentage,
+                    muscleMassInKg,
+                    boneMassInKg,
+                    bodyWaterInPercentage
                     ->
                     bodyWeightOverviewViewModel.addBodyWeight(
                         date,

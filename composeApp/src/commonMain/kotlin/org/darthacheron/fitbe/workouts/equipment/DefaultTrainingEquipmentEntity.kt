@@ -17,28 +17,29 @@ data class DefaultTrainingEquipmentEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "image_uri") val imageUri: String? = null,
-    val dateUtc: LocalDate = Clock.System
-        .now()
-        .toLocalDateTime(TimeZone.UTC)
-        .date,
+    val dateUtc: LocalDate =
+        Clock.System
+            .now()
+            .toLocalDateTime(TimeZone.UTC)
+            .date
 ) {
     fun toTrainingEquipmentEntity(): TrainingEquipmentEntity =
         TrainingEquipmentEntity(
-        id = id,
-        name = name,
-        imageUri = imageUri,
-        default = true,
-        dateUtc = dateUtc
-    )
+            id = id,
+            name = name,
+            imageUri = imageUri,
+            default = true,
+            dateUtc = dateUtc
+        )
 
     fun toTrainingEquipment(): TrainingEquipment =
         TrainingEquipment(
-        id = id,
-        name = name,
-        imageUri = imageUri,
-        default = true,
-        dateUtc = dateUtc
-    )
+            id = id,
+            name = name,
+            imageUri = imageUri,
+            default = true,
+            dateUtc = dateUtc
+        )
 }
 
 @OptIn(ExperimentalUuidApi::class)

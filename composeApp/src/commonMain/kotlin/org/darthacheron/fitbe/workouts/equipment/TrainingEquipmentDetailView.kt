@@ -71,22 +71,23 @@ import kotlin.uuid.Uuid
 @Composable
 fun TrainingEquipmentDetailView(
     equipmentId: Uuid?,
-    viewModel: TrainingEquipmentDetailViewModel,
+    viewModel: TrainingEquipmentDetailViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val galleryLauncher = rememberFilePickerLauncher(
-        type = FileKitType.Image,
-        mode = FileKitMode.Single,
-        onResult = {
-            if (it != null && uiState.isEditing) {
-                viewModel.onImageUriChange(it.absolutePath())
+    val galleryLauncher =
+        rememberFilePickerLauncher(
+            type = FileKitType.Image,
+            mode = FileKitMode.Single,
+            onResult = {
+                if (it != null && uiState.isEditing) {
+                    viewModel.onImageUriChange(it.absolutePath())
+                }
             }
-        }
-    )
+        )
 
     LaunchedEffect(equipmentId) {
         viewModel.loadEquipment(equipmentId?.toString())
@@ -97,27 +98,29 @@ fun TrainingEquipmentDetailView(
     }
 
     val generalErrorResId = uiState.error.generalError
-    val generalErrorMessage = if (generalErrorResId != null && uiState.error.hasGeneralError) {
-        stringResource(generalErrorResId)
-    } else {
-        null
-    }
+    val generalErrorMessage =
+        if (generalErrorResId != null && uiState.error.hasGeneralError) {
+            stringResource(generalErrorResId)
+        } else {
+            null
+        }
 
     LaunchedEffect(generalErrorMessage) {
         if (generalErrorMessage != null) {
             scope.launch {
                 snackbarHostState.showSnackbar(generalErrorMessage)
-                viewModel.clearGeneralError() // Clear the error after showing Snackbar
+                viewModel.clearGeneralError()
             }
         }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
+            modifier =
+                Modifier
+                    .verticalScroll(scrollState)
+                    .fillMaxSize()
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
         ) {
             if (uiState.isLoading && uiState.equipmentId != null && !uiState.isEditing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -133,8 +136,12 @@ fun TrainingEquipmentDetailView(
                                 imageUri = uiState.imageUri,
                                 imageResource = getEquipmentImage(uiState.imageUri, uiState.default),
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_image),
-                                defaultContentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment),
+                                contentDescription =
+                                    stringResource(Res.string.training_equipment_detail_content_description_image),
+                                defaultContentDescription =
+                                    stringResource(
+                                        Res.string.training_equipment_detail_content_description_default_equipment
+                                    ),
                                 modifier = Modifier.size(256.dp).align(Alignment.Center)
                             )
                             if (uiState.isEditing) {
@@ -145,7 +152,10 @@ fun TrainingEquipmentDetailView(
                                 ) {
                                     Icon(
                                         painter = painterResource(Res.drawable.ic_remove),
-                                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_remove_image)
+                                        contentDescription =
+                                            stringResource(
+                                                Res.string.training_equipment_detail_content_description_remove_image
+                                            )
                                     )
                                 }
                             }
@@ -153,7 +163,10 @@ fun TrainingEquipmentDetailView(
                             ImagePlaceholder(
                                 isEditing = uiState.isEditing,
                                 default = uiState.default,
-                                contentDescription = stringResource(Res.string.training_equipment_detail_content_description_default_equipment)
+                                contentDescription =
+                                    stringResource(
+                                        Res.string.training_equipment_detail_content_description_default_equipment
+                                    )
                             )
                         }
                         if (uiState.isEditing) {
@@ -164,7 +177,10 @@ fun TrainingEquipmentDetailView(
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_photo_library),
-                                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_select_image)
+                                    contentDescription =
+                                        stringResource(
+                                            Res.string.training_equipment_detail_content_description_select_image
+                                        )
                                 )
                             }
                         }
@@ -173,19 +189,18 @@ fun TrainingEquipmentDetailView(
                     OutlinedTextField(
                         value = getEquipmentName(uiState.name, uiState.default),
                         onValueChange = { if (uiState.isEditing) viewModel.onNameChange(it) },
-                        label = { Text(stringResource(Res.string.training_equipment_detail_name)) },
+                        label = { Text(text = stringResource(Res.string.training_equipment_detail_name)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         readOnly = !uiState.isEditing,
                         isError = uiState.error.hasNameError,
                         supportingText = {
                             if (uiState.error.hasNameError) {
-                                Text(stringResource(uiState.error.nameError!!))
+                                Text(text = stringResource(uiState.error.nameError!!))
                             }
                         }
                     )
 
-                    // Display Exercises
                     if (uiState.exercises.isNotEmpty()) {
                         Text(
                             text = stringResource(Res.string.training_equipment_detail_exercises_title),
@@ -194,15 +209,17 @@ fun TrainingEquipmentDetailView(
                         )
                         uiState.exercises.forEach { exercise ->
                             Card(
-                                modifier = Modifier
-                                    .align(Alignment.Start)
-                                    .padding(vertical = 4.dp)
-                                    .clickable(enabled = !uiState.isEditing) { viewModel.navigateToExerciseDetail(exercise.id) },
-                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.Start)
+                                        .padding(vertical = 4.dp)
+                                        .clickable(enabled = !uiState.isEditing) {
+                                            viewModel.navigateToExerciseDetail(exercise.id)
+                                        },
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                             ) {
-                                Row( // This Row might differ if previous changes were not applied as expected
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     FitBeImage(
@@ -225,7 +242,7 @@ fun TrainingEquipmentDetailView(
         }
 
         AnimatedVisibility(
-            visible = uiState.isEditing && uiState.equipmentId != null && uiState.default && uiState.isModifiedFromPersistedDefault,
+            visible = uiState.canResetToDefault,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
             FloatingActionButton(
@@ -235,44 +252,48 @@ fun TrainingEquipmentDetailView(
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_reset_default),
-                    contentDescription = stringResource(Res.string.training_equipment_detail_content_description_reset_to_default)
+                    contentDescription =
+                        stringResource(Res.string.training_equipment_detail_content_description_reset_to_default)
                 )
             }
         }
 
         Row(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(!uiState.isEditing && uiState.equipmentId != null && !uiState.default) {
+            AnimatedVisibility(visible = uiState.canDelete) {
                 FloatingActionButton(
                     onClick = {
                         if (!uiState.isLoading) {
                             viewModel.deleteEquipment()
                         }
                     },
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    containerColor = MaterialTheme.colorScheme.errorContainer
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
-                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_delete)
+                        contentDescription =
+                            stringResource(Res.string.training_equipment_detail_content_description_delete)
                     )
                 }
             }
         }
 
         Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(uiState.isEditing && uiState.equipmentId != null && !uiState.isModifiedFromPersistedDefault) {
+            AnimatedVisibility(uiState.canCancelEditing) {
                 FloatingActionButton(
                     onClick = {
-                        viewModel.loadEquipment(uiState.equipmentId.toString()) // Reload original state
+                        viewModel.loadEquipment(uiState.equipmentId.toString())
                         viewModel.setEditing(false)
                     },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -280,39 +301,45 @@ fun TrainingEquipmentDetailView(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_cancel),
-                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_cancel_editing)
+                        contentDescription =
+                            stringResource(Res.string.training_equipment_detail_content_description_cancel_editing)
                     )
                 }
             }
 
-            AnimatedVisibility(uiState.isEditing) {
+            AnimatedVisibility(uiState.isSaveButtonVisible) {
                 FloatingActionButton(
                     onClick = {
-                        if (!uiState.isLoading && !uiState.error.hasError) {
+                        if (uiState.canSave) {
                             viewModel.saveEquipment()
                         }
                     },
-                    containerColor = if (!uiState.isLoading && !uiState.error.hasError) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.12f
-                    ),
+                    containerColor =
+                        if (uiState.canSave) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                        }
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_save)
+                        contentDescription =
+                            stringResource(Res.string.training_equipment_detail_content_description_save)
                     )
                 }
             }
 
-            AnimatedVisibility(!uiState.isEditing && uiState.equipmentId != null) {
+            AnimatedVisibility(uiState.canEdit) {
                 FloatingActionButton(
                     onClick = {
                         viewModel.setEditing(true)
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_edit),
-                        contentDescription = stringResource(Res.string.training_equipment_detail_content_description_edit)
+                        contentDescription =
+                            stringResource(Res.string.training_equipment_detail_content_description_edit)
                     )
                 }
             }

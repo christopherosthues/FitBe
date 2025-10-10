@@ -42,17 +42,16 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ExercisesDashboardView(
-    exercisesDashboardViewModel: ExercisesDashboardViewModel,
-) {
+fun ExercisesDashboardView(exercisesDashboardViewModel: ExercisesDashboardViewModel) {
     LaunchedEffect(Unit) {
         exercisesDashboardViewModel.updateTopBarConfig()
     }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(300.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -95,7 +94,8 @@ fun ExercisesDashboardView(
                 title = stringResource(Res.string.card_title_training_equipment_overview),
                 imagePainter = painterResource(Res.drawable.ic_training_equipment),
                 onClick = { exercisesDashboardViewModel.navigateToEquipmentOverview() },
-                contentDescription = stringResource(Res.string.card_title_content_description_training_equipment_overview)
+                contentDescription =
+                    stringResource(Res.string.card_title_content_description_training_equipment_overview)
             )
         }
     }
@@ -110,13 +110,14 @@ private fun DashboardCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .height(200.dp)
-            .clickable(onClick = onClick)
-            .semantics { this.contentDescription = contentDescription },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .height(200.dp)
+                .clickable(onClick = onClick)
+                .semantics { this.contentDescription = contentDescription },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -126,16 +127,25 @@ private fun DashboardCard(
                 contentScale = ContentScale.Crop
             )
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
             ) {
                 Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp, topStart = 0.dp, topEnd = 0.dp))
-                        .background(Color.Black.copy(alpha = 0.6f))
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .clip(
+                                shape =
+                                    RoundedCornerShape(
+                                        bottomStart = 16.dp,
+                                        bottomEnd = 16.dp,
+                                        topStart = 0.dp,
+                                        topEnd = 0.dp
+                                    )
+                            ).background(Color.Black.copy(alpha = 0.6f))
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = title,

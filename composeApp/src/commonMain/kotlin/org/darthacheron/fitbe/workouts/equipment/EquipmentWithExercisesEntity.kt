@@ -8,22 +8,23 @@ import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.toExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi
 
-data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, but the @Relation is different
+data class EquipmentWithExercisesEntity(
     @Embedded val equipment: TrainingEquipmentEntity,
     @Relation(
-        parentColumn = "id", // From TrainingEquipmentEntity (the @Embedded entity)
-        entityColumn = "id",   // From ExerciseEntity (the entity in the List)
-        associateBy = Junction(
-            value = ExerciseEquipmentCrossRef::class,
-            parentColumn = "equipmentId", // Column in ExerciseEquipmentCrossRef matching TrainingEquipmentEntity's id
-            entityColumn = "exerciseId"   // Column in ExerciseEquipmentCrossRef matching ExerciseEntity's id
-        )
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy =
+            Junction(
+                value = ExerciseEquipmentCrossRef::class,
+                parentColumn = "equipmentId",
+                entityColumn = "exerciseId"
+            )
     )
     val exercises: List<ExerciseEntity>
 ) {
     @OptIn(ExperimentalUuidApi::class)
-    fun toEquipmentWithExercises(): EquipmentWithExercises {
-        return EquipmentWithExercises(
+    fun toEquipmentWithExercises(): EquipmentWithExercises =
+        EquipmentWithExercises(
             id = equipment.id,
             name = equipment.name,
             default = equipment.default,
@@ -31,20 +32,18 @@ data class EquipmentWithExercisesEntity( // Reusing the name from one-to-many, b
             imageUri = equipment.imageUri,
             exercises = exercises.map { it.toExercise() }
         )
-    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
-fun EquipmentWithExercises.toEquipmentWithExercisesEntity(): EquipmentWithExercisesEntity {
-    return EquipmentWithExercisesEntity(
-        equipment = TrainingEquipmentEntity(
-            id = this.id,
-            name = this.name,
-            imageUri = this.imageUri,
-            default = this.default,
-            dateUtc = this.dateUtc
-        ),
+fun EquipmentWithExercises.toEquipmentWithExercisesEntity(): EquipmentWithExercisesEntity =
+    EquipmentWithExercisesEntity(
+        equipment =
+            TrainingEquipmentEntity(
+                id = this.id,
+                name = this.name,
+                imageUri = this.imageUri,
+                default = this.default,
+                dateUtc = this.dateUtc
+            ),
         exercises = this.exercises.map { it.toExerciseEntity() }
     )
-}
-

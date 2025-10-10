@@ -56,18 +56,25 @@ interface EquipmentDao {
     @Delete
     suspend fun removeFavorite(crossRef: ProfileFavoriteEquipmentCrossRef)
 
-    @Query("""
+    @Query(
+        """
         SELECT equipmentId FROM profile_favorite_equipment_cross_ref
         WHERE profileId = :profileId
-    """)
+        """
+    )
     fun getFavoriteEquipmentIds(profileId: Uuid): Flow<List<Uuid>>
 
-    @Query("""
+    @Query(
+        """
         SELECT EXISTS(
             SELECT 1 FROM profile_favorite_equipment_cross_ref
             WHERE profileId = :profileId
             AND equipmentId = :equipmentId
         )
-    """)
-    fun isFavorite(profileId: Uuid, equipmentId: Uuid): Flow<Boolean>
+        """
+    )
+    fun isFavorite(
+        profileId: Uuid,
+        equipmentId: Uuid
+    ): Flow<Boolean>
 }

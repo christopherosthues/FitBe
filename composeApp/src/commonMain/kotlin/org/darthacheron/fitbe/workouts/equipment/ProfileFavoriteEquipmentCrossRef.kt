@@ -25,7 +25,7 @@ import kotlin.uuid.Uuid
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["equipmentId"])] // Index for faster queries by equipment
+    indices = [Index(value = ["equipmentId"])]
 )
 data class ProfileFavoriteEquipmentCrossRef(
     val profileId: Uuid,

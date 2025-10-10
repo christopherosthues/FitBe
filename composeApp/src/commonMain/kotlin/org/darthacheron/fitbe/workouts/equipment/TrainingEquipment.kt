@@ -14,25 +14,27 @@ open class TrainingEquipment(
     open val name: String,
     open val imageUri: String? = null,
     open val default: Boolean = false,
-    open val dateUtc: LocalDate,
+    open val dateUtc: LocalDate
 )
 
 @Composable
-internal fun getEquipmentName(name: String, default: Boolean): String {
-    return if (default && equipmentList.contains(name)) {
-        DefaultEquipmentResProvider.equipmentNameMap[name]?.let {
-            stringResource(it)
-        } ?: name
+internal fun getEquipmentName(
+    name: String,
+    default: Boolean
+): String =
+    if (default && equipmentList.contains(name)) {
+        DefaultEquipmentResProvider.equipmentNameMap[name]?.let { stringResource(it) } ?: name
     } else {
         name
     }
-}
 
 @Composable
-internal fun getEquipmentImage(imageUri: String?, default: Boolean): DrawableResource? {
-    return if (default && imageUri != null && imageUri.startsWith("default_training_equipment_")) {
+internal fun getEquipmentImage(
+    imageUri: String?,
+    default: Boolean
+): DrawableResource? =
+    if (default && imageUri != null && imageUri.startsWith("default_training_equipment_")) {
         DefaultEquipmentResProvider.equipmentImageMap[imageUri]
     } else {
         null
     }
-}

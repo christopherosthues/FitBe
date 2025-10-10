@@ -18,4 +18,22 @@ data class AddEditTrainingEquipmentUiState(
     val isModifiedFromPersistedDefault: Boolean = false,
     val exercises: List<Exercise> = emptyList(),
     val isFavorite: Boolean = false
-)
+) {
+    val canCancelEditing: Boolean
+        get() = isEditing && equipmentId != null && !isModifiedFromPersistedDefault
+
+    val canEdit: Boolean
+        get() = !isEditing && equipmentId != null
+
+    val canSave: Boolean
+        get() = !isLoading && !error.hasError
+
+    val canDelete: Boolean
+        get() = !isEditing && equipmentId != null && !default
+
+    val canResetToDefault: Boolean
+        get() = isEditing && equipmentId != null && default && isModifiedFromPersistedDefault
+
+    val isSaveButtonVisible: Boolean
+        get() = isEditing
+}

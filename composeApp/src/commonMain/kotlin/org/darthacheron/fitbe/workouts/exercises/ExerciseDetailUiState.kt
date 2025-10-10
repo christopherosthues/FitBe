@@ -40,6 +40,12 @@ data class ExerciseDetailUiState(
     val canEdit: Boolean
         get() = !isEditing && exerciseId != null
 
+    val isSaveButtonVisible: Boolean
+        get() = isEditing
+
+    val canSave: Boolean
+        get() = !isLoading && !error.hasError
+
     val canStartWorkout: Boolean
         get() = !isEditing && exerciseId != null
 }

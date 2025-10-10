@@ -109,7 +109,8 @@ class TrainingEquipmentViewModel(
             _isLoadingEquipment,
             _isLoadingFavorites,
             _equipmentListErrorMessage
-        ) { equipment: List<TrainingEquipment>,
+        ) {
+            equipment: List<TrainingEquipment>,
             favorites: Set<Uuid>,
             isLoadingEquip: Boolean,
             isLoadingFav: Boolean,
@@ -122,27 +123,30 @@ class TrainingEquipmentViewModel(
         }
 
     val uiState: StateFlow<TrainingEquipmentScreenUiState> =
-        combinedFiveFlows.combine(
-            _favoriteStateErrorMessage
-        ) { intermediateData: Pair<Pair<List<TrainingEquipment>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>,
-            favError: StringResource?
-            ->
-            val (pair1, triple1) = intermediateData
-            val (equipment, favorites) = pair1
-            val (isLoadingEquip, isLoadingFav, equipError) = triple1
+        combinedFiveFlows
+            .combine(
+                _favoriteStateErrorMessage
+            ) {
+                intermediateData:
+                    Pair<Pair<List<TrainingEquipment>, Set<Uuid>>, Triple<Boolean, Boolean, StringResource?>>,
+                favError: StringResource?
+                ->
+                val (pair1, triple1) = intermediateData
+                val (equipment, favorites) = pair1
+                val (isLoadingEquip, isLoadingFav, equipError) = triple1
 
-            TrainingEquipmentScreenUiState(
-                isLoading = isLoadingEquip || isLoadingFav,
-                rawEquipmentList = equipment,
-                favoriteEquipmentIds = favorites,
-                equipmentListError = equipError,
-                favoriteStateError = favError
+                TrainingEquipmentScreenUiState(
+                    isLoading = isLoadingEquip || isLoadingFav,
+                    rawEquipmentList = equipment,
+                    favoriteEquipmentIds = favorites,
+                    equipmentListError = equipError,
+                    favoriteStateError = favError
+                )
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                TrainingEquipmentScreenUiState(isLoading = true)
             )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            TrainingEquipmentScreenUiState(isLoading = true)
-        )
 
     fun navigateToTrainingEquipmentDetail(id: Uuid?) {
         navHostController.navigate(Screen.TrainingEquipmentDetail(id?.toString()))

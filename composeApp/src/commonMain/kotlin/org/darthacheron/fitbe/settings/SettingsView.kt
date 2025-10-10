@@ -95,9 +95,8 @@ fun SettingsView(
             TopAppBar(
                 title = { Text(stringResource(Res.string.top_bar_title_settings)) },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                        viewModel.revertChanges() 
+                    IconButton(onClick = {
+                        viewModel.revertChanges()
                         navHostController.navigateUp()
                     }) {
                         Icon(

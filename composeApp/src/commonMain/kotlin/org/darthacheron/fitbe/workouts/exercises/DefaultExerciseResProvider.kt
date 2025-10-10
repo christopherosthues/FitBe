@@ -367,7 +367,7 @@ object DefaultExerciseResProvider {
             "default_exercise_incline_bench_press_barbell" to Res.string.default_exercise_incline_bench_press_barbell_name,
             "default_exercise_incline_bench_press_dumbbell" to Res.string.default_exercise_incline_bench_press_dumbbell_name,
             "default_exercise_around_the_world_dumbbell" to Res.string.default_exercise_around_the_world_dumbbell_name,
-            "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_name,
+            "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_name
         )
 
     val exerciseGuideMap: Map<String, StringResource> =
@@ -491,7 +491,7 @@ object DefaultExerciseResProvider {
             "default_exercise_incline_bench_press_barbell" to Res.string.default_exercise_incline_bench_press_barbell_guide,
             "default_exercise_incline_bench_press_dumbbell" to Res.string.default_exercise_incline_bench_press_dumbbell_guide,
             "default_exercise_around_the_world_dumbbell" to Res.string.default_exercise_around_the_world_dumbbell_guide,
-            "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_guide,
+            "default_exercise_around_the_world_plate" to Res.string.default_exercise_around_the_world_plate_guide
         )
 
     val exerciseImageMap: Map<String, DrawableResource> =

@@ -308,15 +308,15 @@ fun ExerciseDetailView(
                 }
             }
 
-            AnimatedVisibility(visible = uiState.isEditing) {
+            AnimatedVisibility(visible = uiState.isSaveButtonVisible) {
                 FloatingActionButton(
                     onClick = {
-                        if (!uiState.isLoading && !uiState.error.hasError) {
+                        if (uiState.canSave) {
                             viewModel.saveExercise()
                         }
                     },
                     containerColor =
-                        if (!uiState.isLoading && !uiState.error.hasError) {
+                        if (uiState.canSave) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
@@ -576,13 +576,11 @@ private fun RecommendedForListView(
                     expanded = recommendedForDropdownExpanded,
                     onExpandedChange = {
                         recommendedForDropdownExpanded = !recommendedForDropdownExpanded
-                    },
+                    }
                 ) {
                     TextButton(
                         onClick = { recommendedForDropdownExpanded = true },
-                        modifier = Modifier.menuAnchor(
-                            MenuAnchorType.SecondaryEditable
-                        )
+                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable)
                     ) {
                         Icon(
                             painterResource(Res.drawable.ic_add),

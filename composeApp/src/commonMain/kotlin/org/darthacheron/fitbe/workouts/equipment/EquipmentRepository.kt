@@ -7,9 +7,11 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class EquipmentRepository(private val equipmentDao: EquipmentDao) {
+class EquipmentRepository(
+    private val equipmentDao: EquipmentDao
+) {
     fun getAllEquipments(): Flow<List<TrainingEquipment>> =
-        equipmentDao.getAllEquipments().map { it.map { e ->  e.toTrainingEquipment() } }
+        equipmentDao.getAllEquipments().map { it.map { e -> e.toTrainingEquipment() } }
 
     fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipment?> =
         equipmentDao.getEquipmentById(equipmentId).map { it?.toTrainingEquipment() }
@@ -32,18 +34,24 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
         equipmentDao.resetEquipmentToDefault(equipmentId)
     }
 
-    // Favorite methods
-    suspend fun addFavorite(profileId: Uuid, equipmentId: Uuid) {
+    suspend fun addFavorite(
+        profileId: Uuid,
+        equipmentId: Uuid
+    ) {
         equipmentDao.addFavorite(ProfileFavoriteEquipmentCrossRef(profileId, equipmentId))
     }
 
-    suspend fun removeFavorite(profileId: Uuid, equipmentId: Uuid) {
+    suspend fun removeFavorite(
+        profileId: Uuid,
+        equipmentId: Uuid
+    ) {
         equipmentDao.removeFavorite(ProfileFavoriteEquipmentCrossRef(profileId, equipmentId))
     }
 
-    fun getFavoriteEquipmentIds(profileId: Uuid): Flow<List<Uuid>> = // Renamed for clarity from Dao
-        equipmentDao.getFavoriteEquipmentIds(profileId)
+    fun getFavoriteEquipmentIds(profileId: Uuid): Flow<List<Uuid>> = equipmentDao.getFavoriteEquipmentIds(profileId)
 
-    fun isFavorite(profileId: Uuid, equipmentId: Uuid): Flow<Boolean> =
-        equipmentDao.isFavorite(profileId, equipmentId)
+    fun isFavorite(
+        profileId: Uuid,
+        equipmentId: Uuid
+    ): Flow<Boolean> = equipmentDao.isFavorite(profileId, equipmentId)
 }
