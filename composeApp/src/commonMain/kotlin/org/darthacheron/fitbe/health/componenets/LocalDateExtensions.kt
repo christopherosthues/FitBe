@@ -1,5 +1,6 @@
 package org.darthacheron.fitbe.health.componenets
 
+import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.month_april
 import fitbe.composeapp.generated.resources.month_august
@@ -15,7 +16,10 @@ import fitbe.composeapp.generated.resources.month_october
 import fitbe.composeapp.generated.resources.month_september
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 fun LocalDate.monthResourceString(): StringResource =
@@ -53,3 +57,16 @@ fun List<LocalDate>.representativeDates(): Set<LocalDate> {
         }
     return actualDatesForLabels
 }
+
+@Composable
+fun LocalDate.dateLabel(dateUnit: DateUnit): String =
+    when (dateUnit) {
+        DateUnit.DAY -> this.toString()
+        DateUnit.WEEK -> "W${this.isoWeekAndYear().second}/${this.year}"
+        DateUnit.MONTH -> {
+            val monthResource = this.monthResourceString()
+            "${stringResource(monthResource)}/${this.year}"
+        }
+
+        DateUnit.YEAR -> this.year.toString()
+    }

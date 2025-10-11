@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
@@ -53,6 +54,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
+import org.darthacheron.fitbe.health.componenets.dateLabel
 import org.darthacheron.fitbe.health.componenets.monthResourceString
 import org.darthacheron.fitbe.health.componenets.representativeDates
 import org.darthacheron.fitbe.utils.isoWeekAndYear
@@ -91,20 +93,13 @@ fun PlotBeverages(
             xAxisLabels = { labelDate ->
                 if (!thumbnail && labelDate in actualDatesForLabels) {
                     Text(
-                        text =
-                            when (dateRange.dateUnit) {
-                                DateUnit.DAY -> labelDate.toString()
-                                DateUnit.WEEK -> "W${labelDate.isoWeekAndYear().second}/${labelDate.year}"
-                                DateUnit.MONTH -> {
-                                    val monthResource = labelDate.monthResourceString()
-                                    "${stringResource(monthResource)}/${labelDate.year}"
-                                }
-
-                                DateUnit.YEAR -> labelDate.year.toString()
-                            },
+                        text = labelDate.dateLabel(dateRange.dateUnit),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(top = 2.dp),
+                        modifier =
+                            Modifier
+                                .padding(top = 2.dp)
+                                .clearAndSetSemantics { },
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
@@ -118,7 +113,10 @@ fun PlotBeverages(
                         text = it.toString(),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(top = 2.dp),
+                        modifier =
+                            Modifier
+                                .padding(top = 2.dp)
+                                .clearAndSetSemantics { },
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
