@@ -85,7 +85,7 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_arrow_back),
-                            contentDescription = null
+                            contentDescription = overviewViewModel.movePastContentDescription(dateRange.dateUnit)
                         )
                     }
 
@@ -100,7 +100,7 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_arrow_forward),
-                            contentDescription = null
+                            contentDescription = overviewViewModel.moveFutureContentDescription(dateRange.dateUnit)
                         )
                     }
                 }
@@ -113,7 +113,10 @@ fun <Error : UiStateError, State : UiState<Error>> OverviewView(
                 containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
-                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_add),
+                    contentDescription = stringResource(overviewViewModel.addButtonContentDescription)
+                )
             }
         }
     }

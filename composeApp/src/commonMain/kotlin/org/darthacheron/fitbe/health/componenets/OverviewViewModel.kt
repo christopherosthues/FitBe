@@ -1,5 +1,9 @@
 package org.darthacheron.fitbe.health.componenets
 
+import androidx.compose.runtime.Composable
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.overview_content_description_move_future
+import fitbe.composeapp.generated.resources.overview_content_description_move_past
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
@@ -14,6 +18,7 @@ import org.darthacheron.fitbe.ui.UiStateError
 import org.darthacheron.fitbe.utils.minusOne
 import org.darthacheron.fitbe.utils.plusOne
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.days
 
 abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
@@ -35,6 +40,18 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val errorMessage = MutableStateFlow<StringResource?>(null)
 
     abstract val uiState: StateFlow<State>
+
+    abstract val addButtonContentDescription: StringResource
+
+    @Composable
+    fun movePastContentDescription(dateUnit: DateUnit): String {
+        return stringResource(Res.string.overview_content_description_move_past, dateUnit.localizedDateUnit())
+    }
+
+    @Composable
+    fun moveFutureContentDescription(dateUnit: DateUnit): String {
+        return stringResource(Res.string.overview_content_description_move_future, dateUnit.localizedDateUnit())
+    }
 
     fun movePast() {
         val range = dateRangeFlow.value.minusOne()

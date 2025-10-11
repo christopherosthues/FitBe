@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_content_description_add_beverage
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
@@ -51,6 +52,9 @@ class BeverageOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
+
+    override val addButtonContentDescription: StringResource
+        get() = Res.string.beverages_overview_content_description_add_beverage
 
     val targetBeverages: StateFlow<UInt> =
         settingsRepository
