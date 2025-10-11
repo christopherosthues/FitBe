@@ -70,6 +70,7 @@ import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.componenets.monthResourceString
+import org.darthacheron.fitbe.health.componenets.representativeDates
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.isoWeekAndYear
@@ -109,26 +110,7 @@ fun PlotBodyWeights(
             }
         }
     ) {
-        val maxConfigurableLabels = 7
-        val actualDatesForLabels: Set<LocalDate> =
-            if (dates.isEmpty()) {
-                emptySet()
-            } else if (dates.size <= maxConfigurableLabels) {
-                dates.toSet()
-            } else { // dates.size > maxConfigurableLabels (which is 7)
-                val selectedDates = mutableSetOf<LocalDate>()
-                // maxConfigurableLabels is 7, so maxConfigurableLabels - 1 is 6 (not zero).
-                // dates.size > 7, so dates.size - 1 is at least 7.
-                for (i in 0 until maxConfigurableLabels) { // Loop i from 0 to 6
-                    // Calculate the ideal proportional position from 0.0 to 1.0
-                    val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
-                    // Map this ratio to an index in the 'dates' list
-                    val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
-                    // Add the date at the calculated index, ensuring it's within bounds
-                    selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
-                }
-                selectedDates
-            }
+        val actualDatesForLabels = dates.representativeDates()
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_add_dialog_amount
 import fitbe.composeapp.generated.resources.beverages_add_dialog_cancel
+import fitbe.composeapp.generated.resources.beverages_add_dialog_content_description_date
 import fitbe.composeapp.generated.resources.beverages_add_dialog_name
 import fitbe.composeapp.generated.resources.beverages_add_dialog_save
 import fitbe.composeapp.generated.resources.beverages_add_dialog_title
@@ -61,7 +62,7 @@ fun AddBeverageDialog(
                         Text(text = "${uiState.date}")
                         Icon(
                             painter = painterResource(Res.drawable.ic_date_range),
-                            contentDescription = null
+                            contentDescription = stringResource(Res.string.beverages_add_dialog_content_description_date)
                         )
                     }
                 }

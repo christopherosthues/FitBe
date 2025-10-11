@@ -601,6 +601,10 @@
     <string name="fluid_unit_deciliter">dl</string>
     <string name="fluid_unit_liter">l</string>
 
+    <!-- Health view -->
+    <string name="health_view_content_description_overview">Switch to daily health data</string>
+    <string name="health_view_content_description_detail">Switch to health data overview</string>
+
     <!-- Overview view -->
     <plurals name="overview_content_description_date_unit">
         <item quantity="zero">one %1$s</item>
@@ -627,6 +631,7 @@
 
     <!-- Beverage Add Dialog -->
     <string name="beverages_add_dialog_title">Add Beverage</string>
+    <string name="beverages_add_dialog_content_description_date">Select date</string>
     <string name="beverages_add_dialog_amount">Amount</string>
     <string name="beverages_add_dialog_name">Beverage Name</string>
     <string name="beverages_add_dialog_unit">Unit</string>
@@ -805,8 +810,4 @@
     <string name="sleep_add_dialog_error_start_time">The start time has to be before the end time.</string>
     <string name="sleep_add_dialog_error_end_time">The end time has to be after the start time.</string>
     <string name="sleep_add_dialog_error_time_interval">The provided time interval overlaps with an existing tracked sleep.</string>
-
-    <!-- Health view -->
-    <string name="health_view_content_description_overview">Display overview of health data</string>
-    <string name="health_view_content_description_detail">Display the daily health data</string>
 </resources>

@@ -53,6 +53,7 @@ import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.componenets.monthResourceString
+import org.darthacheron.fitbe.health.componenets.representativeDates
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -77,21 +78,7 @@ fun PlotSleeps(
             }
         }
     ) {
-        val maxConfigurableLabels = 7
-        val actualDatesForLabels: Set<LocalDate> =
-            if (dates.isEmpty()) {
-                emptySet()
-            } else if (dates.size <= maxConfigurableLabels) {
-                dates.toSet()
-            } else {
-                val selectedDates = mutableSetOf<LocalDate>()
-                for (i in 0 until maxConfigurableLabels) {
-                    val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
-                    val indexInDates = (idealPositionRatio * (dates.size - 1)).roundToInt()
-                    selectedDates.add(dates[indexInDates.coerceIn(0, dates.size - 1)])
-                }
-                selectedDates
-            }
+        val actualDatesForLabels = dates.representativeDates()
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),

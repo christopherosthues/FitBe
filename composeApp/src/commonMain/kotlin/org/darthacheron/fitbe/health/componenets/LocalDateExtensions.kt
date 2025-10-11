@@ -16,6 +16,7 @@ import fitbe.composeapp.generated.resources.month_september
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import org.jetbrains.compose.resources.StringResource
+import kotlin.math.roundToInt
 
 fun LocalDate.monthResourceString(): StringResource =
     when (this.month) {
@@ -33,3 +34,22 @@ fun LocalDate.monthResourceString(): StringResource =
         Month.DECEMBER -> Res.string.month_december
         else -> Res.string.month_january
     }
+
+fun List<LocalDate>.representativeDates(): Set<LocalDate> {
+    val maxConfigurableLabels = 7
+    val actualDatesForLabels: Set<LocalDate> =
+        if (this.isEmpty()) {
+            emptySet()
+        } else if (this.size <= maxConfigurableLabels) {
+            this.toSet()
+        } else {
+            val selectedDates = mutableSetOf<LocalDate>()
+            for (i in 0 until maxConfigurableLabels) {
+                val idealPositionRatio = i.toDouble() / (maxConfigurableLabels - 1)
+                val indexInDates = (idealPositionRatio * (this.size - 1)).roundToInt()
+                selectedDates.add(this[indexInDates.coerceIn(0, this.size - 1)])
+            }
+            selectedDates
+        }
+    return actualDatesForLabels
+}
