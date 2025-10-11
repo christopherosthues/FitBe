@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.AB_WHEEL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.AIR_BIKE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.ANKLE_WEIGHTS
@@ -19,7 +20,6 @@ import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.BOD
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.BOSU_BALL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.BULGARIAN_BAG
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.CABLE_MACHINE
-import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.CHEST_PRESS_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.DIP_BARS
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.DIP_STATION
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.DUMBBELL
@@ -27,7 +27,6 @@ import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.ELL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.EZ_CURL_BAR
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.FOAM_ROLLER
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.GYMNASTIC_RINGS
-import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.JUMP_ROPE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.KETTLEBELL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.LANDMINE_ATTACHMENT
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.LAT_PULLDOWN_MACHINE
@@ -43,7 +42,6 @@ import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.PUS
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.RESISTANCE_BANDS
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.ROWING_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SANDBAG
-import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SEATED_ROW_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SHOULDER_PRESS_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SLAM_BALL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SMITH_MACHINE
@@ -61,6 +59,124 @@ import org.darthacheron.fitbe.workouts.equipment.EquipmentDao
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.equipment.toDefaultTrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseEquipmentCrossRef
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.AB_WHEEL_ROLLOUTS_KNEES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.AB_WHEEL_ROLLOUTS_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.AIR_BIKE_CARDIO
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ANKLE_WEIGHT_GLUTE_KICKBACKS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ANKLE_WEIGHT_LEG_RAISES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ANKLE_WEIGHT_REVERSE_CRUNCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.AROUND_THE_WORLD_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.AROUND_THE_WORLD_PLATE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ASSISTED_PULL_UPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BATTLE_ROPES_WAVES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BENCH_PRESS_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BENCH_PRESS_BARBELL_POWER_RACK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BENCH_PRESS_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BENCH_PRESS_SMITH_MACHINE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BICYCLE_CRUNCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BOX_JUMPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BOX_JUMPS_CALF_FOCUS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.BURPEES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CABLE_CRUNCHES_KNEELING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CABLE_CRUNCHES_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_BARBELL_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_BODYWEIGHT_SEATED
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_BODYWEIGHT_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_DUMBBELL_SEATED
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_DUMBBELL_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_SINGLE_LEG_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_SINGLE_LEG_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CALF_RAISES_SMITH_MACHINE_STANDING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CAPTAINS_CHAIR_LEG_RAISES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CRUNCHES_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.CRUNCHES_WEIGHTED_PLATE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.DEADLIFT_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.DECLINE_CRUNCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.DECLINE_PUSH_UPS_FEET_ON_PLYO_BOX
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.DIP_STATION_LEG_RAISES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.DUMBBELL_SIDE_BENDS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_CLOSE_GRIP_BENCH_PRESS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_CURL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_PREACHER_CURL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_REVERSE_CURL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_SKULLCRUSHER
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.EZ_BAR_UPRIGHT_ROW
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.FLUTTER_KICKS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.GOBLET_SQUAT_KETTLEBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.HANGING_KNEE_RAISES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.HANGING_LEG_RAISES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.HEEL_TOUCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.INCLINE_BENCH_PRESS_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.INCLINE_BENCH_PRESS_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.INCLINE_REVERSE_CRUNCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.JUMPING_JACKS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_CLEAN_AND_PRESS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_DEADLIFTS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_FARMERS_WALK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_HALO
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_LUNGES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_RUSSIAN_TWISTS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_SINGLE_ARM_ROWS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_SNATCH
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_SWINGS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_TURKISH_GET_UP
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.KETTLEBELL_WINDMILL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LANDMINE_TWISTS_ATTACHMENT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LANDMINE_TWISTS_CORNER
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LUNGES_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LUNGES_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LUNGES_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LYING_LEG_RAISES_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.LYING_LEG_RAISES_DUMBBELL_BETWEEN_FEET
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.MEDICINE_BALL_OVERHEAD_SLAMS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.MEDICINE_BALL_RUSSIAN_TWISTS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.MEDICINE_BALL_WOODCHOPPERS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.MOUNTAIN_CLIMBERS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.NEGATIVE_PULL_UPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.OVERHEAD_PRESS_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.OVERHEAD_PRESS_BARBELL_POWER_RACK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.OVERHEAD_PRESS_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.OVERHEAD_PRESS_SMITH_MACHINE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PLANK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PLATE_FRONT_RAISE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PLATE_HALOS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PLYO_BOX_STEP_UPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PULL_UPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PUSH_UPS_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.PUSH_UPS_HANDLES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.RACK_PULLS_BARBELL_POWER_RACK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.REVERSE_CRUNCHES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ROMANIAN_DEADLIFT_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ROMANIAN_DEADLIFT_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.ROWING_MACHINE_CARDIO
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SANDBAG_BEAR_HUG_SQUATS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SANDBAG_CLEANS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SANDBAG_SHOULDER_TO_SHOULDER_PRESS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SIDE_LUNGES_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SIDE_LUNGES_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SIT_UPS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SIT_UPS_WEIGHTED_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SIT_UPS_WEIGHTED_PLATE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SLAM_BALL_GROUND_TO_OVERHEAD
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SLAM_BALL_OVER_SHOULDER_TOSS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SQUAT_BARBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SQUAT_BARBELL_POWER_RACK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SQUAT_BODYWEIGHT
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SQUAT_DUMBBELL
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.SQUAT_SMITH_MACHINE
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.TREADMILL_RUNNING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.TREADMILL_WALKING
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.TRICEPS_DIPS_DIP_STATION
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WALL_BALL_SHOTS
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WALL_BALL_SQUAT_AND_PRESS_NO_THROW
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WEIGHTED_DIPS_DIP_STATION
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WEIGHTED_PLANK_PLATE_ON_BACK
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WOODCHOPPERS_CABLE_HIGH_TO_LOW
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WOODCHOPPERS_DUMBBELL_HIGH_TO_LOW
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WOODCHOPPERS_KETTLEBELL_HIGH_TO_LOW
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WRIST_WEIGHT_ARM_CIRCLES
+import org.darthacheron.fitbe.workouts.exercises.DefaultExerciseResProvider.WRIST_WEIGHT_SHADOW_BOXING
 import org.darthacheron.fitbe.workouts.exercises.ExerciseDao
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
@@ -86,7 +202,7 @@ internal val equipmentList =
         BOSU_BALL,
         BULGARIAN_BAG,
         CABLE_MACHINE,
-        CHEST_PRESS_MACHINE,
+        DefaultEquipmentResProvider.CHEST_PRESS_MACHINE,
         DIP_BARS,
         DIP_STATION,
         DUMBBELL,
@@ -94,7 +210,7 @@ internal val equipmentList =
         EZ_CURL_BAR,
         FOAM_ROLLER,
         GYMNASTIC_RINGS,
-        JUMP_ROPE,
+        DefaultEquipmentResProvider.JUMP_ROPE,
         KETTLEBELL,
         LANDMINE_ATTACHMENT,
         LAT_PULLDOWN_MACHINE,
@@ -110,7 +226,7 @@ internal val equipmentList =
         RESISTANCE_BANDS,
         ROWING_MACHINE,
         SANDBAG,
-        SEATED_ROW_MACHINE,
+        DefaultEquipmentResProvider.SEATED_ROW_MACHINE,
         SHOULDER_PRESS_MACHINE,
         SLAM_BALL,
         SMITH_MACHINE,
@@ -137,259 +253,259 @@ internal data class ExerciseSeedData(
 internal val exerciseList: List<ExerciseSeedData> =
     listOf(
         ExerciseSeedData(
-            key = "default_exercise_squat_bodyweight",
+            key = SQUAT_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_squat_barbell",
+            key = SQUAT_BARBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, SQUAT_RACK)
         ),
         ExerciseSeedData(
-            key = "default_exercise_squat_dumbbell",
+            key = SQUAT_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_goblet_squat_kettlebell",
+            key = GOBLET_SQUAT_KETTLEBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_deadlift_barbell",
+            key = DEADLIFT_BARBELL,
             muscleGroups = listOf(MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.BACK, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_romanian_deadlift_dumbbell",
+            key = ROMANIAN_DEADLIFT_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.BACK),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_romanian_deadlift_barbell",
+            key = ROMANIAN_DEADLIFT_BARBELL,
             muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.BACK),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_bench_press_barbell",
+            key = BENCH_PRESS_BARBELL,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_bench_press_dumbbell",
+            key = BENCH_PRESS_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_overhead_press_barbell",
+            key = OVERHEAD_PRESS_BARBELL,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_overhead_press_dumbbell",
+            key = OVERHEAD_PRESS_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_pull_ups",
+            key = PULL_UPS,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PULL_UP_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_push_ups_bodyweight",
+            key = PUSH_UPS_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_push_ups_handles",
+            key = PUSH_UPS_HANDLES,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PUSH_UP_HANDLES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_lunges_bodyweight",
+            key = LUNGES_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_lunges_dumbbell",
+            key = LUNGES_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_lunges_barbell",
+            key = LUNGES_BARBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sit_ups",
+            key = SIT_UPS,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_plank",
+            key = PLANK,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.TIMED,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_jumping_jacks",
+            key = JUMPING_JACKS,
             muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.CARDIO),
             recommendedFor = listOf(RecommendedFor.Warmup),
             exerciseType = ExerciseType.TIMED,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_side_lunges_bodyweight",
+            key = SIDE_LUNGES_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ADDUCTORS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_side_lunges_dumbbell",
+            key = SIDE_LUNGES_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ADDUCTORS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_burpees",
+            key = BURPEES,
             muscleGroups = listOf(MuscleGroup.FULL_BODY, MuscleGroup.CARDIO, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_mountain_climbers",
+            key = MOUNTAIN_CLIMBERS,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.QUADS, MuscleGroup.SHOULDERS, MuscleGroup.CARDIO),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.TIMED,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_rack_pulls_barbell_power_rack",
+            key = RACK_PULLS_BARBELL_POWER_RACK,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, POWER_RACK)
         ),
         ExerciseSeedData(
-            key = "default_exercise_squat_barbell_power_rack",
+            key = SQUAT_BARBELL_POWER_RACK,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, POWER_RACK)
         ),
         ExerciseSeedData(
-            key = "default_exercise_bench_press_barbell_power_rack",
+            key = BENCH_PRESS_BARBELL_POWER_RACK,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, BENCH, POWER_RACK)
         ),
         ExerciseSeedData(
-            key = "default_exercise_overhead_press_barbell_power_rack",
+            key = OVERHEAD_PRESS_BARBELL_POWER_RACK,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, POWER_RACK)
         ),
         ExerciseSeedData(
-            key = "default_exercise_squat_smith_machine",
+            key = SQUAT_SMITH_MACHINE,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(SMITH_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_bench_press_smith_machine",
+            key = BENCH_PRESS_SMITH_MACHINE,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(SMITH_MACHINE, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_overhead_press_smith_machine",
+            key = OVERHEAD_PRESS_SMITH_MACHINE,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(SMITH_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_chest_press_machine",
+            key = DefaultExerciseResProvider.CHEST_PRESS_MACHINE,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
-            equipmentKeys = listOf(CHEST_PRESS_MACHINE)
+            equipmentKeys = listOf(DefaultEquipmentResProvider.CHEST_PRESS_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_air_bike_cardio",
+            key = AIR_BIKE_CARDIO,
             muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.FULL_BODY),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.TIMED,
             equipmentKeys = listOf(AIR_BIKE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_treadmill_running",
+            key = TREADMILL_RUNNING,
             muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.DISTANCE_TIMED,
             equipmentKeys = listOf(TREADMILL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_treadmill_walking",
+            key = TREADMILL_WALKING,
             muscleGroups = listOf(MuscleGroup.CARDIO, MuscleGroup.QUADS, MuscleGroup.HAMSTRINGS, MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.DISTANCE_TIMED,
             equipmentKeys = listOf(TREADMILL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_seated_row_machine",
+            key = DefaultExerciseResProvider.SEATED_ROW_MACHINE,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
-            equipmentKeys = listOf(SEATED_ROW_MACHINE)
+            equipmentKeys = listOf(DefaultEquipmentResProvider.SEATED_ROW_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_rowing_machine_cardio",
+            key = ROWING_MACHINE_CARDIO,
             muscleGroups =
                 listOf(
                     MuscleGroup.CARDIO,
@@ -406,7 +522,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(ROWING_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_battle_ropes_waves",
+            key = BATTLE_ROPES_WAVES,
             muscleGroups =
                 listOf(
                     MuscleGroup.SHOULDERS,
@@ -421,7 +537,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(BATTLE_ROPES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_swings",
+            key = KETTLEBELL_SWINGS,
             muscleGroups =
                 listOf(
                     MuscleGroup.GLUTES,
@@ -435,14 +551,14 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_single_arm_rows",
+            key = KETTLEBELL_SINGLE_ARM_ROWS,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_turkish_get_up",
+            key = KETTLEBELL_TURKISH_GET_UP,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -456,21 +572,21 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_halo",
+            key = KETTLEBELL_HALO,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS, MuscleGroup.TRICEPS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_windmill",
+            key = KETTLEBELL_WINDMILL,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_clean_and_press",
+            key = KETTLEBELL_CLEAN_AND_PRESS,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -485,7 +601,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_snatch",
+            key = KETTLEBELL_SNATCH,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -500,14 +616,14 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_russian_twists",
+            key = KETTLEBELL_RUSSIAN_TWISTS,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_farmers_walk",
+            key = KETTLEBELL_FARMERS_WALK,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -523,154 +639,154 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_lunges",
+            key = KETTLEBELL_LUNGES,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.HAMSTRINGS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_kettlebell_deadlifts",
+            key = KETTLEBELL_DEADLIFTS,
             muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES, MuscleGroup.BACK, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_curl",
+            key = EZ_BAR_CURL,
             muscleGroups = listOf(MuscleGroup.BICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_preacher_curl",
+            key = EZ_BAR_PREACHER_CURL,
             muscleGroups = listOf(MuscleGroup.BICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_reverse_curl",
+            key = EZ_BAR_REVERSE_CURL,
             muscleGroups = listOf(MuscleGroup.FOREARMS, MuscleGroup.BICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_skullcrusher",
+            key = EZ_BAR_SKULLCRUSHER,
             muscleGroups = listOf(MuscleGroup.TRICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_close_grip_bench_press",
+            key = EZ_BAR_CLOSE_GRIP_BENCH_PRESS,
             muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ez_bar_upright_row",
+            key = EZ_BAR_UPRIGHT_ROW,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.BICEPS, MuscleGroup.BACK),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(EZ_CURL_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_triceps_dips_dip_station",
+            key = TRICEPS_DIPS_DIP_STATION,
             muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(DIP_STATION)
         ),
         ExerciseSeedData(
-            key = "default_exercise_weighted_dips_dip_station",
+            key = WEIGHTED_DIPS_DIP_STATION,
             muscleGroups = listOf(MuscleGroup.TRICEPS, MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DIP_STATION, WEIGHT_PLATES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_dip_station_leg_raises",
+            key = DIP_STATION_LEG_RAISES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(DIP_STATION)
         ),
         ExerciseSeedData(
-            key = "default_exercise_plate_halos",
+            key = PLATE_HALOS,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WEIGHT_PLATES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_plate_front_raise",
+            key = PLATE_FRONT_RAISE,
             muscleGroups = listOf(MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WEIGHT_PLATES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_weighted_plank_plate_on_back",
+            key = WEIGHTED_PLANK_PLATE_ON_BACK,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_TIMED,
             equipmentKeys = listOf(WEIGHT_PLATES, BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ankle_weight_leg_raises",
+            key = ANKLE_WEIGHT_LEG_RAISES,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.QUADS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(ANKLE_WEIGHTS)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ankle_weight_glute_kickbacks",
+            key = ANKLE_WEIGHT_GLUTE_KICKBACKS,
             muscleGroups = listOf(MuscleGroup.GLUTES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(ANKLE_WEIGHTS)
         ),
         ExerciseSeedData(
-            key = "default_exercise_wrist_weight_shadow_boxing",
+            key = WRIST_WEIGHT_SHADOW_BOXING,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.BICEPS, MuscleGroup.TRICEPS, MuscleGroup.CARDIO),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.WEIGHT_TIMED,
             equipmentKeys = listOf(WRIST_WEIGHTS)
         ),
         ExerciseSeedData(
-            key = "default_exercise_wrist_weight_arm_circles",
+            key = WRIST_WEIGHT_ARM_CIRCLES,
             muscleGroups = listOf(MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Warmup),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WRIST_WEIGHTS)
         ),
         ExerciseSeedData(
-            key = "default_exercise_box_jumps",
+            key = BOX_JUMPS,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.CALVES, MuscleGroup.CARDIO),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PLYO_BOX)
         ),
         ExerciseSeedData(
-            key = "default_exercise_plyo_box_step_ups",
+            key = PLYO_BOX_STEP_UPS,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PLYO_BOX)
         ),
         ExerciseSeedData(
-            key = "default_exercise_decline_push_ups_feet_on_plyo_box",
+            key = DECLINE_PUSH_UPS_FEET_ON_PLYO_BOX,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PLYO_BOX, BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_medicine_ball_overhead_slams",
+            key = MEDICINE_BALL_OVERHEAD_SLAMS,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -684,21 +800,21 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(MEDICINE_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_medicine_ball_russian_twists",
+            key = MEDICINE_BALL_RUSSIAN_TWISTS,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(MEDICINE_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_medicine_ball_woodchoppers",
+            key = MEDICINE_BALL_WOODCHOPPERS,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(MEDICINE_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_slam_ball_over_shoulder_toss",
+            key = SLAM_BALL_OVER_SHOULDER_TOSS,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -712,7 +828,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(SLAM_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_slam_ball_ground_to_overhead",
+            key = SLAM_BALL_GROUND_TO_OVERHEAD,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -726,7 +842,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(SLAM_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_wall_ball_shots",
+            key = WALL_BALL_SHOTS,
             muscleGroups =
                 listOf(
                     MuscleGroup.QUADS,
@@ -741,14 +857,14 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(WALL_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_wall_ball_squat_and_press_no_throw",
+            key = WALL_BALL_SQUAT_AND_PRESS_NO_THROW,
             muscleGroups = listOf(MuscleGroup.QUADS, MuscleGroup.GLUTES, MuscleGroup.SHOULDERS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WALL_BALL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sandbag_bear_hug_squats",
+            key = SANDBAG_BEAR_HUG_SQUATS,
             muscleGroups =
                 listOf(
                     MuscleGroup.QUADS,
@@ -762,7 +878,7 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(SANDBAG)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sandbag_cleans",
+            key = SANDBAG_CLEANS,
             muscleGroups =
                 listOf(
                     MuscleGroup.FULL_BODY,
@@ -777,301 +893,301 @@ internal val exerciseList: List<ExerciseSeedData> =
             equipmentKeys = listOf(SANDBAG)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sandbag_shoulder_to_shoulder_press",
+            key = SANDBAG_SHOULDER_TO_SHOULDER_PRESS,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(SANDBAG)
         ),
         ExerciseSeedData(
-            key = "default_exercise_assisted_pull_ups",
+            key = ASSISTED_PULL_UPS,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PULL_UP_BAR, RESISTANCE_BANDS)
         ),
         ExerciseSeedData(
-            key = "default_exercise_negative_pull_ups",
+            key = NEGATIVE_PULL_UPS,
             muscleGroups = listOf(MuscleGroup.BACK, MuscleGroup.BICEPS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PULL_UP_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_crunches_bodyweight",
+            key = CRUNCHES_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_crunches_weighted_plate",
+            key = CRUNCHES_WEIGHTED_PLATE,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WEIGHT_PLATES, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_decline_crunches",
+            key = DECLINE_CRUNCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_lying_leg_raises_bodyweight",
+            key = LYING_LEG_RAISES_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_lying_leg_raises_dumbbell_between_feet",
+            key = LYING_LEG_RAISES_DUMBBELL_BETWEEN_FEET,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_flutter_kicks",
+            key = FLUTTER_KICKS,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.TIMED,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_bicycle_crunches",
+            key = BICYCLE_CRUNCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_heel_touches",
+            key = HEEL_TOUCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_reverse_crunches",
+            key = REVERSE_CRUNCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_incline_reverse_crunches",
+            key = INCLINE_REVERSE_CRUNCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BENCH, BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_hanging_leg_raises",
+            key = HANGING_LEG_RAISES,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PULL_UP_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_hanging_knee_raises",
+            key = HANGING_KNEE_RAISES,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.FOREARMS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PULL_UP_BAR)
         ),
         ExerciseSeedData(
-            key = "default_exercise_captains_chair_leg_raises",
+            key = CAPTAINS_CHAIR_LEG_RAISES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(DIP_STATION)
         ),
         ExerciseSeedData(
-            key = "default_exercise_cable_crunches_kneeling",
+            key = CABLE_CRUNCHES_KNEELING,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(CABLE_MACHINE, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_cable_crunches_standing",
+            key = CABLE_CRUNCHES_STANDING,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(CABLE_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_dumbbell_side_bends",
+            key = DUMBBELL_SIDE_BENDS,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sit_ups_weighted_plate",
+            key = SIT_UPS_WEIGHTED_PLATE,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(WEIGHT_PLATES, BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_sit_ups_weighted_dumbbell",
+            key = SIT_UPS_WEIGHTED_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BODYWEIGHT, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_woodchoppers_dumbbell_high_to_low",
+            key = WOODCHOPPERS_DUMBBELL_HIGH_TO_LOW,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_woodchoppers_cable_high_to_low",
+            key = WOODCHOPPERS_CABLE_HIGH_TO_LOW,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(CABLE_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_woodchoppers_kettlebell_high_to_low",
+            key = WOODCHOPPERS_KETTLEBELL_HIGH_TO_LOW,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(KETTLEBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_landmine_twists_attachment",
+            key = LANDMINE_TWISTS_ATTACHMENT,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, LANDMINE_ATTACHMENT, WEIGHT_PLATES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_landmine_twists_corner",
+            key = LANDMINE_TWISTS_CORNER,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, WEIGHT_PLATES)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ab_wheel_rollouts_knees",
+            key = AB_WHEEL_ROLLOUTS_KNEES,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(AB_WHEEL, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ab_wheel_rollouts_standing",
+            key = AB_WHEEL_ROLLOUTS_STANDING,
             muscleGroups = listOf(MuscleGroup.ABS, MuscleGroup.BACK, MuscleGroup.SHOULDERS, MuscleGroup.FULL_BODY),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(AB_WHEEL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_ankle_weight_reverse_crunches",
+            key = ANKLE_WEIGHT_REVERSE_CRUNCHES,
             muscleGroups = listOf(MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(ANKLE_WEIGHTS, YOGA_MAT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_bodyweight_standing",
+            key = CALF_RAISES_BODYWEIGHT_STANDING,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout, RecommendedFor.Warmup),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_dumbbell_standing",
+            key = CALF_RAISES_DUMBBELL_STANDING,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_barbell_standing",
+            key = CALF_RAISES_BARBELL_STANDING,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_smith_machine_standing",
+            key = CALF_RAISES_SMITH_MACHINE_STANDING,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(SMITH_MACHINE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_bodyweight_seated",
+            key = CALF_RAISES_BODYWEIGHT_SEATED,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_dumbbell_seated",
+            key = CALF_RAISES_DUMBBELL_SEATED,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_single_leg_bodyweight",
+            key = CALF_RAISES_SINGLE_LEG_BODYWEIGHT,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_calf_raises_single_leg_dumbbell",
+            key = CALF_RAISES_SINGLE_LEG_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.CALVES),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BODYWEIGHT)
         ),
         ExerciseSeedData(
-            key = "default_exercise_box_jumps_calf_focus",
+            key = BOX_JUMPS_CALF_FOCUS,
             muscleGroups = listOf(MuscleGroup.CALVES, MuscleGroup.GLUTES, MuscleGroup.QUADS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.REPS_ONLY,
             equipmentKeys = listOf(PLYO_BOX)
         ),
         ExerciseSeedData(
-            key = "default_exercise_jump_rope",
+            key = DefaultExerciseResProvider.JUMP_ROPE,
             muscleGroups = listOf(MuscleGroup.CALVES, MuscleGroup.CARDIO, MuscleGroup.FULL_BODY),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.TIMED,
-            equipmentKeys = listOf(JUMP_ROPE)
+            equipmentKeys = listOf(DefaultEquipmentResProvider.JUMP_ROPE)
         ),
         ExerciseSeedData(
-            key = "default_exercise_incline_bench_press_barbell",
+            key = INCLINE_BENCH_PRESS_BARBELL,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(BARBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_incline_bench_press_dumbbell",
+            key = INCLINE_BENCH_PRESS_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS, MuscleGroup.TRICEPS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_around_the_world_dumbbell",
+            key = AROUND_THE_WORLD_DUMBBELL,
             muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.SHOULDERS),
             recommendedFor = listOf(RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
             equipmentKeys = listOf(DUMBBELL, BENCH)
         ),
         ExerciseSeedData(
-            key = "default_exercise_around_the_world_plate",
+            key = AROUND_THE_WORLD_PLATE,
             muscleGroups = listOf(MuscleGroup.SHOULDERS, MuscleGroup.ABS),
             recommendedFor = listOf(RecommendedFor.Warmup, RecommendedFor.Workout),
             exerciseType = ExerciseType.WEIGHT_REPS,
