@@ -38,7 +38,6 @@ fun App() {
                 }.build()
         }
 
-        // Apply theme at the root of the app
         AppTheme(themeMode = settings.value.persistedSettings.themeMode) {
             MaterialTheme {
                 val navHostController = rememberNavController()

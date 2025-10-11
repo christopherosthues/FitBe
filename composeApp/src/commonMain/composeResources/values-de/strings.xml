@@ -4,6 +4,10 @@
     <string name="bottom_bar_exercises">Übungen</string>
     <string name="bottom_bar_health">Gesundheit</string>
     <string name="bottom_bar_profile">Profil</string>
+    <string name="bottom_bar_content_description_home">Startseite öffnen</string>
+    <string name="bottom_bar_content_description_exercises">Übungen öffnen</string>
+    <string name="bottom_bar_content_description_health">Gesundheitsdaten öffnen</string>
+    <string name="bottom_bar_content_description_profile">Profil öffnen</string>
 
     <!-- Top Bar -->
     <string name="top_bar_title_home">Start</string>
@@ -23,6 +27,8 @@
     <string name="top_bar_title_beverages_overview">Trinkenübersicht</string>
     <string name="top_bar_title_body_weights">Körpergewicht</string>
     <string name="top_bar_title_settings">Einstellungen</string>
+    <string name="top_bar_content_description_back">Zurück navigieren</string>
+    <string name="top_bar_content_description_settings">Einstellungen öffnen</string>
 
     <!-- Exercise dashboard -->
     <string name="card_title_programs_overview">Programmübersicht</string>
@@ -683,7 +689,6 @@
     <string name="settings_theme_dark">Dunkel</string>
     <string name="settings_theme_system">System</string>
     <string name="settings_reset">Auf Standard zurücksetzen</string>
-    <string name="settings_content_description_title">Einstellungen öffnen</string>
     <string name="settings_error_loading">Fehler beim Laden der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_error_saving">Fehler beim Speichern der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_content_description_back">Zurück navigieren</string>

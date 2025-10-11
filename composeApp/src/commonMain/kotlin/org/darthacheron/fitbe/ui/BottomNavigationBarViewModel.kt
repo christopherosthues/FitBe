@@ -3,7 +3,7 @@ package org.darthacheron.fitbe.ui
 import androidx.navigation.NavHostController
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_settings
-import fitbe.composeapp.generated.resources.settings_content_description_title
+import fitbe.composeapp.generated.resources.top_bar_content_description_settings
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.state.TopBarAction
 
@@ -17,10 +17,8 @@ abstract class BottomNavigationBarViewModel(
             listOf(
                 TopBarAction(
                     icon = Res.drawable.ic_settings,
-                    contentDescription = Res.string.settings_content_description_title,
-                    onClick = {
-                        topNavHostController.navigate(Screen.Settings)
-                    },
+                    contentDescription = Res.string.top_bar_content_description_settings,
+                    onClick = { topNavHostController.navigate(Screen.Settings) },
                     isVisible = true
                 )
             )

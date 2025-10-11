@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_back
+import fitbe.composeapp.generated.resources.top_bar_content_description_back
 import org.darthacheron.fitbe.navigation.BottomBarNavGraph
 import org.darthacheron.fitbe.navigation.bottomBarDestinations
 import org.darthacheron.fitbe.ui.TopBarManager
@@ -74,7 +75,7 @@ fun RootScreen(
                         IconButton(onClick = { bottomBarNavController.navigateUp() }) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_back),
-                                contentDescription = null // stringResource(Res.string.ic_back) // Accessibility
+                                contentDescription = stringResource(Res.string.top_bar_content_description_back)
                             )
                         }
                     }
@@ -121,7 +122,7 @@ fun RootScreen(
                         icon = {
                             Icon(
                                 painter = painterResource(bottomBarDestination.icon),
-                                contentDescription = null,
+                                contentDescription = stringResource(bottomBarDestination.contentDescription),
                                 modifier = Modifier.size(24.dp)
                             )
                         }

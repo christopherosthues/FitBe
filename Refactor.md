@@ -2,10 +2,9 @@
 ## darthacheron
 ### fitbe
 
-* [ ] App
-* [ ] Platform
-* [ ] RootScreen
-* [ ] StartUpService
+* [x] App
+* [x] RootScreen
+* [x] StartUpService
 
 #### components
 
@@ -194,10 +193,10 @@
 
 #### navigation
 
-* [ ] BottomBarDestination
+* [x] BottomBarDestination
 * [ ] BottomBarNavGraph
 * [ ] RootNavGraph
-* [ ] Screen
+* [x] Screen
 
 #### profile
 
@@ -236,26 +235,26 @@
 
 #### ui
 
-* [ ] ActualTopBarManager
-* [ ] AppTheme
-* [ ] BottomNavigationBarViewModel
-* [ ] FilterableViewModel
-* [ ] FitBeViewModel
-* [ ] TopBarManager
-* [ ] UiState
-* [ ] UiStateError
+* [x] ActualTopBarManager
+* [x] AppTheme
+* [x] BottomNavigationBarViewModel
+* [x] FilterableViewModel
+* [x] FitBeViewModel
+* [x] TopBarManager
+* [x] UiState
+* [x] UiStateError
 
 ##### state
 
-* [ ] TopBarAction
-* [ ] TopBarConfig
+* [x] TopBarAction
+* [x] TopBarConfig
 
 #### utils
 
-* [ ] DateUtils
-* [ ] DoubleUtils
-* [ ] MathUtils
-* [ ] StackedAreaPlotDoubleDataAdapter
+* [x] DateUtils
+* [x] DoubleUtils
+* [x] MathUtils
+* [x] StackedAreaPlotDoubleDataAdapter
 
 #### workouts
 

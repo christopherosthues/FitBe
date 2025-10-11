@@ -32,7 +32,7 @@ class StartUpService(
                 }
 //                seedDatabase(database)
             } catch (exception: Exception) {
-                // TODO proper error handling
+                exception.printStackTrace()
             }
         }
     }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.darthacheron.fitbe.ui.state.TopBarConfig
 
 class ActualTopBarManager : TopBarManager {
-    private val _topBarConfigFlow = MutableStateFlow(TopBarConfig()) // Default empty config
+    private val _topBarConfigFlow = MutableStateFlow(TopBarConfig())
     override val topBarConfigFlow: StateFlow<TopBarConfig> = _topBarConfigFlow.asStateFlow()
 
     override fun setConfig(config: TopBarConfig) {
@@ -14,6 +14,6 @@ class ActualTopBarManager : TopBarManager {
     }
 
     override fun resetConfig() {
-        _topBarConfigFlow.value = TopBarConfig() // Reset to default
+        _topBarConfigFlow.value = TopBarConfig()
     }
 }
