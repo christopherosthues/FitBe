@@ -14,7 +14,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
+import org.darthacheron.fitbe.health.components.AddDialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi

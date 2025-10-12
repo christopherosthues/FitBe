@@ -15,7 +15,7 @@ import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageView
-import org.darthacheron.fitbe.health.componenets.HealthViewModel
+import org.darthacheron.fitbe.health.components.HealthViewModel
 import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
 import org.darthacheron.fitbe.health.sleep.SleepDailyViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel

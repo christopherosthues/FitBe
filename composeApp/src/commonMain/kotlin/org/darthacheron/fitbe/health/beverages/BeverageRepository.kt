@@ -39,14 +39,12 @@ class BeverageRepository(
     ): Flow<List<Beverage>> {
         val timeZone = TimeZone.currentSystemDefault()
         val startOfDay = date.atStartOfDayIn(timeZone)
-        val dateSpan = toDateSpan(startOfDay, startOfDay)
 
-        return beverageDao
-            .getBeverages(
-                start = dateSpan.first,
-                end = dateSpan.second,
-                profileId = profileId
-            ).map { entities -> entities.map { it.toBeverage() } }
+        return getBeveragesOverview(
+            startDate = startOfDay,
+            endDate = startOfDay,
+            profileId = profileId
+        )
     }
 
     @OptIn(ExperimentalUuidApi::class)

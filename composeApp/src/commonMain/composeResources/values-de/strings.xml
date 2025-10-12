@@ -620,6 +620,11 @@
     <string name="overview_content_description_move_future">%1$s vorwärts</string>
     <string name="overview_content_description_move_past">%1$s zurück</string>
 
+    <!-- Daily view -->
+    <string name="daily_view_content_description_move_past">Ein Tag zurück</string>
+    <string name="daily_view_content_description_move_future">Ein Tag vorwärts</string>
+    <string name="daily_view_content_description_add_beverage">Getränk eintragen</string>
+
     <!-- Beverage Overview -->
     <string name="beverages_overview_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_overview_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
@@ -677,22 +682,30 @@
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>
-    <string name="settings_kg">kg</string>
-    <string name="settings_pound">lb</string>
     <string name="settings_distance_unit">Entfernungseinheit</string>
-    <string name="settings_km">km</string>
-    <string name="settings_miles">Meilen</string>
     <string name="settings_body_measurement_unit">Körpermaßeinheit</string>
-    <string name="settings_cm">cm</string>
-    <string name="settings_inch">Zoll</string>
     <string name="settings_theme">Thema</string>
-    <string name="settings_theme_light">Hell</string>
-    <string name="settings_theme_dark">Dunkel</string>
-    <string name="settings_theme_system">System</string>
     <string name="settings_reset">Auf Standard zurücksetzen</string>
     <string name="settings_error_loading">Fehler beim Laden der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_error_saving">Fehler beim Speichern der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_content_description_back">Zurück navigieren</string>
+
+    <!-- Weight Unit -->
+    <string name="weight_unit_kg">kg</string>
+    <string name="weight_unit_pound">lb</string>
+
+    <!-- Distance Unit -->
+    <string name="distance_unit_km">km</string>
+    <string name="distance_unit_miles">Meilen</string>
+
+    <!-- Body Measurement Unit -->
+    <string name="body_measurement_unit_cm">cm</string>
+    <string name="body_measurement_unit_inch">Zoll</string>
+
+    <!-- Theme -->
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_system">System</string>
 
     <!-- Profile -->
     <string name="profile_add">Profil hinzufügen</string>

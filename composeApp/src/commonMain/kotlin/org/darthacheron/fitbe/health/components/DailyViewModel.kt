@@ -1,40 +1,41 @@
-package org.darthacheron.fitbe.health.componenets
+package org.darthacheron.fitbe.health.components
 
 import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.daily_view_content_description_move_future
+import fitbe.composeapp.generated.resources.daily_view_content_description_move_past
 import fitbe.composeapp.generated.resources.overview_content_description_move_future
 import fitbe.composeapp.generated.resources.overview_content_description_move_past
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.darthacheron.fitbe.components.date.DateRange
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
-import org.darthacheron.fitbe.utils.minusOne
-import org.darthacheron.fitbe.utils.plusOne
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.days
 
-abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
+abstract class DailyViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager
 ) : FitBeViewModel(topBarManager) {
-    protected val dateRange =
+    protected val date =
         MutableStateFlow(
-            DateRange(
-                Clock.System.now().minus(6.days),
-                Clock.System.now(),
-                DateUnit.DAY
-            )
+            Clock.System
+                .now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .toInstant(TimeZone.currentSystemDefault())
         )
 
-    val dateRangeFlow: StateFlow<DateRange> = dateRange
+    val dateFlow: StateFlow<Instant> = date
 
     protected val isLoading = MutableStateFlow(true)
     protected val errorMessage = MutableStateFlow<StringResource?>(null)
@@ -44,35 +45,27 @@ abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
     abstract val addButtonContentDescription: StringResource
 
     @Composable
-    fun movePastContentDescription(dateUnit: DateUnit): String {
-        return stringResource(Res.string.overview_content_description_move_past, dateUnit.localizedDateUnit())
+    fun movePastContentDescription(): String {
+        return stringResource(Res.string.daily_view_content_description_move_past)
     }
 
     @Composable
-    fun moveFutureContentDescription(dateUnit: DateUnit): String {
-        return stringResource(Res.string.overview_content_description_move_future, dateUnit.localizedDateUnit())
+    fun moveFutureContentDescription(): String {
+        return stringResource(Res.string.daily_view_content_description_move_future)
     }
 
     fun movePast() {
-        val range = dateRangeFlow.value.minusOne()
-        setRange(range)
+        val range = dateFlow.value.minus(1.days)
+        setDate(range)
     }
 
     fun moveFuture() {
-        val range = dateRangeFlow.value.plusOne()
-        setRange(range)
+        val range = dateFlow.value.plus(1.days)
+        setDate(range)
     }
 
-    fun setRange(
-        startDate: Instant,
-        endDate: Instant,
-        dateUnit: DateUnit
-    ) {
-        dateRange.value = DateRange(startDate, endDate, dateUnit)
-    }
-
-    fun setRange(range: DateRange) {
-        dateRange.value = range
+    fun setDate(dateInstant: Instant) {
+        date.value = dateInstant
     }
 
     fun clearErrorMessage() {

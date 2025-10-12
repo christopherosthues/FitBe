@@ -20,7 +20,7 @@ import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
-import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
+import org.darthacheron.fitbe.health.components.AddDialogViewModel
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit

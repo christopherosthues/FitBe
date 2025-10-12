@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
@@ -38,8 +39,8 @@ class SettingsViewModel(
         viewModelScope.launch {
             repository
                 .getSettingsFlow()
+                .onStart { _uiState.update { it.copy(isLoading = true, error = SettingsError()) } }
                 .catch { e ->
-                    // Log error e
                     _uiState.update {
                         it.copy(
                             isLoading = false,

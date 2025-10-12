@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.componenets
+package org.darthacheron.fitbe.health.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

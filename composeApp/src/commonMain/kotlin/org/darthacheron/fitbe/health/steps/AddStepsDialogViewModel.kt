@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
-import org.darthacheron.fitbe.health.componenets.AddDialogViewModel
+import org.darthacheron.fitbe.health.components.AddDialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 

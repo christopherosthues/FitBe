@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.componenets
+package org.darthacheron.fitbe.health.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.daily_view_content_description_add_beverage
 import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
@@ -82,7 +83,7 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_arrow_back),
-                            contentDescription = null
+                            contentDescription = dailyViewModel.movePastContentDescription()
                         )
                     }
 
@@ -97,7 +98,7 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_arrow_forward),
-                            contentDescription = null
+                            contentDescription = dailyViewModel.moveFutureContentDescription()
                         )
                     }
                 }
@@ -110,7 +111,10 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
                 containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
             ) {
-                Icon(painter = painterResource(Res.drawable.ic_add), contentDescription = null)
+                Icon(
+                    painter = painterResource(Res.drawable.ic_add),
+                    contentDescription = stringResource(dailyViewModel.addButtonContentDescription)
+                )
             }
         }
     }

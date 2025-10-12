@@ -4,7 +4,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.health.componenets.DialogUiState
+import org.darthacheron.fitbe.health.components.DialogUiState
 import org.jetbrains.compose.resources.StringResource
 
 data class AddBodyWeightDialogUiState(

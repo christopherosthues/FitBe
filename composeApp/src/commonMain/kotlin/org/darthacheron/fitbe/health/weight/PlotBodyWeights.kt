@@ -30,18 +30,6 @@ import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight_value
 import fitbe.composeapp.generated.resources.body_weight_chart_thumbnail_title
-import fitbe.composeapp.generated.resources.month_april
-import fitbe.composeapp.generated.resources.month_august
-import fitbe.composeapp.generated.resources.month_december
-import fitbe.composeapp.generated.resources.month_february
-import fitbe.composeapp.generated.resources.month_january
-import fitbe.composeapp.generated.resources.month_july
-import fitbe.composeapp.generated.resources.month_june
-import fitbe.composeapp.generated.resources.month_march
-import fitbe.composeapp.generated.resources.month_may
-import fitbe.composeapp.generated.resources.month_november
-import fitbe.composeapp.generated.resources.month_october
-import fitbe.composeapp.generated.resources.month_september
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
@@ -67,20 +55,14 @@ import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.XYGraphScope
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month
 import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.components.date.DateUnit
-import org.darthacheron.fitbe.health.componenets.dateLabel
-import org.darthacheron.fitbe.health.componenets.monthResourceString
-import org.darthacheron.fitbe.health.componenets.representativeDates
+import org.darthacheron.fitbe.health.components.dateLabel
+import org.darthacheron.fitbe.health.components.representativeDates
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
-import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 @Suppress("MagicNumber")
 private val colorPalette =

@@ -58,7 +58,7 @@
 * [x] DatabaseFactory
 * [x] FitBeDatabase
 * [x] FitBeDatabaseConstructor
-* [ ] InitialData
+* [x] InitialData
 * [x] PrepopulateCallback
 
 ##### converters
@@ -92,41 +92,41 @@
 * [ ] AddBeverageDialog
 * [ ] AddBeverageDialogUiState
 * [ ] AddBeverageDialogViewModel
-* [ ] Beverage
-* [ ] BeverageDailyError
-* [ ] BeverageDailyUiState
+* [x] Beverage
+* [x] BeverageDailyError
+* [x] BeverageDailyUiState
 * [ ] BeverageDailyView
 * [ ] BeverageDailyViewModel
-* [ ] BeverageDao
-* [ ] BeverageEntity
+* [x] BeverageDao
+* [x] BeverageEntity
 * [ ] BeverageOverview
-* [ ] BeverageOverviewError
-* [ ] BeverageOverviewUiState
+* [x] BeverageOverviewError
+* [x] BeverageOverviewUiState
 * [x] BeverageOverviewView
 * [x] BeverageOverviewViewModel
-* [ ] BeverageRepository
-* [ ] BeverageView
-* [ ] FluidUnit
+* [x] BeverageRepository
+* [x] BeverageView
+* [x] FluidUnit
 * [ ] PlotBeverages
 
-##### componenets
+##### components
 
-* [ ] AddDialogViewModel
-* [ ] DailyView
-* [ ] DailyViewModel
+* [x] AddDialogViewModel
+* [x] DailyView
+* [x] DailyViewModel
 * [ ] DateControl
 * [ ] DateRangeControl
-* [ ] DialogUiState
+* [x] DialogUiState
 * [x] HealthView
 * [x] HealthViewModel
 * [ ] LocalDateExtensions
-* [ ] Overview
-* [ ] OverviewView
-* [ ] OverviewViewModel
+* [x] Overview
+* [x] OverviewView
+* [x] OverviewViewModel
 
 ##### nutrition
 
-* [ ] NutritionOverviewView
+* [x] NutritionOverviewView
 * [ ] NutritionOverviewViewModel
 
 ##### sleep
@@ -214,24 +214,24 @@
 
 #### settings
 
-* [ ] BodyMeasurementUnit
-* [ ] DistanceUnit
-* [ ] Settings
-* [ ] SettingsError
-* [ ] SettingsKeys
-* [ ] SettingsRepository
-* [ ] SettingsUiState
+* [x] BodyMeasurementUnit
+* [x] DistanceUnit
+* [x] Settings
+* [x] SettingsError
+* [x] SettingsKeys
+* [x] SettingsRepository
+* [x] SettingsUiState
 * [ ] SettingsView
 * [ ] SettingsViewModel
-* [ ] ThemeMode
-* [ ] WeightUnit
+* [x] ThemeMode
+* [x] WeightUnit
 
 ##### converters
 
-* [ ] BodyMeasurementUnitConverter
-* [ ] DistanceUnitConverter
-* [ ] FluidUnitConverter
-* [ ] WeightUnitConverter
+* [x] BodyMeasurementUnitConverter
+* [x] DistanceUnitConverter
+* [x] FluidUnitConverter
+* [x] WeightUnitConverter
 
 #### ui
 

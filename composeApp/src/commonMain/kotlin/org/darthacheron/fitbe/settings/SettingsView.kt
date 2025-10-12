@@ -65,7 +65,7 @@ fun SettingsView(
         LaunchedEffect(it, message) {
             scope.launch {
                 snackbarHostState.showSnackbar(message)
-                viewModel.clearError() // Clear error after showing
+                viewModel.clearError()
             }
         }
     }

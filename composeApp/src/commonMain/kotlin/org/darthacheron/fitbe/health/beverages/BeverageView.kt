@@ -1,8 +1,8 @@
 package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.runtime.Composable
-import org.darthacheron.fitbe.health.componenets.HealthView
-import org.darthacheron.fitbe.health.componenets.HealthViewModel
+import org.darthacheron.fitbe.health.components.HealthView
+import org.darthacheron.fitbe.health.components.HealthViewModel
 
 @Composable
 fun BeverageView(

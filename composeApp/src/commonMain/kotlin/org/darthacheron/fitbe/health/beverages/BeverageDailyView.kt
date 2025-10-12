@@ -20,7 +20,7 @@ import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percen
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total_target
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
-import org.darthacheron.fitbe.health.componenets.DailyView
+import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

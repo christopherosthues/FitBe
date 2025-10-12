@@ -1,8 +1,8 @@
 package org.darthacheron.fitbe.settings
 
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.settings_km
-import fitbe.composeapp.generated.resources.settings_miles
+import fitbe.composeapp.generated.resources.distance_unit_km
+import fitbe.composeapp.generated.resources.distance_unit_miles
 import org.jetbrains.compose.resources.StringResource
 
 private const val KM_TO_MILES = 0.621371
@@ -17,8 +17,8 @@ enum class DistanceUnit {
 
     fun toResourceString(): StringResource =
         when (this) {
-            KM -> Res.string.settings_km
-            MILES -> Res.string.settings_miles
+            KM -> Res.string.distance_unit_km
+            MILES -> Res.string.distance_unit_miles
         }
 
     fun toKilometer(value: Double): Double =

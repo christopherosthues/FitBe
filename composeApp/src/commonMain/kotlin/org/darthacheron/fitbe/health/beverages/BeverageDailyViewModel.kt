@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
+import fitbe.composeapp.generated.resources.beverages_overview_content_description_add_beverage
+import fitbe.composeapp.generated.resources.daily_view_content_description_add_beverage
 import fitbe.composeapp.generated.resources.top_bar_title_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.health.componenets.DailyViewModel
+import org.darthacheron.fitbe.health.components.DailyViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -43,6 +45,9 @@ class BeverageDailyViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
+
+    override val addButtonContentDescription: StringResource
+        get() = Res.string.daily_view_content_description_add_beverage
 
     private val targetBeverage: StateFlow<UInt> =
         settingsRepository

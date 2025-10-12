@@ -1,8 +1,8 @@
 package org.darthacheron.fitbe.settings
 
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.settings_cm
-import fitbe.composeapp.generated.resources.settings_inch
+import fitbe.composeapp.generated.resources.body_measurement_unit_cm
+import fitbe.composeapp.generated.resources.body_measurement_unit_inch
 import org.jetbrains.compose.resources.StringResource
 
 private const val CM_TO_INCH = 0.393701
@@ -14,8 +14,8 @@ enum class BodyMeasurementUnit {
 
     fun toStringResource(): StringResource =
         when (this) {
-            CM -> Res.string.settings_cm
-            INCH -> Res.string.settings_inch
+            CM -> Res.string.body_measurement_unit_cm
+            INCH -> Res.string.body_measurement_unit_inch
         }
 
     fun toCentimeters(value: Double): Double =
