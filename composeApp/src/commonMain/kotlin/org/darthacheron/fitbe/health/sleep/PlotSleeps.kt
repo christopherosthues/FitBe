@@ -16,8 +16,10 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.sleeps_chart_thumbnail_title
-import fitbe.composeapp.generated.resources.sleeps_chart_y_axis_title
+import fitbe.composeapp.generated.resources.beverages_chart_annotation_beverage_value
+import fitbe.composeapp.generated.resources.sleep_chart_annotation_sleep_value
+import fitbe.composeapp.generated.resources.sleep_chart_thumbnail_title
+import fitbe.composeapp.generated.resources.sleep_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
@@ -58,7 +60,7 @@ fun PlotSleeps(
         modifier = modifier.padding(horizontal = 8.dp),
         title = {
             if (thumbnail) {
-                Text(text = stringResource(Res.string.sleeps_chart_thumbnail_title))
+                Text(text = stringResource(Res.string.sleep_chart_thumbnail_title))
             }
         }
     ) {
@@ -107,7 +109,7 @@ fun PlotSleeps(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = stringResource(Res.string.sleeps_chart_y_axis_title),
+                            text = stringResource(Res.string.sleep_chart_y_axis_title),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -116,6 +118,7 @@ fun PlotSleeps(
                 }
             }
         ) {
+            // TODO: accessible plot data
             if (dates.size > 1) {
                 AreaPlot(
                     data = sleeps.map { Point(it.date, it.totalMinutes) },
@@ -145,7 +148,13 @@ fun PlotSleeps(
                                     modifier = modifier.padding(8.dp)
                                 ) {
                                     Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(text = sleepsChartData[index].y.yMax.toString())
+                                        Text(
+                                            text =
+                                                stringResource(
+                                                    Res.string.sleep_chart_annotation_sleep_value,
+                                                    sleepsChartData[index].y.yMax.toString()
+                                                )
+                                        )
                                     }
                                 }
                             }

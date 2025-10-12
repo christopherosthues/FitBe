@@ -134,7 +134,7 @@
 * [ ] AddSleepDialog
 * [ ] AddSleepDialogUiState
 * [ ] AddSleepDialogViewModel
-* [ ] PlotSleeps
+* [x] PlotSleeps
 * [x] Sleep
 * [x] SleepDailyError
 * [x] SleepDailyUiState
@@ -145,7 +145,7 @@
 * [x] SleepOverview
 * [x] SleepOverviewError
 * [x] SleepOverviewUiState
-* [ ] SleepOverviewView
+* [x] SleepOverviewView
 * [x] SleepOverviewViewModel
 * [x] SleepRepository
 * [x] SleepView

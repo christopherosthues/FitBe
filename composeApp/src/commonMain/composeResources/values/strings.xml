@@ -632,7 +632,7 @@
     <!-- Beverage Chart -->
     <string name="beverages_chart_thumbnail_title">Beverages</string>
     <string name="beverages_chart_y_axis_title">ml</string>
-    <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
+    <string name="beverages_chart_annotation_beverage_value">Beverages: %1$s ml</string>
 
     <!-- Beverage daily view -->
     <string name="beverages_daily_view_content_description_add_beverage">Record Beverage</string>
@@ -685,8 +685,9 @@
     <string name="sleep_overview_error_saving">Error saving sleep data. Please try again.</string>
 
     <!-- Sleep chart -->
-    <string name="sleeps_chart_thumbnail_title">Sleep</string>
-    <string name="sleeps_chart_y_axis_title">Sleep Duration (minutes)</string>
+    <string name="sleep_chart_thumbnail_title">Sleep</string>
+    <string name="sleep_chart_y_axis_title">Sleep Duration (minutes)</string>
+    <string name="sleep_chart_annotation_sleep_value">Sleep duration: %1$s minutes</string>
 
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Record sleep</string>
