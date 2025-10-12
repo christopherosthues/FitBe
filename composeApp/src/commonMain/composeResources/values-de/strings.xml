@@ -623,12 +623,11 @@
     <!-- Daily view -->
     <string name="daily_view_content_description_move_past">Ein Tag zurück</string>
     <string name="daily_view_content_description_move_future">Ein Tag vorwärts</string>
-    <string name="daily_view_content_description_add_beverage">Getränk eintragen</string>
 
     <!-- Beverage Overview -->
+    <string name="beverages_overview_content_description_add_beverage">Getränk eintragen</string>
     <string name="beverages_overview_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_overview_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
-    <string name="beverages_overview_content_description_add_beverage">Getränk eintragen</string>
 
     <!-- Beverage Chart -->
     <string name="beverages_chart_thumbnail_title">Trinken</string>
@@ -636,6 +635,7 @@
     <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
 
     <!-- Beverage daily view -->
+    <string name="beverages_daily_view_content_description_add_beverage">Getränk eintragen</string>
     <string name="beverages_daily_view_progress_percent">%1$d%</string>
     <string name="beverages_daily_view_progress_total">%1$d ml</string>
     <string name="beverages_daily_view_progress_total_target">%1$d ml von %2$d ml</string>
