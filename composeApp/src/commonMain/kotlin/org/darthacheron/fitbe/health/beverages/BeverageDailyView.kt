@@ -14,9 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_progress_percent_target
+import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percent
+import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
+import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total_target
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
 import org.darthacheron.fitbe.health.componenets.DailyView
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -50,7 +57,37 @@ fun BeverageDailyView(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            CircularWaveAnimationProgressIndicator(progress = { state.progress.toFloat() })
+                            val progress = (state.progress.toFloat() * 100).toInt()
+                            val progressText: String
+                            var totalAmountText: String? = null
+                            var contentDescription: String? = null
+                            if (state.target != null) {
+                                progressText =
+                                    stringResource(Res.string.beverages_daily_view_progress_percent, progress)
+                                totalAmountText =
+                                    stringResource(
+                                        Res.string.beverages_daily_view_progress_total_target,
+                                        state.total.roundToDecimals(2),
+                                        state.target.toInt()
+                                    )
+                                contentDescription =
+                                    stringResource(
+                                        Res.string.beverages_daily_view_content_description_progress_percent_target,
+                                        progress
+                                    )
+                            } else {
+                                progressText =
+                                    stringResource(
+                                        Res.string.beverages_daily_view_progress_total,
+                                        state.total.toFloat()
+                                    )
+                            }
+                            CircularWaveAnimationProgressIndicator(
+                                progress = { state.progress.toFloat() },
+                                text = progressText,
+                                label = totalAmountText,
+                                contentDescription = contentDescription
+                            )
                         }
                     }
                     state.beverages.forEach { beverage ->

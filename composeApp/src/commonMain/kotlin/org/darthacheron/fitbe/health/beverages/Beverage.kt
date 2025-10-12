@@ -19,6 +19,9 @@ import org.darthacheron.fitbe.health.beverages.FluidUnit.Liter
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Milliliter
 import org.darthacheron.fitbe.health.beverages.FluidUnit.NormalGlass
 import org.darthacheron.fitbe.health.beverages.FluidUnit.SmallGlass
+import org.darthacheron.fitbe.utils.roundToDecimals
+import org.jetbrains.compose.resources.PluralStringResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
@@ -35,36 +38,24 @@ data class Beverage(
     val unit: FluidUnit
 ) {
     @Composable
-    fun localizedString(): String =
-        when (unit) {
-            Cup -> pluralStringResource(Res.plurals.beverage_in_cup, quantity = amount.toInt(), amount, beverage)
-            SmallGlass ->
-                pluralStringResource(
-                    Res.plurals.beverage_in_small_glass,
-                    quantity = amount.toInt(),
-                    amount,
-                    beverage
-                )
-
-            NormalGlass ->
-                pluralStringResource(
-                    Res.plurals.beverage_in_normal_glass,
-                    quantity = amount.toInt(),
-                    amount,
-                    beverage
-                )
-
-            LargeGlass ->
-                pluralStringResource(
-                    Res.plurals.beverage_in_large_glass,
-                    quantity = amount.toInt(),
-                    amount,
-                    beverage
-                )
-
-            Milliliter -> stringResource(Res.string.beverage_in_milliliter, amount, beverage)
-            Centiliter -> stringResource(Res.string.beverage_in_centiliter, amount, beverage)
-            Deciliter -> stringResource(Res.string.beverage_in_deciliter, amount, beverage)
-            Liter -> stringResource(Res.string.beverage_in_liter, amount, beverage)
+    fun localizedString(): String {
+        val resource = when (unit) {
+            Cup -> Res.plurals.beverage_in_cup
+            SmallGlass -> Res.plurals.beverage_in_small_glass
+            NormalGlass -> Res.plurals.beverage_in_normal_glass
+            LargeGlass -> Res.plurals.beverage_in_large_glass
+            Milliliter -> Res.string.beverage_in_milliliter
+            Centiliter -> Res.string.beverage_in_centiliter
+            Deciliter -> Res.string.beverage_in_deciliter
+            Liter -> Res.string.beverage_in_liter
         }
+
+        if (resource is PluralStringResource) {
+            return pluralStringResource(resource, quantity = amount.toInt(), amount.roundToDecimals(2), beverage)
+        } else if (resource is StringResource) {
+            return stringResource(resource, amount.roundToDecimals(2), beverage)
+        } else {
+            return ""
+        }
+    }
 }

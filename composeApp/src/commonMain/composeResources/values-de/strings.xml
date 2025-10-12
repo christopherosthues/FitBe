@@ -616,8 +616,7 @@
     <plurals name="overview_content_description_date_unit">
         <item quantity="zero">Ein %1$s</item>
         <item quantity="one">Eine %1$s</item>
-        <item quantity="two">Ein %1$s</item>
-        <item quantity="three">Ein %1$s</item>
+        <item quantity="other">Ein %1$s</item>
     </plurals>
     <string name="overview_content_description_move_future">%1$s vorwärts</string>
     <string name="overview_content_description_move_past">%1$s zurück</string>
@@ -625,7 +624,7 @@
     <!-- Beverage Overview -->
     <string name="beverages_overview_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_overview_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
-    <string name="beverages_overview_content_description_add_beverage">Getränk hinzufügen</string>
+    <string name="beverages_overview_content_description_add_beverage">Getränk eintragen</string>
 
     <!-- Beverage Chart -->
     <string name="beverages_chart_thumbnail_title">Trinken</string>
@@ -633,11 +632,15 @@
     <string name="beverages_chart_annotation_beverage_value">Trinken: %1$d ml</string>
 
     <!-- Beverage daily view -->
+    <string name="beverages_daily_view_progress_percent">%1$d%</string>
+    <string name="beverages_daily_view_progress_total">%1$d ml</string>
+    <string name="beverages_daily_view_progress_total_target">%1$d ml von %2$d ml</string>
+    <string name="beverages_daily_view_content_description_progress_percent_target">%1$d Prozent des Tagesziels wurden erreicht</string>
     <string name="beverages_daily_view_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_daily_view_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
 
     <!-- Beverage Add Dialog -->
-    <string name="beverages_add_dialog_title">Getränk hinzufügen</string>
+    <string name="beverages_add_dialog_title">Getränk eintragen</string>
     <string name="beverages_add_dialog_content_description_date">Datum auswählen</string>
     <string name="beverages_add_dialog_amount">Menge</string>
     <string name="beverages_add_dialog_name">Getränkename</string>
@@ -648,31 +651,30 @@
     <string name="beverages_add_dialog_error_invalid_total_amount">Die tägliche Flüssigkeitseinnahme von 5.000 ml sollte nicht überschritten werden.</string>
     <string name="beverages_add_dialog_error_name_empty">Der Name des Getränks darf nicht leer sein.</string>
 
-    <string name="add_beverage">Getränk hinzufügen</string>
     <plurals name="beverage_in_cup">
-        <item quantity="zero">%1$.2f Tassen %2$s</item>
-        <item quantity="one">%1$.2f Tasse %2$s</item>
-        <item quantity="other">%1$.2f Tassen %2$s</item>
+        <item quantity="zero">%1$d Tassen %2$s</item>
+        <item quantity="one">%1$d Tasse %2$s</item>
+        <item quantity="other">%1$d Tassen %2$s</item>
     </plurals>
     <plurals name="beverage_in_small_glass">
-        <item quantity="zero">%1$.2f kleine Gläser %2$s</item>
-        <item quantity="one">%1$.2f kleines Glas %2$s</item>
-        <item quantity="other">%1$.2f kleine Gläser %2$s</item>
+        <item quantity="zero">%1$d kleine Gläser %2$s</item>
+        <item quantity="one">%1$d kleines Glas %2$s</item>
+        <item quantity="other">%1$d kleine Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_normal_glass">
-        <item quantity="zero">%1$.2f normale Gläser %2$s</item>
-        <item quantity="one">%1$.2f normales Glas %2$s</item>
-        <item quantity="other">%1$.2f normale Gläser %2$s</item>
+        <item quantity="zero">%1$d normale Gläser %2$s</item>
+        <item quantity="one">%1$d normales Glas %2$s</item>
+        <item quantity="other">%1$d normale Gläser %2$s</item>
     </plurals>
     <plurals name="beverage_in_large_glass">
-        <item quantity="zero">%1$.2f große Gläser %2$s</item>
-        <item quantity="one">%1$.2f großes Glas %2$s</item>
-        <item quantity="other">%1$.2f große Gläser %2$s</item>
+        <item quantity="zero">%1$d große Gläser %2$s</item>
+        <item quantity="one">%1$d großes Glas %2$s</item>
+        <item quantity="other">%1$d große Gläser %2$s</item>
     </plurals>
-    <string name="beverage_in_milliliter">%1$.2f ml %2$s</string>
-    <string name="beverage_in_centiliter">%1$.2f cl %2$s</string>
-    <string name="beverage_in_deciliter">%1$.2f dl %2$s</string>
-    <string name="beverage_in_liter">%1$.2f l %2$s</string>
+    <string name="beverage_in_milliliter">%1$d ml %2$s</string>
+    <string name="beverage_in_centiliter">%1$d cl %2$s</string>
+    <string name="beverage_in_deciliter">%1$d dl %2$s</string>
+    <string name="beverage_in_liter">%1$d l %2$s</string>
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>
@@ -760,6 +762,7 @@
     <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
     <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
     <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
+    <string name="weight_overview_content_description_add_body_weight">Körpergewicht eintragen</string>
     <string name="weight_overview_error_loading">Fehler beim Laden der Gewichtsdaten.</string>
 
     <string name="month_january">Januar</string>
@@ -779,6 +782,7 @@
     <string name="steps_add_dialog_steps">Schrittanzahl</string>
     <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
     <string name="steps_overview_error_loading">Fehler beim Laden der Schrittdaten.</string>
+    <string name="steps_overview_content_description_add_steps">Schritte eintragen</string>
 
     <string name="steps_add_dialog_title">Schritte eintragen</string>
     <string name="steps_chart_y_axis_title">Schritte</string>
@@ -803,6 +807,7 @@
     <!-- Sleep overview -->
     <string name="sleeps_chart_thumbnail_title">Schlaf</string>
     <string name="sleeps_chart_y_axis_title">Schlafdauer (Minuten)</string>
+    <string name="sleep_overview_content_description_add_sleep">Schlaf eintragen</string>
 
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Schlaf eintragen</string>

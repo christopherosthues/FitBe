@@ -615,8 +615,7 @@
     <plurals name="overview_content_description_date_unit">
         <item quantity="zero">one %1$s</item>
         <item quantity="one">one %1$s</item>
-        <item quantity="two">one %1$s</item>
-        <item quantity="three">one %1$s</item>
+        <item quantity="other">one %1$s</item>
     </plurals>
     <string name="overview_content_description_move_future">Move %1$s forward</string>
     <string name="overview_content_description_move_past">Move %1$s backward</string>
@@ -624,7 +623,7 @@
     <!-- Beverage Overview -->
     <string name="beverages_overview_error_loading">Error loading beverage data.</string>
     <string name="beverages_overview_error_saving">Error saving beverage. Please try again.</string>
-    <string name="beverages_overview_content_description_add_beverage">Add Beverage</string>
+    <string name="beverages_overview_content_description_add_beverage">Record Beverage</string>
 
     <!-- Beverage Chart -->
     <string name="beverages_chart_thumbnail_title">Beverages</string>
@@ -632,11 +631,15 @@
     <string name="beverages_chart_annotation_beverage_value">Beverages: %1$d ml</string>
 
     <!-- Beverage daily view -->
+    <string name="beverages_daily_view_progress_percent">%1$d%</string>
+    <string name="beverages_daily_view_progress_total">%1$d ml</string>
+    <string name="beverages_daily_view_progress_total_target">%1$d ml of %2$d ml</string>
+    <string name="beverages_daily_view_content_description_progress_percent_target">%1$d percent of the daily target has been met</string>
     <string name="beverages_daily_view_error_loading">Error loading beverage data.</string>
     <string name="beverages_daily_view_error_saving">Error saving beverage. Please try again.</string>
 
     <!-- Beverage Add Dialog -->
-    <string name="beverages_add_dialog_title">Add Beverage</string>
+    <string name="beverages_add_dialog_title">Record Beverage</string>
     <string name="beverages_add_dialog_content_description_date">Select date</string>
     <string name="beverages_add_dialog_amount">Amount</string>
     <string name="beverages_add_dialog_name">Beverage Name</string>
@@ -647,31 +650,30 @@
     <string name="beverages_add_dialog_error_invalid_total_amount">The daily intake of 5,000 ml should not be exceeded.</string>
     <string name="beverages_add_dialog_error_name_empty">Beverage name cannot be empty.</string>
 
-    <string name="add_beverage">Add beverage</string>
     <plurals name="beverage_in_cup">
-        <item quantity="zero">%1$.2f cups %2$s</item>
-        <item quantity="one">%1$.2f cup %2$s</item>
-        <item quantity="other">%1$.2f cups %2$s</item>
+        <item quantity="zero">%1$d cups %2$s</item>
+        <item quantity="one">%1$d cup %2$s</item>
+        <item quantity="other">%1$d cups %2$s</item>
     </plurals>
     <plurals name="beverage_in_small_glass">
-        <item quantity="zero">%1$.2f small glasses %2$s</item>
-        <item quantity="one">%1$.2f small glass %2$s</item>
-        <item quantity="other">%1$.2f small glasses %2$s</item>
+        <item quantity="zero">%1$d small glasses %2$s</item>
+        <item quantity="one">%1$d small glass %2$s</item>
+        <item quantity="other">%1$d small glasses %2$s</item>
     </plurals>
     <plurals name="beverage_in_normal_glass">
-        <item quantity="zero">%1$.2f normal glasses %2$s</item>
-        <item quantity="one">%1$.2f normal glass %2$s</item>
-        <item quantity="other">%1$.2f normal glasses %2$s</item>
+        <item quantity="zero">%1$d normal glasses %2$s</item>
+        <item quantity="one">%1$d normal glass %2$s</item>
+        <item quantity="other">%1$d normal glasses %2$s</item>
     </plurals>
     <plurals name="beverage_in_large_glass">
-        <item quantity="zero">%1$.2f large glasses %2$s</item>
-        <item quantity="one">%1$.2f large glass %2$s</item>
-        <item quantity="other">%1$.2f large glasses %2$s</item>
+        <item quantity="zero">%1$d large glasses %2$s</item>
+        <item quantity="one">%1$d large glass %2$s</item>
+        <item quantity="other">%1$d large glasses %2$s</item>
     </plurals>
-    <string name="beverage_in_milliliter">%1$.2f ml %2$s</string>
-    <string name="beverage_in_centiliter">%1$.2f cl %2$s</string>
-    <string name="beverage_in_deciliter">%1$.2f dl %2$s</string>
-    <string name="beverage_in_liter">%1$.2f l %2$s</string>
+    <string name="beverage_in_milliliter">%1$d ml %2$s</string>
+    <string name="beverage_in_centiliter">%1$d cl %2$s</string>
+    <string name="beverage_in_deciliter">%1$d dl %2$s</string>
+    <string name="beverage_in_liter">%1$d l %2$s</string>
 
     <!-- Settings -->
     <string name="settings_weight_unit">Weight Unit</string>
@@ -759,6 +761,7 @@
     <string name="body_weight_chart_annotation_body_fat">Body fat</string>
     <string name="body_weight_chart_annotation_body_water">Body water</string>
     <string name="body_weight_chart_annotation_total_weight">Total weight</string>
+    <string name="weight_overview_content_description_add_body_weight">Record body weight</string>
     <string name="weight_overview_error_loading">Error loading weight data.</string>
 
     <string name="month_january">January</string>
@@ -778,6 +781,7 @@
     <string name="steps_chart_y_axis_title">Steps</string>
     <string name="steps_error_count">Enter a value between 0 and 500,000.</string>
     <string name="steps_overview_error_loading">Error loading steps data.</string>
+    <string name="steps_overview_content_description_add_steps">Record steps</string>
 
     <string name="steps_add_dialog_title">Record steps</string>
     <string name="steps_add_dialog_steps">Steps count</string>
@@ -802,6 +806,7 @@
     <!-- Sleep overview -->
     <string name="sleeps_chart_thumbnail_title">Sleep</string>
     <string name="sleeps_chart_y_axis_title">Sleep Duration (minutes)</string>
+    <string name="sleep_overview_content_description_add_sleep">Record sleep</string>
 
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Record sleep</string>

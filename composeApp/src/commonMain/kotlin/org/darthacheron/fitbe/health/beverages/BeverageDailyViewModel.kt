@@ -87,9 +87,10 @@ class BeverageDailyViewModel(
             isLoading,
             errorMessage
         ) { beverages, target, isLoading, error ->
+            val totalAmount = beverages.sumOf { it.unit.toMilliliter(it.amount) }
             val progress =
                 if (target > 0u) {
-                    beverages.sumOf { it.unit.toMilliliter(it.amount) } / target.toDouble()
+                    totalAmount / target.toDouble()
                 } else {
                     0.0
                 }
@@ -97,6 +98,8 @@ class BeverageDailyViewModel(
                 isLoading = isLoading,
                 beverages = beverages,
                 progress = progress,
+                total = totalAmount,
+                target = target,
                 error = BeverageDailyError(error)
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())

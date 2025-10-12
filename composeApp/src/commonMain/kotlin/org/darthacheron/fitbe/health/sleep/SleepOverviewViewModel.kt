@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.sleep
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.sleep_overview_content_description_add_sleep
 import fitbe.composeapp.generated.resources.top_bar_title_sleeps
 import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,6 +58,9 @@ class SleepOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
+
+    override val addButtonContentDescription: StringResource
+        get() = Res.string.sleep_overview_content_description_add_sleep
 
     val targetSleeps: StateFlow<UInt?> =
         settingsRepository

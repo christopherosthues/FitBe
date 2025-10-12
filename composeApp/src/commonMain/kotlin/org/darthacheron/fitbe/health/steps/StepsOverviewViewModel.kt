@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.steps_overview_content_description_add_steps
 import fitbe.composeapp.generated.resources.steps_overview_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,6 +51,9 @@ class StepsOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
+
+    override val addButtonContentDescription: StringResource
+        get() = Res.string.steps_overview_content_description_add_steps
 
     val targetSteps: StateFlow<UInt?> =
         settingsRepository

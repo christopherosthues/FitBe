@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.health.weight
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
+import fitbe.composeapp.generated.resources.weight_overview_content_description_add_body_weight
 import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +56,9 @@ class WeightOverviewViewModel(
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health
+
+    override val addButtonContentDescription: StringResource
+        get() = Res.string.weight_overview_content_description_add_body_weight
 
     private val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
 

@@ -7,8 +7,11 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -19,10 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.PI
@@ -34,7 +40,9 @@ fun CircularWaveAnimationProgressIndicator(
     modifier: Modifier = Modifier,
     size: Dp = 150.dp,
     strokeWidth: Dp = 8.dp,
-    label: String = "${(progress() * 100).toInt()}%"
+    text: String,
+    label: String?,
+    contentDescription: String?
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "wave_animation")
     val phase by infiniteTransition.animateFloat(
@@ -108,11 +116,38 @@ fun CircularWaveAnimationProgressIndicator(
             strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap
         )
 
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.surfaceTint,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.surfaceTint,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier =
+                    Modifier
+                        .width(size - strokeWidth - strokeWidth - 16.dp)
+                        .semantics {
+                            if (contentDescription != null) {
+                                this.contentDescription = contentDescription
+                            }
+                        }
+            )
+            if (label != null) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.surfaceTint,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier =
+                        Modifier
+                            .width(size - strokeWidth - strokeWidth - 16.dp)
+                            .clearAndSetSemantics { }
+                )
+            }
+        }
     }
 }

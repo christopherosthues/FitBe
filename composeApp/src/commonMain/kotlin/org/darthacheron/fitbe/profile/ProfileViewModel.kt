@@ -191,7 +191,6 @@ class ProfileViewModel(
         }.launchIn(viewModelScope)
     }
 
-    // --- Input Field Handlers ---
     fun onNameChanged(name: String) {
         _uiState.update { it.copy(inputName = name) }
 
