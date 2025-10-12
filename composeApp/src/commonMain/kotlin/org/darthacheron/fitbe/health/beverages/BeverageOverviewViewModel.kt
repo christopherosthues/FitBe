@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.OverviewViewModel
+import org.darthacheron.fitbe.health.sleep.SleepOverview
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -32,6 +34,7 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
@@ -130,24 +133,32 @@ class BeverageOverviewViewModel(
                 if (beverages.isEmpty()) {
                     ProfileDefaults.BEVERAGE
                 } else {
-                    beverages.maxOfOrNull { it.amountMl } ?: ProfileDefaults.BEVERAGE
+                    beverages.maxOfOrNull { it.amountMl }?.toUInt() ?: ProfileDefaults.BEVERAGE
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
-    private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> =
-        beverages
+    private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> = aggregateDailyBeverages(beverages)
+
+    private fun aggregateDailyBeverages(beverages: List<Beverage>): List<BeverageOverview> {
+        if (beverages.isEmpty()) {
+            return emptyList()
+        }
+
+        return beverages
             .groupBy { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, beverageEntries) ->
                 BeverageOverview(
-                    date,
-                    beverageEntries.sumOf { it.amount }.toUInt()
+                    date = date,
+                    amountMl = beverageEntries.sumOf { it.unit.toMilliliter(it.amount) }
                 )
             }
+    }
 
     private fun <K> aggregateBeveragesByPeriod(
-        beverages: List<Beverage>,
-        groupKeySelector: (Beverage) -> K,
-        representativeDateSelector: (List<Beverage>) -> LocalDate
+        beverages: List<BeverageOverview>,
+        groupKeySelector: (BeverageOverview) -> K,
+        representativeDateSelector: (List<BeverageOverview>) -> LocalDate,
+        daysInPeriodSelector: (List<BeverageOverview>) -> Int
     ): List<BeverageOverview> {
         if (beverages.isEmpty()) return emptyList()
 
@@ -156,65 +167,63 @@ class BeverageOverviewViewModel(
             .mapNotNull { (_, group) ->
                 if (group.isEmpty()) return@mapNotNull null
 
-                val avgAmount = group.sumOf { it.amount } / group.size
+                val sumBeverageAmount = group.sumOf { it.amountMl }
+                val daysInPeriod = daysInPeriodSelector(group)
+                if (daysInPeriod == 0) return@mapNotNull null
+
+                val avgAmount = (sumBeverageAmount / daysInPeriod).roundToDecimals(2)
 
                 BeverageOverview(
                     date = representativeDateSelector(group),
-                    amountMl = avgAmount.roundToInt().toUInt()
+                    amountMl = avgAmount
                 )
             }
     }
 
-    private fun mapWeek(beverages: List<Beverage>): List<BeverageOverview> =
-        aggregateBeveragesByPeriod(
-            beverages = beverages,
-            groupKeySelector = {
-                it
-                    .date
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .date
-                    .isoWeekAndYear()
-            },
-            representativeDateSelector = { group ->
-                group
-                    .first()
-                    .date
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .date
-                    .firstDayOfIsoWeek()
-            }
+    private fun mapWeek(beverages: List<Beverage>): List<BeverageOverview> {
+        val dailyBeverages = aggregateDailyBeverages(beverages)
+        return aggregateBeveragesByPeriod(
+            beverages = dailyBeverages,
+            groupKeySelector = { it.date.isoWeekAndYear() },
+            representativeDateSelector = { group -> group.first().date.firstDayOfIsoWeek() },
+            daysInPeriodSelector = { _ -> 7 }
         )
+    }
 
-    private fun mapMonth(beverages: List<Beverage>): List<BeverageOverview> =
-        aggregateBeveragesByPeriod(
-            beverages = beverages,
-            groupKeySelector = {
-                val date = it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date
-                date.year to date.month
-            },
-            representativeDateSelector = { group ->
-                group
-                    .first()
-                    .date
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .date
-                    .firstDayOfMonth()
+    private fun mapMonth(beverages: List<Beverage>): List<BeverageOverview> {
+        val dailyBeverages = aggregateDailyBeverages(beverages)
+        return aggregateBeveragesByPeriod(
+            beverages = dailyBeverages,
+            groupKeySelector = { it.date.year to it.date.month },
+            representativeDateSelector = { group -> group.first().date.firstDayOfMonth() },
+            daysInPeriodSelector = { group ->
+                val localDate = group.first().date.firstDayOfMonth()
+                val firstDay = localDate.firstDayOfMonth()
+                val nextMonth =
+                    if (firstDay.monthNumber == 12) {
+                        LocalDate(firstDay.year + 1, 1, 1)
+                    } else {
+                        LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
+                    }
+                firstDay.daysUntil(nextMonth)
             }
         )
+    }
 
-    private fun mapYear(beverages: List<Beverage>): List<BeverageOverview> =
-        aggregateBeveragesByPeriod(
-            beverages = beverages,
-            groupKeySelector = { it.date.toLocalDateTime(TimeZone.currentSystemDefault()).year },
-            representativeDateSelector = { group ->
-                group
-                    .first()
-                    .date
-                    .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .date
-                    .firstDayOfYear()
+    private fun mapYear(beverages: List<Beverage>): List<BeverageOverview> {
+        val dailyBeverages = aggregateDailyBeverages(beverages)
+        return aggregateBeveragesByPeriod(
+            beverages = dailyBeverages,
+            groupKeySelector = { it.date.year },
+            representativeDateSelector = { group -> group.first().date.firstDayOfYear() },
+            daysInPeriodSelector = { group ->
+                val date = group.first().date.firstDayOfYear()
+                val year = date.year
+                val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+                if (isLeap) 366 else 365
             }
         )
+    }
 
     fun saveBeverage(
         amount: Double,

@@ -681,6 +681,8 @@
 
     <!-- Sleep overview -->
     <string name="sleep_overview_content_description_add_sleep">Record sleep</string>
+    <string name="sleep_overview_error_loading">Error loading sleep data.</string>
+    <string name="sleep_overview_error_saving">Error saving sleep data. Please try again.</string>
 
     <!-- Sleep chart -->
     <string name="sleeps_chart_thumbnail_title">Sleep</string>

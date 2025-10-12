@@ -35,6 +35,7 @@ class AddBeverageDialogViewModel(
     }
 
     private fun validateAmount() {
+        // TODO: convert amount to ml for validation
         viewModelScope.launch {
             val currentState = uiState.value
             val amount = currentState.amount

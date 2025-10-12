@@ -2,7 +2,10 @@ package org.darthacheron.fitbe.health.sleep
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.sleep_overview_content_description_add_sleep
+import fitbe.composeapp.generated.resources.sleep_overview_error_loading
+import fitbe.composeapp.generated.resources.sleep_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_sleeps
 import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,7 +65,7 @@ class SleepOverviewViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.sleep_overview_content_description_add_sleep
 
-    val targetSleeps: StateFlow<UInt?> =
+    val targetSleeps: StateFlow<UInt> =
         settingsRepository
             .getSettingsFlow()
             .flatMapLatest { settings ->
@@ -70,15 +73,18 @@ class SleepOverviewViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSleepDuration }
+                        .map { profile -> profile?.targetSleepDuration ?: ProfileDefaults.SLEEP_DURATION }
                 } else {
-                    flowOf(null)
+                    flowOf(ProfileDefaults.SLEEP_DURATION)
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
     private val sleepsDataFlow: StateFlow<List<SleepOverview>> =
-        combine(dateRange, settingsRepository.getSettingsFlow()) { range, settings ->
+        combine(
+            dateRange,
+            settingsRepository.getSettingsFlow()
+        ) { range, settings ->
             settings.selectedProfileId?.let {
                 Pair(settings, range.dateUnit) to
                     sleepRepository.getSleepsBetween(
@@ -101,21 +107,12 @@ class SleepOverviewViewModel(
             errorMessage.value = null
         }.catch {
             isLoading.value = false
-            errorMessage.value = Res.string.weight_overview_error_loading
+            errorMessage.value = Res.string.sleep_overview_error_loading
             emit(emptyList())
         }.map {
             isLoading.value = false
             it
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
-//        }.flatMapLatest { it }
-//            .map { s ->
-//                s.map { value ->
-//                    Point(
-//                        value.dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).date,
-//                        (value.hours.toDouble() + value.minutes.toDouble() / 60).roundToDecimals(2)
-//                    )
-//                }
-//            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val uiState: StateFlow<SleepOverviewUiState> =
         combine(
@@ -139,7 +136,11 @@ class SleepOverviewViewModel(
         uiState
             .map { it.sleeps }
             .map { sleeps ->
-                sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
+                if (sleeps.isEmpty()) {
+                    ProfileDefaults.SLEEP_DURATION
+                } else {
+                    sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
+                }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
     private fun mapDay(sleeps: List<Sleep>): List<SleepOverview> = aggregateDailySleeps(sleeps)
@@ -235,15 +236,25 @@ class SleepOverviewViewModel(
         endDateTime: Instant
     ) {
         viewModelScope.launch {
-            val settings = settingsRepository.getSettings()
-            sleepRepository.addSleep(
-                Sleep(
-                    id = Uuid.random(),
-                    profileId = settings.selectedProfileId!!,
-                    start = startDateTime,
-                    end = endDateTime
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.sleep_overview_error_saving
+                    return@launch
+                }
+
+                sleepRepository.addSleep(
+                    Sleep(
+                        id = Uuid.random(),
+                        profileId = profileId,
+                        start = startDateTime,
+                        end = endDateTime
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.sleep_overview_error_saving
+            }
         }
     }
 }

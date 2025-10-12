@@ -6,7 +6,4 @@ import org.darthacheron.fitbe.health.components.Overview
 data class SleepOverview(
     override val date: LocalDate,
     val totalMinutes: Double
-) : Overview {
-    val minutes = totalMinutes % 60
-    val hours = totalMinutes / 60
-}
+) : Overview
