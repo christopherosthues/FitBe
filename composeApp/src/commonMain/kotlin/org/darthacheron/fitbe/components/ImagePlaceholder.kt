@@ -23,7 +23,8 @@ import org.jetbrains.compose.resources.painterResource
 fun ImagePlaceholder(
     isEditing: Boolean,
     default: Boolean,
-    contentDescription: String
+    contentDescription: String,
+    defaultContentDescription: String
 ) {
     Box(
         modifier =
@@ -34,7 +35,7 @@ fun ImagePlaceholder(
     ) {
         Image(
             painter = painterResource(Res.drawable.ic_launcher),
-            contentDescription = null,
+            contentDescription = contentDescription,
             modifier = Modifier.size(128.dp),
             contentScale = ContentScale.Fit
         )
@@ -48,7 +49,7 @@ fun ImagePlaceholder(
         if (default && !isEditing) {
             Icon(
                 painter = painterResource(Res.drawable.ic_verified),
-                contentDescription = contentDescription,
+                contentDescription = defaultContentDescription,
                 modifier =
                     Modifier
                         .align(Alignment.TopStart)

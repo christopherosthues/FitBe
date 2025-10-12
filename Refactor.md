@@ -8,78 +8,78 @@
 
 #### components
 
-* [ ] CircularWaveAnimationProgressIndicator
+* [x] CircularWaveAnimationProgressIndicator
 * [ ] DropdownSelection
-* [ ] FitBeImage
-* [ ] HalfCircularProgressIndicator
-* [ ] ImagePlaceholder
-* [ ] ImageWithDefault
-* [ ] SaveCancelFloatingActionButtonRow
+* [x] FitBeImage
+* [x] HalfCircularProgressIndicator
+* [x] ImagePlaceholder
+* [x] ImageWithDefault
+* [x] SaveCancelFloatingActionButtonRow
 
 ##### date
 
-* [ ] AdvancedTimerDialog
-* [ ] DatePickerModal
-* [ ] DateRange
+* [x] AdvancedTimerDialog
+* [x] DatePickerModal
+* [x] DateRange
 * [ ] DateRangePicker
-* [ ] DateUnit
-* [ ] PastOrPresentSelectableDates
-* [ ] TimeInputDialog
-* [ ] TimerPickerDialog
+* [x] DateUnit
+* [x] PastOrPresentSelectableDates
+* [x] TimeInputDialog
+* [x] TimerPickerDialog
 
 ###### month
 
 * [ ] MonthRangePicker
-* [ ] PastOrPresentSelectableMonths
+* [x] PastOrPresentSelectableMonths
 
 ###### week
 
-* [ ] PastOrPresentSelectableWeeks
+* [x] PastOrPresentSelectableWeeks
 * [ ] WeekRangePicker
 
 ###### year
 
-* [ ] PastOrPresentSelectableYears
+* [x] PastOrPresentSelectableYears
 * [ ] YearRangePicker
 
 ##### validators
 
-* [ ] BeverageValidator
-* [ ] BodyHeightValidator
-* [ ] BodyWeightValidator
-* [ ] KcalValidator
-* [ ] PercentageValidator
-* [ ] PositiveDecimalValidator
-* [ ] PositiveNumberValidator
-* [ ] StepsValidator
+* [x] BeverageValidator
+* [x] BodyHeightValidator
+* [x] BodyWeightValidator
+* [x] KcalValidator
+* [x] PercentageValidator
+* [x] PositiveDecimalValidator
+* [x] PositiveNumberValidator
+* [x] StepsValidator
 
 #### database
 
-* [ ] DatabaseFactory
-* [ ] FitBeDatabase
-* [ ] FitBeDatabaseConstructor
+* [x] DatabaseFactory
+* [x] FitBeDatabase
+* [x] FitBeDatabaseConstructor
 * [ ] InitialData
-* [ ] PrepopulateCallback
+* [x] PrepopulateCallback
 
 ##### converters
 
-* [ ] ExerciseTypeConverter
-* [ ] FluidUnitConverter
-* [ ] GenderConverter
-* [ ] InstantConverter
-* [ ] LocalDateConverter
-* [ ] LocalDateTimeConverter
-* [ ] LocalTimeConverter
-* [ ] MuscleGroupListConverter
-* [ ] RecommendedForListConverter
-* [ ] UuidConverter
-* [ ] WorkoutExecutionStatusConverter
-* [ ] WorkoutSetStatusConverter
+* [x] ExerciseTypeConverter
+* [x] FluidUnitConverter
+* [x] GenderConverter
+* [x] InstantConverter
+* [x] LocalDateConverter
+* [x] LocalDateTimeConverter
+* [x] LocalTimeConverter
+* [x] MuscleGroupListConverter
+* [x] RecommendedForListConverter
+* [x] UuidConverter
+* [x] WorkoutExecutionStatusConverter
+* [x] WorkoutSetStatusConverter
 
 #### di
 
-* [ ] Modules
-* [ ] initKoin
+* [x] Modules
+* [x] initKoin
 
 #### health
 

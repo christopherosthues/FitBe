@@ -131,6 +131,23 @@ suspend fun seedDatabase(db: FitBeDatabase) {
         }
 
     val timeZone = TimeZone.currentSystemDefault()
+
+    val beverageNames =
+        listOf(
+            "Water",
+            "Coffee",
+            "Cappuccino",
+            "Espresso",
+            "Tea",
+            "Apple Juice",
+            "Orange Juice",
+            "Milk",
+            "Chocolate Milk",
+            "Strawberry Milk",
+            "Milkshake",
+            "Smoothie",
+        )
+
     for (i in 0 until 730) {
         val dateForLoop =
             Clock.System
@@ -169,7 +186,7 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                             .toLocalDateTime(TimeZone.UTC)
                             .toInstant(TimeZone.UTC)
                             .minus((i - 1).days),
-                    beverage = "",
+                    beverage = beverageNames.random(),
                     amount = Random.nextInt(200, 1500).toDouble(),
                     unit = FluidUnit.Milliliter,
                     profileId = profile.id

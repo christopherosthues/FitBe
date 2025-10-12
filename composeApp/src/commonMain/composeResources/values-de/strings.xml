@@ -612,7 +612,6 @@
     <string name="health_view_content_description_detail">Wechsel zur Übersichtsanzeige der Gesundheitsdaten</string>
 
     <!-- Overview view -->
-    <!-- TODO: Ein -> has to be different for day, week, month, year -->
     <plurals name="overview_content_description_date_unit">
         <item quantity="zero">Ein %1$s</item>
         <item quantity="one">Eine %1$s</item>

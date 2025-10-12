@@ -139,6 +139,8 @@ fun WorkoutTemplateDetailView(
                                 isEditing = uiState.isEditing,
                                 default = uiState.default,
                                 contentDescription =
+                                    stringResource(Res.string.exercise_detail_content_description_image),
+                                defaultContentDescription =
                                     stringResource(Res.string.exercise_detail_content_description_default_exercise)
                             )
                         }

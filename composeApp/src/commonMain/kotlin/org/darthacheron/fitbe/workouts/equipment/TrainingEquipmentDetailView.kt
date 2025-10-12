@@ -164,6 +164,8 @@ fun TrainingEquipmentDetailView(
                                 isEditing = uiState.isEditing,
                                 default = uiState.default,
                                 contentDescription =
+                                    stringResource(Res.string.training_equipment_detail_content_description_image),
+                                defaultContentDescription =
                                     stringResource(
                                         Res.string.training_equipment_detail_content_description_default_equipment
                                     )
