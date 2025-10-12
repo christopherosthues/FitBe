@@ -692,10 +692,15 @@
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Schlaf eintragen</string>
     <string name="sleep_add_dialog_start_date">Starttag</string>
+    <string name="sleep_add_dialog_content_description_start_date">Starttag auswählen</string>
     <string name="sleep_add_dialog_start_time">Startzeit</string>
+    <string name="sleep_add_dialog_content_description_start_time">Startzeit auswählen</string>
     <string name="sleep_add_dialog_end_date">Endtag</string>
+    <string name="sleep_add_dialog_content_description_end_date">Endtag auswählen</string>
     <string name="sleep_add_dialog_end_time">Endzeit</string>
+    <string name="sleep_add_dialog_content_description_end_time">Endzeit auswählen</string>
     <string name="sleep_add_dialog_duration">Dauer</string>
+    <string name="sleep_add_dialog_duration_value">%1$dh %2$dm</string>
     <string name="sleep_add_dialog_save">Speichern</string>
     <string name="sleep_add_dialog_cancel">Abbrechen</string>
     <string name="sleep_add_dialog_error_start_time">Die Startzeit muss vor der Endzeit liegen.</string>

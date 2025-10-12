@@ -29,7 +29,12 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.sleep_add_dialog_cancel
+import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_end_date
+import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_end_time
+import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_date
+import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_duration
+import fitbe.composeapp.generated.resources.sleep_add_dialog_duration_value
 import fitbe.composeapp.generated.resources.sleep_add_dialog_end_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_end_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_save
@@ -93,7 +98,8 @@ fun AddSleepDialog(
                                 IconButton(onClick = { showStartDatePicker = true }) {
                                     Icon(
                                         painterResource(Res.drawable.ic_date_range),
-                                        contentDescription = null
+                                        contentDescription =
+                                            stringResource(Res.string.sleep_add_dialog_content_description_start_date)
                                     )
                                 }
                             },
@@ -109,7 +115,8 @@ fun AddSleepDialog(
                                 IconButton(onClick = { showStartTimePicker = true }) {
                                     Icon(
                                         painterResource(Res.drawable.ic_access_time),
-                                        contentDescription = null
+                                        contentDescription =
+                                            stringResource(Res.string.sleep_add_dialog_content_description_start_time)
                                     )
                                 }
                             },
@@ -123,7 +130,6 @@ fun AddSleepDialog(
                     }
                 }
 
-                // End Date & Time
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         OutlinedTextField(
@@ -135,7 +141,8 @@ fun AddSleepDialog(
                                 IconButton(onClick = { showEndDatePicker = true }) {
                                     Icon(
                                         painterResource(Res.drawable.ic_date_range),
-                                        contentDescription = null
+                                        contentDescription =
+                                            stringResource(Res.string.sleep_add_dialog_content_description_end_date)
                                     )
                                 }
                             },
@@ -151,7 +158,8 @@ fun AddSleepDialog(
                                 IconButton(onClick = { showEndTimePicker = true }) {
                                     Icon(
                                         painterResource(Res.drawable.ic_access_time),
-                                        contentDescription = null
+                                        contentDescription =
+                                            stringResource(Res.string.sleep_add_dialog_content_description_end_time)
                                     )
                                 }
                             },
@@ -165,7 +173,6 @@ fun AddSleepDialog(
                     }
                 }
 
-                // Duration
                 Spacer(Modifier.height(16.dp))
                 OutlinedTextField(
                     value = formatDuration(duration),
@@ -190,11 +197,14 @@ fun AddSleepDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text(text = stringResource(Res.string.sleep_add_dialog_cancel)) }
+            TextButton(onClick = {
+                onDismiss()
+            }) {
+                Text(text = stringResource(Res.string.sleep_add_dialog_cancel))
+            }
         }
     )
 
-    // Date/Time pickers
     if (showStartDatePicker) {
         DatePickerModal(
             onDateSelected = { millis ->
@@ -254,8 +264,9 @@ fun AddSleepDialog(
 private fun formatTime(time: LocalTime): String =
     "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
 
+@Composable
 fun formatDuration(duration: Duration): String {
     val hours = duration.toLong(DurationUnit.HOURS)
     val minutes = (duration.inWholeMinutes % 60)
-    return "${hours}h ${minutes}m"
+    return stringResource(Res.string.sleep_add_dialog_duration_value, hours, minutes)
 }
