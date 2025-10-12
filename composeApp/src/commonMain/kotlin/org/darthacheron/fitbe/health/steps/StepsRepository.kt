@@ -39,25 +39,15 @@ class StepsRepository(
         profileId: Uuid
     ): Flow<List<Steps>> {
         val startOfDay = date.atStartOfDayIn(TimeZone.currentSystemDefault())
-        val dateSpan = toDateSpan(startOfDay, startOfDay)
 
-        return stepsDao
-            .getStepsBetweenDates(
-                start = dateSpan.first,
-                end = dateSpan.second,
-                profileId = profileId
-            ).map { entities -> entities.map { it.toSteps() } }
+        return getSteps(
+            startDate = startOfDay,
+            endDate = startOfDay,
+            profileId = profileId
+        )
     }
 
     suspend fun addSteps(steps: Steps) {
-        stepsDao.upsertSteps(steps.toStepsEntity())
-    }
-
-    suspend fun updateSteps(steps: Steps) {
-        stepsDao.upsertSteps(steps.toStepsEntity())
-    }
-
-    suspend fun deleteSteps(steps: Steps) {
-        stepsDao.deleteSteps(steps.toStepsEntity())
+        stepsDao.upsertSteps(steps = steps.toStepsEntity())
     }
 }

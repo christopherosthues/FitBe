@@ -12,19 +12,8 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface StepsDao {
-    @Query(
-        """
-        SELECT * FROM steps 
-        WHERE profileId = :profileId
-        AND dateUtc BETWEEN SUBSTR(:start, 1, 10) AND SUBSTR(:end, 1, 10)
-        ORDER BY dateUtc ASC
-    """
-    )
-    fun getStepsBetweenDates(
-        start: String,
-        end: String,
-        profileId: Uuid
-    ): Flow<List<StepsEntity>>
+    @Upsert
+    suspend fun upsertSteps(steps: StepsEntity)
 
     // TODO: check call sites for correct dates
     @Query(
@@ -53,10 +42,4 @@ interface StepsDao {
         today: String,
         profileId: Uuid
     ): Flow<StepsEntity>
-
-    @Upsert
-    suspend fun upsertSteps(steps: StepsEntity)
-
-    @Delete
-    suspend fun deleteSteps(steps: StepsEntity)
 }

@@ -156,18 +156,18 @@
 * [ ] AddStepsDialogUiState
 * [ ] AddStepsDialogViewModel
 * [ ] PlotSteps
-* [ ] Steps
+* [x] Steps
 * [ ] StepsDailyView
 * [ ] StepsDailyViewModel
-* [ ] StepsDao
-* [ ] StepsEntity
-* [ ] StepsOverview
-* [ ] StepsOverviewError
-* [ ] StepsOverviewUiState
+* [x] StepsDao
+* [x] StepsEntity
+* [x] StepsOverview
+* [x] StepsOverviewError
+* [x] StepsOverviewUiState
 * [ ] StepsOverviewView
 * [ ] StepsOverviewViewModel
-* [ ] StepsRepository
-* [ ] StepsView
+* [x] StepsRepository
+* [x] StepsView
 
 ##### weight
 

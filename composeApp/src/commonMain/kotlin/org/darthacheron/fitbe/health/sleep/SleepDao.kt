@@ -11,6 +11,9 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface SleepDao {
+    @Upsert()
+    suspend fun upsertSleep(sleep: SleepEntity)
+
     // TODO: check call sites for correct dates
     @Query(
         """
@@ -26,7 +29,4 @@ interface SleepDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<SleepEntity>>
-
-    @Upsert()
-    suspend fun upsertSleep(sleep: SleepEntity)
 }
