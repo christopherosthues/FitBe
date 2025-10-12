@@ -117,6 +117,7 @@ fun PlotBeverages(
                 }
             }
         ) {
+            // TODO: accessible plot data
             if (dates.size > 1) {
                 AreaPlot(
                     data = beverages.map { Point(it.date, it.amountMl.toInt()) },

@@ -83,8 +83,6 @@ class BeverageDailyViewModel(
                 beverages
             }
 
-    // TODO: translations
-
     override val uiState: StateFlow<BeverageDailyUiState> =
         combine(
             beveragesFlow,

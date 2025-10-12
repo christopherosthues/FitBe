@@ -89,17 +89,17 @@
 
 ##### beverages
 
-* [ ] AddBeverageDialog
-* [ ] AddBeverageDialogUiState
-* [ ] AddBeverageDialogViewModel
+* [x] AddBeverageDialog
+* [x] AddBeverageDialogUiState
+* [x] AddBeverageDialogViewModel
 * [x] Beverage
 * [x] BeverageDailyError
 * [x] BeverageDailyUiState
-* [ ] BeverageDailyView
-* [ ] BeverageDailyViewModel
+* [x] BeverageDailyView
+* [x] BeverageDailyViewModel
 * [x] BeverageDao
 * [x] BeverageEntity
-* [ ] BeverageOverview
+* [x] BeverageOverview
 * [x] BeverageOverviewError
 * [x] BeverageOverviewUiState
 * [x] BeverageOverviewView
@@ -107,7 +107,7 @@
 * [x] BeverageRepository
 * [x] BeverageView
 * [x] FluidUnit
-* [ ] PlotBeverages
+* [x] PlotBeverages
 
 ##### components
 

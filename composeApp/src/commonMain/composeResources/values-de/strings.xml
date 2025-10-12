@@ -642,19 +642,6 @@
     <string name="beverages_daily_view_content_description_progress_percent_target">%1$d Prozent des Tagesziels wurden erreicht</string>
     <string name="beverages_daily_view_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_daily_view_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
-
-    <!-- Beverage Add Dialog -->
-    <string name="beverages_add_dialog_title">Getränk eintragen</string>
-    <string name="beverages_add_dialog_content_description_date">Datum auswählen</string>
-    <string name="beverages_add_dialog_amount">Menge</string>
-    <string name="beverages_add_dialog_name">Getränkename</string>
-    <string name="beverages_add_dialog_unit">Einheit</string>
-    <string name="beverages_add_dialog_cancel">Abbrechen</string>
-    <string name="beverages_add_dialog_save">Speichern</string>
-    <string name="beverages_add_dialog_error_invalid_amount">Geben Sie einen Wert zwischen 0 und 5.000 ml ein.</string>
-    <string name="beverages_add_dialog_error_invalid_total_amount">Die tägliche Flüssigkeitseinnahme von 5.000 ml sollte nicht überschritten werden.</string>
-    <string name="beverages_add_dialog_error_name_empty">Der Name des Getränks darf nicht leer sein.</string>
-
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
         <item quantity="one">%1$d Tasse %2$s</item>
@@ -679,6 +666,91 @@
     <string name="beverage_in_centiliter">%1$d cl %2$s</string>
     <string name="beverage_in_deciliter">%1$d dl %2$s</string>
     <string name="beverage_in_liter">%1$d l %2$s</string>
+
+    <!-- Beverage Add Dialog -->
+    <string name="beverages_add_dialog_title">Getränk eintragen</string>
+    <string name="beverages_add_dialog_content_description_date">Datum auswählen</string>
+    <string name="beverages_add_dialog_amount">Menge</string>
+    <string name="beverages_add_dialog_name">Getränkename</string>
+    <string name="beverages_add_dialog_unit">Einheit</string>
+    <string name="beverages_add_dialog_save">Speichern</string>
+    <string name="beverages_add_dialog_cancel">Abbrechen</string>
+    <string name="beverages_add_dialog_error_invalid_amount">Geben Sie einen Wert zwischen 0 und 5.000 ml ein.</string>
+    <string name="beverages_add_dialog_error_invalid_total_amount">Die tägliche Flüssigkeitseinnahme von 5.000 ml sollte nicht überschritten werden.</string>
+    <string name="beverages_add_dialog_error_name_empty">Der Name des Getränks darf nicht leer sein.</string>
+
+    <!-- Sleep overview -->
+    <string name="sleep_overview_content_description_add_sleep">Schlaf eintragen</string>
+
+    <!-- Sleep chart -->
+    <string name="sleeps_chart_thumbnail_title">Schlaf</string>
+    <string name="sleeps_chart_y_axis_title">Schlafdauer (Minuten)</string>
+
+    <!-- Add sleep dialog -->
+    <string name="sleep_add_dialog_title">Schlaf eintragen</string>
+    <string name="sleep_add_dialog_start_date">Starttag</string>
+    <string name="sleep_add_dialog_start_time">Startzeit</string>
+    <string name="sleep_add_dialog_end_date">Endtag</string>
+    <string name="sleep_add_dialog_end_time">Endzeit</string>
+    <string name="sleep_add_dialog_duration">Dauer</string>
+    <string name="sleep_add_dialog_save">Speichern</string>
+    <string name="sleep_add_dialog_cancel">Abbrechen</string>
+    <string name="sleep_add_dialog_error_start_time">Die Startzeit muss vor der Endzeit liegen.</string>
+    <string name="sleep_add_dialog_error_end_time">Die Endzeit muss nach der Startzeit liegen.</string>
+    <string name="sleep_add_dialog_error_time_interval">Das angegebene Zeitintervall überschneidet sich mit einem bereits eingetragenem Schlafintervall.</string>
+
+    <!-- Steps overview -->
+    <string name="steps_overview_error_loading">Fehler beim Laden der Schrittdaten.</string>
+    <string name="steps_overview_content_description_add_steps">Schritte eintragen</string>
+
+    <!-- Steps chart -->
+    <string name="steps_chart_thumbnail_title">Schritte</string>
+    <string name="steps_chart_y_axis_title">Schritte</string>
+    <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
+
+    <!-- Add steps dialog -->
+    <string name="steps_add_dialog_title">Schritte eintragen</string>
+    <string name="steps_add_dialog_steps">Schrittanzahl</string>
+    <string name="steps_add_dialog_save">Speichern</string>
+    <string name="steps_add_dialog_cancel">Abbrechen</string>
+    <string name="steps_add_dialog_error_invalid_steps">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
+    <string name="steps_add_dialog_error_invalid_total_steps">Die Gesamtanzahl an Schritten pro Tag muss zwischen 0 und 500.000 liegen.</string>
+
+    <!-- Body weight Overview -->
+    <string name="weight_overview_content_description_add_body_weight">Körpergewicht eintragen</string>
+    <string name="weight_overview_error_loading">Fehler beim Laden der Gewichtsdaten.</string>
+
+    <!-- Body weight chart -->
+    <string name="body_weight_chart_thumbnail_title">Körpergewicht</string>
+    <string name="body_weight_chart_annotation_bone_mass_value">Knochenmasse: %1$d %2$s</string>
+    <string name="body_weight_chart_annotation_muscle_mass_value">Muskelmasse: %1$d %2$s</string>
+    <string name="body_weight_chart_annotation_body_fat_value">Körperfett: %1$d %</string>
+    <string name="body_weight_chart_annotation_body_water_value">Körperwasser: %1$d %</string>
+    <string name="body_weight_chart_annotation_total_weight_value">Gesamtgewicht: %1$d %2$s</string>
+    <string name="body_weight_chart_annotation_bone_mass">Knochenmasse</string>
+    <string name="body_weight_chart_annotation_muscle_mass">Muskelmasse</string>
+    <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
+    <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
+    <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
+
+    <!-- Body weight Add Dialog -->
+    <string name="body_weight_add_dialog_error_total_weight_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_total_weight_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_body_fat">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_muscle_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
+    <string name="body_weight_add_dialog_error_bone_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
+    <string name="body_weight_add_dialog_error_body_water">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
+    <string name="body_weight_add_dialog_error_total_weight_sum">Die Summe der Einzelgewichte darf das Gesamtgewicht nicht überschreiten.</string>
+    <string name="body_weight_add_dialog_title">Körpergewicht eintragen</string>
+    <string name="body_weight_add_dialog_total_weight">Gesamtgewicht (%1$s)</string>
+    <string name="body_weight_add_dialog_body_fat">Körperfett (%)</string>
+    <string name="body_weight_add_dialog_muscle_mass">Muskelmasse (%1$s)</string>
+    <string name="body_weight_add_dialog_bone_mass">Knochenmasse (%1$s)</string>
+    <string name="body_weight_add_dialog_body_water">Körperwasser (%)</string>
+    <string name="body_weight_add_dialog_save">Speichern</string>
+    <string name="body_weight_add_dialog_cancel">Abbrechen</string>
 
     <!-- Settings -->
     <string name="settings_weight_unit">Gewichtseinheit</string>
@@ -752,39 +824,7 @@
     <string name="gender_female">Weiblich</string>
     <string name="gender_other">Divers</string>
 
-    <!-- Body Weight Add Dialog -->
-    <string name="body_weight_add_dialog_error_total_weight_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_add_dialog_error_total_weight_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_add_dialog_error_body_fat">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
-    <string name="body_weight_add_dialog_error_muscle_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_add_dialog_error_muscle_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_add_dialog_error_bone_mass_kg">Geben Sie einen Wert zwischen 0,0 und 600,0 kg ein.</string>
-    <string name="body_weight_add_dialog_error_bone_mass_lb">Geben Sie einen Wert zwischen 0,0 und 1322,77 lb ein.</string>
-    <string name="body_weight_add_dialog_error_body_water">Geben Sie einen Wert zwischen 0,0 und 100,0 % ein.</string>
-    <string name="body_weight_add_dialog_error_total_weight_sum">Die Summe der Einzelgewichte darf das Gesamtgewicht nicht überschreiten.</string>
-    <string name="body_weight_add_dialog_title">Körpergewicht eintragen</string>
-    <string name="body_weight_add_dialog_total_weight">Gesamtgewicht (%1$s)</string>
-    <string name="body_weight_add_dialog_body_fat">Körperfett (%)</string>
-    <string name="body_weight_add_dialog_muscle_mass">Muskelmasse (%1$s)</string>
-    <string name="body_weight_add_dialog_bone_mass">Knochenmasse (%1$s)</string>
-    <string name="body_weight_add_dialog_body_water">Körperwasser (%)</string>
-    <string name="body_weight_add_dialog_save">Speichern</string>
-    <string name="body_weight_add_dialog_cancel">Abbrechen</string>
-
-    <string name="body_weight_chart_thumbnail_title">Körpergewicht</string>
-    <string name="body_weight_chart_annotation_bone_mass_value">Knochenmasse: %1$d %2$s</string>
-    <string name="body_weight_chart_annotation_muscle_mass_value">Muskelmasse: %1$d %2$s</string>
-    <string name="body_weight_chart_annotation_body_fat_value">Körperfett: %1$d %</string>
-    <string name="body_weight_chart_annotation_body_water_value">Körperwasser: %1$d %</string>
-    <string name="body_weight_chart_annotation_total_weight_value">Gesamtgewicht: %1$d %2$s</string>
-    <string name="body_weight_chart_annotation_bone_mass">Knochenmasse</string>
-    <string name="body_weight_chart_annotation_muscle_mass">Muskelmasse</string>
-    <string name="body_weight_chart_annotation_body_fat">Körperfett</string>
-    <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
-    <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
-    <string name="weight_overview_content_description_add_body_weight">Körpergewicht eintragen</string>
-    <string name="weight_overview_error_loading">Fehler beim Laden der Gewichtsdaten.</string>
-
+    <!-- Months -->
     <string name="month_january">Januar</string>
     <string name="month_february">Februar</string>
     <string name="month_march">März</string>
@@ -798,19 +838,6 @@
     <string name="month_november">November</string>
     <string name="month_december">Dezember</string>
 
-    <string name="steps_chart_thumbnail_title">Schritte</string>
-    <string name="steps_add_dialog_steps">Schrittanzahl</string>
-    <string name="steps_error_count">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
-    <string name="steps_overview_error_loading">Fehler beim Laden der Schrittdaten.</string>
-    <string name="steps_overview_content_description_add_steps">Schritte eintragen</string>
-
-    <string name="steps_add_dialog_title">Schritte eintragen</string>
-    <string name="steps_chart_y_axis_title">Schritte</string>
-    <string name="steps_add_dialog_save">Speichern</string>
-    <string name="steps_add_dialog_cancel">Abbrechen</string>
-    <string name="steps_add_dialog_error_invalid_steps">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
-    <string name="steps_add_dialog_error_invalid_total_steps">Die Gesamtanzahl an Schritten pro Tag muss zwischen 0 und 500.000 liegen.</string>
-
     <!-- Workout Templates -->
     <string name="workout_template_filter_label">Workout-Vorlagen filtern</string>
     <string name="workout_template_no_filtered_templates">Keine Workout-Vorlagen gefunden.</string>
@@ -823,22 +850,4 @@
     <string name="workout_template_exercises">%1$d Übungen</string>
     <string name="workout_template_error_favorites">Laden der favorisierten Workout-Vorlagen fehlgeschlagen</string>
     <string name="workout_template_error_toggle_favorite">Favoritenstatus der Workout-Vorlage konnte nicht geändert werden</string>
-
-    <!-- Sleep overview -->
-    <string name="sleeps_chart_thumbnail_title">Schlaf</string>
-    <string name="sleeps_chart_y_axis_title">Schlafdauer (Minuten)</string>
-    <string name="sleep_overview_content_description_add_sleep">Schlaf eintragen</string>
-
-    <!-- Add sleep dialog -->
-    <string name="sleep_add_dialog_title">Schlaf eintragen</string>
-    <string name="sleep_add_dialog_start_date">Starttag</string>
-    <string name="sleep_add_dialog_start_time">Startzeit</string>
-    <string name="sleep_add_dialog_end_date">Endtag</string>
-    <string name="sleep_add_dialog_end_time">Endzeit</string>
-    <string name="sleep_add_dialog_duration">Dauer</string>
-    <string name="sleep_add_dialog_save">Speichern</string>
-    <string name="sleep_add_dialog_cancel">Abbrechen</string>
-    <string name="sleep_add_dialog_error_start_time">Die Startzeit muss vor der Endzeit liegen.</string>
-    <string name="sleep_add_dialog_error_end_time">Die Endzeit muss nach der Startzeit liegen.</string>
-    <string name="sleep_add_dialog_error_time_interval">Das angegebene Zeitintervall überschneidet sich mit einem bereits eingetragenem Schlafintervall.</string>
 </resources>
