@@ -685,7 +685,8 @@
     <string name="settings_distance_unit">Entfernungseinheit</string>
     <string name="settings_body_measurement_unit">Körpermaßeinheit</string>
     <string name="settings_theme">Thema</string>
-    <string name="settings_reset">Auf Standard zurücksetzen</string>
+    <string name="settings_content_description_reset">Auf Standard zurücksetzen</string>
+    <string name="settings_content_description_save">Einstellungen speichern</string>
     <string name="settings_error_loading">Fehler beim Laden der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_error_saving">Fehler beim Speichern der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_content_description_back">Zurück navigieren</string>

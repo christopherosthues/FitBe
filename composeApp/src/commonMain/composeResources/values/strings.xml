@@ -685,7 +685,8 @@
     <string name="settings_distance_unit">Distance Unit</string>
     <string name="settings_body_measurement_unit">Body Measurement Unit</string>
     <string name="settings_theme">Theme</string>
-    <string name="settings_reset">Reset to Defaults</string>
+    <string name="settings_content_description_reset">Reset to Defaults</string>
+    <string name="settings_content_description_save">Save settings</string>
     <string name="settings_error_loading">Failed to load settings. Please try again.</string>
     <string name="settings_error_saving">Failed to save settings. Please try again.</string>
     <string name="settings_content_description_back">Navigate back</string>

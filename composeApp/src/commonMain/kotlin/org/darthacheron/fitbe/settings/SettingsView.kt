@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,11 +33,11 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_back
 import fitbe.composeapp.generated.resources.ic_reset
 import fitbe.composeapp.generated.resources.ic_save
-import fitbe.composeapp.generated.resources.profile_save
 import fitbe.composeapp.generated.resources.settings_body_measurement_unit
 import fitbe.composeapp.generated.resources.settings_content_description_back
+import fitbe.composeapp.generated.resources.settings_content_description_reset
+import fitbe.composeapp.generated.resources.settings_content_description_save
 import fitbe.composeapp.generated.resources.settings_distance_unit
-import fitbe.composeapp.generated.resources.settings_reset
 import fitbe.composeapp.generated.resources.settings_theme
 import fitbe.composeapp.generated.resources.settings_weight_unit
 import fitbe.composeapp.generated.resources.top_bar_title_settings
@@ -65,25 +64,6 @@ fun SettingsView(
         LaunchedEffect(it, message) {
             scope.launch {
                 snackbarHostState.showSnackbar(message)
-                viewModel.clearError()
-            }
-        }
-    }
-    val errorResId = uiState.error.generalError
-    val errorMessage =
-        if (errorResId != null && uiState.error.hasGeneralError) {
-            stringResource(errorResId)
-        } else {
-            null
-        }
-
-    LaunchedEffect(errorMessage) {
-        if (errorMessage != null) {
-            scope.launch {
-                snackbarHostState.showSnackbar(
-                    message = errorMessage,
-                    duration = SnackbarDuration.Short
-                )
                 viewModel.clearError()
             }
         }
@@ -120,17 +100,17 @@ fun SettingsView(
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_reset),
-                        contentDescription = stringResource(Res.string.settings_reset)
+                        contentDescription = stringResource(Res.string.settings_content_description_reset)
                     )
                 }
-                FloatingActionButton( // SAVE FAB
+                FloatingActionButton(
                     onClick = {
                         viewModel.saveSettings { navHostController.navigateUp() }
                     }
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_save),
-                        contentDescription = stringResource(Res.string.profile_save)
+                        contentDescription = stringResource(Res.string.settings_content_description_save)
                     )
                 }
             }

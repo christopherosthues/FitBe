@@ -221,8 +221,8 @@
 * [x] SettingsKeys
 * [x] SettingsRepository
 * [x] SettingsUiState
-* [ ] SettingsView
-* [ ] SettingsViewModel
+* [x] SettingsView
+* [x] SettingsViewModel
 * [x] ThemeMode
 * [x] WeightUnit
 
