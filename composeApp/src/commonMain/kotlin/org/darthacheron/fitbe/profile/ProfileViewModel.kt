@@ -207,9 +207,7 @@ class ProfileViewModel(
                             nameError = Res.string.profile_error_name_blank
                         )
                     } else if (existingProfileByName != null && existingProfileByName.id != profileId) {
-                        it.error.copy(
-                            nameError = Res.string.profile_error_name_exists
-                        )
+                        it.error.copy(nameError = Res.string.profile_error_name_exists)
                     } else {
                         it.error.copy(nameError = null)
                     }
@@ -239,9 +237,7 @@ class ProfileViewModel(
                 if (!positiveDecimalValidator.validate(beverage) ||
                     !beverageValidator.validate(beverage.toDoubleOrNull())
                 ) {
-                    it.error.copy(
-                        beverageError = Res.string.profile_error_beverage
-                    )
+                    it.error.copy(beverageError = Res.string.profile_error_beverage)
                 } else {
                     it.error.copy(beverageError = null)
                 }

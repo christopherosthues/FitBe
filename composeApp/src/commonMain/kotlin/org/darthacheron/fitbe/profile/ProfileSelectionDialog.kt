@@ -26,8 +26,9 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_profile
 import fitbe.composeapp.generated.resources.ic_profile_selected
-import fitbe.composeapp.generated.resources.profile_cancel
-import fitbe.composeapp.generated.resources.profile_select
+import fitbe.composeapp.generated.resources.select_profile_dialog_cancel
+import fitbe.composeapp.generated.resources.select_profile_dialog_select
+import fitbe.composeapp.generated.resources.select_profile_dialog_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -46,7 +47,7 @@ fun ProfileSelectionDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(Res.string.profile_select)) },
+        title = { Text(text = stringResource(Res.string.select_profile_dialog_title)) },
         text = {
             LazyColumn(
                 modifier =
@@ -95,12 +96,12 @@ fun ProfileSelectionDialog(
                     onProfileSelected(profiles[tempSelectedIndex])
                 }
             ) {
-                Text(text = stringResource(Res.string.profile_select))
+                Text(text = stringResource(Res.string.select_profile_dialog_select))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(Res.string.profile_cancel))
+                Text(text = stringResource(Res.string.select_profile_dialog_cancel))
             }
         }
     )

@@ -709,27 +709,24 @@
     <string name="theme_system">System</string>
 
     <!-- Profile -->
-    <string name="profile_add">Add Profile</string>
-    <string name="profile_gender">Gender</string>
-    <string name="profile_gender_unknown">Unknown</string>
-    <string name="profile_gender_male">Male</string>
-    <string name="profile_gender_female">Female</string>
-    <string name="profile_gender_other">Other</string>
-    <string name="profile_edit">Edit profile</string>
-    <string name="profile_delete">Delete profile</string>
-    <string name="profile_select">Select profile</string>
-    <string name="profile_add_title">Add Profile</string>
-    <string name="profile_edit_title">Edit Profile</string>
     <string name="profile_name">Name</string>
-    <string name="profile_target_kcal">Target kcal</string>
-    <string name="profile_target_beverage">Target Beverage (%1$s)</string>
-    <string name="profile_target_weight">Target Weight (%1$s)</string>
-    <string name="profile_target_sleep_duration">Target Sleep Duration</string>
-    <string name="profile_target_steps">Target Steps</string>
+    <string name="profile_content_description_select">Select profile</string>
     <string name="profile_date_of_birth">Date of birth</string>
+    <string name="profile_date_of_birth_select">Select date</string>
+    <string name="profile_gender">Gender</string>
+    <string name="profile_target_kcal">Target kcal</string>
+    <string name="profile_target_beverage">Target beverage amount (%1$s)</string>
+    <string name="profile_target_weight">Target weight (%1$s)</string>
+    <string name="profile_target_sleep_duration">Target sleep duration</string>
+    <string name="profile_target_sleep_duration_edit">Edit sleep duration</string>
+    <string name="profile_target_steps">Target steps</string>
     <string name="profile_body_height">Body height (%1$s)</string>
-    <string name="profile_save">Save</string>
-    <string name="profile_cancel">Cancel</string>
+    <string name="profile_no_profiles_prompt_add">No profiles found. Add one.</string>
+    <string name="profile_content_description_add">Add new Profile</string>
+    <string name="profile_content_description_edit">Edit profile</string>
+    <string name="profile_content_description_delete">Delete profile</string>
+    <string name="profile_content_description_save">Save profile</string>
+    <string name="profile_content_description_cancel">Cancel</string>
     <string name="profile_error_kcal">Enter a value between 0 and 10,000.</string>
     <string name="profile_error_beverage">Enter a value between 0 and 5,000 ml.</string>
     <string name="profile_error_weight_kg">Enter a value between 0.0 and 600.0 kg.</string>
@@ -743,7 +740,17 @@
     <string name="profile_error_name_exists">A profile with this name already exists.</string>
     <string name="profile_error_saving">Error saving profile. Please try again.</string>
     <string name="profile_error_switching">Error switching profile. Please try again.</string>
-    <string name="profile_no_profiles_prompt_add">No profiles found. Click \'+\' to add one.</string>
+
+    <!-- Select profile dialog -->
+    <string name="select_profile_dialog_title">Select Profile</string>
+    <string name="select_profile_dialog_cancel">Cancel</string>
+    <string name="select_profile_dialog_select">Select</string>
+
+    <!-- Gender -->
+    <string name="gender_unknown">Unknown</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
 
     <!-- Body Weight Add Dialog -->
     <string name="body_weight_add_dialog_error_total_weight_kg">Enter a value between 0.0 and 600.0 kg.</string>

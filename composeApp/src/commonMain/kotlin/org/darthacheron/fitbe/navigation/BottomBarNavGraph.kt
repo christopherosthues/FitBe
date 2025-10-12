@@ -217,5 +217,6 @@ fun String?.toUuidOrNull(): Uuid? {
         Uuid.parse(this)
     }.onFailure {
         println("Failed to parse UUID from string '$this': ${it.message}")
+        it.printStackTrace()
     }.getOrNull()
 }

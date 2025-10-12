@@ -188,29 +188,29 @@
 
 #### home
 
-* [ ] HomeView
-* [ ] HomeViewModel
+* [x] HomeView
+* [x] HomeViewModel
 
 #### navigation
 
 * [x] BottomBarDestination
-* [ ] BottomBarNavGraph
-* [ ] RootNavGraph
+* [x] BottomBarNavGraph
+* [x] RootNavGraph
 * [x] Screen
 
 #### profile
 
-* [ ] Gender
-* [ ] Profile
-* [ ] ProfileDao
-* [ ] ProfileDefaults
-* [ ] ProfileEntity
-* [ ] ProfileError
-* [ ] ProfileRepository
-* [ ] ProfileSelectionDialog
-* [ ] ProfileUiState
-* [ ] ProfileView
-* [ ] ProfileViewModel
+* [x] Gender
+* [x] Profile
+* [x] ProfileDao
+* [x] ProfileDefaults
+* [x] ProfileEntity
+* [x] ProfileError
+* [x] ProfileRepository
+* [x] ProfileSelectionDialog
+* [x] ProfileUiState
+* [x] ProfileView
+* [x] ProfileViewModel
 
 #### settings
 

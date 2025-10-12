@@ -44,20 +44,22 @@ import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_switch
-import fitbe.composeapp.generated.resources.profile_add
+import fitbe.composeapp.generated.resources.profile_content_description_add
 import fitbe.composeapp.generated.resources.profile_body_height
-import fitbe.composeapp.generated.resources.profile_cancel
+import fitbe.composeapp.generated.resources.profile_content_description_cancel
 import fitbe.composeapp.generated.resources.profile_date_of_birth
-import fitbe.composeapp.generated.resources.profile_delete
-import fitbe.composeapp.generated.resources.profile_edit
+import fitbe.composeapp.generated.resources.profile_content_description_delete
+import fitbe.composeapp.generated.resources.profile_content_description_edit
 import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
 import fitbe.composeapp.generated.resources.profile_no_profiles_prompt_add
-import fitbe.composeapp.generated.resources.profile_save
-import fitbe.composeapp.generated.resources.profile_select
+import fitbe.composeapp.generated.resources.profile_content_description_save
+import fitbe.composeapp.generated.resources.profile_content_description_select
+import fitbe.composeapp.generated.resources.profile_date_of_birth_select
 import fitbe.composeapp.generated.resources.profile_target_beverage
 import fitbe.composeapp.generated.resources.profile_target_kcal
 import fitbe.composeapp.generated.resources.profile_target_sleep_duration
+import fitbe.composeapp.generated.resources.profile_target_sleep_duration_edit
 import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
 import kotlinx.coroutines.launch
@@ -135,7 +137,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                         ) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_switch),
-                                contentDescription = stringResource(Res.string.profile_select)
+                                contentDescription = stringResource(Res.string.profile_content_description_select)
                             )
                         }
                     }
@@ -154,7 +156,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             ) {
                                 Icon(
                                     painterResource(Res.drawable.ic_date_range),
-                                    contentDescription = null
+                                    contentDescription = stringResource(Res.string.profile_date_of_birth_select)
                                 )
                             }
                         },
@@ -263,7 +265,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                             ) {
                                 Icon(
                                     painterResource(Res.drawable.ic_access_time),
-                                    contentDescription = null
+                                    contentDescription = stringResource(Res.string.profile_target_sleep_duration_edit)
                                 )
                             }
                         },
@@ -334,7 +336,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                         ) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_edit),
-                                contentDescription = stringResource(Res.string.profile_edit)
+                                contentDescription = stringResource(Res.string.profile_content_description_edit)
                             )
                         }
                     }
@@ -344,7 +346,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_add),
-                            contentDescription = stringResource(Res.string.profile_add)
+                            contentDescription = stringResource(Res.string.profile_content_description_add)
                         )
                     }
                 }
@@ -364,7 +366,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.ic_delete),
-                        contentDescription = stringResource(Res.string.profile_delete)
+                        contentDescription = stringResource(Res.string.profile_content_description_delete)
                     )
                 }
             }
@@ -375,8 +377,8 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                 isEditing = uiState.isEditing,
                 isLoading = uiState.isLoading,
                 hasError = uiState.error.hasAnyFieldError,
-                saveButtonContentDescription = Res.string.profile_save,
-                cancelButtonContentDescription = Res.string.profile_cancel,
+                saveButtonContentDescription = Res.string.profile_content_description_save,
+                cancelButtonContentDescription = Res.string.profile_content_description_cancel,
                 modifier = Modifier.align(Alignment.BottomEnd)
             )
         }

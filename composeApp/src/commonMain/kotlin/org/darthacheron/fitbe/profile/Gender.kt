@@ -1,10 +1,10 @@
 package org.darthacheron.fitbe.profile
 
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.profile_gender_female
-import fitbe.composeapp.generated.resources.profile_gender_male
-import fitbe.composeapp.generated.resources.profile_gender_other
-import fitbe.composeapp.generated.resources.profile_gender_unknown
+import fitbe.composeapp.generated.resources.gender_female
+import fitbe.composeapp.generated.resources.gender_male
+import fitbe.composeapp.generated.resources.gender_other
+import fitbe.composeapp.generated.resources.gender_unknown
 import org.jetbrains.compose.resources.StringResource
 
 enum class Gender {
@@ -15,9 +15,9 @@ enum class Gender {
 
     fun toStringResource(): StringResource =
         when (this) {
-            UNKNOWN -> Res.string.profile_gender_unknown
-            MALE -> Res.string.profile_gender_male
-            FEMALE -> Res.string.profile_gender_female
-            OTHER -> Res.string.profile_gender_other
+            UNKNOWN -> Res.string.gender_unknown
+            MALE -> Res.string.gender_male
+            FEMALE -> Res.string.gender_female
+            OTHER -> Res.string.gender_other
         }
 }
