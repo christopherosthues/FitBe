@@ -137,12 +137,13 @@ class WeightOverviewViewModel(
                 val settings = bodyWeightsWithSettings.second
                 if (bodyWeights.isEmpty()) {
                     maxDefaultWeight(settings)
+                } else {
+                    bodyWeights
+                        .maxOfOrNull { it.weight }
+                        ?.roundUpToNextTen()
+                        ?.roundToDecimals(2) ?: maxDefaultWeight(settings)
                 }
-                bodyWeights
-                    .maxOfOrNull { it.weight }
-                    ?.roundUpToNextTen()
-                    ?.roundToDecimals(2) ?: maxDefaultWeight(settings)
-            }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
     private fun maxDefaultWeight(settings: Settings): Double {
         return weightUnitConverter.convert(ProfileDefaults.MAX_BODY_WEIGHT, WeightUnit.KG, settings.weightUnit)!!
