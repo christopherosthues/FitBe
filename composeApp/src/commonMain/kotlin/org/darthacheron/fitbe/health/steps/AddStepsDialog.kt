@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.steps_add_dialog_cancel
+import fitbe.composeapp.generated.resources.steps_add_dialog_content_description_date
 import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import fitbe.composeapp.generated.resources.steps_add_dialog_steps
 import fitbe.composeapp.generated.resources.steps_add_dialog_title
@@ -39,7 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 fun AddStepsDialog(
     viewModel: AddStepsDialogViewModel,
     onDismiss: () -> Unit,
-    onSave: (date: LocalDate, steps: UInt) -> Unit
+    onSave: (date: Instant, steps: UInt) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
@@ -54,7 +55,7 @@ fun AddStepsDialog(
                         Text(text = "${uiState.date}")
                         Icon(
                             painter = painterResource(Res.drawable.ic_date_range),
-                            contentDescription = null
+                            contentDescription = stringResource(Res.string.steps_add_dialog_content_description_date)
                         )
                     }
                 }
@@ -92,7 +93,7 @@ fun AddStepsDialog(
                 onClick = {
                     viewModel.dismissDialog()
                     onSave(
-                        uiState.date,
+                        uiState.date.atStartOfDayIn(TimeZone.currentSystemDefault()),
                         uiState.steps.toUInt()
                     )
                 },

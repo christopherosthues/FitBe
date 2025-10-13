@@ -2,8 +2,10 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.sleep_overview_error_saving
 import fitbe.composeapp.generated.resources.steps_overview_content_description_add_steps
 import fitbe.composeapp.generated.resources.steps_overview_error_loading
+import fitbe.composeapp.generated.resources.steps_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,9 +18,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
@@ -32,11 +34,13 @@ import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class StepsOverviewViewModel(
     private val stepsRepository: StepsRepository,
     settingsRepository: SettingsRepository,
@@ -98,9 +102,9 @@ class StepsOverviewViewModel(
             isLoading.value = false
             errorMessage.value = Res.string.steps_overview_error_loading
             emit(emptyList())
-        }.map { steps ->
+        }.map {
             isLoading.value = false
-            steps
+            it
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val uiState: StateFlow<StepsOverviewUiState> =
@@ -128,7 +132,7 @@ class StepsOverviewViewModel(
                 if (stepsList.isEmpty()) {
                     ProfileDefaults.STEPS
                 } else {
-                    stepsList.maxOfOrNull { it.steps } ?: ProfileDefaults.STEPS
+                    stepsList.maxOfOrNull { it.steps }?.roundToInt()?.toUInt() ?: ProfileDefaults.STEPS
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
@@ -144,7 +148,7 @@ class StepsOverviewViewModel(
             .map { (date, group) ->
                 StepsOverview(
                     date = date,
-                    steps = group.sumOf { it.steps }
+                    steps = group.sumOf { it.steps }.toDouble()
                 )
             }
     }
@@ -166,7 +170,7 @@ class StepsOverviewViewModel(
                 val daysInPeriod = daysInPeriodSelector(group)
                 if (daysInPeriod == 0) return@mapNotNull null
 
-                val avgSteps = (sumSteps.toDouble() / daysInPeriod).roundToInt().toUInt()
+                val avgSteps = (sumSteps / daysInPeriod).roundToDecimals(2)
 
                 StepsOverview(
                     date = representativeDateSelector(group),
@@ -222,19 +226,27 @@ class StepsOverviewViewModel(
     }
 
     fun addSteps(
-        date: LocalDate,
+        date: Instant,
         steps: UInt
     ) {
         viewModelScope.launch {
-            val settings = settingsRepository.getSettings()
-            settings.selectedProfileId?.let { profileId ->
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.steps_overview_error_saving
+                    return@launch
+                }
+
                 stepsRepository.addSteps(
                     Steps(
                         profileId = profileId,
-                        date = date.atStartOfDayIn(TimeZone.currentSystemDefault()),
+                        date = date,
                         steps = steps
                     )
                 )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.steps_overview_error_saving
             }
         }
     }

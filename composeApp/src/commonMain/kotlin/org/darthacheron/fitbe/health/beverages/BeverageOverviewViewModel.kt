@@ -133,7 +133,7 @@ class BeverageOverviewViewModel(
                 if (beverages.isEmpty()) {
                     ProfileDefaults.BEVERAGE
                 } else {
-                    beverages.maxOfOrNull { it.amountMl }?.toUInt() ?: ProfileDefaults.BEVERAGE
+                    beverages.maxOfOrNull { it.amountMl }?.roundToInt()?.toUInt() ?: ProfileDefaults.BEVERAGE
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 

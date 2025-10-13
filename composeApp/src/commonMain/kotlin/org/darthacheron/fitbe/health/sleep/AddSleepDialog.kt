@@ -82,7 +82,7 @@ fun AddSleepDialog(
         }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = viewModel::dismissDialog,
         title = { Text(text = stringResource(Res.string.sleep_add_dialog_title)) },
         text = {
             Column {
@@ -186,6 +186,7 @@ fun AddSleepDialog(
         confirmButton = {
             Button(
                 onClick = {
+                    viewModel.dismissDialog()
                     onSave(
                         uiState.startDateTime.toInstant(TimeZone.currentSystemDefault()),
                         uiState.endDateTime.toInstant(TimeZone.currentSystemDefault())
@@ -198,6 +199,7 @@ fun AddSleepDialog(
         },
         dismissButton = {
             TextButton(onClick = {
+                viewModel.dismissDialog()
                 onDismiss()
             }) {
                 Text(text = stringResource(Res.string.sleep_add_dialog_cancel))

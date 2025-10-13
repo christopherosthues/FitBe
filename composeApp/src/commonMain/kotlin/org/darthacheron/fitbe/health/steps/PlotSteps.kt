@@ -16,6 +16,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_chart_annotation_beverage_value
+import fitbe.composeapp.generated.resources.steps_chart_annotation_steps_value
 import fitbe.composeapp.generated.resources.steps_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.steps_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
@@ -116,6 +118,7 @@ fun PlotSteps(
                 }
             }
         ) {
+            // TODO: accessible plot data
             if (dates.size > 1) {
                 AreaPlot(
                     data = stepsData.map { Point(it.date, it.steps.toInt()) },
@@ -145,7 +148,13 @@ fun PlotSteps(
                                     modifier = modifier.padding(8.dp)
                                 ) {
                                     Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(text = stepsChartData[index].y.yMax.toString())
+                                        Text(
+                                            text =
+                                                stringResource(
+                                                    Res.string.steps_chart_annotation_steps_value,
+                                                    stepsChartData[index].y.yMax
+                                                )
+                                        )
                                     }
                                 }
                             }

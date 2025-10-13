@@ -42,6 +42,7 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.map
+import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -139,7 +140,7 @@ class SleepOverviewViewModel(
                 if (sleeps.isEmpty()) {
                     ProfileDefaults.SLEEP_DURATION
                 } else {
-                    sleeps.maxOfOrNull { it.totalMinutes }?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
+                    sleeps.maxOfOrNull { it.totalMinutes }?.roundToInt()?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
@@ -154,8 +155,8 @@ class SleepOverviewViewModel(
             .groupBy { it.start.toLocalDateTime(TimeZone.currentSystemDefault()).date }
             .map { (date, group) ->
                 SleepOverview(
-                    date,
-                    group.sumOf { it.start.until(it.end, DateTimeUnit.MINUTE) }.toDouble()
+                    date = date,
+                    totalMinutes = group.sumOf { it.start.until(it.end, DateTimeUnit.MINUTE) }.toDouble()
                 )
             }
     }

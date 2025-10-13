@@ -5,5 +5,5 @@ import org.darthacheron.fitbe.health.components.Overview
 
 data class StepsOverview(
     override val date: LocalDate,
-    val steps: UInt
+    val steps: Double
 ) : Overview

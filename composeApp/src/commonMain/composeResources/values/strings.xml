@@ -715,6 +715,7 @@
     <!-- Steps chart -->
     <string name="steps_chart_thumbnail_title">Steps</string>
     <string name="steps_chart_y_axis_title">Steps</string>
+    <string name="steps_chart_annotation_steps_value">Steps: %1$s</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Record steps</string>

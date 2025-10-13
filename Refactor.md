@@ -152,10 +152,10 @@
 
 ##### steps
 
-* [ ] AddStepsDialog
-* [ ] AddStepsDialogUiState
-* [ ] AddStepsDialogViewModel
-* [ ] PlotSteps
+* [x] AddStepsDialog
+* [x] AddStepsDialogUiState
+* [x] AddStepsDialogViewModel
+* [x] PlotSteps
 * [x] Steps
 * [ ] StepsDailyView
 * [ ] StepsDailyViewModel
@@ -164,8 +164,8 @@
 * [x] StepsOverview
 * [x] StepsOverviewError
 * [x] StepsOverviewUiState
-* [ ] StepsOverviewView
-* [ ] StepsOverviewViewModel
+* [x] StepsOverviewView
+* [x] StepsOverviewViewModel
 * [x] StepsRepository
 * [x] StepsView
 

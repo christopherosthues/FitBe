@@ -715,9 +715,11 @@
     <!-- Steps chart -->
     <string name="steps_chart_thumbnail_title">Schritte</string>
     <string name="steps_chart_y_axis_title">Schritte</string>
+    <string name="steps_chart_annotation_steps_value">Schritte: %1$s</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Schritte eintragen</string>
+    <string name="steps_add_dialog_content_description_date">Datum auswählen</string>
     <string name="steps_add_dialog_steps">Schrittanzahl</string>
     <string name="steps_add_dialog_save">Speichern</string>
     <string name="steps_add_dialog_cancel">Abbrechen</string>
