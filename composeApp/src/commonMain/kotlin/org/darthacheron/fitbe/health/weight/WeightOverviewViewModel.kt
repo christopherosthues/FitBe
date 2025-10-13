@@ -2,9 +2,9 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.body_weight_overview_content_description_add_body_weight
+import fitbe.composeapp.generated.resources.body_weight_overview_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_body_weights
-import fitbe.composeapp.generated.resources.weight_overview_content_description_add_body_weight
-import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -58,34 +58,34 @@ class WeightOverviewViewModel(
         get() = Screen.Health
 
     override val addButtonContentDescription: StringResource
-        get() = Res.string.weight_overview_content_description_add_body_weight
+        get() = Res.string.body_weight_overview_content_description_add_body_weight
 
     private val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
 
-    val targetWeight: StateFlow<Double?> =
+    val targetWeight: StateFlow<Double> =
         settings
             .flatMapLatest { settings ->
                 val profileId = settings.selectedProfileId
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetWeight }
+                        .map { profile -> profile?.targetWeight ?: ProfileDefaults.WEIGHT_IN_KG }
                 } else {
-                    flowOf(null)
+                    flowOf(ProfileDefaults.WEIGHT_IN_KG)
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.WEIGHT_IN_KG)
 
     private val bodyWeightsDataFlow: StateFlow<List<BodyWeightOverview>> =
         combine(
             dateRange,
             settingsRepository.getSettingsFlow()
         ) { range, settings ->
-            settings.selectedProfileId?.let {
+            settings.selectedProfileId?.let { profileId ->
                 Pair(settings, range.dateUnit) to
-                    bodyWeightRepository.getBeverages(
+                    bodyWeightRepository.getBodyWeights(
                         range.startDate,
                         range.endDate,
-                        it
+                        profileId
                     )
             } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
         }.flatMapLatest { (settingsDateUnit, bodyWeightFlow) ->
@@ -102,7 +102,7 @@ class WeightOverviewViewModel(
             errorMessage.value = null
         }.catch {
             isLoading.value = false
-            errorMessage.value = Res.string.weight_overview_error_loading
+            errorMessage.value = Res.string.body_weight_overview_error_loading
             emit(emptyList())
         }.map {
             isLoading.value = false
@@ -131,13 +131,22 @@ class WeightOverviewViewModel(
 
     val maxWeight: StateFlow<Double> =
         uiState
-            .map { it.bodyWeights }
-            .map { bodyWeights ->
+            .map { Pair(it.bodyWeights, it.settings) }
+            .map { bodyWeightsWithSettings ->
+                val bodyWeights = bodyWeightsWithSettings.first
+                val settings = bodyWeightsWithSettings.second
+                if (bodyWeights.isEmpty()) {
+                    maxDefaultWeight(settings)
+                }
                 bodyWeights
                     .maxOfOrNull { it.weight }
                     ?.roundUpToNextTen()
-                    ?.roundToDecimals(2) ?: ProfileDefaults.MAX_BODY_WEIGHT
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
+                    ?.roundToDecimals(2) ?: maxDefaultWeight(settings)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
+
+    private fun maxDefaultWeight(settings: Settings): Double {
+        return weightUnitConverter.convert(ProfileDefaults.MAX_BODY_WEIGHT, WeightUnit.KG, settings.weightUnit)!!
+    }
 
     private fun mapDay(
         bodyWeights: List<BodyWeight>,
@@ -305,11 +314,17 @@ class WeightOverviewViewModel(
         bodyWaterInPercentage: Double?
     ) {
         viewModelScope.launch {
-            val settings = settingsRepository.getSettings()
-            settings.selectedProfileId?.let {
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.body_weight_overview_error_loading
+                    return@launch
+                }
+
                 bodyWeightRepository.addBodyWeight(
                     BodyWeight(
-                        profileId = it,
+                        profileId = profileId,
                         date = date.atStartOfDayIn(TimeZone.currentSystemDefault()),
                         weightInKg = weightInKg,
                         bodyFatPercentage = bodyFatPercentage,
@@ -318,6 +333,8 @@ class WeightOverviewViewModel(
                         bodyWaterInPercentage = bodyWaterInPercentage
                     )
                 )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.body_weight_overview_error_loading
             }
         }
     }

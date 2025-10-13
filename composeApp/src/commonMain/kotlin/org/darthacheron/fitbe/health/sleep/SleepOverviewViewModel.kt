@@ -2,12 +2,10 @@ package org.darthacheron.fitbe.health.sleep
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_overview_error_saving
 import fitbe.composeapp.generated.resources.sleep_overview_content_description_add_sleep
 import fitbe.composeapp.generated.resources.sleep_overview_error_loading
 import fitbe.composeapp.generated.resources.sleep_overview_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_sleeps
-import fitbe.composeapp.generated.resources.weight_overview_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -86,12 +84,12 @@ class SleepOverviewViewModel(
             dateRange,
             settingsRepository.getSettingsFlow()
         ) { range, settings ->
-            settings.selectedProfileId?.let {
+            settings.selectedProfileId?.let { profileId ->
                 Pair(settings, range.dateUnit) to
                     sleepRepository.getSleepsBetween(
                         range.startDate,
                         range.endDate,
-                        it
+                        profileId
                     )
             } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
         }.flatMapLatest { (settingsDateUnit, sleepsFlow) ->

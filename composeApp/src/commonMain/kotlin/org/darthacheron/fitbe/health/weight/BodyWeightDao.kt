@@ -12,19 +12,8 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface BodyWeightDao {
-    @Query(
-        """
-        SELECT * FROM body_weights 
-        WHERE profileId = :profileId
-        AND dateUtc BETWEEN :startDate AND :endDate
-        ORDER BY dateUtc ASC
-    """
-    )
-    fun getBodyWeightsBetweenDates(
-        startDate: String,
-        endDate: String,
-        profileId: Uuid
-    ): Flow<List<BodyWeightEntity>>
+    @Upsert
+    suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
     // TODO: check call sites for correct dates
     @Query(
@@ -40,10 +29,4 @@ interface BodyWeightDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<BodyWeightEntity>>
-
-    @Upsert
-    suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
-
-    @Delete
-    suspend fun deleteBodyWeight(bodyWeight: BodyWeightEntity)
 }

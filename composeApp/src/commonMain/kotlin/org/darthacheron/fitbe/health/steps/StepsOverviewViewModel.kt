@@ -2,7 +2,6 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.sleep_overview_error_saving
 import fitbe.composeapp.generated.resources.steps_overview_content_description_add_steps
 import fitbe.composeapp.generated.resources.steps_overview_error_loading
 import fitbe.composeapp.generated.resources.steps_overview_error_saving
@@ -59,7 +58,7 @@ class StepsOverviewViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.steps_overview_content_description_add_steps
 
-    val targetSteps: StateFlow<UInt?> =
+    val targetSteps: StateFlow<UInt> =
         settingsRepository
             .getSettingsFlow()
             .flatMapLatest { settings ->
@@ -67,7 +66,7 @@ class StepsOverviewViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSteps }
+                        .map { profile -> profile?.targetSteps ?: ProfileDefaults.STEPS}
                 } else {
                     flowOf(ProfileDefaults.STEPS)
                 }

@@ -171,22 +171,22 @@
 
 ##### weight
 
-* [ ] AddBodyWeightDialog
-* [ ] AddBodyWeightDialogUiState
-* [ ] AddBodyWeightDialogViewModel
-* [ ] BodyWeight
+* [x] AddBodyWeightDialog
+* [x] AddBodyWeightDialogUiState
+* [x] AddBodyWeightDialogViewModel
+* [x] BodyWeight
 * [ ] BodyWeightDailyView
 * [ ] BodyWeightDailyViewModel
-* [ ] BodyWeightDao
-* [ ] BodyWeightEntity
-* [ ] BodyWeightOverview
-* [ ] BodyWeightRepository
-* [ ] BodyWeightView
-* [ ] PlotBodyWeights
-* [ ] WeightOverviewError
-* [ ] WeightOverviewUiState
-* [ ] WeightOverviewView
-* [ ] WeightOverviewViewModel
+* [x] BodyWeightDao
+* [x] BodyWeightEntity
+* [x] BodyWeightOverview
+* [x] BodyWeightRepository
+* [x] BodyWeightView
+* [x] PlotBodyWeights
+* [x] WeightOverviewError
+* [x] WeightOverviewUiState
+* [x] WeightOverviewView
+* [x] WeightOverviewViewModel
 
 #### home
 
@@ -353,3 +353,6 @@
 * [ ] WorkoutSetExecutionEntity
 * [ ] WorkoutSetStatus
 
+TODO: make target values nullable
+TODO: option to switch between avg, median, total
+TODO: add option to ignore dates with no values in summary

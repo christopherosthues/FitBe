@@ -29,17 +29,4 @@ interface StepsDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<StepsEntity>>
-
-    @Query(
-        """
-        SELECT * FROM steps
-        WHERE dateUtc = :today
-        AND profileId = :profileId
-        LIMIT 1
-        """
-    )
-    fun getStepsForDate(
-        today: String,
-        profileId: Uuid
-    ): Flow<StepsEntity>
 }

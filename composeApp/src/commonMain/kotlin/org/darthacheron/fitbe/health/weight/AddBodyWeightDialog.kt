@@ -27,6 +27,7 @@ import fitbe.composeapp.generated.resources.body_weight_add_dialog_body_fat
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_body_water
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_bone_mass
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_cancel
+import fitbe.composeapp.generated.resources.body_weight_add_dialog_content_description_date
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_muscle_mass
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_save
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_title
@@ -76,7 +77,8 @@ fun AddBodyWeightDialog(
                         Text(text = "${uiState.date}")
                         Icon(
                             painter = painterResource(Res.drawable.ic_date_range),
-                            contentDescription = null
+                            contentDescription =
+                                stringResource(Res.string.body_weight_add_dialog_content_description_date)
                         )
                     }
                 }

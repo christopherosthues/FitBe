@@ -148,6 +148,7 @@ fun PlotBodyWeights(
                 }
             }
         ) {
+            // TODO: accessible plot data
             if (dates.size > 1) {
                 val yData =
                     toVerticalStackedAreaBodyWeightData(bodyWeights)

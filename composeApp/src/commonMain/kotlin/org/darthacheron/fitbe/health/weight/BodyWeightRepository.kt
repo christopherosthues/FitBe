@@ -11,7 +11,7 @@ import kotlin.uuid.Uuid
 class BodyWeightRepository(
     private val bodyWeightDao: BodyWeightDao
 ) {
-    fun getBeverages(
+    fun getBodyWeights(
         startDate: Instant,
         endDate: Instant,
         profileId: Uuid

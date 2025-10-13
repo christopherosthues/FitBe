@@ -70,7 +70,7 @@ class BodyWeightRepositoryTest {
             val startDate = LocalDate(2025, 10, 1).toInstantAtStartOfDay(germanTimeZone)
             val endDate = LocalDate(2025, 10, 31).toInstantAtStartOfDay(germanTimeZone)
 
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 assertEquals(emptyList(), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
@@ -91,7 +91,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2025, 10, 16).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(2, entries.size, "Should find 2 entries within the local date range")
                 // Note: toBodyWeight() converts back to the system's timezone, which we assume is Berlin for the test logic
@@ -116,7 +116,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(1, entries.size, "Should find entry exactly at the start of the day")
                 assertEquals(entryTime, entries[0].date)
@@ -145,7 +145,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 // All entries fall on the local date of October 26th.
                 assertEquals(2, entries.size, "Should find all entries on the day of DST change")
@@ -169,7 +169,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2026, 1, 2).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     1,
@@ -200,7 +200,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     0,
@@ -227,7 +227,7 @@ class BodyWeightRepositoryTest {
             val endDate = LocalDate(2025, 10, 26).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeverages(startDate, endDate, testProfileId).test {
+            repository.getBodyWeights(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     1,
