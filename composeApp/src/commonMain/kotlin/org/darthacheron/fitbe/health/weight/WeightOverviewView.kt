@@ -25,7 +25,7 @@ fun WeightOverviewView(
                 state.bodyWeights,
                 dateRange,
                 state.dates,
-                state.settings,
+                state.weightUnit,
                 maxBodyWeight,
                 false,
                 targetWeight

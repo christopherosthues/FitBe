@@ -154,7 +154,7 @@ private fun BodyWeightOverView(
         bodyWeights = uiState.bodyWeights,
         dateRange = dateRange,
         dates = uiState.dates,
-        settings = settings,
+        weightUnit = settings.weightUnit,
         maxWeight = maxBodyWeight,
         thumbnail = true
     )

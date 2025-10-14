@@ -181,12 +181,26 @@ fun AddBodyWeightDialog(
             Button(
                 onClick = {
                     viewModel.dismissDialog()
+
+                    val muscleMassInKg =
+                        if (uiState.muscleMass.toDoubleOrNull() != null) {
+                            settings.weightUnit.toKilogram(uiState.muscleMass.toDouble())
+                        } else {
+                            null
+                        }
+                    val boneMassInKg =
+                        if (uiState.boneMass.toDoubleOrNull() != null) {
+                            settings.weightUnit.toKilogram(uiState.boneMass.toDouble())
+                        } else {
+                            null
+                        }
+
                     onSave(
                         uiState.date,
-                        uiState.weight.toDouble(),
+                        settings.weightUnit.toKilogram(uiState.weight.toDouble()),
                         uiState.bodyFatInPercentage.toDoubleOrNull(),
-                        uiState.muscleMass.toDoubleOrNull(),
-                        uiState.boneMass.toDoubleOrNull(),
+                        muscleMassInKg,
+                        boneMassInKg,
                         uiState.bodyWaterInPercentage.toDoubleOrNull()
                     )
                 },

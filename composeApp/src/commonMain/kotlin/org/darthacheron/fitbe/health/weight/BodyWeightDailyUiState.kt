@@ -1,15 +1,14 @@
 package org.darthacheron.fitbe.health.weight
 
-import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.ui.UiState
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class WeightOverviewUiState(
+class BodyWeightDailyUiState(
     isLoading: Boolean = true,
-    val bodyWeights: List<BodyWeightOverview> = emptyList(),
-    val dates: List<LocalDate> = emptyList(),
+    error: BodyWeightDailyError = BodyWeightDailyError(),
+    val bodyWeights: List<BodyWeight> = emptyList(),
+    val target: Double? = null,
     val weightUnit: WeightUnit = WeightUnit.KG,
-    error: WeightOverviewError = WeightOverviewError()
-) : UiState<WeightOverviewError>(isLoading, error)
+) : UiState<BodyWeightDailyError>(isLoading, error)

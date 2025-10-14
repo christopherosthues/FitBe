@@ -25,7 +25,8 @@
     <string name="top_bar_title_steps">Schritte</string>
     <string name="top_bar_title_beverages">Flüssigkeitsaufnahme</string>
     <string name="top_bar_title_beverages_overview">Flüssigkeitsaufnahmeübersicht</string>
-    <string name="top_bar_title_body_weights">Körpergewicht</string>
+    <string name="top_bar_title_body_weights">Übersicht - Körpergewicht</string>
+    <string name="top_bar_title_daily_body_weights">Tagesansicht - Körpergewicht</string>
     <string name="top_bar_title_settings">Einstellungen</string>
     <string name="top_bar_content_description_back">Zurück navigieren</string>
     <string name="top_bar_content_description_settings">Einstellungen öffnen</string>
@@ -745,6 +746,16 @@
     <string name="body_weight_chart_annotation_body_water">Körperwasser</string>
     <string name="body_weight_chart_annotation_total_weight">Gesamtgewicht</string>
 
+    <!-- Body weight daily view -->
+    <string name="body_weight_daily_view_content_description_add_body_weight">Körpergewicht eintragen</string>
+    <string name="body_weight_daily_view_error_loading">Fehler beim Laden der Gewichtsdaten.</string>
+    <string name="body_weight_daily_view_error_saving">Fehler beim Speichern des Körpergewichts. Bitte versuchen Sie es erneut.</string>
+    <string name="body_weight_daily_view_body_weight">%1$d %2$s</string>
+    <string name="body_weight_daily_view_muscle_mass">%1$d %2$s Muskeln</string>
+    <string name="body_weight_daily_view_body_fat">%1$d % Fett</string>
+    <string name="body_weight_daily_view_bone_mass">%1$d %2$s Knochen</string>
+    <string name="body_weight_daily_view_body_water">%1$d % Wasser</string>
+
     <!-- Body weight Add Dialog -->
     <string name="body_weight_add_dialog_title">Körpergewicht eintragen</string>
     <string name="body_weight_add_dialog_total_weight">Gesamtgewicht (%1$s)</string>
@@ -862,4 +873,7 @@
     <string name="workout_template_exercises">%1$d Übungen</string>
     <string name="workout_template_error_favorites">Laden der favorisierten Workout-Vorlagen fehlgeschlagen</string>
     <string name="workout_template_error_toggle_favorite">Favoritenstatus der Workout-Vorlage konnte nicht geändert werden</string>
+
+    <!-- Date and time formats -->
+    <string name="local_time_format">HH:mm</string>
 </resources>

@@ -242,7 +242,6 @@ class BeverageOverviewViewModel(
 
                 beverageRepository.addBeverage(
                     Beverage(
-                        id = Uuid.random(),
                         amount = amount,
                         beverage = name,
                         unit = unit,

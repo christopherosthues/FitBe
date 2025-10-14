@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.local_time_format
 import fitbe.composeapp.generated.resources.sleep_add_dialog_cancel
 import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_end_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_end_time
@@ -41,17 +42,14 @@ import fitbe.composeapp.generated.resources.sleep_add_dialog_save
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_title
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimePickerDialog
+import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
@@ -107,7 +105,7 @@ fun AddSleepDialog(
                         )
                         Spacer(Modifier.width(8.dp))
                         OutlinedTextField(
-                            value = formatTime(uiState.startDateTime.time),
+                            value = uiState.startDateTime.time.format(stringResource(Res.string.local_time_format)),
                             onValueChange = {},
                             label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_time)) },
                             readOnly = true,
@@ -150,7 +148,7 @@ fun AddSleepDialog(
                         )
                         Spacer(Modifier.width(8.dp))
                         OutlinedTextField(
-                            value = formatTime(uiState.endDateTime.time),
+                            value = uiState.endDateTime.time.format(stringResource(Res.string.local_time_format)),
                             onValueChange = {},
                             label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_time)) },
                             readOnly = true,
@@ -262,9 +260,6 @@ fun AddSleepDialog(
         )
     }
 }
-
-private fun formatTime(time: LocalTime): String =
-    "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
 
 @Composable
 fun formatDuration(duration: Duration): String {

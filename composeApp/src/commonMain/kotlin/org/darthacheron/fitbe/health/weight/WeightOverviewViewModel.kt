@@ -69,11 +69,15 @@ class WeightOverviewViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetWeight ?: ProfileDefaults.WEIGHT_IN_KG }
+                        .map { profile -> profile?.targetWeight ?: defaultTargetWeight(settings) }
                 } else {
-                    flowOf(ProfileDefaults.WEIGHT_IN_KG)
+                    flowOf(defaultTargetWeight(settings))
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.WEIGHT_IN_KG)
+
+    private fun defaultTargetWeight(settings: Settings): Double {
+        return weightUnitConverter.convert(ProfileDefaults.WEIGHT_IN_KG, WeightUnit.KG, settings.weightUnit)!!
+    }
 
     private val bodyWeightsDataFlow: StateFlow<List<BodyWeightOverview>> =
         combine(
@@ -120,7 +124,7 @@ class WeightOverviewViewModel(
                 isLoading = isLoading,
                 bodyWeights = bodyWeights,
                 dates = bodyWeights.map { it.date },
-                settings = settings,
+                weightUnit = settings.weightUnit,
                 error = WeightOverviewError(errorMessage)
             )
         }.stateIn(
@@ -131,7 +135,7 @@ class WeightOverviewViewModel(
 
     val maxWeight: StateFlow<Double> =
         uiState
-            .map { Pair(it.bodyWeights, it.settings) }
+            .map { Pair(it.bodyWeights, it.weightUnit) }
             .map { bodyWeightsWithSettings ->
                 val bodyWeights = bodyWeightsWithSettings.first
                 val settings = bodyWeightsWithSettings.second
@@ -145,8 +149,8 @@ class WeightOverviewViewModel(
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.MAX_BODY_WEIGHT)
 
-    private fun maxDefaultWeight(settings: Settings): Double {
-        return weightUnitConverter.convert(ProfileDefaults.MAX_BODY_WEIGHT, WeightUnit.KG, settings.weightUnit)!!
+    private fun maxDefaultWeight(weightUnit: WeightUnit): Double {
+        return weightUnitConverter.convert(ProfileDefaults.MAX_BODY_WEIGHT, WeightUnit.KG, weightUnit)!!
     }
 
     private fun mapDay(

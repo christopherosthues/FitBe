@@ -106,7 +106,6 @@ class BeverageDailyViewModel(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BeverageDailyUiState())
 
-    @OptIn(ExperimentalUuidApi::class)
     fun addBeverage(
         amount: Double,
         name: String,
@@ -121,6 +120,7 @@ class BeverageDailyViewModel(
                     errorMessage.value = Res.string.beverages_daily_view_error_saving
                     return@launch
                 }
+
                 repository.addBeverage(
                     Beverage(
                         amount = amount,

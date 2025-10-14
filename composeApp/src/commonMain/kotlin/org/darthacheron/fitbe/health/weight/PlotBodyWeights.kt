@@ -59,6 +59,7 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.health.components.dateLabel
 import org.darthacheron.fitbe.health.components.representativeDates
 import org.darthacheron.fitbe.settings.Settings
+import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
@@ -81,7 +82,7 @@ fun PlotBodyWeights(
     bodyWeights: List<BodyWeightOverview>,
     dateRange: DateRange,
     dates: List<LocalDate>,
-    settings: Settings,
+    weightUnit: WeightUnit,
     maxWeight: Double,
     thumbnail: Boolean = false,
     targetWeight: Double? = null
@@ -139,7 +140,7 @@ fun PlotBodyWeights(
                 if (!thumbnail) {
                     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
                         Text(
-                            text = stringResource(settings.weightUnit.toStringResource()),
+                            text = stringResource(weightUnit.toStringResource()),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.rotateVertically(VerticalRotation.COUNTER_CLOCKWISE)
@@ -190,14 +191,14 @@ fun PlotBodyWeights(
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_bone_mass_value,
                                                         bodyWeight.boneMass,
-                                                        stringResource(settings.weightUnit.toStringResource())
+                                                        stringResource(weightUnit.toStringResource())
                                                     )
 
                                                 1 ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_muscle_mass_value,
                                                         bodyWeight.muscleMass,
-                                                        stringResource(settings.weightUnit.toStringResource())
+                                                        stringResource(weightUnit.toStringResource())
                                                     )
 
                                                 2 ->
@@ -216,7 +217,7 @@ fun PlotBodyWeights(
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_total_weight_value,
                                                         bodyWeight.weight,
-                                                        stringResource(settings.weightUnit.toStringResource())
+                                                        stringResource(weightUnit.toStringResource())
                                                     )
                                             }
                                         Text(text = bodyWeightAnnotation)
