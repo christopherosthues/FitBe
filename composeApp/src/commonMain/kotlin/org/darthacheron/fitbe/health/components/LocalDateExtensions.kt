@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.health.components
 
 import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.month_april
 import fitbe.composeapp.generated.resources.month_august
 import fitbe.composeapp.generated.resources.month_december
@@ -42,7 +43,7 @@ fun LocalDate.monthResourceString(): StringResource =
 @Composable
 fun LocalDate.dateLabel(dateUnit: DateUnit): String =
     when (dateUnit) {
-        DateUnit.DAY -> this.toString()
+        DateUnit.DAY -> this.format(stringResource(Res.string.local_date_format))
         DateUnit.WEEK -> "W${this.isoWeekAndYear().second}/${this.year}"
         DateUnit.MONTH -> {
             val monthResource = this.monthResourceString()

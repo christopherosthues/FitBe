@@ -33,12 +33,14 @@ import fitbe.composeapp.generated.resources.body_weight_add_dialog_save
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_title
 import fitbe.composeapp.generated.resources.body_weight_add_dialog_total_weight
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.local_date_format
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
+import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.settings.Settings
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -74,7 +76,7 @@ fun AddBodyWeightDialog(
             ) {
                 TextButton(onClick = { showDatePicker = true }) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(text = "${uiState.date}")
+                        Text(text = uiState.date.format(stringResource(Res.string.local_date_format)))
                         Icon(
                             painter = painterResource(Res.drawable.ic_date_range),
                             contentDescription =

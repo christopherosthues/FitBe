@@ -44,6 +44,7 @@ import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_switch
+import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.profile_content_description_add
 import fitbe.composeapp.generated.resources.profile_body_height
 import fitbe.composeapp.generated.resources.profile_content_description_cancel
@@ -70,6 +71,7 @@ import org.darthacheron.fitbe.components.DropdownSelection
 import org.darthacheron.fitbe.components.SaveCancelFloatingActionButtonRow
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimeInputDialog
+import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -145,7 +147,7 @@ fun ProfileView(profileViewModel: ProfileViewModel) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
-                        value = uiState.inputDateOfBirth.toString(),
+                        value = uiState.inputDateOfBirth?.format(stringResource(Res.string.local_date_format)) ?: "",
                         onValueChange = {},
                         label = { Text(text = stringResource(Res.string.profile_date_of_birth)) },
                         readOnly = true,

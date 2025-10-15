@@ -877,4 +877,5 @@
 
     <!-- Date and time formats -->
     <string name="local_time_format">HH:mm a</string>
+    <string name="local_date_format">MM/dd/yyyy</string>
 </resources>

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.local_time_format
 import fitbe.composeapp.generated.resources.sleep_add_dialog_cancel
 import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_end_date
@@ -88,7 +89,7 @@ fun AddSleepDialog(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         OutlinedTextField(
-                            value = uiState.startDateTime.date.toString(),
+                            value = uiState.startDateTime.date.format(stringResource(Res.string.local_date_format)),
                             onValueChange = {},
                             label = { Text(text = stringResource(Res.string.sleep_add_dialog_start_date)) },
                             readOnly = true,
@@ -131,7 +132,7 @@ fun AddSleepDialog(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         OutlinedTextField(
-                            value = uiState.endDateTime.date.toString(),
+                            value = uiState.endDateTime.date.format(stringResource(Res.string.local_date_format)),
                             onValueChange = {},
                             label = { Text(text = stringResource(Res.string.sleep_add_dialog_end_date)) },
                             readOnly = true,

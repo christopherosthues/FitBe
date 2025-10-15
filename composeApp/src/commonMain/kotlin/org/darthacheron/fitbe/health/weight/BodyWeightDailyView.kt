@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -94,7 +95,7 @@ private fun BodyWeightDetailView(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(top = 8.dp, bottom = 64.dp)
+            contentPadding = PaddingValues(top = 8.dp, bottom = 80.dp)
         ) {
             item {
                 PlotDailyBodyWeights(
@@ -116,6 +117,7 @@ private fun BodyWeightDetailView(
                     bodyWeight = bodyWeight,
                     weightUnit = state.weightUnit
                 )
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
@@ -123,6 +125,11 @@ private fun BodyWeightDetailView(
 
 @Composable
 private fun BodyWeightListItem(bodyWeight: BodyWeight, weightUnit: WeightUnit) {
+    val hasSupportingContent = bodyWeight.muscleMassInKg != null ||
+        bodyWeight.bodyFatPercentage != null ||
+        bodyWeight.bodyWaterInPercentage != null ||
+        bodyWeight.boneMassInKg != null
+
     ListItem(
         headlineContent = {
             Text(
@@ -141,50 +148,54 @@ private fun BodyWeightListItem(bodyWeight: BodyWeight, weightUnit: WeightUnit) {
                 )
             )
         },
-        supportingContent = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(top = 4.dp)
-            ) {
-                bodyWeight.muscleMassInKg?.let {
-                    Text(
-                        text = stringResource(
-                            Res.string.body_weight_daily_view_muscle_mass,
-                            it,
-                            stringResource(weightUnit.toStringResource())
-                        ),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                bodyWeight.bodyFatPercentage?.let {
-                    Text(
-                        text = stringResource(
-                            Res.string.body_weight_daily_view_body_fat,
-                            it
-                        ),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                bodyWeight.bodyWaterInPercentage?.let {
-                    Text(
-                        text = stringResource(
-                            Res.string.body_weight_daily_view_body_water,
-                            it
-                        ),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                bodyWeight.boneMassInKg?.let {
-                    Text(
-                        text = stringResource(
-                            Res.string.body_weight_daily_view_bone_mass,
-                            it,
-                            stringResource(weightUnit.toStringResource())
-                        ),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+        supportingContent = if (hasSupportingContent) {
+            {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    bodyWeight.muscleMassInKg?.let {
+                        Text(
+                            text = stringResource(
+                                Res.string.body_weight_daily_view_muscle_mass,
+                                it,
+                                stringResource(weightUnit.toStringResource())
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    bodyWeight.bodyFatPercentage?.let {
+                        Text(
+                            text = stringResource(
+                                Res.string.body_weight_daily_view_body_fat,
+                                it
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    bodyWeight.bodyWaterInPercentage?.let {
+                        Text(
+                            text = stringResource(
+                                Res.string.body_weight_daily_view_body_water,
+                                it
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    bodyWeight.boneMassInKg?.let {
+                        Text(
+                            text = stringResource(
+                                Res.string.body_weight_daily_view_bone_mass,
+                                it,
+                                stringResource(weightUnit.toStringResource())
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
+        } else {
+            null
         }
     )
 }

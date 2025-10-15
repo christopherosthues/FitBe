@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_date_range
+import fitbe.composeapp.generated.resources.local_date_format
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -24,6 +25,7 @@ import org.darthacheron.fitbe.components.date.DateRangePickerModal
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
@@ -43,14 +45,14 @@ internal fun <Error : UiStateError, State : UiState<Error>> DateRangeControl(
                         dateRange.startDate
                             .toLocalDateTime(TimeZone.currentSystemDefault())
                             .date
-                            .toString()
+                            .format(stringResource(Res.string.local_date_format))
                 )
                 Text(
                     text =
                         dateRange.endDate
                             .toLocalDateTime(TimeZone.currentSystemDefault())
                             .date
-                            .toString()
+                            .format(stringResource(Res.string.local_date_format))
                 )
             }
             Icon(
