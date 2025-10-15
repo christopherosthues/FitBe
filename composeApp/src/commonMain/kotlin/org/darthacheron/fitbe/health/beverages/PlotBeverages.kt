@@ -41,7 +41,7 @@ import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.health.components.dateLabel
-import org.darthacheron.fitbe.health.components.representativeDates
+import org.darthacheron.fitbe.health.components.representatives
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalKoalaPlotApi::class)
@@ -63,7 +63,7 @@ fun PlotBeverages(
             }
         }
     ) {
-        val actualDatesForLabels = dates.representativeDates()
+        val representatives = dates.representatives()
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
@@ -72,10 +72,10 @@ fun PlotBeverages(
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
             verticalMinorGridLineStyle = null,
-            xAxisLabels = { labelDate ->
-                if (!thumbnail && labelDate in actualDatesForLabels) {
+            xAxisLabels = { representative ->
+                if (!thumbnail && representative in representatives) {
                     Text(
-                        text = labelDate.dateLabel(dateRange.dateUnit),
+                        text = representative.dateLabel(dateRange.dateUnit),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =

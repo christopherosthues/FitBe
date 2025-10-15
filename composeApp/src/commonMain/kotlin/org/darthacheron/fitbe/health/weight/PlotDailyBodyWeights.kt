@@ -30,6 +30,7 @@ import fitbe.composeapp.generated.resources.body_weight_chart_annotation_muscle_
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight
 import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_weight_value
 import fitbe.composeapp.generated.resources.body_weight_chart_thumbnail_title
+import fitbe.composeapp.generated.resources.local_time_format
 import io.github.koalaplot.core.ChartLayout
 import io.github.koalaplot.core.bar.DefaultVerticalBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
@@ -54,9 +55,10 @@ import io.github.koalaplot.core.xygraph.XYAnnotation
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.XYGraphScope
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
-import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.health.components.dateLabel
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.health.components.representatives
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
@@ -76,11 +78,10 @@ private val colorPalette =
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-fun PlotBodyWeights(
+fun PlotDailyBodyWeights(
     modifier: Modifier = Modifier,
-    bodyWeights: List<BodyWeightOverview>,
-    dateRange: DateRange,
-    dates: List<LocalDate>,
+    bodyWeights: List<BodyWeight>,
+    times: List<LocalTime>,
     weightUnit: WeightUnit,
     maxWeight: Double,
     thumbnail: Boolean = false,
@@ -94,10 +95,10 @@ fun PlotBodyWeights(
             }
         }
     ) {
-        val representatives = dates.representatives()
+        val representatives = times.representatives()
 
         XYGraph(
-            xAxisModel = CategoryAxisModel(dates),
+            xAxisModel = CategoryAxisModel(times),
             yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
@@ -106,7 +107,7 @@ fun PlotBodyWeights(
             xAxisLabels = { representative ->
                 if (!thumbnail && representative in representatives) {
                     Text(
-                        text = representative.dateLabel(dateRange.dateUnit),
+                        text = representative.format(stringResource(Res.string.local_time_format)),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =
@@ -149,11 +150,11 @@ fun PlotBodyWeights(
             }
         ) {
             // TODO: accessible plot data
-            if (dates.size > 1) {
+            if (times.size > 1) {
                 val yData =
                     toVerticalStackedAreaBodyWeightData(bodyWeights)
                 StackedAreaPlot(
-                    data = StackedAreaPlotDoubleDataAdapter(dates, yData),
+                    data = StackedAreaPlotDoubleDataAdapter(times, yData),
                     styles =
                         colorPalette.map {
                             StackedAreaStyle(
@@ -163,8 +164,8 @@ fun PlotBodyWeights(
                         },
                     firstBaseline = AreaBaseline.ConstantLine(0.0)
                 )
-                Annotations(dates, yData, thumbnail)
-            } else if (dates.size == 1) {
+                Annotations(times, yData, thumbnail)
+            } else if (times.size == 1) {
                 StackedVerticalBarPlot(
                     data = toVerticalStackedBodyWeightData(bodyWeights),
                     barWidth = 0.8f,
@@ -189,33 +190,33 @@ fun PlotBodyWeights(
                                                 0 ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_bone_mass_value,
-                                                        bodyWeight.boneMass,
+                                                        bodyWeight.boneMassInKg ?: 0.0,
                                                         stringResource(weightUnit.toStringResource())
                                                     )
 
                                                 1 ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_muscle_mass_value,
-                                                        bodyWeight.muscleMass,
+                                                        bodyWeight.muscleMassInKg ?: 0.0,
                                                         stringResource(weightUnit.toStringResource())
                                                     )
 
                                                 2 ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_body_fat_value,
-                                                        bodyWeight.bodyFatPercentage
+                                                        bodyWeight.bodyFatPercentage ?: 0.0
                                                     )
 
                                                 3 ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_body_water_value,
-                                                        bodyWeight.bodyWaterPercentage
+                                                        bodyWeight.bodyWaterInPercentage ?: 0.0
                                                     )
 
                                                 else ->
                                                     stringResource(
                                                         Res.string.body_weight_chart_annotation_total_weight_value,
-                                                        bodyWeight.weight,
+                                                        bodyWeight.weightInKg,
                                                         stringResource(weightUnit.toStringResource())
                                                     )
                                             }
@@ -230,7 +231,7 @@ fun PlotBodyWeights(
 
             if (targetWeight != null && targetWeight > 0.0) {
                 LinePlot(
-                    data = dates.map { Point(it, targetWeight) },
+                    data = times.map { Point(it, targetWeight) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
@@ -244,8 +245,8 @@ fun PlotBodyWeights(
 
 @Suppress("MagicNumber")
 @Composable
-private fun XYGraphScope<LocalDate, Double>.Annotations(
-    dates: List<LocalDate>,
+private fun XYGraphScope<LocalTime, Double>.Annotations(
+    times: List<LocalTime>,
     bodyWeightData: List<List<Double>>,
     thumbnail: Boolean
 ) {
@@ -257,22 +258,22 @@ private fun XYGraphScope<LocalDate, Double>.Annotations(
             }
 
         bodyWeightData.forEachIndexed { index, data ->
-            val dateIndex = maxIndices[index]
+            val dataIndex = maxIndices[index]
 
             var sum = 0.0
             for (i in 0..<index) {
-                sum += bodyWeightData[i][dateIndex]
+                sum += bodyWeightData[i][dataIndex]
             }
 
             val anchorPoint =
-                when (dateIndex) {
+                when (dataIndex) {
                     0 -> AnchorPoint.LeftMiddle
-                    dates.lastIndex -> AnchorPoint.RightMiddle
+                    times.lastIndex -> AnchorPoint.RightMiddle
                     else -> AnchorPoint.Center
                 }
 
             XYAnnotation(
-                Point(dates[dateIndex], (sum + data[dateIndex] / 2.0)),
+                Point(times[dataIndex], (sum + data[dataIndex] / 2.0)),
                 anchorPoint
             ) {
                 Text(
@@ -299,18 +300,18 @@ private fun XYGraphScope<LocalDate, Double>.Annotations(
 }
 
 private fun toVerticalStackedBodyWeightData(
-    bodyWeights: List<BodyWeightOverview>
-): List<VerticalBarPlotStackedPointEntry<LocalDate, Double>> {
+    bodyWeights: List<BodyWeight>
+): List<VerticalBarPlotStackedPointEntry<LocalTime, Double>> {
     val bodyWeightEntries =
         bodyWeights.map { bodyWeight ->
-            val totalWeight = bodyWeight.weight
+            val totalWeight = bodyWeight.weightInKg
 
-            val boneMass = bodyWeight.boneMass
-            val muscleMass = bodyWeight.muscleMass
-            val bodyFat = (totalWeight * bodyWeight.bodyFatPercentage / 100).roundToDecimals(2)
-            val bodyWater = (totalWeight * bodyWeight.bodyWaterPercentage / 100).roundToDecimals(2)
+            val boneMass = bodyWeight.boneMassInKg ?: 0.0
+            val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
+            val bodyFat = (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(2)
+            val bodyWater = (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(2)
             DefaultVerticalBarPlotStackedPointEntry(
-                bodyWeight.date,
+                bodyWeight.date.toLocalDateTime(TimeZone.currentSystemDefault()).time,
                 0.0,
                 listOf(
                     boneMass,
@@ -325,19 +326,19 @@ private fun toVerticalStackedBodyWeightData(
     return bodyWeightEntries
 }
 
-private fun toVerticalStackedAreaBodyWeightData(bodyWeights: List<BodyWeightOverview>): List<List<Double>> {
+private fun toVerticalStackedAreaBodyWeightData(bodyWeights: List<BodyWeight>): List<List<Double>> {
     val totalWeights = mutableListOf<Double>()
     val boneMasses = mutableListOf<Double>()
     val muscleMasses = mutableListOf<Double>()
     val bodyFats = mutableListOf<Double>()
     val bodyWaters = mutableListOf<Double>()
     for (bodyWeight in bodyWeights) {
-        val totalWeight = bodyWeight.weight
+        val totalWeight = bodyWeight.weightInKg
 
-        val boneMass = bodyWeight.boneMass
-        val muscleMass = bodyWeight.muscleMass
-        val bodyFat = (totalWeight * bodyWeight.bodyFatPercentage / 100).roundToDecimals(2)
-        val bodyWater = (totalWeight * bodyWeight.bodyWaterPercentage / 100).roundToDecimals(2)
+        val boneMass = bodyWeight.boneMassInKg ?: 0.0
+        val muscleMass = bodyWeight.muscleMassInKg ?: 0.0
+        val bodyFat = (totalWeight * (bodyWeight.bodyFatPercentage ?: 0.0) / 100).roundToDecimals(2)
+        val bodyWater = (totalWeight * (bodyWeight.bodyWaterInPercentage ?: 0.0) / 100).roundToDecimals(2)
         val restWeight = max(totalWeight - boneMass - muscleMass - bodyFat - bodyWater, 0.0).roundToDecimals(2)
 
         boneMasses.add(boneMass)

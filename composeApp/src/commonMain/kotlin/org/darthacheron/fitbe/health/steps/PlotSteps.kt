@@ -16,7 +16,6 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_chart_annotation_beverage_value
 import fitbe.composeapp.generated.resources.steps_chart_annotation_steps_value
 import fitbe.composeapp.generated.resources.steps_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.steps_chart_y_axis_title
@@ -42,7 +41,7 @@ import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.health.components.dateLabel
-import org.darthacheron.fitbe.health.components.representativeDates
+import org.darthacheron.fitbe.health.components.representatives
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalKoalaPlotApi::class)
@@ -64,7 +63,7 @@ fun PlotSteps(
             }
         }
     ) {
-        val actualDatesForLabels = dates.representativeDates()
+        val representatives = dates.representatives()
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
@@ -73,10 +72,10 @@ fun PlotSteps(
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
             verticalMinorGridLineStyle = null,
-            xAxisLabels = { labelDate ->
-                if (!thumbnail && labelDate in actualDatesForLabels) {
+            xAxisLabels = { representative ->
+                if (!thumbnail && representative in representatives) {
                     Text(
-                        text = labelDate.dateLabel(dateRange.dateUnit),
+                        text = representative.dateLabel(dateRange.dateUnit),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =
