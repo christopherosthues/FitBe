@@ -692,6 +692,11 @@
     <string name="sleep_chart_y_axis_title">Schlafdauer (Minuten)</string>
     <string name="sleep_chart_annotation_sleep_value">Schlafdauer: %1$s Minuten</string>
 
+    <!-- Sleep overview -->
+    <string name="sleep_daily_view_content_description_add_sleep">Schlaf eintragen</string>
+    <string name="sleep_daily_view_error_loading">Fehler beim Laden der Schlafdaten.</string>
+    <string name="sleep_daily_view_error_saving">Fehler beim Speichern des Schlafintervalls. Bitte versuchen Sie es erneut.</string>
+
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Schlaf eintragen</string>
     <string name="sleep_add_dialog_start_date">Starttag</string>

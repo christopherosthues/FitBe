@@ -11,4 +11,6 @@ data class Sleep(
     val profileId: Uuid,
     val start: Instant,
     val end: Instant
-)
+) {
+    val duration = (end - start).inWholeMinutes
+}

@@ -154,7 +154,7 @@ class SleepOverviewViewModel(
             .map { (date, group) ->
                 SleepOverview(
                     date = date,
-                    totalMinutes = group.sumOf { it.start.until(it.end, DateTimeUnit.MINUTE) }.toDouble()
+                    totalMinutes = group.sumOf { it.duration }.toDouble()
                 )
             }
     }

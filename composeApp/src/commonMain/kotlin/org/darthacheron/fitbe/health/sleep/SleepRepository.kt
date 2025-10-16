@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
@@ -13,6 +14,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class SleepRepository(
     private val dao: SleepDao
 ) {
@@ -85,6 +87,19 @@ class SleepRepository(
                 }
             }
     }
+
+    fun getSleeps(
+        date: LocalDate,
+        profileId: Uuid
+        ): Flow<List<Sleep>> {
+            val startOfDay = date.atStartOfDayIn(TimeZone.currentSystemDefault())
+
+            return getSleepsBetween(
+                start = startOfDay,
+                end = startOfDay,
+                profileId = profileId
+            )
+        }
 
     suspend fun addSleep(sleep: Sleep) = dao.upsertSleep(sleep.toSleepEntity())
 }
