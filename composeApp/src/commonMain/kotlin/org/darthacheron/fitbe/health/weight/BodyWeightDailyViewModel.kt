@@ -93,7 +93,7 @@ class BodyWeightDailyViewModel(
             }.map { beverages ->
                 isLoading.value = false
                 beverages
-            }
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     override val uiState: StateFlow<BodyWeightDailyUiState> =
         combine(

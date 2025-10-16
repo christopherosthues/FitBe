@@ -50,7 +50,7 @@ class AddStepsDialogViewModel(
                 val selectedDate = currentState.date
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
-                val stepsForDate = stepsRepository.getStepsForDate(selectedDate, profileId).first()
+                val stepsForDate = stepsRepository.getSteps(selectedDate, profileId).first()
                 val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt
 
                 if (totalAmountForDay > 500_000u) {

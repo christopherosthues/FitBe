@@ -22,7 +22,8 @@
     <string name="top_bar_title_health">Gesundheit</string>
     <string name="top_bar_title_profile">Profil</string>
     <string name="top_bar_title_sleeps">Schlaf</string>
-    <string name="top_bar_title_steps">Schritte</string>
+    <string name="top_bar_title_steps">Übersicht - Schritte</string>
+    <string name="top_bar_title_daily_steps">Tagesansicht - Schritte</string>
     <string name="top_bar_title_beverages">Flüssigkeitsaufnahme</string>
     <string name="top_bar_title_beverages_overview">Flüssigkeitsaufnahmeübersicht</string>
     <string name="top_bar_title_body_weights">Übersicht - Körpergewicht</string>
@@ -717,6 +718,12 @@
     <string name="steps_chart_thumbnail_title">Schritte</string>
     <string name="steps_chart_y_axis_title">Schritte</string>
     <string name="steps_chart_annotation_steps_value">Schritte: %1$s</string>
+
+    <!-- Steps daily view -->
+    <string name="steps_daily_view_content_description_add_steps">Schritte eintragen</string>
+    <string name="steps_daily_view_error_loading">Fehler beim Laden der Schrittdaten.</string>
+    <string name="steps_daily_view_error_saving">Fehler beim Speichern der Schritte. Bitte versuchen Sie es erneut.</string>
+    <string name="steps_daily_view_steps">%1$d Schritte</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Schritte eintragen</string>

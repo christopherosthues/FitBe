@@ -22,7 +22,8 @@
     <string name="top_bar_title_health">Health</string>
     <string name="top_bar_title_profile">Profile</string>
     <string name="top_bar_title_sleeps">Sleeps</string>
-    <string name="top_bar_title_steps">Steps</string>
+    <string name="top_bar_title_steps">Overview - Steps</string>
+    <string name="top_bar_title_daily_steps">Daily view - Steps</string>
     <string name="top_bar_title_beverages">Beverages</string>
     <string name="top_bar_title_beverages_overview">Beverages Overview</string>
     <string name="top_bar_title_body_weights">Overview - Body weight</string>
@@ -717,6 +718,12 @@
     <string name="steps_chart_thumbnail_title">Steps</string>
     <string name="steps_chart_y_axis_title">Steps</string>
     <string name="steps_chart_annotation_steps_value">Steps: %1$s</string>
+
+    <!-- Steps daily view -->
+    <string name="steps_daily_view_content_description_add_steps">Record steps</string>
+    <string name="steps_daily_view_error_loading">Error loading steps data.</string>
+    <string name="steps_daily_view_error_saving">Error saving steps data. Please try again.</string>
+    <string name="steps_daily_view_steps">%1$d steps</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Record steps</string>

@@ -2,13 +2,10 @@ package org.darthacheron.fitbe.health.steps
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.health.beverages.Beverage
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.collections.map
 import kotlin.uuid.ExperimentalUuidApi
@@ -34,7 +31,7 @@ class StepsRepository(
             }
     }
 
-    fun getStepsForDate(
+    fun getSteps(
         date: LocalDate,
         profileId: Uuid
     ): Flow<List<Steps>> {
