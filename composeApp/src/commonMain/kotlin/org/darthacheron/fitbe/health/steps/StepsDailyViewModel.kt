@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.steps_daily_view_content_description_add_steps
 import fitbe.composeapp.generated.resources.steps_daily_view_error_loading
 import fitbe.composeapp.generated.resources.steps_daily_view_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_daily_steps
+import fitbe.composeapp.generated.resources.top_bar_title_daily_view_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +37,7 @@ class StepsDailyViewModel(
     topBarManager: TopBarManager
 ) : DailyViewModel<StepsDailyError, StepsDailyUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_daily_steps
+        get() = Res.string.top_bar_title_daily_view_steps
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health

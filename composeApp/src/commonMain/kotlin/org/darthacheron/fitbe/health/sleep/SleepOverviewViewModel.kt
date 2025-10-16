@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.sleep_overview_content_description_add_sleep
 import fitbe.composeapp.generated.resources.sleep_overview_error_loading
 import fitbe.composeapp.generated.resources.sleep_overview_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_sleeps
+import fitbe.composeapp.generated.resources.top_bar_title_overview_sleeps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -53,7 +53,7 @@ class SleepOverviewViewModel(
     topBarManager: TopBarManager
 ) : OverviewViewModel<SleepOverviewError, SleepOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_sleeps
+        get() = Res.string.top_bar_title_overview_sleeps
 
     override val backNavigationIconVisible: Boolean?
         get() = true

@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_add_beverage
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_beverages
+import fitbe.composeapp.generated.resources.top_bar_title_daily_view_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +37,7 @@ class BeverageDailyViewModel(
     topBarManager: TopBarManager
 ) : DailyViewModel<BeverageDailyError, BeverageDailyUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_beverages
+        get() = Res.string.top_bar_title_daily_view_beverages
 
     override val backNavigationIconVisible: Boolean?
         get() = true

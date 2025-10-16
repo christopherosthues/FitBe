@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.body_weight_daily_view_content_description_add_body_weight
 import fitbe.composeapp.generated.resources.body_weight_daily_view_error_loading
 import fitbe.composeapp.generated.resources.body_weight_daily_view_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_daily_body_weights
+import fitbe.composeapp.generated.resources.top_bar_title_daily_view_body_weights
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,7 +45,7 @@ class BodyWeightDailyViewModel(
     topBarManager: TopBarManager
 ) : DailyViewModel<BodyWeightDailyError, BodyWeightDailyUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_daily_body_weights
+        get() = Res.string.top_bar_title_daily_view_body_weights
 
     override val bottomBarSelected: Screen?
         get() = Screen.Health

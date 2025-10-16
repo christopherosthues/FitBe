@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.body_weight_overview_content_description_add_body_weight
 import fitbe.composeapp.generated.resources.body_weight_overview_error_loading
-import fitbe.composeapp.generated.resources.top_bar_title_body_weights
+import fitbe.composeapp.generated.resources.top_bar_title_overview_body_weights
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,7 +49,7 @@ class WeightOverviewViewModel(
     topBarManager: TopBarManager
 ) : OverviewViewModel<WeightOverviewError, WeightOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_body_weights
+        get() = Res.string.top_bar_title_overview_body_weights
 
     override val backNavigationIconVisible: Boolean?
         get() = true

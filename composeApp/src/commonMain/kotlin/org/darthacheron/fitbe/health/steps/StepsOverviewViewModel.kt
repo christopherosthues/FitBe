@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.steps_overview_content_description_add_steps
 import fitbe.composeapp.generated.resources.steps_overview_error_loading
 import fitbe.composeapp.generated.resources.steps_overview_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_steps
+import fitbe.composeapp.generated.resources.top_bar_title_overview_steps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +47,7 @@ class StepsOverviewViewModel(
     topBarManager: TopBarManager
 ) : OverviewViewModel<StepsOverviewError, StepsOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_steps
+        get() = Res.string.top_bar_title_overview_steps
 
     override val backNavigationIconVisible: Boolean?
         get() = true

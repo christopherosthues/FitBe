@@ -5,7 +5,7 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_overview_content_description_add_beverage
 import fitbe.composeapp.generated.resources.beverages_overview_error_loading
 import fitbe.composeapp.generated.resources.beverages_overview_error_saving
-import fitbe.composeapp.generated.resources.top_bar_title_beverages_overview
+import fitbe.composeapp.generated.resources.top_bar_title_overview_beverages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +24,6 @@ import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.OverviewViewModel
-import org.darthacheron.fitbe.health.sleep.SleepOverview
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
@@ -38,7 +37,6 @@ import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 class BeverageOverviewViewModel(
@@ -48,7 +46,7 @@ class BeverageOverviewViewModel(
     topBarManager: TopBarManager
 ) : OverviewViewModel<BeverageOverviewError, BeverageOverviewUiState>(settingsRepository, topBarManager) {
     override val title: StringResource
-        get() = Res.string.top_bar_title_beverages_overview
+        get() = Res.string.top_bar_title_overview_beverages
 
     override val backNavigationIconVisible: Boolean?
         get() = true
