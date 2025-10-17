@@ -52,7 +52,7 @@ fun PlotDailySteps(
     modifier: Modifier = Modifier,
     stepsData: List<Steps>,
     times: List<LocalTime>,
-    maxSteps: UInt,
+    maxSteps: Int,
     thumbnail: Boolean = false,
     targetSteps: Int? = null
 ) {
@@ -68,7 +68,7 @@ fun PlotDailySteps(
 
         XYGraph(
             xAxisModel = CategoryAxisModel(times),
-            yAxisModel = IntLinearAxisModel(0..maxSteps.toInt()),
+            yAxisModel = IntLinearAxisModel(0..maxSteps),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,

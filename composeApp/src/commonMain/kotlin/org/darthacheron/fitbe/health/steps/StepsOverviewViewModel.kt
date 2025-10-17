@@ -35,6 +35,7 @@ import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.StringResource
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -58,7 +59,7 @@ class StepsOverviewViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.steps_overview_content_description_add_steps
 
-    val targetSteps: StateFlow<UInt> =
+    private val targetSteps: StateFlow<Int?> =
         settingsRepository
             .getSettingsFlow()
             .flatMapLatest { settings ->
@@ -66,11 +67,11 @@ class StepsOverviewViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSteps ?: ProfileDefaults.STEPS}
+                        .map { profile -> profile?.targetSteps?.toInt()}
                 } else {
-                    flowOf(ProfileDefaults.STEPS)
+                    flowOf(null)
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val stepsDataFlow: StateFlow<List<StepsOverview>> =
         combine(
@@ -106,15 +107,34 @@ class StepsOverviewViewModel(
             it
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val maxSteps: StateFlow<Int> =
+        combine(
+            stepsDataFlow,
+            targetSteps
+        ) { stepsList, targetSteps ->
+            if (stepsList.isEmpty()) {
+                max(ProfileDefaults.STEPS.toInt(), targetSteps ?: ProfileDefaults.STEPS.toInt())
+            } else {
+                max(
+                    (stepsList.maxOfOrNull { it.steps }?.roundToInt() ?: ProfileDefaults.STEPS.toInt()),
+                    targetSteps ?: ProfileDefaults.STEPS.toInt()
+                )
+            }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS.toInt())
+
     override val uiState: StateFlow<StepsOverviewUiState> =
         combine(
             stepsDataFlow,
+            maxSteps,
+            targetSteps,
             isLoading,
             errorMessage
-        ) { steps, isLoading, errorMessage ->
+        ) { steps, maxSteps, target, isLoading, errorMessage ->
             StepsOverviewUiState(
                 isLoading = isLoading,
                 steps = steps,
+                maxSteps = maxSteps,
+                target = target,
                 dates = steps.map { it.date },
                 error = StepsOverviewError(errorMessage)
             )
@@ -123,17 +143,6 @@ class StepsOverviewViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = StepsOverviewUiState(isLoading = true)
         )
-
-    val maxSteps: StateFlow<UInt> =
-        uiState
-            .map { it.steps }
-            .map { stepsList ->
-                if (stepsList.isEmpty()) {
-                    ProfileDefaults.STEPS
-                } else {
-                    stepsList.maxOfOrNull { it.steps }?.roundToInt()?.toUInt() ?: ProfileDefaults.STEPS
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.STEPS)
 
     private fun mapDay(steps: List<Steps>): List<StepsOverview> = aggregateDailySteps(steps)
 

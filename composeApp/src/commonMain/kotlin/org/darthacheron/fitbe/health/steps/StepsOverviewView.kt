@@ -16,16 +16,14 @@ fun StepsOverviewView(
     OverviewView(
         overviewViewModel = stepsOverviewViewModel,
         plot = { state, dateRange ->
-            val targetSteps by stepsOverviewViewModel.targetSteps.collectAsState()
-            val maxSteps by stepsOverviewViewModel.maxSteps.collectAsState()
             PlotSteps(
-                Modifier.padding(top = 8.dp, bottom = 64.dp),
-                state.steps,
-                dateRange,
-                state.dates,
-                maxSteps,
-                false,
-                targetSteps
+                modifier = Modifier.padding(top = 8.dp, bottom = 64.dp),
+                stepsData = state.steps,
+                dateRange = dateRange,
+                dates = state.dates,
+                maxSteps = state.maxSteps,
+                thumbnail = false,
+                targetSteps = state.target
             )
         },
         addDialog = { dismissDialog ->

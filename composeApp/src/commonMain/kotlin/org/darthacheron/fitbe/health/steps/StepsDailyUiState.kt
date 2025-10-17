@@ -14,4 +14,5 @@ class StepsDailyUiState(
     val steps: List<Steps> = emptyList(),
     val times: List<LocalTime> = emptyList(),
     val target: Int? = null,
+    val maxSteps: Int = 0
 ) : UiState<StepsDailyError>(isLoading, error)

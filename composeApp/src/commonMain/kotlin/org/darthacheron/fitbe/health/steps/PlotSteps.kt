@@ -51,9 +51,9 @@ fun PlotSteps(
     stepsData: List<StepsOverview>,
     dateRange: DateRange,
     dates: List<LocalDate>,
-    maxSteps: UInt,
+    maxSteps: Int,
     thumbnail: Boolean = false,
-    targetSteps: UInt? = null
+    targetSteps: Int? = null
 ) {
     ChartLayout(
         modifier = modifier.padding(horizontal = 8.dp),
@@ -67,7 +67,7 @@ fun PlotSteps(
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = IntLinearAxisModel(0..maxSteps.toInt()),
+            yAxisModel = IntLinearAxisModel(0..maxSteps),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
@@ -172,9 +172,9 @@ fun PlotSteps(
                 )
             }
 
-            if (targetSteps != null && targetSteps > 0u) {
+            if (targetSteps != null && targetSteps > 0) {
                 LinePlot(
-                    data = dates.map { Point(it, targetSteps.toInt()) },
+                    data = dates.map { Point(it, targetSteps) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),

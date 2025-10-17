@@ -37,12 +37,10 @@ fun StepsDailyView(
     DailyView(
         dailyViewModel = stepsDailyViewModel,
         detailView = { state, date ->
-            val maxSteps by stepsDailyViewModel.maxSteps.collectAsState()
-            val targetSteps by stepsDailyViewModel.targetSteps.collectAsState()
             StepsDetailView(
                 state = state,
-                maxSteps = maxSteps,
-                targetSteps = targetSteps
+                maxSteps = state.maxSteps,
+                targetSteps = state.target
             )
         },
         addDialog = { onDismiss ->
@@ -62,8 +60,8 @@ fun StepsDailyView(
 @Composable
 private fun StepsDetailView(
     state: StepsDailyUiState,
-    maxSteps: UInt,
-    targetSteps: Int
+    maxSteps: Int,
+    targetSteps: Int?
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
