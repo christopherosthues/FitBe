@@ -7,5 +7,7 @@ class SleepOverviewUiState(
     isLoading: Boolean = true,
     val sleeps: List<SleepOverview> = emptyList(),
     val dates: List<LocalDate> = emptyList(),
+    val target: Int? = null,
+    val maxSleeps: Int = 0,
     error: SleepOverviewError = SleepOverviewError()
 ) : UiState<SleepOverviewError>(isLoading, error)

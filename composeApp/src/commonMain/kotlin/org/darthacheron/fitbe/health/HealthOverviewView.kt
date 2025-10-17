@@ -129,14 +129,13 @@ private fun StepsOverview(stepsOverviewViewModel: StepsOverviewViewModel) {
 @Composable
 private fun SleepsOverview(sleepsViewModel: SleepOverviewViewModel) {
     val uiState by sleepsViewModel.uiState.collectAsState()
-    val maxSleeps by sleepsViewModel.maxSleeps.collectAsState()
     val dateRange by sleepsViewModel.dateRangeFlow.collectAsState()
 
     PlotSleeps(
         sleeps = uiState.sleeps,
         dateRange = dateRange,
         dates = uiState.dates,
-        maxSleeps = maxSleeps,
+        maxSleeps = uiState.maxSleeps,
         thumbnail = true
     )
 }

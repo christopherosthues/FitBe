@@ -33,6 +33,7 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.Duration
 import kotlin.uuid.ExperimentalUuidApi
@@ -57,7 +58,7 @@ class SleepDailyViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.sleep_daily_view_content_description_add_sleep
 
-    val targetSleeps: StateFlow<Int> =
+    private val targetSleeps: StateFlow<Int?> =
         settingsRepository
             .getSettingsFlow()
             .flatMapLatest { settings ->
@@ -65,11 +66,11 @@ class SleepDailyViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSleepDuration?.toInt() ?: ProfileDefaults.SLEEP_DURATION.toInt() }
+                        .map { profile -> profile?.targetSleepDuration?.toInt() }
                 } else {
-                    flowOf(ProfileDefaults.SLEEP_DURATION.toInt())
+                    flowOf(null)
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION.toInt())
+            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val sleepsDataFlow: StateFlow<List<Sleep>> =
         date
@@ -91,19 +92,29 @@ class SleepDailyViewModel(
                 beverages
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val maxSleeps: StateFlow<Int> = combine(
+        sleepsDataFlow,
+        targetSleeps
+    ) { sleeps, targetSleeps ->
+        val duration = sleeps.fold(Duration.ZERO) { acc, it -> acc + it.duration }
+        max(duration.inWholeMinutes.toInt(), targetSleeps ?: ProfileDefaults.SLEEP_DURATION.toInt())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION.toInt())
+
     override val uiState: StateFlow<SleepDailyUiState> =
         combine(
             sleepsDataFlow,
+            maxSleeps,
             targetSleeps,
             isLoading,
             errorMessage
-        ) { sleeps, target, isLoading, errorMessage ->
+        ) { sleeps, maxSleeps, target, isLoading, errorMessage ->
             val duration = sleeps.fold(Duration.ZERO) { acc, it -> acc + it.duration }
             SleepDailyUiState(
                 isLoading = isLoading,
                 sleeps = sleeps,
-//                times = sleeps.map { it. },
                 target = target,
+                maxSleeps = maxSleeps,
+                totalSleep = duration.inWholeMinutes.toInt(),
                 sleepHours = duration.inWholeMinutes.toInt() / 60,
                 sleepMinutes = duration.inWholeMinutes.toInt() % 60,
                 error = SleepDailyError(errorMessage)
@@ -113,17 +124,6 @@ class SleepDailyViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = SleepDailyUiState(isLoading = true)
         )
-
-    val maxSleeps: StateFlow<Int> =
-        uiState
-            .map { it.sleeps }
-            .map { sleeps ->
-                if (sleeps.isEmpty()) {
-                    ProfileDefaults.SLEEP_DURATION.toInt()
-                } else {
-                    sleeps.maxOfOrNull { it.totalMinutes } ?: ProfileDefaults.SLEEP_DURATION.toInt()
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION.toInt())
 
     @OptIn(ExperimentalUuidApi::class)
     fun addSleep(

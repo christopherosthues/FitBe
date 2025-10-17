@@ -19,16 +19,14 @@ fun SleepOverviewView(
     OverviewView(
         overviewViewModel = viewModel,
         plot = { state, dateRange ->
-            val targetSleeps by viewModel.targetSleeps.collectAsState()
-            val maxSleeps by viewModel.maxSleeps.collectAsState()
             PlotSleeps(
-                Modifier.padding(top = 8.dp, bottom = 64.dp),
-                state.sleeps,
-                dateRange,
-                state.dates,
-                maxSleeps,
-                false,
-                targetSleeps
+                modifier = Modifier.padding(top = 8.dp, bottom = 64.dp),
+                sleeps = state.sleeps,
+                dateRange = dateRange,
+                dates = state.dates,
+                maxSleeps = state.maxSleeps,
+                thumbnail = false,
+                targetSleepDuration = state.target
             )
         },
         addDialog = { dismissDialog ->

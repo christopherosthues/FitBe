@@ -33,6 +33,7 @@ import fitbe.composeapp.generated.resources.local_time_format
 import fitbe.composeapp.generated.resources.sleep_daily_view_sleep_time
 import fitbe.composeapp.generated.resources.sleep_daily_view_total_sleep_last_night
 import fitbe.composeapp.generated.resources.sleep_daily_view_total_sleep_time
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
@@ -51,12 +52,11 @@ fun SleepDailyView(
     DailyView(
         dailyViewModel = sleepDailyViewModel,
         detailView = { state, date ->
-            val maxSleep by sleepDailyViewModel.maxSleeps.collectAsState()
-            val targetSleepDuration by sleepDailyViewModel.targetSleeps.collectAsState()
             SleepDetailView(
                 state = state,
-                maxSleep = maxSleep,
-                targetSleepDuration = targetSleepDuration
+                date = date.toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                targetSleepDuration = state.target,
+                maxSleeps = state.maxSleeps
             )
         },
         addDialog = { onDismiss ->
@@ -76,8 +76,9 @@ fun SleepDailyView(
 @Composable
 private fun SleepDetailView(
     state: SleepDailyUiState,
-    maxSleep: Int,
-    targetSleepDuration: Int
+    date: LocalDate,
+    targetSleepDuration: Int?,
+    maxSleeps: Int
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -89,18 +90,17 @@ private fun SleepDetailView(
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(top = 8.dp, bottom = 80.dp)
         ) {
-//            item {
-//                PlotDailySleeps(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(250.dp),
-//                    bodyWeights = state.bodyWeights,
-//                    times = state.times,
-//                    weightUnit = state.weightUnit,
-//                    maxWeight = maxBodyWeight,
-//                    targetWeight = targetBodyWeight
-//                )
-//            }
+            item {
+                PlotDailySleep(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp),
+                    date = date,
+                    totalSleep = state.totalSleep,
+                    maxSleeps = maxSleeps,
+                    targetSleepDuration = targetSleepDuration
+                )
+            }
             item {
                 ListItem(
                     headlineContent = {
@@ -111,7 +111,7 @@ private fun SleepDetailView(
                                     state.sleepHours,
                                     state.sleepMinutes
                                 ),
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.titleMedium
                         )
                     },
                     overlineContent = { null },

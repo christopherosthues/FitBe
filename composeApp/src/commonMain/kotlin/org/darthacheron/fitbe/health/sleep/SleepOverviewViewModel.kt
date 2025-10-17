@@ -40,6 +40,7 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.map
+import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -64,7 +65,7 @@ class SleepOverviewViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.sleep_overview_content_description_add_sleep
 
-    val targetSleeps: StateFlow<UInt> =
+    private val targetSleeps: StateFlow<Int?> =
         settingsRepository
             .getSettingsFlow()
             .flatMapLatest { settings ->
@@ -72,11 +73,11 @@ class SleepOverviewViewModel(
                 if (profileId != null) {
                     profileRepository
                         .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSleepDuration ?: ProfileDefaults.SLEEP_DURATION }
+                        .map { profile -> profile?.targetSleepDuration?.toInt() }
                 } else {
-                    flowOf(ProfileDefaults.SLEEP_DURATION)
+                    flowOf(null)
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
+            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
     private val sleepsDataFlow: StateFlow<List<SleepOverview>> =
@@ -113,15 +114,33 @@ class SleepOverviewViewModel(
             it
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val maxSleeps: StateFlow<Int> = combine(
+        sleepsDataFlow,
+        targetSleeps
+    ) { sleeps, targetSleeps ->
+        if (sleeps.isEmpty()) {
+            max(ProfileDefaults.SLEEP_DURATION.toInt(), targetSleeps ?: ProfileDefaults.SLEEP_DURATION.toInt())
+        } else {
+            max(
+                sleeps.maxOfOrNull { it.totalMinutes }?.roundToInt() ?: ProfileDefaults.SLEEP_DURATION.toInt(),
+                targetSleeps ?: ProfileDefaults.SLEEP_DURATION.toInt()
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION.toInt())
+
     override val uiState: StateFlow<SleepOverviewUiState> =
         combine(
             sleepsDataFlow,
+            maxSleeps,
+            targetSleeps,
             isLoading,
             errorMessage
-        ) { sleeps, isLoading, errorMessage ->
+        ) { sleeps, maxSleeps, target, isLoading, errorMessage ->
             SleepOverviewUiState(
                 isLoading = isLoading,
                 sleeps = sleeps,
+                maxSleeps = maxSleeps,
+                target = target,
                 dates = sleeps.map { it.date },
                 error = SleepOverviewError(errorMessage)
             )
@@ -130,17 +149,6 @@ class SleepOverviewViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = SleepOverviewUiState(isLoading = true)
         )
-
-    val maxSleeps: StateFlow<UInt> =
-        uiState
-            .map { it.sleeps }
-            .map { sleeps ->
-                if (sleeps.isEmpty()) {
-                    ProfileDefaults.SLEEP_DURATION
-                } else {
-                    sleeps.maxOfOrNull { it.totalMinutes }?.roundToInt()?.toUInt() ?: ProfileDefaults.SLEEP_DURATION
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION)
 
     private fun mapDay(sleeps: List<Sleep>): List<SleepOverview> = aggregateDailySleeps(sleeps)
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.sleep_chart_annotation_sleep_value
 import fitbe.composeapp.generated.resources.sleep_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.sleep_chart_y_axis_title
@@ -25,32 +26,26 @@ import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
 import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.VerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotEntry
-import io.github.koalaplot.core.line.AreaBaseline
-import io.github.koalaplot.core.line.AreaPlot
 import io.github.koalaplot.core.line.LinePlot
-import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.VerticalRotation
 import io.github.koalaplot.core.util.rotateVertically
 import io.github.koalaplot.core.xygraph.CategoryAxisModel
-import io.github.koalaplot.core.xygraph.DoubleLinearAxisModel
+import io.github.koalaplot.core.xygraph.IntLinearAxisModel
 import io.github.koalaplot.core.xygraph.Point
 import io.github.koalaplot.core.xygraph.XYGraph
 import io.github.koalaplot.core.xygraph.rememberAxisStyle
 import kotlinx.datetime.LocalDate
-import org.darthacheron.fitbe.components.date.DateRange
-import org.darthacheron.fitbe.health.components.dateLabel
-import org.darthacheron.fitbe.health.components.representatives
+import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
-fun PlotSleeps(
+fun PlotDailySleep(
     modifier: Modifier = Modifier,
-    sleeps: List<SleepOverview>,
-    dateRange: DateRange,
-    dates: List<LocalDate>,
+    date: LocalDate,
+    totalSleep: Int,
     maxSleeps: Int,
     thumbnail: Boolean = false,
     targetSleepDuration: Int? = null
@@ -63,19 +58,18 @@ fun PlotSleeps(
             }
         }
     ) {
-        val representatives = dates.representatives()
 
         XYGraph(
-            xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = DoubleLinearAxisModel(0.0..maxSleeps.toDouble()),
+            xAxisModel = CategoryAxisModel(listOf(date)),
+            yAxisModel = IntLinearAxisModel(0..maxSleeps),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
             verticalMinorGridLineStyle = null,
             xAxisLabels = { representative ->
-                if (!thumbnail && representative in representatives) {
+                if (!thumbnail) {
                     Text(
-                        text = representative.dateLabel(dateRange.dateUnit),
+                        text = date.format(stringResource(Res.string.local_date_format)),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodySmall,
                         modifier =
@@ -118,63 +112,40 @@ fun PlotSleeps(
             }
         ) {
             // TODO: accessible plot data
-            if (dates.size > 1) {
-                AreaPlot(
-                    data = sleeps.map { Point(it.date, it.totalMinutes) },
-                    areaBaseline = AreaBaseline.ConstantLine(0.0),
-                    areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
-                    lineStyle =
-                        LineStyle(
-                            brush = SolidColor(MaterialTheme.colorScheme.primary),
-                            strokeWidth = 2.dp
-                        )
-                )
-            } else if (dates.size == 1) {
-                val sleepsChartData = toVerticalBarData(sleeps)
-                VerticalBarPlot(
-                    data = sleepsChartData,
-                    barWidth = 0.8f,
-                    bar = { index ->
-                        DefaultVerticalBar(
-                            brush = SolidColor(Color(0xFFCC6666)),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            if (!thumbnail) {
-                                Surface(
-                                    shadowElevation = 2.dp,
-                                    shape = MaterialTheme.shapes.medium,
-                                    color = Color.LightGray,
-                                    modifier = modifier.padding(8.dp)
-                                ) {
-                                    Box(modifier = Modifier.padding(8.dp)) {
-                                        Text(
-                                            text =
-                                                stringResource(
-                                                    Res.string.sleep_chart_annotation_sleep_value,
-                                                    sleepsChartData[index].y.yMax.toString()
-                                                )
-                                        )
-                                    }
+            val sleepsChartData = toVerticalBarData(date, totalSleep)
+            VerticalBarPlot(
+                data = sleepsChartData,
+                barWidth = 0.8f,
+                bar = { index ->
+                    DefaultVerticalBar(
+                        brush = SolidColor(Color(0xFFCC6666)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        if (!thumbnail) {
+                            Surface(
+                                shadowElevation = 2.dp,
+                                shape = MaterialTheme.shapes.medium,
+                                color = Color.LightGray,
+                                modifier = modifier.padding(8.dp)
+                            ) {
+                                Box(modifier = Modifier.padding(8.dp)) {
+                                    Text(
+                                        text =
+                                            stringResource(
+                                                Res.string.sleep_chart_annotation_sleep_value,
+                                                sleepsChartData[index].y.yMax.toString()
+                                            )
+                                    )
                                 }
                             }
                         }
                     }
-                )
-            }
-            if (sleeps.isNotEmpty()) {
-                LinePlot(
-                    data = sleeps.map { Point(it.date, it.totalMinutes) },
-                    lineStyle =
-                        LineStyle(
-                            brush = SolidColor(MaterialTheme.colorScheme.primary),
-                            strokeWidth = 2.dp
-                        )
-                )
-            }
+                }
+            )
 
             if (targetSleepDuration != null && targetSleepDuration > 0) {
                 LinePlot(
-                    data = dates.map { Point(it, targetSleepDuration.toDouble()) },
+                    data = listOf(Point(date, targetSleepDuration)),
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
@@ -186,7 +157,5 @@ fun PlotSleeps(
     }
 }
 
-private fun toVerticalBarData(sleeps: List<SleepOverview>): List<VerticalBarPlotEntry<LocalDate, Double>> =
-    sleeps.map {
-        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0.0, it.totalMinutes))
-    }
+private fun toVerticalBarData(date: LocalDate, sleep: Int): List<VerticalBarPlotEntry<LocalDate, Int>> =
+    listOf(DefaultVerticalBarPlotEntry(date, DefaultVerticalBarPosition(0, sleep)))
