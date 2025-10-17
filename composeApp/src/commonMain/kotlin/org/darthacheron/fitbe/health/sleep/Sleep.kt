@@ -12,5 +12,11 @@ data class Sleep(
     val start: Instant,
     val end: Instant
 ) {
-    val duration = (end - start).inWholeMinutes
+    val duration = end - start
+
+    val totalMinutes = duration.inWholeMinutes.toInt()
+
+    val minutes = duration.inWholeMinutes.toInt() % 60
+
+    val hours = duration.inWholeMinutes.toInt() / 60
 }

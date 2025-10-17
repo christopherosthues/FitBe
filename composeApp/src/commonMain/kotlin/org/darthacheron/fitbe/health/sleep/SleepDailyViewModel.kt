@@ -34,6 +34,7 @@ import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
+import kotlin.time.Duration
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -97,10 +98,14 @@ class SleepDailyViewModel(
             isLoading,
             errorMessage
         ) { sleeps, target, isLoading, errorMessage ->
+            val duration = sleeps.fold(Duration.ZERO) { acc, it -> acc + it.duration }
             SleepDailyUiState(
                 isLoading = isLoading,
                 sleeps = sleeps,
-                times = sleeps.map { it. },
+//                times = sleeps.map { it. },
+                target = target,
+                sleepHours = duration.inWholeMinutes.toInt() / 60,
+                sleepMinutes = duration.inWholeMinutes.toInt() % 60,
                 error = SleepDailyError(errorMessage)
             )
         }.stateIn(
@@ -116,7 +121,7 @@ class SleepDailyViewModel(
                 if (sleeps.isEmpty()) {
                     ProfileDefaults.SLEEP_DURATION.toInt()
                 } else {
-                    sleeps.maxOfOrNull { it.duration }?.toInt() ?: ProfileDefaults.SLEEP_DURATION.toInt()
+                    sleeps.maxOfOrNull { it.totalMinutes } ?: ProfileDefaults.SLEEP_DURATION.toInt()
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.SLEEP_DURATION.toInt())
 
