@@ -2,8 +2,6 @@ package org.darthacheron.fitbe.health.weight
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
@@ -11,24 +9,22 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun WeightOverviewView(
-    bodyWeightOverviewViewModel: WeightOverviewViewModel,
+fun BodyWeightOverviewView(
+    bodyWeightOverviewViewModel: BodyWeightOverviewViewModel,
     addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel
 ) {
     OverviewView(
         overviewViewModel = bodyWeightOverviewViewModel,
         plot = { state, dateRange ->
-            val maxBodyWeight by bodyWeightOverviewViewModel.maxWeight.collectAsState()
-            val targetWeight by bodyWeightOverviewViewModel.targetWeight.collectAsState()
             PlotBodyWeights(
-                Modifier.padding(top = 8.dp, bottom = 64.dp),
-                state.bodyWeights,
-                dateRange,
-                state.dates,
-                state.weightUnit,
-                maxBodyWeight,
-                false,
-                targetWeight
+                modifier = Modifier.padding(top = 8.dp, bottom = 64.dp),
+                bodyWeights = state.bodyWeights,
+                dateRange = dateRange,
+                dates = state.dates,
+                weightUnit = state.weightUnit,
+                maxWeight = state.maxBodyWeight,
+                thumbnail = false,
+                targetWeight = state.targetBodyWeight
             )
         },
         addDialog = { dismissDialog ->

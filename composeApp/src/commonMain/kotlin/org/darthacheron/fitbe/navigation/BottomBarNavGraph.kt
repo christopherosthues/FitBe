@@ -27,7 +27,7 @@ import org.darthacheron.fitbe.health.steps.StepsView
 import org.darthacheron.fitbe.health.weight.AddBodyWeightDialogViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightDailyViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightView
-import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
+import org.darthacheron.fitbe.health.weight.BodyWeightOverviewViewModel
 import org.darthacheron.fitbe.home.HomeView
 import org.darthacheron.fitbe.home.HomeViewModel
 import org.darthacheron.fitbe.profile.ProfileView
@@ -185,7 +185,7 @@ fun BottomBarNavGraph(
         composable<Screen.BodyWeights> {
             val viewModel = koinViewModel<HealthViewModel>()
             val dialogViewModel = koinViewModel<AddBodyWeightDialogViewModel>()
-            val overviewViewModel = koinViewModel<WeightOverviewViewModel>()
+            val overviewViewModel = koinViewModel<BodyWeightOverviewViewModel>()
             val detailViewModel = koinViewModel<BodyWeightDailyViewModel>()
             BodyWeightView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
         }

@@ -50,18 +50,8 @@ class StepsDailyViewModel(
         get() = Res.string.steps_daily_view_content_description_add_steps
 
     private val targetSteps: StateFlow<Int?> =
-        settingsRepository
-            .getSettingsFlow()
-            .flatMapLatest { settings ->
-                val profileId = settings.selectedProfileId
-                if (profileId != null) {
-                    profileRepository
-                        .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSteps?.toInt() }
-                } else {
-                    flowOf(null)
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+        profileRepository.getTargetValueFlow { it?.targetSteps?.toInt() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val stepsDataFlow: StateFlow<List<Steps>> =
         date

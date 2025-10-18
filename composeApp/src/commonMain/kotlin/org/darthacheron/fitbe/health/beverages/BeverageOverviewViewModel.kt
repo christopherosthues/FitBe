@@ -34,6 +34,7 @@ import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
@@ -57,19 +58,9 @@ class BeverageOverviewViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.beverages_overview_content_description_add_beverage
 
-    val targetBeverages: StateFlow<UInt> =
-        settingsRepository
-            .getSettingsFlow()
-            .flatMapLatest { settings ->
-                val profileId = settings.selectedProfileId
-                if (profileId != null) {
-                    profileRepository
-                        .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
-                } else {
-                    flowOf(ProfileDefaults.BEVERAGE)
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
+    private val targetBeverages: StateFlow<Int?> =
+        profileRepository.getTargetValueFlow { it?.targetBeverageInMilliliter?.toInt() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val beveragesFlow: StateFlow<List<BeverageOverview>> =
         combine(
@@ -106,15 +97,31 @@ class BeverageOverviewViewModel(
             beverages
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val maxBeverages: StateFlow<Int> =
+        combine(
+            beveragesFlow,
+            targetBeverages
+        ) { beverages, target ->
+                if (beverages.isEmpty()) {
+                    ProfileDefaults.BEVERAGE.toInt()
+                } else {
+                    beverages.maxOfOrNull { it.amountMl }?.roundUpToNextTen()?.toInt() ?: ProfileDefaults.BEVERAGE.toInt()
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE.toInt())
+
     override val uiState: StateFlow<BeverageOverviewUiState> =
         combine(
             beveragesFlow,
+            maxBeverages,
+            targetBeverages,
             isLoading,
             errorMessage
-        ) { beverages, isLoading, errorMessage ->
+        ) { beverages, maxBeverages, target, isLoading, errorMessage ->
             BeverageOverviewUiState(
                 isLoading = isLoading,
                 beverages = beverages,
+                target = target,
+                maxBeverages = maxBeverages,
                 dates = beverages.map { it.date },
                 error = BeverageOverviewError(errorMessage)
             )
@@ -123,17 +130,6 @@ class BeverageOverviewViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = BeverageOverviewUiState(isLoading = true)
         )
-
-    val maxBeverages: StateFlow<UInt> =
-        uiState
-            .map { it.beverages }
-            .map { beverages ->
-                if (beverages.isEmpty()) {
-                    ProfileDefaults.BEVERAGE
-                } else {
-                    beverages.maxOfOrNull { it.amountMl }?.roundToInt()?.toUInt() ?: ProfileDefaults.BEVERAGE
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
 
     private fun mapDay(beverages: List<Beverage>): List<BeverageOverview> = aggregateDailyBeverages(beverages)
 

@@ -59,18 +59,8 @@ class SleepDailyViewModel(
         get() = Res.string.sleep_daily_view_content_description_add_sleep
 
     private val targetSleeps: StateFlow<Int?> =
-        settingsRepository
-            .getSettingsFlow()
-            .flatMapLatest { settings ->
-                val profileId = settings.selectedProfileId
-                if (profileId != null) {
-                    profileRepository
-                        .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSleepDuration?.toInt() }
-                } else {
-                    flowOf(null)
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+        profileRepository.getTargetValueFlow { it?.targetSleepDuration?.toInt() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val sleepsDataFlow: StateFlow<List<Sleep>> =
         date

@@ -59,23 +59,23 @@ fun BeverageDailyView(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            val progress = (state.progress.toFloat() * 100).toInt()
+                            val progressInPercent = (state.progress.toFloat() * 100).toInt()
                             val progressText: String
                             var totalAmountText: String? = null
                             var contentDescription: String? = null
                             if (state.target != null) {
                                 progressText =
-                                    stringResource(Res.string.beverages_daily_view_progress_percent, progress)
+                                    stringResource(Res.string.beverages_daily_view_progress_percent, progressInPercent)
                                 totalAmountText =
                                     stringResource(
                                         Res.string.beverages_daily_view_progress_total_target,
                                         state.total.roundToDecimals(2),
-                                        state.target.toInt()
+                                        state.target
                                     )
                                 contentDescription =
                                     stringResource(
                                         Res.string.beverages_daily_view_content_description_progress_percent_target,
-                                        progress
+                                        progressInPercent
                                     )
                             } else {
                                 progressText =

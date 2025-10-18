@@ -83,9 +83,9 @@ fun PlotDailyBodyWeights(
     bodyWeights: List<BodyWeight>,
     times: List<LocalTime>,
     weightUnit: WeightUnit,
-    maxWeight: Double,
+    maxBodyWeight: Double,
     thumbnail: Boolean = false,
-    targetWeight: Double? = null
+    targetBodyWeight: Double? = null
 ) {
     ChartLayout(
         modifier = modifier.padding(horizontal = 8.dp),
@@ -99,7 +99,7 @@ fun PlotDailyBodyWeights(
 
         XYGraph(
             xAxisModel = CategoryAxisModel(times),
-            yAxisModel = DoubleLinearAxisModel(0.0..maxWeight),
+            yAxisModel = DoubleLinearAxisModel(0.0..maxBodyWeight),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
@@ -229,9 +229,9 @@ fun PlotDailyBodyWeights(
                 )
             }
 
-            if (targetWeight != null && targetWeight > 0.0) {
+            if (targetBodyWeight != null && targetBodyWeight > 0.0) {
                 LinePlot(
-                    data = times.map { Point(it, targetWeight) },
+                    data = times.map { Point(it, targetBodyWeight) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),

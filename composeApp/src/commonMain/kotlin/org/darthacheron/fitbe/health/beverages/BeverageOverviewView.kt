@@ -16,16 +16,14 @@ fun BeverageOverviewView(
     OverviewView(
         overviewViewModel = beverageOverviewViewModel,
         plot = { state, dateRange ->
-            val targetBeverages by beverageOverviewViewModel.targetBeverages.collectAsState()
-            val maxBeverages by beverageOverviewViewModel.maxBeverages.collectAsState()
             PlotBeverages(
-                Modifier.padding(top = 8.dp, bottom = 64.dp),
-                state.beverages,
-                dateRange,
-                state.dates,
-                maxBeverages,
-                false,
-                targetBeverages
+                modifier = Modifier.padding(top = 8.dp, bottom = 64.dp),
+                beverages = state.beverages,
+                dateRange = dateRange,
+                dates = state.dates,
+                maxBeverages = state.maxBeverages,
+                thumbnail = false,
+                targetBeverages = state.target
             )
         },
         addDialog = { dismissDialog ->

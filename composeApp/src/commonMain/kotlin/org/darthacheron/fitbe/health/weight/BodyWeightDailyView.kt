@@ -15,8 +15,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -44,12 +42,8 @@ fun BodyWeightDailyView(
     DailyView(
         dailyViewModel = bodyWeightDailyViewModel,
         detailView = { state, date ->
-            val maxBodyWeight by bodyWeightDailyViewModel.maxBodyWeight.collectAsState()
-            val targetBodyWeight by bodyWeightDailyViewModel.targetBodyWeight.collectAsState()
             BodyWeightDetailView(
-                state = state,
-                maxBodyWeight = maxBodyWeight,
-                targetBodyWeight = targetBodyWeight
+                state = state
             )
         },
         addDialog = { onDismiss ->
@@ -82,9 +76,7 @@ fun BodyWeightDailyView(
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 private fun BodyWeightDetailView(
-    state: BodyWeightDailyUiState,
-    maxBodyWeight: Double,
-    targetBodyWeight: Double
+    state: BodyWeightDailyUiState
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -104,8 +96,8 @@ private fun BodyWeightDetailView(
                     bodyWeights = state.bodyWeights,
                     times = state.times,
                     weightUnit = state.weightUnit,
-                    maxWeight = maxBodyWeight,
-                    targetWeight = targetBodyWeight
+                    maxBodyWeight = state.maxBodyWeight,
+                    targetBodyWeight = state.targetBodyWeight
                 )
             }
             items(

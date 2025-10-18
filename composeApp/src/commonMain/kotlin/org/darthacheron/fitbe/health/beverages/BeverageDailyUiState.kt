@@ -8,5 +8,5 @@ class BeverageDailyUiState(
     val beverages: List<Beverage> = emptyList(),
     val progress: Double = 0.0,
     val total: Double = 0.0,
-    val target: UInt? = null,
+    val target: Int? = null,
 ) : UiState<BeverageDailyError>(isLoading, error)

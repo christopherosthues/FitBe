@@ -51,9 +51,9 @@ fun PlotBeverages(
     beverages: List<BeverageOverview>,
     dateRange: DateRange,
     dates: List<LocalDate>,
-    maxBeverages: UInt,
+    maxBeverages: Int,
     thumbnail: Boolean = false,
-    targetBeverages: UInt? = null
+    targetBeverages: Int? = null
 ) {
     ChartLayout(
         modifier = modifier.padding(horizontal = 8.dp),
@@ -67,7 +67,7 @@ fun PlotBeverages(
 
         XYGraph(
             xAxisModel = CategoryAxisModel(dates),
-            yAxisModel = IntLinearAxisModel(0..maxBeverages.toInt()),
+            yAxisModel = IntLinearAxisModel(0..maxBeverages),
             horizontalMajorGridLineStyle = null,
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
@@ -172,9 +172,9 @@ fun PlotBeverages(
                 )
             }
 
-            if (targetBeverages != null && targetBeverages > 0u) {
+            if (targetBeverages != null && targetBeverages > 0) {
                 LinePlot(
-                    data = dates.map { Point(it, targetBeverages.toInt()) },
+                    data = dates.map { Point(it, targetBeverages) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),

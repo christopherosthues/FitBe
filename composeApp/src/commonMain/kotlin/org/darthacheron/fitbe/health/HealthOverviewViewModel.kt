@@ -6,7 +6,7 @@ import fitbe.composeapp.generated.resources.top_bar_title_health
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
-import org.darthacheron.fitbe.health.weight.WeightOverviewViewModel
+import org.darthacheron.fitbe.health.weight.BodyWeightOverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.ui.BottomNavigationBarViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
@@ -15,7 +15,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 class HealthOverviewViewModel(
-    val bodyWeightOverviewViewModel: WeightOverviewViewModel,
+    val bodyWeightOverviewViewModel: BodyWeightOverviewViewModel,
     val stepsOverviewViewModel: StepsOverviewViewModel,
     val beverageOverviewViewModel: BeverageOverviewViewModel,
     val sleepOverviewViewModel: SleepOverviewViewModel,

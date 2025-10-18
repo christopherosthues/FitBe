@@ -48,19 +48,9 @@ class BeverageDailyViewModel(
     override val addButtonContentDescription: StringResource
         get() = Res.string.beverages_daily_view_content_description_add_beverage
 
-    private val targetBeverage: StateFlow<UInt> =
-        settingsRepository
-            .getSettingsFlow()
-            .flatMapLatest { settings ->
-                val profileId = settings.selectedProfileId
-                if (profileId != null) {
-                    profileRepository
-                        .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetBeverageInMilliliter ?: ProfileDefaults.BEVERAGE }
-                } else {
-                    flowOf(ProfileDefaults.BEVERAGE)
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ProfileDefaults.BEVERAGE)
+    private val targetBeverage: StateFlow<Int?> =
+        profileRepository.getTargetValueFlow { it?.targetBeverageInMilliliter?.toInt() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val beveragesFlow =
         date
@@ -91,7 +81,9 @@ class BeverageDailyViewModel(
         ) { beverages, target, isLoading, error ->
             val totalAmount = beverages.sumOf { it.unit.toMilliliter(it.amount) }
             val progress =
-                if (target > 0u) {
+                if (target == null) {
+                    1.0
+                } else if (target > 0) {
                     totalAmount / target.toDouble()
                 } else {
                     0.0

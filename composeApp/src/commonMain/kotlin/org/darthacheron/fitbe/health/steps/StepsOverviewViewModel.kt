@@ -34,6 +34,7 @@ import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
+import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.max
 import kotlin.math.roundToInt
@@ -60,18 +61,8 @@ class StepsOverviewViewModel(
         get() = Res.string.steps_overview_content_description_add_steps
 
     private val targetSteps: StateFlow<Int?> =
-        settingsRepository
-            .getSettingsFlow()
-            .flatMapLatest { settings ->
-                val profileId = settings.selectedProfileId
-                if (profileId != null) {
-                    profileRepository
-                        .getProfileFlowById(profileId)
-                        .map { profile -> profile?.targetSteps?.toInt()}
-                } else {
-                    flowOf(null)
-                }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+        profileRepository.getTargetValueFlow { it?.targetSteps?.toInt() }
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val stepsDataFlow: StateFlow<List<StepsOverview>> =
         combine(
@@ -116,7 +107,7 @@ class StepsOverviewViewModel(
                 max(ProfileDefaults.STEPS.toInt(), targetSteps ?: ProfileDefaults.STEPS.toInt())
             } else {
                 max(
-                    (stepsList.maxOfOrNull { it.steps }?.roundToInt() ?: ProfileDefaults.STEPS.toInt()),
+                    (stepsList.maxOfOrNull { it.steps }?.roundUpToNextTen()?.toInt() ?: ProfileDefaults.STEPS.toInt()),
                     targetSteps ?: ProfileDefaults.STEPS.toInt()
                 )
             }
