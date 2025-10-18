@@ -48,7 +48,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddBeverageDialog(
     viewModel: AddBeverageDialogViewModel,
-    initialDate: Instant?,
+    initialDate: Instant? = null,
     onDismiss: () -> Any,
     onSave: (Double, String, FluidUnit, Instant) -> Any
 ) {

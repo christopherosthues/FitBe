@@ -49,6 +49,7 @@ fun BodyWeightDailyView(
         addDialog = { date, onDismiss ->
             AddBodyWeightDialog(
                 viewModel = addBodyWeightDialogViewModel,
+                initialDate = date,
                 onSave = {
                         date,
                         weightInKg,

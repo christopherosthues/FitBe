@@ -41,11 +41,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddStepsDialog(
     viewModel: AddStepsDialogViewModel,
+    initialDate: Instant? = null,
     onDismiss: () -> Unit,
     onSave: (date: Instant, steps: UInt) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
+
+    if (initialDate != null) {
+        viewModel.onDateChange(initialDate.toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    }
 
     AlertDialog(
         onDismissRequest = viewModel::dismissDialog,

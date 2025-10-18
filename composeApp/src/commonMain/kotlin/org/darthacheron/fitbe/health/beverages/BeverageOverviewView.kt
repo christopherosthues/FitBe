@@ -27,7 +27,6 @@ fun BeverageOverviewView(
         addDialog = { dismissDialog ->
             AddBeverageDialog(
                 viewModel = addBeverageDialogViewModel,
-                initialDate = null,
                 onSave = { amount, name, unit, date ->
                     beverageOverviewViewModel.saveBeverage(amount, name, unit, date)
                     dismissDialog()

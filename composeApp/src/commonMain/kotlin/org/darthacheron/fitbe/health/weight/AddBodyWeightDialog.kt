@@ -50,6 +50,7 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun AddBodyWeightDialog(
     viewModel: AddBodyWeightDialogViewModel,
+    initialDate: Instant? = null,
     onDismiss: () -> Unit,
     onSave: (
         date: LocalDate,
@@ -62,6 +63,10 @@ fun AddBodyWeightDialog(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val settings by viewModel.settings.collectAsState(initial = Settings())
+
+    if (initialDate != null) {
+        viewModel.onDateChange(initialDate.toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    }
 
     var showDatePicker by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
