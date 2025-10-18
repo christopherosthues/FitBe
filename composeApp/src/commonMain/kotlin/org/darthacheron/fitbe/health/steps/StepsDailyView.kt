@@ -43,7 +43,7 @@ fun StepsDailyView(
                 targetSteps = state.target
             )
         },
-        addDialog = { onDismiss ->
+        addDialog = { date, onDismiss ->
             AddStepsDialog(
                 viewModel = addStepsDialogViewModel,
                 onSave = { date, steps ->

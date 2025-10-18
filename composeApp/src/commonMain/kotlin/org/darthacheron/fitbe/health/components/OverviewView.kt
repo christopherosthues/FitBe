@@ -35,12 +35,15 @@ import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun <Error : UiStateError, State : UiState<Error>> OverviewView(
     overviewViewModel: OverviewViewModel<Error, State>,
     plot: @Composable (state: State, dateRange: DateRange) -> Unit,
-    addDialog: @Composable (() -> Unit) -> Unit
+    addDialog: @Composable (dismiss: () -> Unit) -> Unit
 ) {
     LaunchedEffect(Unit) {
         overviewViewModel.updateTopBarConfig()

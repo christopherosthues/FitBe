@@ -2,8 +2,6 @@ package org.darthacheron.fitbe.health.beverages
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
@@ -29,6 +27,7 @@ fun BeverageOverviewView(
         addDialog = { dismissDialog ->
             AddBeverageDialog(
                 viewModel = addBeverageDialogViewModel,
+                initialDate = null,
                 onSave = { amount, name, unit, date ->
                     beverageOverviewViewModel.saveBeverage(amount, name, unit, date)
                     dismissDialog()

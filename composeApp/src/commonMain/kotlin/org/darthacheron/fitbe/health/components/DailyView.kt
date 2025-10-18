@@ -40,7 +40,7 @@ import org.jetbrains.compose.resources.stringResource
 fun <Error : UiStateError, State : UiState<Error>> DailyView(
     dailyViewModel: DailyViewModel<Error, State>,
     detailView: @Composable (state: State, date: Instant) -> Unit,
-    addDialog: @Composable (() -> Unit) -> Unit
+    addDialog: @Composable (date: Instant, dismiss: () -> Unit) -> Unit
 ) {
     LaunchedEffect(Unit) {
         dailyViewModel.updateTopBarConfig()
@@ -119,6 +119,9 @@ fun <Error : UiStateError, State : UiState<Error>> DailyView(
     }
 
     if (showAddDialog) {
-        addDialog { showAddDialog = false }
+        addDialog(
+            date,
+            { showAddDialog = false }
+        )
     }
 }

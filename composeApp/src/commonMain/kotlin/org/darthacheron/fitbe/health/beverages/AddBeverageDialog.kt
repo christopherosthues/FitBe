@@ -48,11 +48,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddBeverageDialog(
     viewModel: AddBeverageDialogViewModel,
+    initialDate: Instant?,
     onDismiss: () -> Any,
     onSave: (Double, String, FluidUnit, Instant) -> Any
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
+
+    if (initialDate != null) {
+        viewModel.onDateChange(initialDate.toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    }
 
     AlertDialog(
         onDismissRequest = viewModel::dismissDialog,

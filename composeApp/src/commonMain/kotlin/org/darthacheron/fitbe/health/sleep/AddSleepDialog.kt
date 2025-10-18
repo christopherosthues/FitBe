@@ -61,6 +61,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun AddSleepDialog(
     viewModel: AddSleepDialogViewModel,
+    date: Instant?,
     onSave: (start: Instant, end: Instant) -> Unit,
     onDismiss: () -> Unit
 ) {

@@ -59,9 +59,10 @@ fun SleepDailyView(
                 maxSleeps = state.maxSleeps
             )
         },
-        addDialog = { onDismiss ->
+        addDialog = { date, onDismiss ->
             AddSleepDialog(
                 viewModel = addSleepDialogViewModel,
+                date = date,
                 onSave = { start, end ->
                     sleepDailyViewModel.addSleep(start, end)
                     onDismiss()

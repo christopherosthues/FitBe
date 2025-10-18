@@ -32,6 +32,7 @@ fun SleepOverviewView(
         addDialog = { dismissDialog ->
             AddSleepDialog(
                 viewModel = dialogViewModel,
+                date = null,
                 onSave = { start, end ->
                     viewModel.addSleep(start, end)
                     dismissDialog()
