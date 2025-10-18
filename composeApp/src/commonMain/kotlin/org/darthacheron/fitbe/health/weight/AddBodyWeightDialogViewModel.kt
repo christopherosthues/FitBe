@@ -50,6 +50,7 @@ class AddBodyWeightDialogViewModel(
     }
 
     private fun validateWeight() {
+        // TODO: check if this is working correctly
         viewModelScope.launch {
             val currentState = uiState.value
             val weight = currentState.weight
@@ -168,6 +169,11 @@ class AddBodyWeightDialogViewModel(
     private fun validateBodyWeight() {
         viewModelScope.launch {
             val currentState = uiState.value
+
+            if (currentState.weightError != null) {
+                return@launch
+            }
+
             val totalWeight = currentState.weight.replace(',', '.').toDoubleOrNull()
 
             // We can only validate the sum if the total weight is a valid positive number.

@@ -13,6 +13,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -93,7 +94,7 @@ fun AddBeverageDialog(
                     )
                 }
 
-                TextField(
+                OutlinedTextField(
                     value = uiState.amount,
                     onValueChange = viewModel::onAmountChange,
                     label = { Text(text = stringResource(Res.string.beverages_add_dialog_amount)) },
@@ -104,7 +105,7 @@ fun AddBeverageDialog(
                         uiState.amountError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                TextField(
+                OutlinedTextField(
                     value = uiState.beverageName,
                     onValueChange = viewModel::onNameChange,
                     label = { Text(text = stringResource(Res.string.beverages_add_dialog_name)) },
@@ -121,7 +122,7 @@ fun AddBeverageDialog(
                     onExpandedChange = { unitDropdownExpanded = !unitDropdownExpanded },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextField(
+                    OutlinedTextField(
                         value = uiState.selectedUnit.localizedString(uiState.amount.toDoubleOrNull() ?: 0.0),
                         onValueChange = {},
                         readOnly = true,

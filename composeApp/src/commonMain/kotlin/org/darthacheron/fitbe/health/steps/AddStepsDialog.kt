@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -82,7 +83,7 @@ fun AddStepsDialog(
                     )
                 }
 
-                TextField(
+                OutlinedTextField(
                     value = uiState.steps,
                     onValueChange = viewModel::onStepsChange,
                     label = { Text(text = stringResource(Res.string.steps_add_dialog_steps)) },

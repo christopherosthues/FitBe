@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -105,7 +106,7 @@ fun AddBodyWeightDialog(
                     )
                 }
 
-                TextField(
+                OutlinedTextField(
                     value = uiState.weight,
                     onValueChange = viewModel::onWeightChange,
                     label = {
@@ -124,7 +125,7 @@ fun AddBodyWeightDialog(
                         uiState.weightError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                TextField(
+                OutlinedTextField(
                     value = uiState.bodyFatInPercentage,
                     onValueChange = viewModel::onBodyFatChange,
                     label = { Text(stringResource(Res.string.body_weight_add_dialog_body_fat)) },
@@ -135,7 +136,7 @@ fun AddBodyWeightDialog(
                         uiState.bodyFatError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                TextField(
+                OutlinedTextField(
                     value = uiState.muscleMass,
                     onValueChange = viewModel::onMuscleMassChange,
                     label = {
@@ -153,7 +154,7 @@ fun AddBodyWeightDialog(
                         uiState.muscleMassError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                TextField(
+                OutlinedTextField(
                     value = uiState.boneMass,
                     onValueChange = viewModel::onBoneMassChange,
                     label = {
@@ -171,7 +172,7 @@ fun AddBodyWeightDialog(
                         uiState.boneMassError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                TextField(
+                OutlinedTextField(
                     value = uiState.bodyWaterInPercentage,
                     onValueChange = viewModel::onBodyWaterChange,
                     label = { Text(stringResource(Res.string.body_weight_add_dialog_body_water)) },
