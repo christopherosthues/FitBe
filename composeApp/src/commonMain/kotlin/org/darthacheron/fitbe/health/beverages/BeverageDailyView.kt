@@ -5,28 +5,35 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_progress_percent_target
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percent
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total_target
+import fitbe.composeapp.generated.resources.local_time_format
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
 import org.darthacheron.fitbe.health.components.DailyView
+import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun BeverageDailyView(
@@ -52,6 +59,7 @@ fun BeverageDailyView(
     )
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 private fun BeverageDailyView(state: BeverageDailyUiState) {
     Box(
@@ -62,9 +70,9 @@ private fun BeverageDailyView(state: BeverageDailyUiState) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(bottom = 64.dp)
+            contentPadding = PaddingValues(top = 8.dp, bottom = 80.dp)
         ) {
-            stickyHeader {
+            item {
                 Column(
                     modifier =
                         Modifier
@@ -110,21 +118,42 @@ private fun BeverageDailyView(state: BeverageDailyUiState) {
                     )
                 }
             }
-            state.beverages.forEach { beverage ->
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.fillMaxWidth(0.7f).padding(vertical = 8.dp)
-                    ) {
-                        Icon(
-                            painterResource(beverage.unit.iconResource()),
-                            contentDescription = null,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Text(text = beverage.localizedString())
-                    }
-                }
+            items(
+                items = state.beverages,
+                key = { it.id }
+            ) { beverage ->
+                BeveragesListItem(
+                    beverage = beverage
+                )
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
+}
+
+@Composable
+private fun BeveragesListItem(beverage: Beverage) {
+    ListItem(
+        leadingContent = {
+            Icon(
+                painterResource(beverage.unit.iconResource()),
+                contentDescription = null,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        },
+        headlineContent = {
+            Text(
+                text = beverage.localizedString(),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        overlineContent = {
+            Text(
+                text = beverage.date.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
+                    stringResource(Res.string.local_time_format)
+                )
+            )
+        },
+        supportingContent = { null }
+    )
 }

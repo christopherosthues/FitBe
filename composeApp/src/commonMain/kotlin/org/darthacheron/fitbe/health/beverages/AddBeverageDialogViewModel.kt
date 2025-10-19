@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.health.components.AddDialogViewModel
@@ -51,7 +53,7 @@ class AddBeverageDialogViewModel(
                 }
 
             if (error == null && amountAsDouble != null) {
-                val selectedDate = currentState.date
+                val selectedDate = currentState.dateTime.date
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val beveragesForDay = beverageRepository.getBeveragesForDate(selectedDate, profileId).first()
@@ -82,7 +84,12 @@ class AddBeverageDialogViewModel(
     }
 
     fun onDateChange(date: LocalDate) {
-        uiState.update { it.copy(date = date) }
+        uiState.update { it.copy(dateTime = LocalDateTime(date, it.dateTime.time)) }
+        validateAmount()
+    }
+
+    fun onTimeChange(time: LocalTime) {
+        uiState.update { it.copy(dateTime = LocalDateTime(it.dateTime.date, time)) }
         validateAmount()
     }
 

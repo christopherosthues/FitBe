@@ -672,7 +672,10 @@
 
     <!-- Beverage Add Dialog -->
     <string name="beverages_add_dialog_title">Getränk eintragen</string>
+    <string name="beverages_add_dialog_date">Datum</string>
     <string name="beverages_add_dialog_content_description_date">Datum auswählen</string>
+    <string name="beverages_add_dialog_time">Tageszeit</string>
+    <string name="beverages_add_dialog_content_description_time">Tageszeit auswählen</string>
     <string name="beverages_add_dialog_amount">Menge</string>
     <string name="beverages_add_dialog_name">Getränkename</string>
     <string name="beverages_add_dialog_unit">Einheit</string>
