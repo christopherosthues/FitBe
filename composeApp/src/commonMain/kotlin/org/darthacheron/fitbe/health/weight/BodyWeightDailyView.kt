@@ -11,10 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,16 +31,22 @@ import fitbe.composeapp.generated.resources.body_weight_daily_view_body_water
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_weight
 import fitbe.composeapp.generated.resources.body_weight_daily_view_bone_mass
 import fitbe.composeapp.generated.resources.body_weight_daily_view_muscle_mass
+import fitbe.composeapp.generated.resources.ic_delete
+import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.local_time_format
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
+import org.darthacheron.fitbe.health.steps.manage.EditStepsDialog
 import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialog
+import org.darthacheron.fitbe.health.weight.manage.EditBodyWeightDialog
 import org.darthacheron.fitbe.settings.WeightUnit
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun BodyWeightDailyView(
@@ -44,7 +56,8 @@ fun BodyWeightDailyView(
         dailyViewModel = bodyWeightDailyViewModel,
         detailView = { state, date ->
             BodyWeightDetailView(
-                state = state
+                state = state,
+                bodyWeightDailyViewModel = bodyWeightDailyViewModel
             )
         },
         addDialog = { date, onDismiss ->
@@ -76,8 +89,12 @@ fun BodyWeightDailyView(
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 private fun BodyWeightDetailView(
-    state: BodyWeightDailyUiState
+    state: BodyWeightDailyUiState,
+    bodyWeightDailyViewModel: BodyWeightDailyViewModel
 ) {
+    var showEditDialog by remember { mutableStateOf(false) }
+    var selectedBodyWeightId by remember { mutableStateOf<Uuid?>(null) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -106,16 +123,56 @@ private fun BodyWeightDetailView(
             ) { bodyWeight ->
                 BodyWeightListItem(
                     bodyWeight = bodyWeight,
-                    weightUnit = state.weightUnit
+                    weightUnit = state.weightUnit,
+                    editDialog = { id ->
+                        showEditDialog = true
+                        selectedBodyWeightId = id
+                    },
+                    delete = bodyWeightDailyViewModel::deleteBodyWeight
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
+
+    if (showEditDialog && selectedBodyWeightId != null) {
+        EditBodyWeightDialog(
+            id = selectedBodyWeightId!!,
+            onSave = { id,
+                       date,
+                       weightInKg,
+                       bodyFatPercentage,
+                       muscleMassInKg,
+                       boneMassInKg,
+                       bodyWaterInPercentage ->
+                bodyWeightDailyViewModel.editBodyWeight(
+                    id = id,
+                    date = date,
+                    weightInKg = weightInKg,
+                    bodyFatPercentage = bodyFatPercentage,
+                    muscleMassInKg = muscleMassInKg,
+                    boneMassInKg = boneMassInKg,
+                    bodyWaterInPercentage = bodyWaterInPercentage
+                )
+                showEditDialog = false
+                selectedBodyWeightId = null
+            },
+            onDismiss = {
+                showEditDialog = false
+                selectedBodyWeightId = null
+            }
+        )
+    }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-private fun BodyWeightListItem(bodyWeight: BodyWeight, weightUnit: WeightUnit) {
+private fun BodyWeightListItem(
+    bodyWeight: BodyWeight,
+    weightUnit: WeightUnit,
+    editDialog: (id: Uuid) -> Unit,
+    delete: (id: Uuid) -> Unit
+) {
     val hasSupportingContent = bodyWeight.muscleMassInKg != null ||
         bodyWeight.bodyFatPercentage != null ||
         bodyWeight.bodyWaterInPercentage != null ||
@@ -187,6 +244,25 @@ private fun BodyWeightListItem(bodyWeight: BodyWeight, weightUnit: WeightUnit) {
             }
         } else {
             null
+        },
+        trailingContent = {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { editDialog(bodyWeight.id) }
+                ) {
+                    // TODO: content description
+                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                }
+                IconButton(
+                    onClick = { delete(bodyWeight.id) }
+                ) {
+                    // TODO: content description
+                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                }
+            }
         }
     )
 }

@@ -6,6 +6,8 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import org.darthacheron.fitbe.health.steps.Steps
+import org.darthacheron.fitbe.health.steps.toStepsEntity
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -14,6 +16,10 @@ import kotlin.uuid.Uuid
 class BodyWeightRepository(
     private val bodyWeightDao: BodyWeightDao
 ) {
+    suspend fun getBodyWeight(id: Uuid): BodyWeight? {
+        return bodyWeightDao.getBodyWeight(id)?.toBodyWeight()
+    }
+
     fun getBodyWeights(
         startDate: Instant,
         endDate: Instant,
@@ -40,5 +46,13 @@ class BodyWeightRepository(
 
     suspend fun addBodyWeight(bodyWeight: BodyWeight) {
         bodyWeightDao.upsertBodyWeight(bodyWeight.toBodyWeightEntity())
+    }
+
+    suspend fun editBodyWeight(bodyWeight: BodyWeight) {
+        bodyWeightDao.upsertBodyWeight(bodyWeight = bodyWeight.toBodyWeightEntity())
+    }
+
+    suspend fun deleteBodyWeight(id: Uuid) {
+        bodyWeightDao.deleteBodyWeight(id)
     }
 }

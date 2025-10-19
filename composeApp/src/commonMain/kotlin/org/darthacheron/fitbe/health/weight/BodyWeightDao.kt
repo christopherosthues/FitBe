@@ -6,12 +6,16 @@ import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import org.darthacheron.fitbe.health.steps.StepsEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface BodyWeightDao {
+    @Query("SELECT * FROM body_weights WHERE id = :id")
+    suspend fun getBodyWeight(id: Uuid): BodyWeightEntity?
+
     @Upsert
     suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
@@ -29,4 +33,7 @@ interface BodyWeightDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<BodyWeightEntity>>
+
+    @Query("DELETE FROM body_weights WHERE id = :id")
+    suspend fun deleteBodyWeight(id: Uuid)
 }

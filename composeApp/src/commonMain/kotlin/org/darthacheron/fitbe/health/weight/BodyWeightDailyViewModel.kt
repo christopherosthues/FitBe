@@ -3,6 +3,8 @@ package org.darthacheron.fitbe.health.weight
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.body_weight_daily_view_content_description_add_body_weight
+import fitbe.composeapp.generated.resources.body_weight_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.body_weight_daily_view_error_editing
 import fitbe.composeapp.generated.resources.body_weight_daily_view_error_loading
 import fitbe.composeapp.generated.resources.body_weight_daily_view_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_body_weights
@@ -35,6 +37,7 @@ import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.max
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class BodyWeightDailyViewModel(
@@ -207,6 +210,52 @@ class BodyWeightDailyViewModel(
                 )
             } catch (e: Exception) {
                 errorMessage.value = Res.string.body_weight_daily_view_error_saving
+            }
+        }
+    }
+
+    fun editBodyWeight(
+        id: Uuid,
+        date: Instant,
+        weightInKg: Double,
+        bodyFatPercentage: Double?,
+        muscleMassInKg: Double?,
+        boneMassInKg: Double?,
+        bodyWaterInPercentage: Double?
+    ) {
+        viewModelScope.launch {
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.body_weight_daily_view_error_editing
+                    return@launch
+                }
+
+                repository.editBodyWeight(
+                    BodyWeight(
+                        id = id,
+                        profileId = profileId,
+                        date = date,
+                        weightInKg = weightInKg,
+                        bodyFatPercentage = bodyFatPercentage,
+                        muscleMassInKg = muscleMassInKg,
+                        boneMassInKg = boneMassInKg,
+                        bodyWaterInPercentage = bodyWaterInPercentage
+                    )
+                )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.body_weight_daily_view_error_editing
+            }
+        }
+    }
+
+    fun deleteBodyWeight(id: Uuid) {
+        viewModelScope.launch {
+            try {
+                repository.deleteBodyWeight(id)
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.body_weight_daily_view_error_deleting
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,14 +58,16 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun AddBodyWeightDialog(
-    viewModel: AddBodyWeightDialogViewModel = koinViewModel(),
-    initialDate: Instant? = null,
+fun EditBodyWeightDialog(
+    viewModel: EditBodyWeightDialogViewModel = koinViewModel(),
+    id: Uuid,
     onDismiss: () -> Unit,
     onSave: (
+        id: Uuid,
         date: Instant,
         weightInKg: Double,
         bodyFatPercentage: Double?,
@@ -76,8 +79,8 @@ fun AddBodyWeightDialog(
     val uiState by viewModel.uiState.collectAsState()
     val settings by viewModel.settings.collectAsState(initial = Settings())
 
-    if (initialDate != null) {
-        viewModel.onDateChange(initialDate.toLocalDateTime(TimeZone.currentSystemDefault()).date)
+    LaunchedEffect(Unit) {
+        viewModel.init(id)
     }
 
     var showDatePicker by remember { mutableStateOf(false) }
@@ -256,6 +259,7 @@ fun AddBodyWeightDialog(
                         }
 
                     onSave(
+                        uiState.id,
                         uiState.dateTime.toInstant(TimeZone.currentSystemDefault()),
                         settings.weightUnit.toKilogram(uiState.weight.toDouble()),
                         uiState.bodyFatInPercentage.toDoubleOrNull(),

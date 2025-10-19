@@ -206,11 +206,13 @@ private fun BeveragesListItem(
                 IconButton(
                     onClick = { editDialog(beverage.id) }
                 ) {
+                    // TODO: content description
                     Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
                 }
                 IconButton(
                     onClick = { delete(beverage.id) }
                 ) {
+                    // TODO: content description
                     Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
                 }
             }

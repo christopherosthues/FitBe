@@ -76,7 +76,10 @@ class EditStepsDialogViewModel(
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val stepsForDate = stepsRepository.getSteps(selectedDate.date, profileId).first()
-                val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt
+                val totalAmountForDay =
+                    stepsForDate
+                        .filter { it.id != currentState.id }
+                        .sumOf { it.steps } + stepsAsUInt
 
                 if (totalAmountForDay > 500_000u) {
                     error = Res.string.steps_add_dialog_error_invalid_total_steps

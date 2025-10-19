@@ -59,7 +59,7 @@ fun EditStepsDialog(
     viewModel: EditStepsDialogViewModel = koinViewModel(),
     id: Uuid,
     onDismiss: () -> Any,
-    onSave: (Uuid, Instant, UInt) -> Any
+    onSave: (id: Uuid, date: Instant, steps: UInt) -> Any
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
