@@ -70,7 +70,7 @@ class BeverageRepositoryTest {
             val startDate = LocalDate(2025, 10, 1).toInstantAtStartOfDay(germanTimeZone)
             val endDate = LocalDate(2025, 10, 31).toInstantAtStartOfDay(germanTimeZone)
 
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 assertEquals(emptyList(), awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
@@ -91,7 +91,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2025, 10, 16).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(2, entries.size, "Should find 2 entries within the local date range")
                 assertEquals(15, entries[0].date.toLocalDateTime(germanTimeZone).dayOfMonth)
@@ -114,7 +114,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(1, entries.size, "Should find entry exactly at the start of the day")
                 assertEquals(entryTime, entries[0].date)
@@ -139,7 +139,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(2, entries.size, "Should find all entries on the day of DST change")
                 cancelAndIgnoreRemainingEvents()
@@ -162,7 +162,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2026, 1, 2).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     1,
@@ -190,7 +190,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     0,
@@ -214,7 +214,7 @@ class BeverageRepositoryTest {
             val endDate = LocalDate(2025, 10, 27).toInstantAtStartOfDay(germanTimeZone)
 
             // --- THEN ---
-            repository.getBeveragesOverview(startDate, endDate, testProfileId).test {
+            repository.getBeverages(startDate, endDate, testProfileId).test {
                 val entries = awaitItem()
                 assertEquals(
                     1,

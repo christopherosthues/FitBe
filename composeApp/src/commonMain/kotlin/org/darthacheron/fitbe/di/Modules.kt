@@ -18,6 +18,7 @@ import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
+import org.darthacheron.fitbe.health.beverages.EditBeverageDialogViewModel
 import org.darthacheron.fitbe.health.components.HealthViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
@@ -143,6 +144,7 @@ val sharedModule =
         viewModelOf(::ExerciseExecutionViewModel)
         viewModelOf(::ProgramOverviewViewModel)
         viewModelOf(::AddBeverageDialogViewModel)
+        viewModelOf(::EditBeverageDialogViewModel)
         viewModelOf(::AddStepsDialogViewModel)
         viewModelOf(::AddBodyWeightDialogViewModel)
         viewModelOf(::AddSleepDialogViewModel)

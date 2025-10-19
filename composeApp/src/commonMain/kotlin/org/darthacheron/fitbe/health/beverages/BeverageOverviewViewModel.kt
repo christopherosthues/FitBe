@@ -36,7 +36,6 @@ import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
-import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
@@ -69,7 +68,7 @@ class BeverageOverviewViewModel(
         ) { range, settings ->
             settings.selectedProfileId?.let { profileId ->
                 Pair(settings, range.dateUnit) to
-                    beverageRepository.getBeveragesOverview(
+                    beverageRepository.getBeverages(
                         range.startDate,
                         range.endDate,
                         profileId

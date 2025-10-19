@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_add_beverage
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_editing
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_beverages
@@ -23,7 +24,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyViewModel
 import org.darthacheron.fitbe.navigation.Screen
-import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.TopBarManager
@@ -59,7 +59,7 @@ class BeverageDailyViewModel(
             .flatMapLatest { date ->
                 settingsRepository.getSettingsFlow().flatMapLatest { settings ->
                     settings.selectedProfileId?.let {
-                        repository.getBeveragesForDate(date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
+                        repository.getBeverages(date.toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
                     } ?: flowOf(emptyList())
                 }
             }.onStart {
@@ -130,8 +130,36 @@ class BeverageDailyViewModel(
         }
     }
 
-    fun editBeverage(id: Uuid) {
+    fun editBeverage(
+        id: Uuid,
+        amount: Double,
+        name: String,
+        unit: FluidUnit,
+        date: Instant
+    ) {
+        viewModelScope.launch {
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
 
+                if (profileId == null) {
+                    errorMessage.value = Res.string.beverages_daily_view_error_saving
+                    return@launch
+                }
+
+                repository.editBeverage(
+                    Beverage(
+                        id = id,
+                        amount = amount,
+                        beverage = name,
+                        unit = unit,
+                        date = date,
+                        profileId = profileId
+                    )
+                )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.beverages_daily_view_error_editing
+            }
+        }
     }
 
     fun deleteBeverage(id: Uuid) {

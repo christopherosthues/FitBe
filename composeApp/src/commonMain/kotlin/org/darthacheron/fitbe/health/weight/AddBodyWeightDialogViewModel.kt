@@ -22,7 +22,7 @@ import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
-import org.darthacheron.fitbe.health.components.AddDialogViewModel
+import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
@@ -32,7 +32,7 @@ class AddBodyWeightDialogViewModel(
     private val bodyWeightValidator: BodyWeightValidator,
     private val percentageValidator: PercentageValidator,
     settingsRepository: SettingsRepository
-) : AddDialogViewModel<AddBodyWeightDialogUiState>() {
+) : DialogViewModel<AddBodyWeightDialogUiState>() {
     val settings: Flow<Settings> = settingsRepository.getSettingsFlow()
 
     override val uiState = MutableStateFlow(AddBodyWeightDialogUiState())

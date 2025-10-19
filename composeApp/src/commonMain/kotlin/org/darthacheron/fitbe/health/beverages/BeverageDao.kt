@@ -1,20 +1,21 @@
 package org.darthacheron.fitbe.health.beverages
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
-import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface BeverageDao {
+    @Query("SELECT * FROM beverages WHERE id = :id")
+    suspend fun getBeverage(id: Uuid): BeverageEntity?
+
     @Upsert
-    suspend fun upsertBeverage(intake: BeverageEntity)
+    suspend fun upsertBeverage(beverage: BeverageEntity)
 
     // TODO: check call sites for correct dates
     @Query(

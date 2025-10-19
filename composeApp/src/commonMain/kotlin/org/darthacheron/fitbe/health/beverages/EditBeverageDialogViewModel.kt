@@ -12,23 +12,47 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
 import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class AddBeverageDialogViewModel(
+class EditBeverageDialogViewModel(
     private val beverageRepository: BeverageRepository,
     private val settingsRepository: SettingsRepository,
     private val beverageValidator: BeverageValidator,
     private val positiveDecimalValidator: PositiveDecimalValidator
-) : DialogViewModel<AddBeverageDialogUiState>() {
-    override val uiState = MutableStateFlow(AddBeverageDialogUiState())
+) : DialogViewModel<EditBeverageDialogUiState>() {
+    override val uiState = MutableStateFlow(EditBeverageDialogUiState())
 
     override fun dismissDialog() {
-        uiState.update { AddBeverageDialogUiState() }
+        uiState.update { EditBeverageDialogUiState() }
+    }
+
+    fun init(id: Uuid) {
+        viewModelScope.launch {
+            val beverage = beverageRepository.getBeverage(id)
+
+            if (beverage == null) {
+                dismissDialog()
+                return@launch
+            }
+            uiState.update {
+                val dateTime = beverage.date.toLocalDateTime(TimeZone.currentSystemDefault())
+                it.copy(
+                    id = id,
+                    beverageName = beverage.beverage,
+                    selectedUnit = beverage.unit,
+                    amount = beverage.amount.toString(),
+                    dateTime = LocalDateTime(dateTime.date, dateTime.time)
+                )
+            }
+        }
     }
 
     fun onAmountChange(amount: String) {
@@ -58,7 +82,10 @@ class AddBeverageDialogViewModel(
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
                 val beveragesForDay = beverageRepository.getBeverages(selectedDate, profileId).first()
-                val totalAmountForDay = beveragesForDay.sumOf { it.unit.toMilliliter(it.amount) } + amountInMlAsDouble
+                val totalAmountForDay =
+                    beveragesForDay
+                        .filter { it.id != currentState.id }
+                        .sumOf { it.unit.toMilliliter(it.amount) } + amountInMlAsDouble
 
                 if (totalAmountForDay > 5000) {
                     error = Res.string.beverages_add_dialog_error_invalid_total_amount

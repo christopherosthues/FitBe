@@ -13,7 +13,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
-import org.darthacheron.fitbe.health.components.AddDialogViewModel
+import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -23,7 +23,7 @@ class AddStepsDialogViewModel(
     private val stepsValidator: StepsValidator,
     private val settingsRepository: SettingsRepository,
     private val stepsRepository: StepsRepository
-) : AddDialogViewModel<AddStepsDialogUiState>() {
+) : DialogViewModel<AddStepsDialogUiState>() {
     override val uiState = MutableStateFlow(AddStepsDialogUiState())
 
     override fun dismissDialog() {

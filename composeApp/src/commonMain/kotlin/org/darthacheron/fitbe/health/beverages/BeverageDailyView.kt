@@ -17,6 +17,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +41,7 @@ import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -73,6 +78,9 @@ private fun BeverageDailyView(
     state: BeverageDailyUiState,
     beverageDailyViewModel: BeverageDailyViewModel
 ) {
+    var showEditDialog by remember { mutableStateOf(false) }
+    var selectedBeverageId by remember { mutableStateOf<Uuid?>(null) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -135,12 +143,31 @@ private fun BeverageDailyView(
             ) { beverage ->
                 BeveragesListItem(
                     beverage = beverage,
-                    beverageDailyViewModel::editBeverage,
+                    { id ->
+                        showEditDialog = true
+                        selectedBeverageId = id
+                    },
                     beverageDailyViewModel::deleteBeverage
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
+    }
+
+    if (showEditDialog && selectedBeverageId != null) {
+        EditBeverageDialog(
+            viewModel = koinViewModel<EditBeverageDialogViewModel>(),
+            id = selectedBeverageId!!,
+            onSave = { id, amount, name, unit, date ->
+                beverageDailyViewModel.editBeverage(id, amount, name, unit, date)
+                showEditDialog = false
+                selectedBeverageId = null
+            },
+            onDismiss = {
+                showEditDialog = false
+                selectedBeverageId = null
+            }
+        )
     }
 }
 
@@ -148,7 +175,7 @@ private fun BeverageDailyView(
 @Composable
 private fun BeveragesListItem(
     beverage: Beverage,
-    edit: (id: Uuid) -> Unit,
+    editDialog: (id: Uuid) -> Unit,
     delete: (id: Uuid) -> Unit,
 ) {
     ListItem(
@@ -178,7 +205,7 @@ private fun BeveragesListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { edit(beverage.id) }
+                    onClick = { editDialog(beverage.id) }
                 ) {
                     Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
                 }

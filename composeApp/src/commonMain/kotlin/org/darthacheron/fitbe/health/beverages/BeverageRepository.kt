@@ -15,7 +15,11 @@ import kotlin.uuid.Uuid
 class BeverageRepository(
     private val beverageDao: BeverageDao
 ) {
-    fun getBeveragesOverview(
+    suspend fun getBeverage(id: Uuid): Beverage? {
+        return beverageDao.getBeverage(id)?.toBeverage()
+    }
+
+    fun getBeverages(
         startDate: Instant,
         endDate: Instant,
         profileId: Uuid
@@ -33,14 +37,14 @@ class BeverageRepository(
             }
     }
 
-    fun getBeveragesForDate(
+    fun getBeverages(
         date: LocalDate,
         profileId: Uuid
     ): Flow<List<Beverage>> {
         val timeZone = TimeZone.currentSystemDefault()
         val startOfDay = date.atStartOfDayIn(timeZone)
 
-        return getBeveragesOverview(
+        return getBeverages(
             startDate = startOfDay,
             endDate = startOfDay,
             profileId = profileId
@@ -49,7 +53,11 @@ class BeverageRepository(
 
     @OptIn(ExperimentalUuidApi::class)
     suspend fun addBeverage(beverage: Beverage) {
-        beverageDao.upsertBeverage(intake = beverage.toBeverageEntity())
+        beverageDao.upsertBeverage(beverage = beverage.toBeverageEntity())
+    }
+
+    suspend fun editBeverage(beverage: Beverage) {
+        beverageDao.upsertBeverage(beverage = beverage.toBeverageEntity())
     }
 
     suspend fun deleteBeverage(id: Uuid) {
