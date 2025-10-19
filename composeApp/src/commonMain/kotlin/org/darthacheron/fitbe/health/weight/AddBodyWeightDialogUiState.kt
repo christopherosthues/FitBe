@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.health.weight
 
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DialogUiState
@@ -13,11 +13,10 @@ data class AddBodyWeightDialogUiState(
     val muscleMass: String = "",
     val boneMass: String = "",
     val bodyWaterInPercentage: String = "",
-    val date: LocalDate =
+    val dateTime: LocalDateTime =
         Clock.System
             .now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date,
+            .toLocalDateTime(TimeZone.currentSystemDefault()),
     val weightError: StringResource? = null,
     val bodyFatError: StringResource? = null,
     val muscleMassError: StringResource? = null,

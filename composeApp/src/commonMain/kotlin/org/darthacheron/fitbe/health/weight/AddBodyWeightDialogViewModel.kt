@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.BodyWeightValidator
 import org.darthacheron.fitbe.components.validators.PercentageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
@@ -40,7 +42,13 @@ class AddBodyWeightDialogViewModel(
     }
 
     fun onDateChange(date: LocalDate) {
-        uiState.update { it.copy(date = date) }
+        uiState.update { it.copy(dateTime = LocalDateTime(date, it.dateTime.time)) }
+        validateBodyWeight()
+    }
+
+    fun onTimeChange(time: LocalTime) {
+        uiState.update { it.copy(dateTime = LocalDateTime(it.dateTime.date, time)) }
+        validateBodyWeight()
     }
 
     fun onWeightChange(weight: String) {

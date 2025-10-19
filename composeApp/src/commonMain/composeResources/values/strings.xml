@@ -673,9 +673,9 @@
     <!-- Beverage Add Dialog -->
     <string name="beverages_add_dialog_title">Record Beverage</string>
     <string name="beverages_add_dialog_date">Date</string>
-    <string name="beverages_add_dialog_content_description_date">Select the date</string>
+    <string name="beverages_add_dialog_content_description_date">Select a date</string>
     <string name="beverages_add_dialog_time">Time</string>
-    <string name="beverages_add_dialog_content_description_time">Select the time</string>
+    <string name="beverages_add_dialog_content_description_time">Select a time</string>
     <string name="beverages_add_dialog_amount">Amount</string>
     <string name="beverages_add_dialog_name">Beverage Name</string>
     <string name="beverages_add_dialog_unit">Unit</string>
@@ -739,7 +739,10 @@
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Record steps</string>
-    <string name="steps_add_dialog_content_description_date">Select date</string>
+    <string name="steps_add_dialog_date">Date</string>
+    <string name="steps_add_dialog_content_description_date">Select a date</string>
+    <string name="steps_add_dialog_time">Time</string>
+    <string name="steps_add_dialog_content_description_time">Select a time</string>
     <string name="steps_add_dialog_steps">Steps count</string>
     <string name="steps_add_dialog_save">Save</string>
     <string name="steps_add_dialog_cancel">Cancel</string>
@@ -777,7 +780,10 @@
 
     <!-- Body weight Add Dialog -->
     <string name="body_weight_add_dialog_title">Record body weight</string>
-    <string name="body_weight_add_dialog_content_description_date">Select date</string>
+    <string name="body_weight_add_dialog_date">Date</string>
+    <string name="body_weight_add_dialog_content_description_date">Select a date</string>
+    <string name="body_weight_add_dialog_time">Time</string>
+    <string name="body_weight_add_dialog_content_description_time">Select a time</string>
     <string name="body_weight_add_dialog_total_weight">Total weight (%1$s)</string>
     <string name="body_weight_add_dialog_body_fat">Body fat (%)</string>
     <string name="body_weight_add_dialog_muscle_mass">Muscle mass (%1$s)</string>

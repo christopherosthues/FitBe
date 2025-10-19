@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.health.components.AddDialogViewModel
@@ -47,10 +49,10 @@ class AddStepsDialogViewModel(
                 }
 
             if (error == null && stepsAsUInt != null) {
-                val selectedDate = currentState.date
+                val selectedDate = currentState.dateTime
                 val profileId = settingsRepository.getSettings().selectedProfileId ?: return@launch
 
-                val stepsForDate = stepsRepository.getSteps(selectedDate, profileId).first()
+                val stepsForDate = stepsRepository.getSteps(selectedDate.date, profileId).first()
                 val totalAmountForDay = stepsForDate.sumOf { it.steps } + stepsAsUInt
 
                 if (totalAmountForDay > 500_000u) {
@@ -62,7 +64,12 @@ class AddStepsDialogViewModel(
     }
 
     fun onDateChange(date: LocalDate) {
-        uiState.update { it.copy(date = date) }
+        uiState.update { it.copy(dateTime = LocalDateTime(date, it.dateTime.time)) }
+        validateSteps()
+    }
+
+    fun onTimeChange(time: LocalTime) {
+        uiState.update { it.copy(dateTime = LocalDateTime(it.dateTime.date, time)) }
         validateSteps()
     }
 }

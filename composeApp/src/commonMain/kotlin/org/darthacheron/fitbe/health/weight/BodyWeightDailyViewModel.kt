@@ -18,9 +18,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -179,7 +178,7 @@ class BodyWeightDailyViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BodyWeightDailyUiState())
 
     fun addBodyWeight(
-        date: LocalDate,
+        date: Instant,
         weightInKg: Double,
         bodyFatPercentage: Double?,
         muscleMassInKg: Double?,
@@ -198,7 +197,7 @@ class BodyWeightDailyViewModel(
                 repository.addBodyWeight(
                     BodyWeight(
                         profileId = profileId,
-                        date = date.atStartOfDayIn(TimeZone.currentSystemDefault()),
+                        date = date,
                         weightInKg = weightInKg,
                         bodyFatPercentage = bodyFatPercentage,
                         muscleMassInKg = muscleMassInKg,

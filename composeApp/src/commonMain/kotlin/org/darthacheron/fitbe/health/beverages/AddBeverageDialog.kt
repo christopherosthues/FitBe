@@ -149,7 +149,6 @@ fun AddBeverageDialog(
                     )
                 }
 
-
                 OutlinedTextField(
                     value = uiState.amount,
                     onValueChange = viewModel::onAmountChange,
