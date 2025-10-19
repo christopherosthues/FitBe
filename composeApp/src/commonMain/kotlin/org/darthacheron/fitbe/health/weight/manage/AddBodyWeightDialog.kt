@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.weight
+package org.darthacheron.fitbe.health.weight.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,9 +43,7 @@ import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.local_time_format
-import fitbe.composeapp.generated.resources.steps_add_dialog_content_description_date
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn

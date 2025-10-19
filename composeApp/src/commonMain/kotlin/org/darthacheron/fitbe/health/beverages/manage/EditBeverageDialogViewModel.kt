@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.beverages
+package org.darthacheron.fitbe.health.beverages.manage
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
@@ -16,6 +16,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.validators.BeverageValidator
 import org.darthacheron.fitbe.components.validators.PositiveDecimalValidator
+import org.darthacheron.fitbe.health.beverages.BeverageRepository
+import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi

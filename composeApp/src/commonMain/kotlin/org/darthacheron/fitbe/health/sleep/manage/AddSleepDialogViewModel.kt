@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.sleep
+package org.darthacheron.fitbe.health.sleep.manage
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
@@ -15,6 +15,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import org.darthacheron.fitbe.health.components.DialogViewModel
+import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi

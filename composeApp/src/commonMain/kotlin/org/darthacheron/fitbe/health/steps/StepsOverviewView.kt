@@ -2,11 +2,10 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.darthacheron.fitbe.health.steps.manage.AddStepsDialog
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

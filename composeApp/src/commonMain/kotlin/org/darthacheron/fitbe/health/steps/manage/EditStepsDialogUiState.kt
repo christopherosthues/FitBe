@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.steps
+package org.darthacheron.fitbe.health.steps.manage
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -6,8 +6,12 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DialogUiState
 import org.jetbrains.compose.resources.StringResource
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-data class AddStepsDialogUiState(
+@OptIn(ExperimentalUuidApi::class)
+data class EditStepsDialogUiState(
+    val id: Uuid = Uuid.NIL,
     val dateTime: LocalDateTime =
         Clock.System
             .now()

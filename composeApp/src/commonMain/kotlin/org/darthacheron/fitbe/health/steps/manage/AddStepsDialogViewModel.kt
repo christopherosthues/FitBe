@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.steps
+package org.darthacheron.fitbe.health.steps.manage
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
@@ -14,6 +14,7 @@ import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.components.validators.PositiveNumberValidator
 import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.health.components.DialogViewModel
+import org.darthacheron.fitbe.health.steps.StepsRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import kotlin.uuid.ExperimentalUuidApi
 

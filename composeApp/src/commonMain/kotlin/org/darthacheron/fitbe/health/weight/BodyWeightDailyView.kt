@@ -30,6 +30,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
+import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialog
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -49,13 +50,12 @@ fun BodyWeightDailyView(
         addDialog = { date, onDismiss ->
             AddBodyWeightDialog(
                 initialDate = date,
-                onSave = {
-                        date,
-                        weightInKg,
-                        bodyFatPercentage,
-                        muscleMassInKg,
-                        boneMassInKg,
-                        bodyWaterInPercentage
+                onSave = { date,
+                           weightInKg,
+                           bodyFatPercentage,
+                           muscleMassInKg,
+                           boneMassInKg,
+                           bodyWaterInPercentage
                     ->
                     bodyWeightDailyViewModel.addBodyWeight(
                         date,

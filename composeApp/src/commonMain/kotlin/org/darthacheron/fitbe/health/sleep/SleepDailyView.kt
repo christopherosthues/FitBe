@@ -3,7 +3,6 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,18 +15,11 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.body_weight_daily_view_body_fat
-import fitbe.composeapp.generated.resources.body_weight_daily_view_body_water
-import fitbe.composeapp.generated.resources.body_weight_daily_view_body_weight
-import fitbe.composeapp.generated.resources.body_weight_daily_view_bone_mass
-import fitbe.composeapp.generated.resources.body_weight_daily_view_muscle_mass
 import fitbe.composeapp.generated.resources.ic_sleep
 import fitbe.composeapp.generated.resources.local_time_format
 import fitbe.composeapp.generated.resources.sleep_daily_view_sleep_time
@@ -38,8 +30,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
-import org.darthacheron.fitbe.health.weight.PlotDailyBodyWeights
-import org.darthacheron.fitbe.settings.WeightUnit
+import org.darthacheron.fitbe.health.sleep.manage.AddSleepDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.sleep
+package org.darthacheron.fitbe.health.sleep.manage
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

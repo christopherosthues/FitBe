@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.steps
+package org.darthacheron.fitbe.health.steps.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

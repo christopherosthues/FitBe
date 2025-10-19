@@ -33,6 +33,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
+import org.darthacheron.fitbe.health.steps.manage.AddStepsDialog
+import org.darthacheron.fitbe.health.steps.manage.EditStepsDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

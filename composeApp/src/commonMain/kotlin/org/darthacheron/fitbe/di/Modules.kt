@@ -14,22 +14,24 @@ import org.darthacheron.fitbe.database.DatabaseFactory
 import org.darthacheron.fitbe.database.FitBeDatabase
 import org.darthacheron.fitbe.database.PrepopulateCallback
 import org.darthacheron.fitbe.health.HealthOverviewViewModel
-import org.darthacheron.fitbe.health.beverages.AddBeverageDialogViewModel
+import org.darthacheron.fitbe.health.beverages.manage.AddBeverageDialogViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageDailyViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
-import org.darthacheron.fitbe.health.beverages.EditBeverageDialogViewModel
+import org.darthacheron.fitbe.health.beverages.manage.EditBeverageDialogViewModel
 import org.darthacheron.fitbe.health.components.HealthViewModel
 import org.darthacheron.fitbe.health.nutrition.NutritionOverviewViewModel
-import org.darthacheron.fitbe.health.sleep.AddSleepDialogViewModel
+import org.darthacheron.fitbe.health.sleep.manage.AddSleepDialogViewModel
 import org.darthacheron.fitbe.health.sleep.SleepDailyViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
-import org.darthacheron.fitbe.health.steps.AddStepsDialogViewModel
+import org.darthacheron.fitbe.health.steps.manage.AddStepsDialogViewModel
+import org.darthacheron.fitbe.health.steps.manage.EditStepsDialogViewModel
 import org.darthacheron.fitbe.health.steps.StepsDailyViewModel
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
 import org.darthacheron.fitbe.health.steps.StepsRepository
-import org.darthacheron.fitbe.health.weight.AddBodyWeightDialogViewModel
+import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialogViewModel
+import org.darthacheron.fitbe.health.weight.EditBodyWeightDialogViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightDailyViewModel
 import org.darthacheron.fitbe.health.weight.BodyWeightRepository
 import org.darthacheron.fitbe.health.weight.BodyWeightOverviewViewModel
@@ -146,7 +148,9 @@ val sharedModule =
         viewModelOf(::AddBeverageDialogViewModel)
         viewModelOf(::EditBeverageDialogViewModel)
         viewModelOf(::AddStepsDialogViewModel)
+        viewModelOf(::EditStepsDialogViewModel)
         viewModelOf(::AddBodyWeightDialogViewModel)
+        viewModelOf(::EditBodyWeightDialogViewModel)
         viewModelOf(::AddSleepDialogViewModel)
         viewModelOf(::HealthViewModel)
         viewModelOf(::SleepDailyViewModel)

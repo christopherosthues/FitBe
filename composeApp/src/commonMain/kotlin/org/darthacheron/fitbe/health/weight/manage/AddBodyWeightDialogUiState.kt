@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.weight
+package org.darthacheron.fitbe.health.weight.manage
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

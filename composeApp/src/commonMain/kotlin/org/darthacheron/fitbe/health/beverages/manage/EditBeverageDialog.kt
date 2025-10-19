@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.beverages
+package org.darthacheron.fitbe.health.beverages.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,10 +45,6 @@ import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.local_time_format
-import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_date
-import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_time
-import fitbe.composeapp.generated.resources.sleep_add_dialog_start_date
-import fitbe.composeapp.generated.resources.sleep_add_dialog_start_time
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -57,29 +53,28 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
 import org.darthacheron.fitbe.components.date.TimePickerDialog
+import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun AddBeverageDialog(
-    viewModel: AddBeverageDialogViewModel = koinViewModel(),
-    initialDate: Instant? = null,
+fun EditBeverageDialog(
+    viewModel: EditBeverageDialogViewModel = koinViewModel(),
+    id: Uuid,
     onDismiss: () -> Any,
-    onSave: (Double, String, FluidUnit, Instant) -> Any
+    onSave: (Uuid, Double, String, FluidUnit, Instant) -> Any
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        if (initialDate != null) {
-            val toLocalDateTime = initialDate.toLocalDateTime(TimeZone.currentSystemDefault())
-            viewModel.onDateChange(toLocalDateTime.date)
-            viewModel.onTimeChange(toLocalDateTime.time)
-        }
+        viewModel.init(id)
     }
 
     AlertDialog(
@@ -211,6 +206,7 @@ fun AddBeverageDialog(
                 onClick = {
                     viewModel.dismissDialog()
                     onSave(
+                        uiState.id,
                         uiState.amount.toDouble(),
                         uiState.beverageName,
                         uiState.selectedUnit,

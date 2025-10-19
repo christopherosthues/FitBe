@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.sleep
+package org.darthacheron.fitbe.health.sleep.manage
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.weight
+package org.darthacheron.fitbe.health.weight.manage
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res

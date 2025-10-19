@@ -1,4 +1,4 @@
-package org.darthacheron.fitbe.health.beverages
+package org.darthacheron.fitbe.health.steps.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,18 +9,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,20 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_add_dialog_amount
-import fitbe.composeapp.generated.resources.beverages_add_dialog_cancel
-import fitbe.composeapp.generated.resources.beverages_add_dialog_content_description_date
-import fitbe.composeapp.generated.resources.beverages_add_dialog_content_description_time
-import fitbe.composeapp.generated.resources.beverages_add_dialog_date
-import fitbe.composeapp.generated.resources.beverages_add_dialog_name
-import fitbe.composeapp.generated.resources.beverages_add_dialog_save
-import fitbe.composeapp.generated.resources.beverages_add_dialog_time
-import fitbe.composeapp.generated.resources.beverages_add_dialog_title
-import fitbe.composeapp.generated.resources.beverages_add_dialog_unit
 import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.local_time_format
+import fitbe.composeapp.generated.resources.steps_add_dialog_cancel
+import fitbe.composeapp.generated.resources.steps_add_dialog_content_description_date
+import fitbe.composeapp.generated.resources.steps_add_dialog_content_description_time
+import fitbe.composeapp.generated.resources.steps_add_dialog_date
+import fitbe.composeapp.generated.resources.steps_add_dialog_save
+import fitbe.composeapp.generated.resources.steps_add_dialog_steps
+import fitbe.composeapp.generated.resources.steps_add_dialog_time
+import fitbe.composeapp.generated.resources.steps_add_dialog_title
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -57,42 +49,39 @@ import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
-fun EditBeverageDialog(
-    viewModel: EditBeverageDialogViewModel = koinViewModel(),
-    id: Uuid,
-    onDismiss: () -> Any,
-    onSave: (Uuid, Double, String, FluidUnit, Instant) -> Any
+fun AddStepsDialog(
+    viewModel: AddStepsDialogViewModel = koinViewModel(),
+    initialDate: Instant? = null,
+    onDismiss: () -> Unit,
+    onSave: (date: Instant, steps: UInt) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        viewModel.init(id)
+    if (initialDate != null) {
+        viewModel.onDateChange(initialDate.toLocalDateTime(TimeZone.currentSystemDefault()).date)
     }
 
     AlertDialog(
         onDismissRequest = viewModel::dismissDialog,
-        title = { Text(stringResource(Res.string.beverages_add_dialog_title)) },
+        title = { Text(stringResource(Res.string.steps_add_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
                         value = uiState.dateTime.date.format(stringResource(Res.string.local_date_format)),
                         onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.beverages_add_dialog_date)) },
+                        label = { Text(text = stringResource(Res.string.steps_add_dialog_date)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
                                 Icon(
                                     painterResource(Res.drawable.ic_date_range),
                                     contentDescription =
-                                        stringResource(Res.string.beverages_add_dialog_content_description_date)
+                                        stringResource(Res.string.steps_add_dialog_content_description_date)
                                 )
                             }
                         },
@@ -102,14 +91,14 @@ fun EditBeverageDialog(
                     OutlinedTextField(
                         value = uiState.dateTime.time.format(stringResource(Res.string.local_time_format)),
                         onValueChange = {},
-                        label = { Text(text = stringResource(Res.string.beverages_add_dialog_time)) },
+                        label = { Text(text = stringResource(Res.string.steps_add_dialog_time)) },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showTimePicker = true }) {
                                 Icon(
                                     painterResource(Res.drawable.ic_access_time),
                                     contentDescription =
-                                        stringResource(Res.string.beverages_add_dialog_content_description_time)
+                                        stringResource(Res.string.steps_add_dialog_content_description_time)
                                 )
                             }
                         },
@@ -148,56 +137,16 @@ fun EditBeverageDialog(
                 }
 
                 OutlinedTextField(
-                    value = uiState.amount,
-                    onValueChange = viewModel::onAmountChange,
-                    label = { Text(text = stringResource(Res.string.beverages_add_dialog_amount)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    value = uiState.steps,
+                    onValueChange = viewModel::onStepsChange,
+                    label = { Text(text = stringResource(Res.string.steps_add_dialog_steps)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
-                    isError = uiState.amountError != null,
+                    isError = uiState.stepsError != null,
                     supportingText = {
-                        uiState.amountError?.let { Text(text = stringResource(it)) }
+                        uiState.stepsError?.let { Text(text = stringResource(it)) }
                     }
                 )
-                OutlinedTextField(
-                    value = uiState.beverageName,
-                    onValueChange = viewModel::onNameChange,
-                    label = { Text(text = stringResource(Res.string.beverages_add_dialog_name)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = uiState.beverageNameError != null,
-                    supportingText = {
-                        uiState.beverageNameError?.let { Text(text = stringResource(it)) }
-                    }
-                )
-
-                var unitDropdownExpanded by remember { mutableStateOf(false) }
-                ExposedDropdownMenuBox(
-                    expanded = unitDropdownExpanded,
-                    onExpandedChange = { unitDropdownExpanded = !unitDropdownExpanded },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    OutlinedTextField(
-                        value = uiState.selectedUnit.localizedString(uiState.amount.toDoubleOrNull() ?: 0.0),
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text(text = stringResource(Res.string.beverages_add_dialog_unit)) },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = unitDropdownExpanded) },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = unitDropdownExpanded,
-                        onDismissRequest = { unitDropdownExpanded = false }
-                    ) {
-                        viewModel.allFluidUnits.forEach { unit ->
-                            DropdownMenuItem(
-                                text = { Text(text = unit.localizedString(uiState.amount.toDoubleOrNull() ?: 0.0)) },
-                                onClick = {
-                                    viewModel.onUnitChange(unit)
-                                    unitDropdownExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
             }
         },
         confirmButton = {
@@ -205,16 +154,13 @@ fun EditBeverageDialog(
                 onClick = {
                     viewModel.dismissDialog()
                     onSave(
-                        uiState.id,
-                        uiState.amount.toDouble(),
-                        uiState.beverageName,
-                        uiState.selectedUnit,
-                        uiState.dateTime.toInstant(TimeZone.currentSystemDefault())
+                        uiState.dateTime.toInstant(TimeZone.currentSystemDefault()),
+                        uiState.steps.toUInt()
                     )
                 },
                 enabled = uiState.canSave
             ) {
-                Text(text = stringResource(Res.string.beverages_add_dialog_save))
+                Text(text = stringResource(Res.string.steps_add_dialog_save))
             }
         },
         dismissButton = {
@@ -222,7 +168,7 @@ fun EditBeverageDialog(
                 viewModel.dismissDialog()
                 onDismiss()
             }) {
-                Text(text = stringResource(Res.string.beverages_add_dialog_cancel))
+                Text(text = stringResource(Res.string.steps_add_dialog_cancel))
             }
         }
     )

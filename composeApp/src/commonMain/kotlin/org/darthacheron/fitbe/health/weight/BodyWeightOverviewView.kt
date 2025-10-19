@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialog
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -29,13 +30,12 @@ fun BodyWeightOverviewView(
         },
         addDialog = { dismissDialog ->
             AddBodyWeightDialog(
-                onSave = {
-                    date,
-                    weightInKg,
-                    bodyFatPercentage,
-                    muscleMassInKg,
-                    boneMassInKg,
-                    bodyWaterInPercentage
+                onSave = { date,
+                           weightInKg,
+                           bodyFatPercentage,
+                           muscleMassInKg,
+                           boneMassInKg,
+                           bodyWaterInPercentage
                     ->
                     bodyWeightOverviewViewModel.addBodyWeight(
                         date,

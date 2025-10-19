@@ -36,6 +36,8 @@ import fitbe.composeapp.generated.resources.local_time_format
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
+import org.darthacheron.fitbe.health.beverages.manage.AddBeverageDialog
+import org.darthacheron.fitbe.health.beverages.manage.EditBeverageDialog
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.utils.roundToDecimals
