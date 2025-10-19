@@ -8,13 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SleepOverviewView(
-    viewModel: SleepOverviewViewModel,
-    dialogViewModel: AddSleepDialogViewModel
+    viewModel: SleepOverviewViewModel = koinViewModel()
 ) {
     OverviewView(
         overviewViewModel = viewModel,
@@ -31,7 +31,6 @@ fun SleepOverviewView(
         },
         addDialog = { dismissDialog ->
             AddSleepDialog(
-                viewModel = dialogViewModel,
                 date = null,
                 onSave = { start, end ->
                     viewModel.addSleep(start, end)

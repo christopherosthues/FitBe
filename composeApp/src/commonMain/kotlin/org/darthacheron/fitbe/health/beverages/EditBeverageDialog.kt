@@ -56,13 +56,14 @@ import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun EditBeverageDialog(
-    viewModel: EditBeverageDialogViewModel,
+    viewModel: EditBeverageDialogViewModel = koinViewModel(),
     id: Uuid,
     onDismiss: () -> Any,
     onSave: (Uuid, Double, String, FluidUnit, Instant) -> Any

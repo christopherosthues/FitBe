@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BeverageOverviewView(
-    beverageOverviewViewModel: BeverageOverviewViewModel,
-    addBeverageDialogViewModel: AddBeverageDialogViewModel
+    beverageOverviewViewModel: BeverageOverviewViewModel = koinViewModel()
 ) {
     OverviewView(
         overviewViewModel = beverageOverviewViewModel,
@@ -26,7 +26,6 @@ fun BeverageOverviewView(
         },
         addDialog = { dismissDialog ->
             AddBeverageDialog(
-                viewModel = addBeverageDialogViewModel,
                 onSave = { amount, name, unit, date ->
                     beverageOverviewViewModel.saveBeverage(amount, name, unit, date)
                     dismissDialog()

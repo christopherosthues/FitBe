@@ -3,17 +3,12 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.compose.runtime.Composable
 import org.darthacheron.fitbe.health.components.HealthView
 import org.darthacheron.fitbe.health.components.HealthViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SleepView(
-    healthViewModel: HealthViewModel,
-    addSleepDialogViewModel: AddSleepDialogViewModel,
-    sleepOverviewViewModel: SleepOverviewViewModel,
-    sleepDailyViewModel: SleepDailyViewModel
-) {
+fun SleepView() {
     HealthView(
-        healthViewModel = healthViewModel,
-        overviewView = { SleepOverviewView(sleepOverviewViewModel, addSleepDialogViewModel) },
-        detailView = { SleepDailyView(sleepDailyViewModel, addSleepDialogViewModel) }
+        overviewView = { SleepOverviewView() },
+        detailView = { SleepDailyView() }
     )
 }

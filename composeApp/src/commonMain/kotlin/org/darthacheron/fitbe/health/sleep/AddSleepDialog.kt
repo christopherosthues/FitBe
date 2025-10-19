@@ -53,6 +53,7 @@ import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
@@ -60,7 +61,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun AddSleepDialog(
-    viewModel: AddSleepDialogViewModel,
+    viewModel: AddSleepDialogViewModel = koinViewModel(),
     date: Instant?,
     onSave: (start: Instant, end: Instant) -> Unit,
     onDismiss: () -> Unit

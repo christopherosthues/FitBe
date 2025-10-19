@@ -162,32 +162,16 @@ fun BottomBarNavGraph(
             TrainingEquipmentDetailView(id, viewModel)
         }
         composable<Screen.Sleeps> {
-            val viewModel = koinViewModel<HealthViewModel>()
-            val dialogViewModel = koinViewModel<AddSleepDialogViewModel>()
-            val overviewViewModel = koinViewModel<SleepOverviewViewModel>()
-            val detailViewModel = koinViewModel<SleepDailyViewModel>()
-            SleepView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
+            SleepView()
         }
         composable<Screen.Steps> {
-            val viewModel = koinViewModel<HealthViewModel>()
-            val dialogViewModel = koinViewModel<AddStepsDialogViewModel>()
-            val overviewViewModel = koinViewModel<StepsOverviewViewModel>()
-            val detailViewModel = koinViewModel<StepsDailyViewModel>()
-            StepsView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
+            StepsView()
         }
         composable<Screen.Beverages> {
-            val viewModel = koinViewModel<HealthViewModel>()
-            val dialogViewModel = koinViewModel<AddBeverageDialogViewModel>()
-            val overviewViewModel = koinViewModel<BeverageOverviewViewModel>()
-            val detailViewModel = koinViewModel<BeverageDailyViewModel>()
-            BeverageView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
+            BeverageView()
         }
         composable<Screen.BodyWeights> {
-            val viewModel = koinViewModel<HealthViewModel>()
-            val dialogViewModel = koinViewModel<AddBodyWeightDialogViewModel>()
-            val overviewViewModel = koinViewModel<BodyWeightOverviewViewModel>()
-            val detailViewModel = koinViewModel<BodyWeightDailyViewModel>()
-            BodyWeightView(viewModel, dialogViewModel, overviewViewModel, detailViewModel)
+            BodyWeightView()
         }
         composable<Screen.WorkoutsOverview> {
             val viewModel =

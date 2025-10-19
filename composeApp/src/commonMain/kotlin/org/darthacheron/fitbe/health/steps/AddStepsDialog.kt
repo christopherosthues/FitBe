@@ -51,10 +51,11 @@ import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AddStepsDialog(
-    viewModel: AddStepsDialogViewModel,
+    viewModel: AddStepsDialogViewModel = koinViewModel(),
     initialDate: Instant? = null,
     onDismiss: () -> Unit,
     onSave: (date: Instant, steps: UInt) -> Unit

@@ -57,12 +57,13 @@ import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.settings.Settings
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun AddBodyWeightDialog(
-    viewModel: AddBodyWeightDialogViewModel,
+    viewModel: AddBodyWeightDialogViewModel = koinViewModel(),
     initialDate: Instant? = null,
     onDismiss: () -> Unit,
     onSave: (

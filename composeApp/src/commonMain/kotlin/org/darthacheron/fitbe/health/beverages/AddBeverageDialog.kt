@@ -20,6 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,11 +60,12 @@ import org.darthacheron.fitbe.components.date.TimePickerDialog
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBeverageDialog(
-    viewModel: AddBeverageDialogViewModel,
+    viewModel: AddBeverageDialogViewModel = koinViewModel(),
     initialDate: Instant? = null,
     onDismiss: () -> Any,
     onSave: (Double, String, FluidUnit, Instant) -> Any
@@ -72,10 +74,12 @@ fun AddBeverageDialog(
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
 
-    if (initialDate != null) {
-        val toLocalDateTime = initialDate.toLocalDateTime(TimeZone.currentSystemDefault())
-        viewModel.onDateChange(toLocalDateTime.date)
-        viewModel.onTimeChange(toLocalDateTime.time)
+    LaunchedEffect(Unit) {
+        if (initialDate != null) {
+            val toLocalDateTime = initialDate.toLocalDateTime(TimeZone.currentSystemDefault())
+            viewModel.onDateChange(toLocalDateTime.date)
+            viewModel.onTimeChange(toLocalDateTime.time)
+        }
     }
 
     AlertDialog(

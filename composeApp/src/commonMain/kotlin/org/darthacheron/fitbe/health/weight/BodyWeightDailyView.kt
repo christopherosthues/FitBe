@@ -32,12 +32,12 @@ import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun BodyWeightDailyView(
-    bodyWeightDailyViewModel: BodyWeightDailyViewModel,
-    addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel
+    bodyWeightDailyViewModel: BodyWeightDailyViewModel = koinViewModel()
 ) {
     DailyView(
         dailyViewModel = bodyWeightDailyViewModel,
@@ -48,7 +48,6 @@ fun BodyWeightDailyView(
         },
         addDialog = { date, onDismiss ->
             AddBodyWeightDialog(
-                viewModel = addBodyWeightDialogViewModel,
                 initialDate = date,
                 onSave = {
                         date,

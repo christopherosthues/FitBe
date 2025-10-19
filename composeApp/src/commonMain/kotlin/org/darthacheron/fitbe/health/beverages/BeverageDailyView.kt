@@ -47,8 +47,7 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun BeverageDailyView(
-    beverageDailyViewModel: BeverageDailyViewModel,
-    addBeverageDialogViewModel: AddBeverageDialogViewModel
+    beverageDailyViewModel: BeverageDailyViewModel = koinViewModel(),
 ) {
     DailyView(
         dailyViewModel = beverageDailyViewModel,
@@ -60,7 +59,6 @@ fun BeverageDailyView(
         },
         addDialog = { date, onDismiss ->
             AddBeverageDialog(
-                viewModel = addBeverageDialogViewModel,
                 initialDate = date,
                 onSave = { amount, name, unit, date ->
                     beverageDailyViewModel.addBeverage(amount, name, unit, date)
@@ -156,7 +154,6 @@ private fun BeverageDailyView(
 
     if (showEditDialog && selectedBeverageId != null) {
         EditBeverageDialog(
-            viewModel = koinViewModel<EditBeverageDialogViewModel>(),
             id = selectedBeverageId!!,
             onSave = { id, amount, name, unit, date ->
                 beverageDailyViewModel.editBeverage(id, amount, name, unit, date)
@@ -176,7 +173,7 @@ private fun BeverageDailyView(
 private fun BeveragesListItem(
     beverage: Beverage,
     editDialog: (id: Uuid) -> Unit,
-    delete: (id: Uuid) -> Unit,
+    delete: (id: Uuid) -> Unit
 ) {
     ListItem(
         leadingContent = {

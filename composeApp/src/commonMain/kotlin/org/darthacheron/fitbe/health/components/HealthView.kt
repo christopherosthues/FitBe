@@ -17,10 +17,11 @@ import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.ViewState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HealthView(
-    healthViewModel: HealthViewModel,
+    healthViewModel: HealthViewModel = koinViewModel(),
     overviewView: @Composable () -> Unit,
     detailView: @Composable () -> Unit
 ) {

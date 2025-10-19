@@ -42,12 +42,12 @@ import org.darthacheron.fitbe.health.weight.PlotDailyBodyWeights
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun SleepDailyView(
-    sleepDailyViewModel: SleepDailyViewModel,
-    addSleepDialogViewModel: AddSleepDialogViewModel
+    sleepDailyViewModel: SleepDailyViewModel = koinViewModel()
 ) {
     DailyView(
         dailyViewModel = sleepDailyViewModel,
@@ -61,7 +61,6 @@ fun SleepDailyView(
         },
         addDialog = { date, onDismiss ->
             AddSleepDialog(
-                viewModel = addSleepDialogViewModel,
                 date = date,
                 onSave = { start, end ->
                     sleepDailyViewModel.addSleep(start, end)

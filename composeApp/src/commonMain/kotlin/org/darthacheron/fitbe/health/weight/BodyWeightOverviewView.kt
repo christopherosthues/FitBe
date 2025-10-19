@@ -5,13 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun BodyWeightOverviewView(
-    bodyWeightOverviewViewModel: BodyWeightOverviewViewModel,
-    addBodyWeightDialogViewModel: AddBodyWeightDialogViewModel
+    bodyWeightOverviewViewModel: BodyWeightOverviewViewModel = koinViewModel()
 ) {
     OverviewView(
         overviewViewModel = bodyWeightOverviewViewModel,
@@ -29,7 +29,6 @@ fun BodyWeightOverviewView(
         },
         addDialog = { dismissDialog ->
             AddBodyWeightDialog(
-                addBodyWeightDialogViewModel,
                 onSave = {
                     date,
                     weightInKg,

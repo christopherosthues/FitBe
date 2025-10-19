@@ -3,17 +3,12 @@ package org.darthacheron.fitbe.health.steps
 import androidx.compose.runtime.Composable
 import org.darthacheron.fitbe.health.components.HealthView
 import org.darthacheron.fitbe.health.components.HealthViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun StepsView(
-    healthViewModel: HealthViewModel,
-    addStepsDialogViewModel: AddStepsDialogViewModel,
-    stepsOverviewViewModel: StepsOverviewViewModel,
-    stepsDailyViewModel: StepsDailyViewModel
-) {
+fun StepsView() {
     HealthView(
-        healthViewModel = healthViewModel,
-        overviewView = { StepsOverviewView(stepsOverviewViewModel, addStepsDialogViewModel) },
-        detailView = { StepsDailyView(stepsDailyViewModel, addStepsDialogViewModel) }
+        overviewView = { StepsOverviewView() },
+        detailView = { StepsDailyView() }
     )
 }

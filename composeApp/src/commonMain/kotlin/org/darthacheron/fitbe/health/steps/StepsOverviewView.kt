@@ -7,11 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.components.OverviewView
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun StepsOverviewView(
-    stepsOverviewViewModel: StepsOverviewViewModel,
-    addStepsDialogViewModel: AddStepsDialogViewModel
+    stepsOverviewViewModel: StepsOverviewViewModel = koinViewModel()
 ) {
     OverviewView(
         overviewViewModel = stepsOverviewViewModel,
@@ -28,7 +28,6 @@ fun StepsOverviewView(
         },
         addDialog = { dismissDialog ->
             AddStepsDialog(
-                viewModel = addStepsDialogViewModel,
                 onSave = { date, steps ->
                     stepsOverviewViewModel.addSteps(date, steps)
                     dismissDialog()
