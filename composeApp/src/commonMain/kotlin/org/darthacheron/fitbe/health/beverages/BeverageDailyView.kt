@@ -141,11 +141,11 @@ private fun BeverageDailyView(
             ) { beverage ->
                 BeveragesListItem(
                     beverage = beverage,
-                    { id ->
+                    editDialog = { id ->
                         showEditDialog = true
                         selectedBeverageId = id
                     },
-                    beverageDailyViewModel::deleteBeverage
+                    delete = beverageDailyViewModel::deleteBeverage
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }

@@ -1,7 +1,6 @@
 package org.darthacheron.fitbe.health.steps
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +11,9 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface StepsDao {
+    @Query("SELECT * FROM steps WHERE id = :id")
+    suspend fun getSteps(id: Uuid): StepsEntity?
+
     @Upsert
     suspend fun upsertSteps(steps: StepsEntity)
 
@@ -29,4 +31,7 @@ interface StepsDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<StepsEntity>>
+
+    @Query("DELETE FROM steps WHERE id = :id")
+    suspend fun deleteSteps(id: Uuid)
 }

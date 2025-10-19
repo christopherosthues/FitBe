@@ -701,6 +701,8 @@
     <string name="sleep_daily_view_content_description_add_sleep">Record sleep</string>
     <string name="sleep_daily_view_error_loading">Error loading sleep data.</string>
     <string name="sleep_daily_view_error_saving">Error saving sleep data. Please try again.</string>
+    <string name="sleep_daily_view_error_deleting">Error deleting sleep data. Please try again.</string>
+    <string name="sleep_daily_view_error_editing">Error editing sleep data. Please try again.</string>
     <string name="sleep_daily_view_total_sleep_last_night">You've slept %1$dh and %2$dm in total.</string>
     <string name="sleep_daily_view_sleep_time">%1$s - %2$s</string>
     <string name="sleep_daily_view_total_sleep_time">%1$d hours and %2$d minutes</string>
@@ -737,6 +739,8 @@
     <string name="steps_daily_view_content_description_add_steps">Record steps</string>
     <string name="steps_daily_view_error_loading">Error loading steps data.</string>
     <string name="steps_daily_view_error_saving">Error saving steps data. Please try again.</string>
+    <string name="steps_daily_view_error_deleting">Error deleting steps data. Please try again.</string>
+    <string name="steps_daily_view_error_editing">Error editing steps data. Please try again.</string>
     <string name="steps_daily_view_steps">%1$d steps</string>
 
     <!-- Add steps dialog -->
@@ -774,6 +778,8 @@
     <string name="body_weight_daily_view_content_description_add_body_weight">Record body weight</string>
     <string name="body_weight_daily_view_error_loading">Error loading weight data.</string>
     <string name="body_weight_daily_view_error_saving">Error saving body weight. Please try again.</string>
+    <string name="body_weight_daily_view_error_deleting">Error deleting body weight. Please try again.</string>
+    <string name="body_weight_daily_view_error_editing">Error editing body weight. Please try again.</string>
     <string name="body_weight_daily_view_body_weight">%1$d %2$s</string>
     <string name="body_weight_daily_view_muscle_mass">%1$d %2$s muscles</string>
     <string name="body_weight_daily_view_body_fat">%1$d % fat</string>

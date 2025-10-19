@@ -2,7 +2,12 @@ package org.darthacheron.fitbe.health.steps
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_editing
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
 import fitbe.composeapp.generated.resources.steps_daily_view_content_description_add_steps
+import fitbe.composeapp.generated.resources.steps_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.steps_daily_view_error_editing
 import fitbe.composeapp.generated.resources.steps_daily_view_error_loading
 import fitbe.composeapp.generated.resources.steps_daily_view_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_steps
@@ -20,6 +25,8 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.darthacheron.fitbe.health.beverages.Beverage
+import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.components.DailyViewModel
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
@@ -29,6 +36,7 @@ import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.max
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
 class StepsDailyViewModel(
@@ -131,6 +139,44 @@ class StepsDailyViewModel(
                 )
             } catch (e: Exception) {
                 errorMessage.value = Res.string.steps_daily_view_error_saving
+            }
+        }
+    }
+
+    fun editSteps(
+        id: Uuid,
+        date: Instant,
+        steps: UInt
+    ) {
+        viewModelScope.launch {
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.steps_daily_view_error_editing
+                    return@launch
+                }
+
+                stepsRepository.editSteps(
+                    Steps(
+                        id = id,
+                        date = date,
+                        profileId = profileId,
+                        steps = steps
+                    )
+                )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.steps_daily_view_error_editing
+            }
+        }
+    }
+
+    fun deleteSteps(id: Uuid) {
+        viewModelScope.launch {
+            try {
+                stepsRepository.deleteSteps(id)
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.steps_daily_view_error_deleting
             }
         }
     }

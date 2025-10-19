@@ -142,7 +142,7 @@ class BeverageDailyViewModel(
                 val profileId = settingsRepository.getSettings().selectedProfileId
 
                 if (profileId == null) {
-                    errorMessage.value = Res.string.beverages_daily_view_error_saving
+                    errorMessage.value = Res.string.beverages_daily_view_error_editing
                     return@launch
                 }
 

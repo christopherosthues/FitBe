@@ -104,33 +104,31 @@ private fun StepsDetailView(
             ) { steps ->
                 StepsListItem(
                     steps = steps,
-                    { id ->
+                    editDialog = { id ->
                         showEditDialog = true
                         selectedStepsId = id
                     },
-                    { id ->
-                    }
-//                    stepsDailyViewModel::deleteSteps
+                    delete = stepsDailyViewModel::deleteSteps
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
 
-//    if (showEditDialog && selectedStepsId != null) {
-//        EditStepsDialog(
-//            id = selectedStepsId!!,
-//            onSave = { id, date, steps ->
-//                stepsDailyViewModel.editSteps(id, date, steps)
-//                showEditDialog = false
-//                selectedStepsId = null
-//            },
-//            onDismiss = {
-//                showEditDialog = false
-//                selectedStepsId = null
-//            }
-//        )
-//    }
+    if (showEditDialog && selectedStepsId != null) {
+        EditStepsDialog(
+            id = selectedStepsId!!,
+            onSave = { id, date, steps ->
+                stepsDailyViewModel.editSteps(id, date, steps)
+                showEditDialog = false
+                selectedStepsId = null
+            },
+            onDismiss = {
+                showEditDialog = false
+                selectedStepsId = null
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalUuidApi::class)
