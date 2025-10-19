@@ -51,4 +51,8 @@ class BeverageRepository(
     suspend fun addBeverage(beverage: Beverage) {
         beverageDao.upsertBeverage(intake = beverage.toBeverageEntity())
     }
+
+    suspend fun deleteBeverage(id: Uuid) {
+        beverageDao.deleteBeverage(id)
+    }
 }

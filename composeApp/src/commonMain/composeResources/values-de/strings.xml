@@ -645,6 +645,8 @@
     <string name="beverages_daily_view_content_description_progress_percent_target">%1$d Prozent des Tagesziels wurden erreicht</string>
     <string name="beverages_daily_view_error_loading">Fehler beim Laden der Getränkedaten.</string>
     <string name="beverages_daily_view_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
+    <string name="beverages_daily_view_error_editing">Fehler beim Bearbeiten des Getränks. Bitte versuchen Sie es erneut.</string>
+    <string name="beverages_daily_view_error_deleting">Fehler beim Löschen des Getränks. Bitte versuchen Sie es erneut.</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
         <item quantity="one">%1$d Tasse %2$s</item>

@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.health.beverages
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -29,4 +30,7 @@ interface BeverageDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<BeverageEntity>>
+
+    @Query("DELETE FROM beverages WHERE id = :id")
+    suspend fun deleteBeverage(id: Uuid)
 }

@@ -77,7 +77,8 @@ class BeverageOverviewViewModel(
             } ?: (Pair(settings, range.dateUnit) to flowOf(emptyList()))
         }.flatMapLatest { (settingsDateUnit, beveragesSource) ->
             beveragesSource.map { beverages ->
-                val beveragesInMl = beverages.map { it.copy(amount = it.unit.toMilliliter(it.amount)) }
+                val beveragesInMl =
+                    beverages.map { it.copy(amount = it.unit.toMilliliter(it.amount), unit = FluidUnit.Milliliter) }
                 when (settingsDateUnit.second) {
                     DateUnit.DAY -> mapDay(beveragesInMl)
                     DateUnit.WEEK -> mapWeek(beveragesInMl)

@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +26,8 @@ import fitbe.composeapp.generated.resources.beverages_daily_view_content_descrip
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percent
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total_target
+import fitbe.composeapp.generated.resources.ic_delete
+import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.local_time_format
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -34,6 +38,7 @@ import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun BeverageDailyView(
@@ -43,7 +48,10 @@ fun BeverageDailyView(
     DailyView(
         dailyViewModel = beverageDailyViewModel,
         detailView = { state, date ->
-            BeverageDailyView(state)
+            BeverageDailyView(
+                state = state,
+                beverageDailyViewModel = beverageDailyViewModel
+            )
         },
         addDialog = { date, onDismiss ->
             AddBeverageDialog(
@@ -61,7 +69,10 @@ fun BeverageDailyView(
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-private fun BeverageDailyView(state: BeverageDailyUiState) {
+private fun BeverageDailyView(
+    state: BeverageDailyUiState,
+    beverageDailyViewModel: BeverageDailyViewModel
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -123,7 +134,9 @@ private fun BeverageDailyView(state: BeverageDailyUiState) {
                 key = { it.id }
             ) { beverage ->
                 BeveragesListItem(
-                    beverage = beverage
+                    beverage = beverage,
+                    beverageDailyViewModel::editBeverage,
+                    beverageDailyViewModel::deleteBeverage
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
@@ -131,8 +144,13 @@ private fun BeverageDailyView(state: BeverageDailyUiState) {
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-private fun BeveragesListItem(beverage: Beverage) {
+private fun BeveragesListItem(
+    beverage: Beverage,
+    edit: (id: Uuid) -> Unit,
+    delete: (id: Uuid) -> Unit,
+) {
     ListItem(
         leadingContent = {
             Icon(
@@ -153,6 +171,23 @@ private fun BeveragesListItem(beverage: Beverage) {
                     stringResource(Res.string.local_time_format)
                 )
             )
+        },
+        trailingContent = {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { edit(beverage.id) }
+                ) {
+                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                }
+                IconButton(
+                    onClick = { delete(beverage.id) }
+                ) {
+                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                }
+            }
         },
         supportingContent = { null }
     )

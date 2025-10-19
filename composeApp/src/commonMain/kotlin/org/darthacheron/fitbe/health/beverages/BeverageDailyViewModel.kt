@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.health.beverages
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_add_beverage
+import fitbe.composeapp.generated.resources.beverages_daily_view_error_deleting
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_loading
 import fitbe.composeapp.generated.resources.beverages_daily_view_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_beverages
@@ -28,6 +29,7 @@ import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 class BeverageDailyViewModel(
@@ -124,6 +126,20 @@ class BeverageDailyViewModel(
                 )
             } catch (e: Exception) {
                 errorMessage.value = Res.string.beverages_daily_view_error_saving
+            }
+        }
+    }
+
+    fun editBeverage(id: Uuid) {
+
+    }
+
+    fun deleteBeverage(id: Uuid) {
+        viewModelScope.launch {
+            try {
+                repository.deleteBeverage(id)
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.beverages_daily_view_error_deleting
             }
         }
     }
