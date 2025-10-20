@@ -11,6 +11,9 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Dao
 interface SleepDao {
+    @Query("SELECT * FROM sleeps WHERE id = :id")
+    suspend fun getSleep(id: Uuid): SleepEntity?
+
     @Upsert()
     suspend fun upsertSleep(sleep: SleepEntity)
 
@@ -29,4 +32,7 @@ interface SleepDao {
         end: Instant,
         profileId: Uuid
     ): Flow<List<SleepEntity>>
+
+    @Query("DELETE FROM sleeps WHERE id = :id")
+    suspend fun deleteSleep(id: Uuid)
 }

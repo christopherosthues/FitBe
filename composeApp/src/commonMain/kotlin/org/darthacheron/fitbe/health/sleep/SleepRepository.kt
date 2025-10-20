@@ -18,6 +18,10 @@ import kotlin.uuid.Uuid
 class SleepRepository(
     private val dao: SleepDao
 ) {
+    suspend fun getSleep(id: Uuid): Sleep? {
+        return dao.getSleep(id)?.toSleep()
+    }
+
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
     fun getSleepsBetween(
         start: Instant,
@@ -102,4 +106,12 @@ class SleepRepository(
         }
 
     suspend fun addSleep(sleep: Sleep) = dao.upsertSleep(sleep.toSleepEntity())
+
+    suspend fun editSleep(sleep: Sleep) {
+        dao.upsertSleep(sleep = sleep.toSleepEntity())
+    }
+
+    suspend fun deleteSleep(id: Uuid) {
+        dao.deleteSleep(id)
+    }
 }
