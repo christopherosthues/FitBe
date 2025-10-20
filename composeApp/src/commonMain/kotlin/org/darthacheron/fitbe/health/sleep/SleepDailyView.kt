@@ -26,10 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_delete
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_sleep
 import fitbe.composeapp.generated.resources.local_time_format
+import fitbe.composeapp.generated.resources.sleep_daily_view_content_description_delete
+import fitbe.composeapp.generated.resources.sleep_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.sleep_daily_view_sleep_time
 import fitbe.composeapp.generated.resources.sleep_daily_view_total_sleep_last_night
 import fitbe.composeapp.generated.resources.sleep_daily_view_total_sleep_time
@@ -164,6 +168,15 @@ private fun SleepListItem(
     editDialog: (id: Uuid) -> Unit,
     delete: (id: Uuid) -> Unit
 ) {
+    val timeText = stringResource(
+        Res.string.sleep_daily_view_sleep_time,
+        sleep.start.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
+            stringResource(Res.string.local_time_format)
+        ),
+        sleep.end.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
+            stringResource(Res.string.local_time_format)
+        )
+    )
     ListItem(
         leadingContent = {
             Icon(painter = painterResource(Res.drawable.ic_sleep), contentDescription = null)
@@ -175,16 +188,7 @@ private fun SleepListItem(
             )
         },
         overlineContent = {
-            Text(
-                text =
-                    stringResource(
-                        Res.string.sleep_daily_view_sleep_time,
-                        sleep.start.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
-                            stringResource(Res.string.local_time_format)),
-                        sleep.end.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
-                            stringResource(Res.string.local_time_format))
-                    )
-                )
+            Text(text = timeText)
         },
         trailingContent = {
             Row(
@@ -194,14 +198,20 @@ private fun SleepListItem(
                 IconButton(
                     onClick = { editDialog(sleep.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_edit),
+                        contentDescription =
+                            stringResource(Res.string.sleep_daily_view_content_description_edit, timeText)
+                    )
                 }
                 IconButton(
                     onClick = { delete(sleep.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_delete),
+                        contentDescription =
+                            stringResource(Res.string.sleep_daily_view_content_description_delete, timeText)
+                    )
                 }
             }
         },

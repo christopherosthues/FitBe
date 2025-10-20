@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_delete
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_progress_percent_target
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percent
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
@@ -206,14 +208,23 @@ private fun BeveragesListItem(
                 IconButton(
                     onClick = { editDialog(beverage.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_edit),
+                        contentDescription =
+                            stringResource(Res.string.beverages_daily_view_content_description_edit, beverage.beverage)
+                    )
                 }
                 IconButton(
                     onClick = { delete(beverage.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_delete),
+                        contentDescription =
+                            stringResource(
+                                Res.string.beverages_daily_view_content_description_delete,
+                                beverage.beverage
+                            )
+                    )
                 }
             }
         },

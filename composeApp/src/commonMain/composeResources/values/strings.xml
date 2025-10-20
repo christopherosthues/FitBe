@@ -647,6 +647,8 @@
     <string name="beverages_daily_view_error_saving">Error saving beverage. Please try again.</string>
     <string name="beverages_daily_view_error_editing">Error editing beverage. Please try again.</string>
     <string name="beverages_daily_view_error_deleting">Error deleting beverage. Please try again.</string>
+    <string name="beverages_daily_view_content_description_edit">Edit beverage %1$s</string>
+    <string name="beverages_daily_view_content_description_delete">Delete beverage %1$s</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d cups %2$s</item>
         <item quantity="one">%1$d cup %2$s</item>
@@ -706,6 +708,8 @@
     <string name="sleep_daily_view_total_sleep_last_night">You've slept %1$dh and %2$dm in total.</string>
     <string name="sleep_daily_view_sleep_time">%1$s - %2$s</string>
     <string name="sleep_daily_view_total_sleep_time">%1$d hours and %2$d minutes</string>
+    <string name="sleep_daily_view_content_description_edit">Edit sleep %1$s</string>
+    <string name="sleep_daily_view_content_description_delete">Delete sleep %1$s</string>
 
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Record sleep</string>
@@ -742,6 +746,8 @@
     <string name="steps_daily_view_error_deleting">Error deleting steps data. Please try again.</string>
     <string name="steps_daily_view_error_editing">Error editing steps data. Please try again.</string>
     <string name="steps_daily_view_steps">%1$d steps</string>
+    <string name="steps_daily_view_content_description_edit">Edit %1$s steps - %2$s</string>
+    <string name="steps_daily_view_content_description_delete">Delete %1$s steps - %2$s</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Record steps</string>
@@ -785,6 +791,8 @@
     <string name="body_weight_daily_view_body_fat">%1$d % fat</string>
     <string name="body_weight_daily_view_bone_mass">%1$d %2$s bones</string>
     <string name="body_weight_daily_view_body_water">%1$d % water</string>
+    <string name="body_weight_daily_view_content_description_edit">Edit %1$s body weight - %1$s</string>
+    <string name="body_weight_daily_view_content_description_delete">Delete %1$s body weight - %1$s</string>
 
     <!-- Body weight Add Dialog -->
     <string name="body_weight_add_dialog_title">Record body weight</string>

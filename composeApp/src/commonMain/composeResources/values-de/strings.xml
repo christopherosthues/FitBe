@@ -647,6 +647,8 @@
     <string name="beverages_daily_view_error_saving">Fehler beim Speichern des Getränks. Bitte versuchen Sie es erneut.</string>
     <string name="beverages_daily_view_error_editing">Fehler beim Bearbeiten des Getränks. Bitte versuchen Sie es erneut.</string>
     <string name="beverages_daily_view_error_deleting">Fehler beim Löschen des Getränks. Bitte versuchen Sie es erneut.</string>
+    <string name="beverages_daily_view_content_description_edit">Getränk %1$s bearbeiten</string>
+    <string name="beverages_daily_view_content_description_delete">Getränk %1$s löschen</string>
     <plurals name="beverage_in_cup">
         <item quantity="zero">%1$d Tassen %2$s</item>
         <item quantity="one">%1$d Tasse %2$s</item>
@@ -706,6 +708,8 @@
     <string name="sleep_daily_view_total_sleep_last_night">Du hast insgesamt %1$dh und %2$dm geschlafen</string>
     <string name="sleep_daily_view_sleep_time">%1$s - %2$s</string>
     <string name="sleep_daily_view_total_sleep_time">%1$d Stunden und %2$d Minuten</string>
+    <string name="sleep_daily_view_content_description_edit">Schlaf %1$s bearbeiten</string>
+    <string name="sleep_daily_view_content_description_delete">Schlaf %1$s löschen</string>
 
     <!-- Add sleep dialog -->
     <string name="sleep_add_dialog_title">Schlaf eintragen</string>
@@ -742,6 +746,8 @@
     <string name="steps_daily_view_error_deleting">Fehler beim Löschen der Schritte. Bitte versuchen Sie es erneut.</string>
     <string name="steps_daily_view_error_editing">Fehler beim Bearbeiten der Schritte. Bitte versuchen Sie es erneut.</string>
     <string name="steps_daily_view_steps">%1$d Schritte</string>
+    <string name="steps_daily_view_content_description_edit">%1$s Schritte bearbeiten - %2$s</string>
+    <string name="steps_daily_view_content_description_delete">%1$s Schritte löschen - %2$s</string>
 
     <!-- Add steps dialog -->
     <string name="steps_add_dialog_title">Schritte eintragen</string>
@@ -782,6 +788,8 @@
     <string name="body_weight_daily_view_body_fat">%1$d % Fett</string>
     <string name="body_weight_daily_view_bone_mass">%1$d %2$s Knochen</string>
     <string name="body_weight_daily_view_body_water">%1$d % Wasser</string>
+    <string name="body_weight_daily_view_content_description_edit">Gewicht %1$s bearbeiten - %1$s</string>
+    <string name="body_weight_daily_view_content_description_delete">Gewicht %1$s löschen - %1$s</string>
 
     <!-- Body weight Add Dialog -->
     <string name="body_weight_add_dialog_title">Körpergewicht eintragen</string>

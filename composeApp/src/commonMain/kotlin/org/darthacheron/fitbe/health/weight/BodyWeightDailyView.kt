@@ -26,10 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_delete
+import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_fat
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_water
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_weight
 import fitbe.composeapp.generated.resources.body_weight_daily_view_bone_mass
+import fitbe.composeapp.generated.resources.body_weight_daily_view_content_description_delete
+import fitbe.composeapp.generated.resources.body_weight_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.body_weight_daily_view_muscle_mass
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
@@ -178,6 +182,9 @@ private fun BodyWeightListItem(
         bodyWeight.bodyWaterInPercentage != null ||
         bodyWeight.boneMassInKg != null
 
+    val timeText = bodyWeight.date.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
+        stringResource(Res.string.local_time_format)
+    )
     ListItem(
         headlineContent = {
             Text(
@@ -190,11 +197,7 @@ private fun BodyWeightListItem(
             )
         },
         overlineContent = {
-            Text(
-                text = bodyWeight.date.toLocalDateTime(TimeZone.currentSystemDefault()).time.format(
-                    stringResource(Res.string.local_time_format)
-                )
-            )
+            Text(text = timeText)
         },
         supportingContent = if (hasSupportingContent) {
             {
@@ -253,14 +256,28 @@ private fun BodyWeightListItem(
                 IconButton(
                     onClick = { editDialog(bodyWeight.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_edit),
+                        contentDescription =
+                            stringResource(
+                                Res.string.body_weight_daily_view_content_description_edit,
+                                bodyWeight.weightInKg,
+                                timeText
+                            )
+                    )
                 }
                 IconButton(
                     onClick = { delete(bodyWeight.id) }
                 ) {
-                    // TODO: content description
-                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_delete),
+                        contentDescription =
+                            stringResource(
+                                Res.string.body_weight_daily_view_content_description_delete,
+                                bodyWeight.weightInKg,
+                                timeText
+                            )
+                    )
                 }
             }
         }
