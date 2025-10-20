@@ -25,6 +25,7 @@ import org.darthacheron.fitbe.health.sleep.SleepDailyViewModel
 import org.darthacheron.fitbe.health.sleep.SleepOverviewViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.sleep.manage.AddSleepDialogViewModel
+import org.darthacheron.fitbe.health.sleep.manage.EditSleepDialogViewModel
 import org.darthacheron.fitbe.health.steps.StepsDailyViewModel
 import org.darthacheron.fitbe.health.steps.StepsOverviewViewModel
 import org.darthacheron.fitbe.health.steps.StepsRepository
@@ -152,6 +153,7 @@ val sharedModule =
         viewModelOf(::AddBodyWeightDialogViewModel)
         viewModelOf(::EditBodyWeightDialogViewModel)
         viewModelOf(::AddSleepDialogViewModel)
+        viewModelOf(::EditSleepDialogViewModel)
         viewModelOf(::HealthViewModel)
         viewModelOf(::SleepDailyViewModel)
         viewModelOf(::StepsDailyViewModel)

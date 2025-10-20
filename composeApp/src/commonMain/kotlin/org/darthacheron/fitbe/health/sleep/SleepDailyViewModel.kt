@@ -3,10 +3,14 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.sleep_daily_view_content_description_add_sleep
+import fitbe.composeapp.generated.resources.sleep_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.sleep_daily_view_error_editing
 import fitbe.composeapp.generated.resources.sleep_daily_view_error_loading
 import fitbe.composeapp.generated.resources.sleep_daily_view_error_saving
 import fitbe.composeapp.generated.resources.sleep_overview_error_loading
 import fitbe.composeapp.generated.resources.sleep_overview_error_saving
+import fitbe.composeapp.generated.resources.steps_daily_view_error_deleting
+import fitbe.composeapp.generated.resources.steps_daily_view_error_editing
 import fitbe.composeapp.generated.resources.steps_daily_view_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_sleeps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -139,6 +143,44 @@ class SleepDailyViewModel(
                 )
             } catch (e: Exception) {
                 errorMessage.value = Res.string.sleep_daily_view_error_saving
+            }
+        }
+    }
+
+    fun editSleep(
+        id: Uuid,
+        start: Instant,
+        end: Instant
+    ) {
+        viewModelScope.launch {
+            try {
+                val profileId = settingsRepository.getSettings().selectedProfileId
+
+                if (profileId == null) {
+                    errorMessage.value = Res.string.sleep_daily_view_error_editing
+                    return@launch
+                }
+
+                sleepRepository.editSleep(
+                    Sleep(
+                        id = id,
+                        start = start,
+                        end = end,
+                        profileId = profileId
+                    )
+                )
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.sleep_daily_view_error_editing
+            }
+        }
+    }
+
+    fun deleteSleep(id: Uuid) {
+        viewModelScope.launch {
+            try {
+                sleepRepository.deleteSleep(id)
+            } catch (e: Exception) {
+                errorMessage.value = Res.string.sleep_daily_view_error_deleting
             }
         }
     }

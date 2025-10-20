@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.health.sleep
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,15 +12,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.ic_delete
+import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_sleep
 import fitbe.composeapp.generated.resources.local_time_format
 import fitbe.composeapp.generated.resources.sleep_daily_view_sleep_time
@@ -31,10 +39,12 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.health.sleep.manage.AddSleepDialog
+import org.darthacheron.fitbe.health.sleep.manage.EditSleepDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun SleepDailyView(
@@ -47,7 +57,8 @@ fun SleepDailyView(
                 state = state,
                 date = date.toLocalDateTime(TimeZone.currentSystemDefault()).date,
                 targetSleepDuration = state.target,
-                maxSleeps = state.maxSleeps
+                maxSleeps = state.maxSleeps,
+                sleepDailyViewModel = sleepDailyViewModel
             )
         },
         addDialog = { date, onDismiss ->
@@ -69,8 +80,12 @@ private fun SleepDetailView(
     state: SleepDailyUiState,
     date: LocalDate,
     targetSleepDuration: Int?,
-    maxSleeps: Int
+    maxSleeps: Int,
+    sleepDailyViewModel: SleepDailyViewModel
 ) {
+    var showEditDialog by remember { mutableStateOf(false) }
+    var selectedSleepId by remember { mutableStateOf<Uuid?>(null) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -114,16 +129,41 @@ private fun SleepDetailView(
                 key = { it.id }
             ) { sleep ->
                 SleepListItem(
-                    sleep = sleep
+                    sleep = sleep,
+                    editDialog = { id ->
+                        showEditDialog = true
+                        selectedSleepId = id
+                    },
+                    delete = sleepDailyViewModel::deleteSleep
                 )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
+
+    if (showEditDialog && selectedSleepId != null) {
+        EditSleepDialog(
+            id = selectedSleepId!!,
+            onSave = { id, start, end ->
+                sleepDailyViewModel.editSleep(id, start, end)
+                showEditDialog = false
+                selectedSleepId = null
+            },
+            onDismiss = {
+                showEditDialog = false
+                selectedSleepId = null
+            }
+        )
+    }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-private fun SleepListItem(sleep: Sleep) {
+private fun SleepListItem(
+    sleep: Sleep,
+    editDialog: (id: Uuid) -> Unit,
+    delete: (id: Uuid) -> Unit
+) {
     ListItem(
         leadingContent = {
             Icon(painter = painterResource(Res.drawable.ic_sleep), contentDescription = null)
@@ -145,6 +185,25 @@ private fun SleepListItem(sleep: Sleep) {
                             stringResource(Res.string.local_time_format))
                     )
                 )
+        },
+        trailingContent = {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = { editDialog(sleep.id) }
+                ) {
+                    // TODO: content description
+                    Icon(painter = painterResource(Res.drawable.ic_edit), contentDescription = null)
+                }
+                IconButton(
+                    onClick = { delete(sleep.id) }
+                ) {
+                    // TODO: content description
+                    Icon(painter = painterResource(Res.drawable.ic_delete), contentDescription = null)
+                }
+            }
         },
         supportingContent = { null }
     )

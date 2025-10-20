@@ -76,7 +76,7 @@ class SleepRepository(
                         ) {
                             splitSleeps.add(
                                 Sleep(
-                                    id = Uuid.random(), // Generate new ID for the split part
+                                    id = originalSleep.id,
                                     profileId = originalSleep.profileId,
                                     start = currentInstant,
                                     end = segmentEndInstant
