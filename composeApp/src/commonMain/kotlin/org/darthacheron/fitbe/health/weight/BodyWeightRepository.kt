@@ -6,8 +6,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import org.darthacheron.fitbe.health.steps.Steps
-import org.darthacheron.fitbe.health.steps.toStepsEntity
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

@@ -65,8 +65,11 @@ import fitbe.composeapp.generated.resources.month_range_picker_october
 import fitbe.composeapp.generated.resources.month_range_picker_september
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.month.MonthRangePickerDefaults.MonthNames
@@ -96,8 +99,8 @@ data class YearMonth(
                 2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
                 else -> throw IllegalArgumentException("Invalid month: $month")
             }
-        return LocalDateTime(year, month, lastDayOfMonth, 23, 59, 59, 999)
-            .toInstant(TimeZone.UTC)
+        return LocalDate(year, month, lastDayOfMonth)
+            .atStartOfDayIn(TimeZone.UTC)
             .toEpochMilliseconds()
     }
 

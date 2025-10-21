@@ -86,8 +86,7 @@ data class YearWeek(
     fun endDateMillis(): Long {
         val date = LocalDate.fromYearWeek(year, week, DayOfWeek.MONDAY)
         val endDate = date.plus(DatePeriod(days = 6))
-        val endDateTime = endDate.atTime(23, 59, 59, 999)
-        return endDateTime.toInstant(TimeZone.UTC).toEpochMilliseconds()
+        return endDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
     }
 
     override fun compareTo(other: YearWeek): Int =

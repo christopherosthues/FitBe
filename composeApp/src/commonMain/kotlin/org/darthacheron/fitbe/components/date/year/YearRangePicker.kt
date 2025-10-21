@@ -61,6 +61,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
@@ -80,8 +81,8 @@ data class Year(
             .toEpochMilliseconds()
 
     fun endDateMillis(): Long =
-        LocalDateTime(value, 12, 31, 23, 59, 59, 999)
-            .toInstant(TimeZone.UTC)
+        LocalDate(value, 12, 31)
+            .atStartOfDayIn(TimeZone.UTC)
             .toEpochMilliseconds()
 
     override fun compareTo(other: Year): Int = value.compareTo(other.value)
