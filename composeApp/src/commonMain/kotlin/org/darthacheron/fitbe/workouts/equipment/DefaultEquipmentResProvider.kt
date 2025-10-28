@@ -52,7 +52,12 @@ import fitbe.composeapp.generated.resources.default_training_equipment_wall_ball
 import fitbe.composeapp.generated.resources.default_training_equipment_weight_plates
 import fitbe.composeapp.generated.resources.default_training_equipment_wrist_weights
 import fitbe.composeapp.generated.resources.default_training_equipment_yoga_mat
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_ab_wheel
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_air_bike
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_ankle_weights
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_balance_pad
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_barbell
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_battle_ropes
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_bench
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_bodyweight
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_dumbbell
@@ -181,13 +186,13 @@ object DefaultEquipmentResProvider {
 
     val equipmentImageMap: Map<String, DrawableResource?> =
         mapOf(
-            AB_WHEEL to Res.drawable.ic_launcher,
-            AIR_BIKE to Res.drawable.ic_launcher,
-            ANKLE_WEIGHTS to Res.drawable.ic_launcher,
+            AB_WHEEL to Res.drawable.ic_default_training_equipment_ab_wheel,
+            AIR_BIKE to Res.drawable.ic_default_training_equipment_air_bike,
+            ANKLE_WEIGHTS to Res.drawable.ic_default_training_equipment_ankle_weights,
             BACK_EXTENSION_MACHINE to Res.drawable.ic_launcher,
-            BALANCE_PAD to Res.drawable.ic_launcher,
+            BALANCE_PAD to Res.drawable.ic_default_training_equipment_balance_pad,
             BARBELL to Res.drawable.ic_default_training_equipment_barbell,
-            BATTLE_ROPES to Res.drawable.ic_launcher,
+            BATTLE_ROPES to Res.drawable.ic_default_training_equipment_battle_ropes,
             BENCH to Res.drawable.ic_default_training_equipment_bench,
             BODYWEIGHT to Res.drawable.ic_default_training_equipment_bodyweight,
             BOSU_BALL to Res.drawable.ic_launcher,
