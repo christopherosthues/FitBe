@@ -525,6 +525,7 @@
     <string name="default_training_equipment_resistance_bands">Resistance Bands</string>
     <string name="default_training_equipment_rowing_machine">Rowing Machine</string>
     <string name="default_training_equipment_sandbag">Sandbag</string>
+    <string name="default_training_equipment_seated_back_extension_machine">Seated Back Extension Machine</string>
     <string name="default_training_equipment_seated_row_machine">Seated Row Machine</string>
     <string name="default_training_equipment_shoulder_press_machine">Shoulder Press Machine</string>
     <string name="default_training_equipment_slam_ball">Slam Ball</string>

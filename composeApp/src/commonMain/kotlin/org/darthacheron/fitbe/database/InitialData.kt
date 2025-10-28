@@ -35,6 +35,7 @@ import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.PUS
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.RESISTANCE_BANDS
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.ROWING_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SANDBAG
+import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SEATED_BACK_EXTENSION_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SHOULDER_PRESS_MACHINE
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SLAM_BALL
 import org.darthacheron.fitbe.workouts.equipment.DefaultEquipmentResProvider.SMITH_MACHINE
@@ -216,6 +217,7 @@ internal val equipmentList =
         RESISTANCE_BANDS,
         ROWING_MACHINE,
         SANDBAG,
+        SEATED_BACK_EXTENSION_MACHINE,
         DefaultEquipmentResProvider.SEATED_ROW_MACHINE,
         SHOULDER_PRESS_MACHINE,
         SLAM_BALL,

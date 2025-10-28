@@ -107,6 +107,7 @@ object DefaultEquipmentResProvider {
     const val RESISTANCE_BANDS = "default_training_equipment_resistance_bands"
     const val ROWING_MACHINE = "default_training_equipment_rowing_machine"
     const val SANDBAG = "default_training_equipment_sandbag"
+    const val SEATED_BACK_EXTENSION_MACHINE = "default_training_equipment_seated_back_extension_machine"
     const val SEATED_ROW_MACHINE = "default_training_equipment_seated_row_machine"
     const val SHOULDER_PRESS_MACHINE = "default_training_equipment_shoulder_press_machine"
     const val SLAM_BALL = "default_training_equipment_slam_ball"
@@ -160,6 +161,7 @@ object DefaultEquipmentResProvider {
             RESISTANCE_BANDS to Res.string.default_training_equipment_resistance_bands,
             ROWING_MACHINE to Res.string.default_training_equipment_rowing_machine,
             SANDBAG to Res.string.default_training_equipment_sandbag,
+            SEATED_BACK_EXTENSION_MACHINE to Res.string.default_training_equipment_seated_back_extension_machine,
             SEATED_ROW_MACHINE to Res.string.default_training_equipment_seated_row_machine,
             SHOULDER_PRESS_MACHINE to Res.string.default_training_equipment_shoulder_press_machine,
             SLAM_BALL to Res.string.default_training_equipment_slam_ball,
@@ -214,6 +216,7 @@ object DefaultEquipmentResProvider {
             RESISTANCE_BANDS to Res.drawable.ic_launcher,
             ROWING_MACHINE to Res.drawable.ic_default_training_equipment_rowing_machine,
             SANDBAG to Res.drawable.ic_default_training_equipment_sandbag,
+            SEATED_BACK_EXTENSION_MACHINE to Res.drawable.ic_launcher,
             SEATED_ROW_MACHINE to Res.drawable.ic_default_training_equipment_seated_row_machine,
             SHOULDER_PRESS_MACHINE to Res.drawable.ic_launcher,
             SLAM_BALL to Res.drawable.ic_launcher,

@@ -525,6 +525,7 @@
     <string name="default_training_equipment_resistance_bands">Widerstandsbänder</string>
     <string name="default_training_equipment_rowing_machine">Rudergerät</string>
     <string name="default_training_equipment_sandbag">Sandsack</string>
+    <string name="default_training_equipment_seated_back_extension_machine">Rückenstreckermaschine (sitzend)</string>
     <string name="default_training_equipment_seated_row_machine">Rudermaschine (sitzend)</string>
     <string name="default_training_equipment_shoulder_press_machine">Schulterpresse Maschine</string>
     <string name="default_training_equipment_slam_ball">Slam Ball</string>
