@@ -60,8 +60,12 @@ import fitbe.composeapp.generated.resources.ic_default_training_equipment_barbel
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_battle_ropes
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_bench
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_bodyweight
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_bosu_ball
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_chest_press_machine
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_dumbbell
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_ez_curl_bar
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_foam_roller
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_gymnastic_rings
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_kettlebell
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_medicine_ball
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_power_rack
@@ -72,6 +76,7 @@ import fitbe.composeapp.generated.resources.ic_default_training_equipment_seated
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_squat_rack
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_treadmill
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_weight_plates
+import fitbe.composeapp.generated.resources.ic_default_traning_equipment_jump_rope
 import fitbe.composeapp.generated.resources.ic_launcher
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -195,18 +200,18 @@ object DefaultEquipmentResProvider {
             BATTLE_ROPES to Res.drawable.ic_default_training_equipment_battle_ropes,
             BENCH to Res.drawable.ic_default_training_equipment_bench,
             BODYWEIGHT to Res.drawable.ic_default_training_equipment_bodyweight,
-            BOSU_BALL to Res.drawable.ic_launcher,
+            BOSU_BALL to Res.drawable.ic_default_training_equipment_bosu_ball,
             BULGARIAN_BAG to Res.drawable.ic_launcher,
             CABLE_MACHINE to Res.drawable.ic_launcher,
-            CHEST_PRESS_MACHINE to Res.drawable.ic_launcher,
+            CHEST_PRESS_MACHINE to Res.drawable.ic_default_training_equipment_chest_press_machine,
             DIP_BARS to Res.drawable.ic_launcher,
             DIP_STATION to Res.drawable.ic_launcher,
             DUMBBELL to Res.drawable.ic_default_training_equipment_dumbbell,
             ELLIPTICAL_TRAINER to Res.drawable.ic_launcher,
             EZ_CURL_BAR to Res.drawable.ic_default_training_equipment_ez_curl_bar,
-            FOAM_ROLLER to Res.drawable.ic_launcher,
-            GYMNASTIC_RINGS to Res.drawable.ic_launcher,
-            JUMP_ROPE to Res.drawable.ic_launcher,
+            FOAM_ROLLER to Res.drawable.ic_default_training_equipment_foam_roller,
+            GYMNASTIC_RINGS to Res.drawable.ic_default_training_equipment_gymnastic_rings,
+            JUMP_ROPE to Res.drawable.ic_default_traning_equipment_jump_rope,
             KETTLEBELL to Res.drawable.ic_default_training_equipment_kettlebell,
             LANDMINE_ATTACHMENT to Res.drawable.ic_launcher,
             LAT_PULLDOWN_MACHINE to Res.drawable.ic_launcher,
