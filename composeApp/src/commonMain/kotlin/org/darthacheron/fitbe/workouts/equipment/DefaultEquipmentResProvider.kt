@@ -68,11 +68,16 @@ import fitbe.composeapp.generated.resources.ic_default_training_equipment_foam_r
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_gymnastic_rings
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_kettlebell
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_medicine_ball
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_parallettes
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_plyo_box
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_power_rack
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_pull_up_bar
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_push_up_handles
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_resistance_bands
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_rowing_machine
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_sandbag
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_seated_row_machine
+import fitbe.composeapp.generated.resources.ic_default_training_equipment_slam_ball
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_squat_rack
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_treadmill
 import fitbe.composeapp.generated.resources.ic_default_training_equipment_weight_plates
@@ -219,18 +224,18 @@ object DefaultEquipmentResProvider {
             LEG_EXTENSION_MACHINE to Res.drawable.ic_launcher,
             LEG_PRESS_MACHINE to Res.drawable.ic_launcher,
             MEDICINE_BALL to Res.drawable.ic_default_training_equipment_medicine_ball,
-            PARALLETTES to Res.drawable.ic_launcher,
-            PLYO_BOX to Res.drawable.ic_launcher,
+            PARALLETTES to Res.drawable.ic_default_training_equipment_parallettes,
+            PLYO_BOX to Res.drawable.ic_default_training_equipment_plyo_box,
             POWER_RACK to Res.drawable.ic_default_training_equipment_power_rack,
             PULL_UP_BAR to Res.drawable.ic_default_training_equipment_pull_up_bar,
-            PUSH_UP_HANDLES to Res.drawable.ic_launcher,
-            RESISTANCE_BANDS to Res.drawable.ic_launcher,
+            PUSH_UP_HANDLES to Res.drawable.ic_default_training_equipment_push_up_handles,
+            RESISTANCE_BANDS to Res.drawable.ic_default_training_equipment_resistance_bands,
             ROWING_MACHINE to Res.drawable.ic_default_training_equipment_rowing_machine,
             SANDBAG to Res.drawable.ic_default_training_equipment_sandbag,
             SEATED_BACK_EXTENSION_MACHINE to Res.drawable.ic_launcher,
             SEATED_ROW_MACHINE to Res.drawable.ic_default_training_equipment_seated_row_machine,
             SHOULDER_PRESS_MACHINE to Res.drawable.ic_launcher,
-            SLAM_BALL to Res.drawable.ic_launcher,
+            SLAM_BALL to Res.drawable.ic_default_training_equipment_slam_ball,
             SMITH_MACHINE to Res.drawable.ic_launcher,
             SPOTTER_ARMS to Res.drawable.ic_launcher,
             SQUAT_RACK to Res.drawable.ic_default_training_equipment_squat_rack,
