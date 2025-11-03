@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.navigation.Screen
@@ -51,10 +50,12 @@ import org.darthacheron.fitbe.ui.state.TopBarAction
 import org.darthacheron.fitbe.workouts.equipment.EquipmentRepository
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipment
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class ExerciseDetailViewModel(
     private val exerciseRepository: ExerciseRepository,
     equipmentRepository: EquipmentRepository,

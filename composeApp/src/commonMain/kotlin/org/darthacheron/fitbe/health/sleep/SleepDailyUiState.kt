@@ -1,9 +1,7 @@
 package org.darthacheron.fitbe.health.sleep
 
-import kotlinx.datetime.LocalTime
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.ui.UiState
-import kotlin.time.Duration
 
 class SleepDailyUiState(
     isLoading: Boolean = true,

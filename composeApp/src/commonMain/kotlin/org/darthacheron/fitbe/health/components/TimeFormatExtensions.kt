@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.health.components
 
-import androidx.compose.runtime.Composable
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern

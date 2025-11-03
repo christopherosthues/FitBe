@@ -1,15 +1,16 @@
 package org.darthacheron.fitbe.health.weight.manage
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DialogUiState
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class EditBodyWeightDialogUiState(
     val id: Uuid = Uuid.NIL,
     val weight: String = "",

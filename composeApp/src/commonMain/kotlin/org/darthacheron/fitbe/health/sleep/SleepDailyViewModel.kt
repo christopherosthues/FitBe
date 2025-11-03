@@ -7,11 +7,6 @@ import fitbe.composeapp.generated.resources.sleep_daily_view_error_deleting
 import fitbe.composeapp.generated.resources.sleep_daily_view_error_editing
 import fitbe.composeapp.generated.resources.sleep_daily_view_error_loading
 import fitbe.composeapp.generated.resources.sleep_daily_view_error_saving
-import fitbe.composeapp.generated.resources.sleep_overview_error_loading
-import fitbe.composeapp.generated.resources.sleep_overview_error_saving
-import fitbe.composeapp.generated.resources.steps_daily_view_error_deleting
-import fitbe.composeapp.generated.resources.steps_daily_view_error_editing
-import fitbe.composeapp.generated.resources.steps_daily_view_error_loading
 import fitbe.composeapp.generated.resources.top_bar_title_daily_view_sleeps
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,26 +19,23 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.DailyViewModel
-import org.darthacheron.fitbe.health.steps.Steps
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.max
-import kotlin.math.roundToInt
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class, ExperimentalTime::class)
 class SleepDailyViewModel(
     private val sleepRepository: SleepRepository,
     settingsRepository: SettingsRepository,

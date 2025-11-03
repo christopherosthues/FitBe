@@ -17,13 +17,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.until
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -43,6 +40,7 @@ import kotlin.collections.map
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

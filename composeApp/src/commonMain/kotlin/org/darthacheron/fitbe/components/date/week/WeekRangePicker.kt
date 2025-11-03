@@ -52,21 +52,21 @@ import fitbe.composeapp.generated.resources.week_range_picker_content_descriptio
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_start_headline
 import fitbe.composeapp.generated.resources.week_range_picker_content_description_week_in_range
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class YearWeek(
     val year: Int,
     val week: Int
@@ -216,6 +216,7 @@ fun rememberWeekRangePickerState(
         )
     }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun WeekRangePickerContent(
     selectedStartYearWeek: YearWeek?,

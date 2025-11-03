@@ -1,7 +1,7 @@
 package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.time.ExperimentalTime
 
 /**

@@ -17,10 +17,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.OverviewViewModel
@@ -40,9 +38,11 @@ import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.max
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class BodyWeightOverviewViewModel(
     private val bodyWeightRepository: BodyWeightRepository,
     settingsRepository: SettingsRepository,

@@ -1,13 +1,15 @@
 package org.darthacheron.fitbe.health.beverages.manage
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.beverages.FluidUnit
 import org.darthacheron.fitbe.health.components.DialogUiState
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class AddBeverageDialogUiState(
     val dateTime: LocalDateTime =
         Clock.System

@@ -3,15 +3,16 @@ package org.darthacheron.fitbe.workouts.templates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class WorkoutTemplateRepository(
     private val workoutTemplateDao: WorkoutTemplateDao
 ) {

@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.date_range_picker_cancel
 import fitbe.composeapp.generated.resources.date_range_picker_ok
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import org.darthacheron.fitbe.components.date.month.MonthRangePicker
 import org.darthacheron.fitbe.components.date.month.PastOrPresentSelectableMonths
 import org.darthacheron.fitbe.components.date.month.YearMonth

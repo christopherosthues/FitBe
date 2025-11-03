@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -50,6 +49,8 @@ import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.utils.toDoubleString
 import org.darthacheron.fitbe.utils.toUintString
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -61,7 +62,7 @@ private data class ProfileCombinedInitData(
     val settings: Settings
 )
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class ProfileViewModel(
     private val profileRepository: ProfileRepository,
     private val settingsRepository: SettingsRepository,
@@ -81,7 +82,7 @@ class ProfileViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_profile
 
-    override val bottomBarSelected: Screen?
+    override val bottomBarSelected: Screen
         get() = Screen.Profile
 
     private val _uiState = MutableStateFlow(ProfileUiState(isLoading = true))
@@ -406,13 +407,13 @@ class ProfileViewModel(
                         targetKcal = currentState.inputTargetKcal.toUIntOrNull(),
                         targetBeverageInMilliliter = currentState.inputTargetBeverage.toUIntOrNull(),
                         targetWeight =
-                            currentState.inputTargetWeight.replace(",", ".")?.toDoubleOrNull()?.let {
+                            currentState.inputTargetWeight.replace(",", ".").toDoubleOrNull()?.let {
                                 weightUnitConverter.convert(it, settings.weightUnit, WeightUnit.KG)
                             },
                         targetSleepDuration = currentState.inputTargetSleepDuration,
                         targetSteps = currentState.inputTargetSteps.toUIntOrNull(),
                         bodyHeight =
-                            currentState.inputBodyHeight.replace(",", ".")?.toDoubleOrNull()?.let {
+                            currentState.inputBodyHeight.replace(",", ".").toDoubleOrNull()?.let {
                                 bodyMeasurementUnitConverter.convert(
                                     it,
                                     settings.bodyMeasurementUnit,

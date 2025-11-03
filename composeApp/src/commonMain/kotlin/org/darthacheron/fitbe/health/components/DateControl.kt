@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.local_date_format
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.DatePickerModal
@@ -24,7 +23,10 @@ import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun <Error : UiStateError, State : UiState<Error>> DateControl(
     date: Instant,

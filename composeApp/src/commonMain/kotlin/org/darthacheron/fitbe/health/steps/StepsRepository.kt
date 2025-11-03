@@ -2,18 +2,16 @@ package org.darthacheron.fitbe.health.steps
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import org.darthacheron.fitbe.health.beverages.Beverage
-import org.darthacheron.fitbe.health.beverages.toBeverageEntity
 import org.darthacheron.fitbe.utils.toDateSpan
-import kotlin.collections.map
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class StepsRepository(
     private val stepsDao: StepsDao
 ) {

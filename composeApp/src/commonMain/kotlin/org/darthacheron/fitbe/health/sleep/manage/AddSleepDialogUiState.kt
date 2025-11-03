@@ -1,14 +1,16 @@
 package org.darthacheron.fitbe.health.sleep.manage
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DialogUiState
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class AddSleepDialogUiState(
     val startDateTime: LocalDateTime =
         Clock.System

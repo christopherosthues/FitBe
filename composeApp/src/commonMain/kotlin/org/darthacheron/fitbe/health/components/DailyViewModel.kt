@@ -4,16 +4,11 @@ import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.daily_view_content_description_move_future
 import fitbe.composeapp.generated.resources.daily_view_content_description_move_past
-import fitbe.composeapp.generated.resources.overview_content_description_move_future
-import fitbe.composeapp.generated.resources.overview_content_description_move_past
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
@@ -21,8 +16,12 @@ import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 abstract class DailyViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager

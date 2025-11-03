@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.health.weight
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

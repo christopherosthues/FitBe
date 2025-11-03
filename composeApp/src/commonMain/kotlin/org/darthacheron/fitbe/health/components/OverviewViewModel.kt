@@ -6,8 +6,8 @@ import fitbe.composeapp.generated.resources.overview_content_description_move_fu
 import fitbe.composeapp.generated.resources.overview_content_description_move_past
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.settings.SettingsRepository
@@ -20,7 +20,9 @@ import org.darthacheron.fitbe.utils.plusOne
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 abstract class OverviewViewModel<Error : UiStateError, State : UiState<Error>>(
     protected val settingsRepository: SettingsRepository,
     topBarManager: TopBarManager

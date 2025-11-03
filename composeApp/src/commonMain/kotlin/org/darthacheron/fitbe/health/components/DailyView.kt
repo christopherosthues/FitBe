@@ -30,12 +30,14 @@ import fitbe.composeapp.generated.resources.ic_add
 import fitbe.composeapp.generated.resources.ic_arrow_back
 import fitbe.composeapp.generated.resources.ic_arrow_forward
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.ui.UiStateError
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun <Error : UiStateError, State : UiState<Error>> DailyView(
     dailyViewModel: DailyViewModel<Error, State>,

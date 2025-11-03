@@ -10,7 +10,7 @@ import fitbe.composeapp.generated.resources.beverage_in_liter
 import fitbe.composeapp.generated.resources.beverage_in_milliliter
 import fitbe.composeapp.generated.resources.beverage_in_normal_glass
 import fitbe.composeapp.generated.resources.beverage_in_small_glass
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Centiliter
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Cup
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Deciliter

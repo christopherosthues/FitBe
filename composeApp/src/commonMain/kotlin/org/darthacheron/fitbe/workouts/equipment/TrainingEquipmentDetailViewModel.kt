@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.navigation.Screen
@@ -44,10 +44,11 @@ import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.ui.state.TopBarAction
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class TrainingEquipmentDetailViewModel(
     private val equipmentRepository: EquipmentRepository,
     settingsRepository: SettingsRepository,
@@ -57,10 +58,10 @@ class TrainingEquipmentDetailViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_add_edit_training_equipment
 
-    override val bottomBarSelected: Screen?
+    override val bottomBarSelected: Screen
         get() = Screen.ExercisesDashboard
 
-    override val backNavigationIconVisible: Boolean?
+    override val backNavigationIconVisible: Boolean
         get() = true
 
     private val _uiState = MutableStateFlow(AddEditTrainingEquipmentUiState())

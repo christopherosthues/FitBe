@@ -29,10 +29,11 @@ import org.darthacheron.fitbe.health.weight.BodyWeightRepository
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class EditBodyWeightDialogViewModel(
     private val positiveDecimalValidator: PositiveDecimalValidator,
     private val bodyWeightValidator: BodyWeightValidator,

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.darthacheron.fitbe.profile.ProfileEntity // Assuming ProfileEntity exists
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import kotlin.uuid.ExperimentalUuidApi

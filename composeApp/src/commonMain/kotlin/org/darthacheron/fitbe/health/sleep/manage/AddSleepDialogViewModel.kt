@@ -18,8 +18,10 @@ import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalTime::class)
 class AddSleepDialogViewModel(
     private val settingsRepository: SettingsRepository,
     private val sleepRepository: SleepRepository

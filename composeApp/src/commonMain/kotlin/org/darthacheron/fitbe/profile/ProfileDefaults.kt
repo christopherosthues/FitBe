@@ -1,7 +1,5 @@
 package org.darthacheron.fitbe.profile
 
-import kotlinx.datetime.LocalTime
-
 object ProfileDefaults {
     const val NAME = "Default"
     val gender = Gender.UNKNOWN

@@ -36,14 +36,12 @@ import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description
 import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_content_description_start_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_duration
-import fitbe.composeapp.generated.resources.sleep_add_dialog_duration_value
 import fitbe.composeapp.generated.resources.sleep_add_dialog_end_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_end_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_save
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_title
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -55,10 +53,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 fun EditSleepDialog(
     viewModel: EditSleepDialogViewModel = koinViewModel(),

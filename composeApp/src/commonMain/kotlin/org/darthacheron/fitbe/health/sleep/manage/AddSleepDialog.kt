@@ -43,7 +43,6 @@ import fitbe.composeapp.generated.resources.sleep_add_dialog_save
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_date
 import fitbe.composeapp.generated.resources.sleep_add_dialog_start_time
 import fitbe.composeapp.generated.resources.sleep_add_dialog_title
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -57,6 +56,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable

@@ -66,7 +66,7 @@ fun PlotDailySleep(
             horizontalMinorGridLineStyle = null,
             verticalMajorGridLineStyle = null,
             verticalMinorGridLineStyle = null,
-            xAxisLabels = { representative ->
+            xAxisLabels = {
                 if (!thumbnail) {
                     Text(
                         text = date.format(stringResource(Res.string.local_date_format)),

@@ -2,11 +2,10 @@ package org.darthacheron.fitbe.database.converters
 
 import androidx.room.TypeConverter
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 import kotlin.time.ExperimentalTime
 
 /**
- * Room type converter for kotlinx.datetime.LocalTime
+ * Room type converter for kotlin.time.LocalTime
  * Stores LocalTime as String in format HH:MM:SS
  */
 @OptIn(ExperimentalTime::class)

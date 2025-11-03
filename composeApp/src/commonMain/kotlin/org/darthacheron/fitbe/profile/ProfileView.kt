@@ -45,18 +45,18 @@ import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.ic_switch
 import fitbe.composeapp.generated.resources.local_date_format
-import fitbe.composeapp.generated.resources.profile_content_description_add
 import fitbe.composeapp.generated.resources.profile_body_height
+import fitbe.composeapp.generated.resources.profile_content_description_add
 import fitbe.composeapp.generated.resources.profile_content_description_cancel
-import fitbe.composeapp.generated.resources.profile_date_of_birth
 import fitbe.composeapp.generated.resources.profile_content_description_delete
 import fitbe.composeapp.generated.resources.profile_content_description_edit
+import fitbe.composeapp.generated.resources.profile_content_description_save
+import fitbe.composeapp.generated.resources.profile_content_description_select
+import fitbe.composeapp.generated.resources.profile_date_of_birth
+import fitbe.composeapp.generated.resources.profile_date_of_birth_select
 import fitbe.composeapp.generated.resources.profile_gender
 import fitbe.composeapp.generated.resources.profile_name
 import fitbe.composeapp.generated.resources.profile_no_profiles_prompt_add
-import fitbe.composeapp.generated.resources.profile_content_description_save
-import fitbe.composeapp.generated.resources.profile_content_description_select
-import fitbe.composeapp.generated.resources.profile_date_of_birth_select
 import fitbe.composeapp.generated.resources.profile_target_beverage
 import fitbe.composeapp.generated.resources.profile_target_kcal
 import fitbe.composeapp.generated.resources.profile_target_sleep_duration
@@ -64,7 +64,6 @@ import fitbe.composeapp.generated.resources.profile_target_sleep_duration_edit
 import fitbe.composeapp.generated.resources.profile_target_steps
 import fitbe.composeapp.generated.resources.profile_target_weight
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.DropdownSelection
@@ -74,6 +73,7 @@ import org.darthacheron.fitbe.components.date.TimeInputDialog
 import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalMaterial3Api::class)

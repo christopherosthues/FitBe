@@ -37,7 +37,6 @@ fun LocalDate.monthResourceString(): StringResource =
         Month.OCTOBER -> Res.string.month_october
         Month.NOVEMBER -> Res.string.month_november
         Month.DECEMBER -> Res.string.month_december
-        else -> Res.string.month_january
     }
 
 @Composable

@@ -52,9 +52,9 @@ This project uses **Kotlin**, **Compose Multiplatform** from JetBrains and Gradl
     - `PolarPLotSeries`
     - `XYGraph`
 - Do **not** use any JVM-specific classes.
-- For all date and time types, use the library **kotlinx.datetime** (version 0.6.0).
+- For all date and time types, use the library **kotlin.time** (version 0.6.0).
 - Mark experimental API usages with @OptIn(<Classname>::class). This includes class from
-  kotlinx.datetime (ExperimentalTime::class), some Material3 classes (ExperimentalMaterial3Api::
+  kotlin.time (ExperimentalTime::class), some Material3 classes (ExperimentalMaterial3Api::
   class)) and Uuid (ExperimentalUuidApi::class) or the kotlin.uuid package.
 
 ## Architecture

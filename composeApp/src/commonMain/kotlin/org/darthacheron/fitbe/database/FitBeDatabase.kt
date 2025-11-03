@@ -5,13 +5,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import org.darthacheron.fitbe.database.converters.ExerciseTypeConverter
 import org.darthacheron.fitbe.database.converters.FluidUnitConverter
 import org.darthacheron.fitbe.database.converters.GenderConverter

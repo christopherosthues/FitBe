@@ -46,9 +46,11 @@ import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun BeverageDailyView(
     beverageDailyViewModel: BeverageDailyViewModel = koinViewModel(),
@@ -74,7 +76,7 @@ fun BeverageDailyView(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun BeverageDailyView(
     state: BeverageDailyUiState,
@@ -172,7 +174,7 @@ private fun BeverageDailyView(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun BeveragesListItem(
     beverage: Beverage,

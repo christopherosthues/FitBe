@@ -26,8 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_delete
-import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_fat
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_water
 import fitbe.composeapp.generated.resources.body_weight_daily_view_body_weight
@@ -42,16 +40,17 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.DailyView
 import org.darthacheron.fitbe.health.components.format
-import org.darthacheron.fitbe.health.steps.manage.EditStepsDialog
 import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialog
 import org.darthacheron.fitbe.health.weight.manage.EditBodyWeightDialog
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun BodyWeightDailyView(
     bodyWeightDailyViewModel: BodyWeightDailyViewModel = koinViewModel()
@@ -90,7 +89,7 @@ fun BodyWeightDailyView(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun BodyWeightDetailView(
     state: BodyWeightDailyUiState,
@@ -169,7 +168,7 @@ private fun BodyWeightDetailView(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun BodyWeightListItem(
     bodyWeight: BodyWeight,

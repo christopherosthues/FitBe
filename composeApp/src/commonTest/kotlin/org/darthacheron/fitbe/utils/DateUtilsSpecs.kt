@@ -7,7 +7,9 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class DateUtilsSpecs {
     @Test
     fun `test Jan 1, 2025 is in ISO week 1 of 2025`() {

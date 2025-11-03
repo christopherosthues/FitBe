@@ -45,8 +45,9 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.components.format
 import org.darthacheron.fitbe.health.components.representatives
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalKoalaPlotApi::class)
+@OptIn(ExperimentalKoalaPlotApi::class, ExperimentalTime::class)
 @Composable
 fun PlotDailySteps(
     modifier: Modifier = Modifier,
@@ -197,6 +198,7 @@ fun PlotDailySteps(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 private fun toVerticalBarData(steps: List<Steps>): List<VerticalBarPlotEntry<LocalTime, Int>> =
     steps.map {
         DefaultVerticalBarPlotEntry(

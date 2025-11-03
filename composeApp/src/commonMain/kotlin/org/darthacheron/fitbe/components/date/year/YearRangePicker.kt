@@ -56,16 +56,15 @@ import fitbe.composeapp.generated.resources.year_range_picker_content_descriptio
 import fitbe.composeapp.generated.resources.year_range_picker_content_description_start_headline
 import fitbe.composeapp.generated.resources.year_range_picker_content_description_year_in_range
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class Year(
     val value: Int
 ) : Comparable<Year> {
@@ -189,7 +188,7 @@ fun rememberYearRangePickerState(
         )
     }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun YearRangePickerContent(
     selectedStartYear: Year?,

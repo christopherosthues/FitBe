@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.darthacheron.fitbe.health.steps.StepsEntity
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

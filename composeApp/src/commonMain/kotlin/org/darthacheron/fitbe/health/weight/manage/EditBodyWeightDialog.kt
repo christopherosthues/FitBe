@@ -44,7 +44,7 @@ import fitbe.composeapp.generated.resources.ic_access_time
 import fitbe.composeapp.generated.resources.ic_date_range
 import fitbe.composeapp.generated.resources.local_date_format
 import fitbe.composeapp.generated.resources.local_time_format
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -57,10 +57,11 @@ import org.darthacheron.fitbe.settings.Settings
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 fun EditBodyWeightDialog(
     viewModel: EditBodyWeightDialogViewModel = koinViewModel(),

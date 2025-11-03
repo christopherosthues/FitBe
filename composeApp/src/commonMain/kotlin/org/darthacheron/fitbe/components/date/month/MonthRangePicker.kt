@@ -64,17 +64,18 @@ import fitbe.composeapp.generated.resources.month_range_picker_november
 import fitbe.composeapp.generated.resources.month_range_picker_october
 import fitbe.composeapp.generated.resources.month_range_picker_september
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 import org.darthacheron.fitbe.components.date.month.MonthRangePickerDefaults.MonthNames
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 data class YearMonth(
     val year: Int,
     val month: Int
@@ -211,6 +212,7 @@ fun rememberMonthRangePickerState(
         )
     }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun MonthRangePickerContent(
     selectedStartYearMonth: YearMonth?,
@@ -227,7 +229,7 @@ private fun MonthRangePickerContent(
     // Calculate the index of the current month
     val currentYearMonth =
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).let {
-            YearMonth(it.year, it.monthNumber)
+            kotlinx.datetime.YearMonth(it.year, it.month)
         }
     val currentYearMonthIndex = sortedYears.indexOf(currentYearMonth.year)
 

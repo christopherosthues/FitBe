@@ -17,11 +17,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 import org.darthacheron.fitbe.components.date.DateUnit
 import org.darthacheron.fitbe.health.components.OverviewViewModel
 import org.darthacheron.fitbe.navigation.Screen
@@ -36,9 +37,10 @@ import org.darthacheron.fitbe.utils.isoWeekAndYear
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class, ExperimentalTime::class)
 class BeverageOverviewViewModel(
     private val beverageRepository: BeverageRepository,
     settingsRepository: SettingsRepository,
@@ -194,7 +196,7 @@ class BeverageOverviewViewModel(
                 val localDate = group.first().date.firstDayOfMonth()
                 val firstDay = localDate.firstDayOfMonth()
                 val nextMonth =
-                    if (firstDay.monthNumber == 12) {
+                    if (firstDay.month == Month.DECEMBER) {
                         LocalDate(firstDay.year + 1, 1, 1)
                     } else {
                         LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)

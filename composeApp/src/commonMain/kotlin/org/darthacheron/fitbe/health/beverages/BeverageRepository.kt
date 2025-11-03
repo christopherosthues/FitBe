@@ -2,10 +2,10 @@ package org.darthacheron.fitbe.health.beverages
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlin.time.Instant
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi

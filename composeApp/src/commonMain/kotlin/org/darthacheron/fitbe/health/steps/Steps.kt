@@ -1,6 +1,6 @@
 package org.darthacheron.fitbe.health.steps
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

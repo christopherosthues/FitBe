@@ -65,6 +65,7 @@ import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
+import kotlin.time.ExperimentalTime
 
 @Suppress("MagicNumber")
 private val colorPalette =
@@ -299,6 +300,7 @@ private fun XYGraphScope<LocalTime, Double>.Annotations(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 private fun toVerticalStackedBodyWeightData(
     bodyWeights: List<BodyWeight>
 ): List<VerticalBarPlotStackedPointEntry<LocalTime, Double>> {

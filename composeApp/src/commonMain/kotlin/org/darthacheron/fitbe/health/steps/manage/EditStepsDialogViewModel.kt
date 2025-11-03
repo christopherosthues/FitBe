@@ -18,10 +18,11 @@ import org.darthacheron.fitbe.components.validators.StepsValidator
 import org.darthacheron.fitbe.health.components.DialogViewModel
 import org.darthacheron.fitbe.health.steps.StepsRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class EditStepsDialogViewModel(
     private val positiveNumberValidator: PositiveNumberValidator,
     private val stepsValidator: StepsValidator,

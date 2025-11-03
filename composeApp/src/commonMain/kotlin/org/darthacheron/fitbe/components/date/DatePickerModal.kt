@@ -10,14 +10,15 @@ import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.date_range_picker_cancel
 import fitbe.composeapp.generated.resources.date_range_picker_ok
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.components.date.PastOrPresentSelectableDates
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,

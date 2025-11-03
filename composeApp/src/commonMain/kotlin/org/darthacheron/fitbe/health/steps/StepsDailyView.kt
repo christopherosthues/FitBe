@@ -25,8 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_delete
-import fitbe.composeapp.generated.resources.beverages_daily_view_content_description_edit
 import fitbe.composeapp.generated.resources.ic_delete
 import fitbe.composeapp.generated.resources.ic_edit
 import fitbe.composeapp.generated.resources.local_time_format
@@ -42,9 +40,11 @@ import org.darthacheron.fitbe.health.steps.manage.EditStepsDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun StepsDailyView(
     stepsDailyViewModel: StepsDailyViewModel = koinViewModel()
@@ -72,7 +72,7 @@ fun StepsDailyView(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun StepsDetailView(
     state: StepsDailyUiState,
@@ -137,7 +137,7 @@ private fun StepsDetailView(
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
 private fun StepsListItem(
     steps: Steps,

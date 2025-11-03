@@ -37,7 +37,7 @@ import fitbe.composeapp.generated.resources.steps_add_dialog_save
 import fitbe.composeapp.generated.resources.steps_add_dialog_steps
 import fitbe.composeapp.generated.resources.steps_add_dialog_time
 import fitbe.composeapp.generated.resources.steps_add_dialog_title
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -49,7 +49,9 @@ import org.darthacheron.fitbe.health.components.format
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun AddStepsDialog(
     viewModel: AddStepsDialogViewModel = koinViewModel(),

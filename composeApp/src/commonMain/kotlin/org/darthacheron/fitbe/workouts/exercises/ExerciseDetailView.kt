@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -27,7 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -405,7 +405,7 @@ private fun ExerciseTypeSelectionView(
                         )
                     }
                 },
-                modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable).fillMaxWidth(),
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable).fillMaxWidth(),
                 enabled = uiState.isEditing,
                 isError = uiState.error.hasExerciseTypeError
             )
@@ -487,7 +487,7 @@ private fun TargetMuscleGroupListView(
                 ) {
                     TextButton(
                         onClick = { muscleGroupDropdownExpanded = true },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable)
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable)
                     ) {
                         Icon(
                             painterResource(Res.drawable.ic_add),
@@ -582,7 +582,7 @@ private fun RecommendedForListView(
                 ) {
                     TextButton(
                         onClick = { recommendedForDropdownExpanded = true },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable)
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable)
                     ) {
                         Icon(
                             painterResource(Res.drawable.ic_add),
@@ -679,7 +679,7 @@ private fun EquipmentListView(
                 ) {
                     TextButton(
                         onClick = { equipmentDropdownExpanded = true },
-                        modifier = Modifier.menuAnchor(MenuAnchorType.SecondaryEditable)
+                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.SecondaryEditable)
                     ) {
                         Icon(
                             painter = painterResource(Res.drawable.ic_add),
