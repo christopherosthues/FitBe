@@ -42,10 +42,10 @@ class BeverageDailyViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_daily_view_beverages
 
-    override val backNavigationIconVisible: Boolean?
+    override val backNavigationIconVisible: Boolean
         get() = true
 
-    override val bottomBarSelected: Screen?
+    override val bottomBarSelected: Screen
         get() = Screen.Health
 
     override val addButtonContentDescription: StringResource

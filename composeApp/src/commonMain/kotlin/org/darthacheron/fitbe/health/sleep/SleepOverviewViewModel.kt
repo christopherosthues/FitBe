@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.toLocalDateTime
@@ -54,10 +55,10 @@ class SleepOverviewViewModel(
     override val title: StringResource
         get() = Res.string.top_bar_title_overview_sleeps
 
-    override val backNavigationIconVisible: Boolean?
+    override val backNavigationIconVisible: Boolean
         get() = true
 
-    override val bottomBarSelected: Screen?
+    override val bottomBarSelected: Screen
         get() = Screen.Health
 
     override val addButtonContentDescription: StringResource
@@ -201,7 +202,7 @@ class SleepOverviewViewModel(
                 val localDate = group.first().date
                 val firstDay = localDate.firstDayOfMonth()
                 val nextMonth =
-                    if (firstDay.monthNumber == 12) {
+                    if (firstDay.month == Month.DECEMBER) {
                         LocalDate(firstDay.year + 1, 1, 1)
                     } else {
                         LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
