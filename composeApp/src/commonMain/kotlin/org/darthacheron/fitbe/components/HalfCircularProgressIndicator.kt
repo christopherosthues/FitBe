@@ -1,6 +1,7 @@
 package org.darthacheron.fitbe.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -17,16 +18,17 @@ fun HalfCircleProgressIndicator(
     modifier: Modifier = Modifier,
     color: Color = Color.Blue,
     backgroundColor: Color = Color.LightGray,
-    strokeWidth: Dp = 12.dp
+    size: Dp = 150.dp,
+    strokeWidth: Dp = 8.dp
 ) {
-    Canvas(modifier = modifier) {
+    Canvas(modifier = modifier.size(size)) {
         val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
-        val arcRadius = size.minDimension / 2
+        val arcRadius = size.toPx() / 2
 
         val topLeft =
             Offset(
-                (size.width - arcRadius * 2) / 2,
-                (size.height - arcRadius) / 2
+                (size.toPx() - arcRadius * 2) / 2,
+                (size.toPx() - arcRadius) / 2
             )
 
         // Draw background arc (semi-circle)

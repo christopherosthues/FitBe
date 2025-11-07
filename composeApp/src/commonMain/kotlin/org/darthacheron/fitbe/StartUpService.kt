@@ -30,7 +30,7 @@ class StartUpService(
                         settings.copy(selectedProfileId = defaultProfile.id)
                     )
                 }
-                seedDatabase(database)
+//                seedDatabase(database)
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }

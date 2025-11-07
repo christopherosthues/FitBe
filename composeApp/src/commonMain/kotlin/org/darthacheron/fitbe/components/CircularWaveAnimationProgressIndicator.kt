@@ -96,7 +96,7 @@ fun CircularWaveAnimationProgressIndicator(
                             x += step
                         }
 
-                        lineTo(innerDiameter + stroke, totalSize)
+                        lineTo(innerDiameter + 2 * stroke, totalSize)
                         close()
                     }
 
@@ -112,8 +112,9 @@ fun CircularWaveAnimationProgressIndicator(
             modifier = Modifier.matchParentSize(),
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = strokeWidth,
-            trackColor = ProgressIndicatorDefaults.circularIndeterminateTrackColor,
-            strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap
+            trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+            strokeCap = ProgressIndicatorDefaults.CircularDeterminateStrokeCap,
+            gapSize = 0.dp
         )
 
         Column(
@@ -122,8 +123,8 @@ fun CircularWaveAnimationProgressIndicator(
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.surfaceTint,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier =
@@ -135,11 +136,11 @@ fun CircularWaveAnimationProgressIndicator(
                             }
                         }
             )
-            if (label != null) {
+            label?.let {
                 Text(
-                    text = label,
+                    text = it,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.surfaceTint,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier =
