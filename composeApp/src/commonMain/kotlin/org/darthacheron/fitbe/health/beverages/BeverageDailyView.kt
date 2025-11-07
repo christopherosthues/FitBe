@@ -134,7 +134,7 @@ private fun BeverageDailyView(
                             )
                     }
                     CircularWaveAnimationProgressIndicator(
-                        progress = { state.progress.toFloat() },
+                        progress = state.progress.toFloat(),
                         text = progressText,
                         label = totalAmountText,
                         contentDescription = contentDescription

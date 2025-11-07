@@ -3,6 +3,7 @@ package org.darthacheron.fitbe.components
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -36,7 +37,7 @@ import kotlin.math.sin
 
 @Composable
 fun CircularWaveAnimationProgressIndicator(
-    progress: () -> Float,
+    progress: Float,
     modifier: Modifier = Modifier,
     size: Dp = 150.dp,
     strokeWidth: Dp = 8.dp,
@@ -54,6 +55,12 @@ fun CircularWaveAnimationProgressIndicator(
                 repeatMode = RepeatMode.Restart
             ),
         label = "wave_phase"
+    )
+
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(durationMillis = 1000),
+        label = "progress_animation"
     )
 
     Box(
@@ -75,7 +82,7 @@ fun CircularWaveAnimationProgressIndicator(
                 }
 
             clipPath(clipPath) {
-                val waveTop = totalSize - stroke - (innerDiameter * progress())
+                val waveTop = totalSize - stroke - (innerDiameter * progress)
                 val amplitude = 8f
                 val wavelength = innerDiameter / 1.5f
                 val step = 5f
@@ -86,7 +93,7 @@ fun CircularWaveAnimationProgressIndicator(
                         lineTo(stroke, waveTop)
 
                         var x = stroke
-                        while (x <= innerDiameter + stroke) {
+                        while (x <= innerDiameter + stroke * 2) {
                             val y =
                                 waveTop + amplitude *
                                     sin(
@@ -108,7 +115,7 @@ fun CircularWaveAnimationProgressIndicator(
         }
 
         CircularProgressIndicator(
-            progress = progress,
+            progress = { animatedProgress },
             modifier = Modifier.matchParentSize(),
             color = MaterialTheme.colorScheme.primary,
             strokeWidth = strokeWidth,
