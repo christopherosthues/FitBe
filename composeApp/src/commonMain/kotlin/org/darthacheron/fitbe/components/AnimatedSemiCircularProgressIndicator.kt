@@ -73,7 +73,7 @@ fun AnimatedSemiCircularProgressIndicator(
         Box(
             modifier = Modifier
 //                .size(size * 0.8f) // Make the gradient background slightly smaller than the arc
-                .size(size) // Make the gradient background slightly smaller than the arc
+                .size(size)
                 .clip(CircleShape)
                 .blur(20.dp)
                 .drawWithCache {
@@ -96,7 +96,6 @@ fun AnimatedSemiCircularProgressIndicator(
         Canvas(modifier = Modifier.fillMaxSize()) {
             val stroke = Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round)
             val diameter = this.size.minDimension - strokeWidth.toPx()
-            val arcRadius = diameter / 2
 
             val topLeft = Offset(
                 x = (this.size.width - diameter) / 2,
@@ -104,10 +103,12 @@ fun AnimatedSemiCircularProgressIndicator(
             )
 
             // Background Arc
+            val startAngle = -230f
+            val sweepAngle = 280f
             drawArc(
                 color = backgroundColor,
-                startAngle = -230f,
-                sweepAngle = 280f,
+                startAngle = startAngle,
+                sweepAngle = sweepAngle,
                 useCenter = false,
                 topLeft = topLeft,
                 size = Size(diameter, diameter),
@@ -117,7 +118,7 @@ fun AnimatedSemiCircularProgressIndicator(
             // Progress Arc
             drawArc(
                 color = color,
-                startAngle = -230f,
+                startAngle = startAngle,
                 sweepAngle = 280 * animatedProgress.coerceIn(0f, 1f),
                 useCenter = false,
                 topLeft = topLeft,

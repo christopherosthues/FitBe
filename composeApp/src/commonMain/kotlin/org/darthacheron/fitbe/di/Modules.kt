@@ -37,6 +37,7 @@ import org.darthacheron.fitbe.health.weight.BodyWeightRepository
 import org.darthacheron.fitbe.health.weight.manage.AddBodyWeightDialogViewModel
 import org.darthacheron.fitbe.health.weight.manage.EditBodyWeightDialogViewModel
 import org.darthacheron.fitbe.home.HomeViewModel
+import org.darthacheron.fitbe.home.summary.BeveragesSummaryViewModel
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
 import org.darthacheron.fitbe.settings.SettingsViewModel
@@ -158,4 +159,5 @@ val sharedModule =
         viewModelOf(::SleepDailyViewModel)
         viewModelOf(::StepsDailyViewModel)
         viewModelOf(::BodyWeightDailyViewModel)
+        viewModelOf(::BeveragesSummaryViewModel)
     }

@@ -108,36 +108,11 @@ private fun BeverageDailyView(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    val progressInPercent = (state.progress.toFloat() * 100).toInt()
-                    val progressText: String
-                    var totalAmountText: String? = null
-                    var contentDescription: String? = null
-                    if (state.target != null) {
-                        progressText =
-                            stringResource(Res.string.beverages_daily_view_progress_percent, progressInPercent)
-                        totalAmountText =
-                            stringResource(
-                                Res.string.beverages_daily_view_progress_total_target,
-                                state.total.roundToDecimals(2),
-                                state.target
-                            )
-                        contentDescription =
-                            stringResource(
-                                Res.string.beverages_daily_view_content_description_progress_percent_target,
-                                progressInPercent
-                            )
-                    } else {
-                        progressText =
-                            stringResource(
-                                Res.string.beverages_daily_view_progress_total,
-                                state.total.toFloat()
-                            )
-                    }
                     CircularWaveAnimationProgressIndicator(
                         progress = state.progress.toFloat(),
-                        text = progressText,
-                        label = totalAmountText,
-                        contentDescription = contentDescription
+                        text = state.progressText(),
+                        label = state.totalAmountText(),
+                        contentDescription = state.contentDescription()
                     )
                 }
             }

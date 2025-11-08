@@ -33,8 +33,6 @@ class HomeViewModel(
     navHostController: NavHostController,
     private val settingsRepository: SettingsRepository,
     private val profileRepository: ProfileRepository,
-    private val beverageRepository: BeverageRepository,
-
     topBarManager: TopBarManager
 ) : BottomNavigationBarViewModel(topNavHostController, navHostController, topBarManager) {
     override val title: StringResource
@@ -43,28 +41,5 @@ class HomeViewModel(
     override val bottomBarSelected: Screen
         get() = Screen.Home
 
-    val targetBeverage: StateFlow<Int?> =
-        profileRepository.getTargetValueFlow { it?.targetBeverageInMilliliter?.toInt() }
-            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    val beveragesFlow =
-            settingsRepository.getSettingsFlow().flatMapLatest { settings ->
-                settings.selectedProfileId?.let {
-                    beverageRepository.getBeverages(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
-                } ?: flowOf(emptyList())
-            }.onStart {
-//                isLoading.value = true
-//                errorMessage.value = null
-            }.catch {
-//                isLoading.value = false
-//                errorMessage.value = Res.string.beverages_daily_view_error_loading
-                emit(emptyList())
-            }.map { beverages ->
-//                isLoading.value = false
-                beverages
-            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val totalBeverage: StateFlow<Double> = beveragesFlow.map { beverages ->
-        beverages.sumOf { it.unit.toMilliliter(it.amount) }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 }

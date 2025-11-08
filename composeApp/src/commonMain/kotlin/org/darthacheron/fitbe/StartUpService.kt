@@ -29,8 +29,9 @@ class StartUpService(
                     settingsRepository.saveSettings(
                         settings.copy(selectedProfileId = defaultProfile.id)
                     )
+                    // TODO: remove me in production
+                    seedDatabase(database)
                 }
-//                seedDatabase(database)
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
