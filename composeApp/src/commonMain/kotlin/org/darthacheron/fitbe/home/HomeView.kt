@@ -17,7 +17,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -25,11 +24,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.home.summary.BeveragesSummary
 import org.darthacheron.fitbe.home.summary.BodyWeightSummary
+import org.darthacheron.fitbe.home.summary.SleepSummary
 import org.darthacheron.fitbe.home.summary.StepsSummary
 
 @Composable
@@ -52,13 +51,10 @@ fun HomeView(homeViewModel: HomeViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) { page ->
                 when (page) {
-                    0 -> BeveragesSummary()
-                    1 -> StepsSummary()
-                    2 -> BodyWeightSummary()
-                    3 -> Text(text = "And another $page")
-//                    1 -> SleepSummary()
-//                    2 -> StepsSummary()
-//                    3 -> BodyWeightSummary()
+                    0 -> BodyWeightSummary()
+                    1 -> SleepSummary()
+                    2 -> BeveragesSummary()
+                    3 -> StepsSummary()
                 }
             }
 
