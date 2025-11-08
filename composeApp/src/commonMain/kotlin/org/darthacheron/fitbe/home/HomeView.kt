@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.home.summary.BeveragesSummary
+import org.darthacheron.fitbe.home.summary.StepsSummary
 
 @Composable
 fun HomeView(homeViewModel: HomeViewModel) {
@@ -51,8 +52,8 @@ fun HomeView(homeViewModel: HomeViewModel) {
             ) { page ->
                 when (page) {
                     0 -> BeveragesSummary()
-                    1 -> Text(text = "$page")
-                    2 -> Text(text = "Another $page")
+                    1 -> Text(text = "Another $page")
+                    2 -> StepsSummary()
                     3 -> Text(text = "And another $page")
 //                    1 -> SleepSummary()
 //                    2 -> StepsSummary()
