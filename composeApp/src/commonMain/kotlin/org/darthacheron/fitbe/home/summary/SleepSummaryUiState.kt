@@ -2,9 +2,10 @@ package org.darthacheron.fitbe.home.summary
 
 import androidx.compose.runtime.Composable
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.sleep_summary_view_progress_percent
-import fitbe.composeapp.generated.resources.sleep_summary_view_progress_total
-import fitbe.composeapp.generated.resources.sleep_summary_view_progress_total_target
+import fitbe.composeapp.generated.resources.sleep_summary_content_description_progress_percent_target
+import fitbe.composeapp.generated.resources.sleep_summary_progress_percent
+import fitbe.composeapp.generated.resources.sleep_summary_progress_total
+import fitbe.composeapp.generated.resources.sleep_summary_progress_total_target
 import org.darthacheron.fitbe.ui.UiState
 import org.jetbrains.compose.resources.stringResource
 
@@ -23,12 +24,12 @@ class SleepSummaryUiState(
     fun progressText(): String {
         return if (target != null) {
             stringResource(
-                Res.string.sleep_summary_view_progress_percent,
+                Res.string.sleep_summary_progress_percent,
                 progressInPercent
             )
         } else {
             stringResource(
-                Res.string.sleep_summary_view_progress_total,
+                Res.string.sleep_summary_progress_total,
                 sleepHours,
                 sleepMinutes
             )
@@ -39,10 +40,11 @@ class SleepSummaryUiState(
     fun totalAmountText(): String? {
         return if (target != null) {
             stringResource(
-                Res.string.sleep_summary_view_progress_total_target,
+                Res.string.sleep_summary_progress_total_target,
                 sleepHours,
                 sleepMinutes,
-                target
+                target / 60,
+                target % 60
             )
         } else {
             null
@@ -53,7 +55,7 @@ class SleepSummaryUiState(
     fun contentDescription(): String? {
         return if (target != null) {
             stringResource(
-                Res.string.sleep_summary_view_progress_percent,
+                Res.string.sleep_summary_content_description_progress_percent_target,
                 progressInPercent
             )
         } else {

@@ -2,6 +2,7 @@ package org.darthacheron.fitbe.home.summary
 
 import AnimatedSemiCircularProgressIndicator
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ fun SleepSummary(sleepSummaryViewModel: SleepSummaryViewModel = koinInject()) {
     ) {
         AnimatedSemiCircularProgressIndicator(
             progress = uiState.progress,
+            modifier = Modifier.fillMaxSize(),
             centerText = uiState.progressText(),
             bottomText = uiState.totalAmountText(),
             contentDescription = uiState.contentDescription()

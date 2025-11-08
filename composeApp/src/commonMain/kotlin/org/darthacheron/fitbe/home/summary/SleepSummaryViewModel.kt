@@ -28,7 +28,7 @@ class SleepSummaryViewModel(
     private val sleepRepository: SleepRepository,
 ) : ViewModel() {
     private val targetSleep: StateFlow<Int?> =
-        profileRepository.getTargetValueFlow { it?.targetSleepInMinutes }
+        profileRepository.getTargetValueFlow { it?.targetSleepDuration?.toInt() }
             .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val sleepsFlow =
@@ -49,7 +49,7 @@ class SleepSummaryViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val totalSleep: StateFlow<Int> = sleepsFlow.map { sleeps ->
-        sleeps.sumOf { it.minutes }
+        sleeps.sumOf { it.totalMinutes }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     val uiState: StateFlow<SleepSummaryUiState> =

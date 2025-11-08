@@ -690,6 +690,12 @@
     <string name="beverages_add_dialog_error_invalid_total_amount">Die tägliche Flüssigkeitseinnahme von 5.000 ml sollte nicht überschritten werden.</string>
     <string name="beverages_add_dialog_error_name_empty">Der Name des Getränks darf nicht leer sein.</string>
 
+    <!-- Sleep summary -->
+    <string name="sleep_summary_progress_percent">%1$d%</string>
+    <string name="sleep_summary_progress_total">%1$dh %2$dm</string>
+    <string name="sleep_summary_progress_total_target">%1$dh %2$dm von %3$dh %4$dm</string>
+    <string name="sleep_summary_content_description_progress_percent_target">%1$d Prozent des Tagesziels wurden erreicht</string>
+
     <!-- Sleep overview -->
     <string name="sleep_overview_content_description_add_sleep">Schlaf eintragen</string>
     <string name="sleep_overview_error_loading">Fehler beim Laden der Schlafdaten.</string>

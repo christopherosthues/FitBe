@@ -692,8 +692,8 @@
 
     <!-- Sleep summary -->
     <string name="sleep_summary_progress_percent">%1$d%</string>
-    <string name="sleep_summary_progress_total">%1$d</string>
-    <string name="sleep_summary_progress_total_target">%1$d of %2$d</string>
+    <string name="sleep_summary_progress_total">%1$dh %2$dm</string>
+    <string name="sleep_summary_progress_total_target">%1$dh %2$dm of %3$dh %4$dm</string>
     <string name="sleep_summary_content_description_progress_percent_target">%1$d percent of the daily target has been met</string>
 
     <!-- Sleep overview -->
