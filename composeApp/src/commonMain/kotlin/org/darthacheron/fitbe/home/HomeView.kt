@@ -1,6 +1,8 @@
 package org.darthacheron.fitbe.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,13 +16,18 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.home.summary.BeveragesSummary
 
 @Composable
@@ -29,6 +36,8 @@ fun HomeView(homeViewModel: HomeViewModel) {
         homeViewModel.updateTopBarConfig()
     }
     val pagerState = rememberPagerState(pageCount = { 4 })
+    val coroutineScope = rememberCoroutineScope()
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -42,9 +51,9 @@ fun HomeView(homeViewModel: HomeViewModel) {
             ) { page ->
                 when (page) {
                     0 -> BeveragesSummary()
-                    1 -> BeveragesSummary()
-                    2 -> BeveragesSummary()
-                    3 -> BeveragesSummary()
+                    1 -> Text(text = "$page")
+                    2 -> Text(text = "Another $page")
+                    3 -> Text(text = "And another $page")
 //                    1 -> SleepSummary()
 //                    2 -> StepsSummary()
 //                    3 -> BodyWeightSummary()
@@ -53,13 +62,19 @@ fun HomeView(homeViewModel: HomeViewModel) {
 
             PagerIndicator(
                 pageCount = pagerState.pageCount,
-                currentPageIndex = pagerState.currentPage)
+                currentPageIndex = pagerState.currentPage,
+                onIndicatorClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(page = it)
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
-fun PagerIndicator(pageCount: Int, currentPageIndex: Int, modifier: Modifier = Modifier) {
+fun PagerIndicator(pageCount: Int, currentPageIndex: Int, modifier: Modifier = Modifier, onIndicatorClick : (Int) -> Unit = {}) {
     Box(modifier = Modifier.wrapContentHeight()) {
         Row(
             modifier = Modifier
@@ -70,13 +85,19 @@ fun PagerIndicator(pageCount: Int, currentPageIndex: Int, modifier: Modifier = M
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(pageCount) { iteration ->
-                val color = if (currentPageIndex == iteration) Color.DarkGray else Color.LightGray
+                val color = if (currentPageIndex == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
                 Box(
                     modifier = modifier
                         .padding(2.dp)
                         .clip(CircleShape)
                         .background(color)
                         .size(16.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onIndicatorClick(iteration)
+                        }
                 )
             }
         }
