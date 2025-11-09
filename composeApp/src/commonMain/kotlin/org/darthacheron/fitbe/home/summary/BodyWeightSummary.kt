@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.home.summary
 
-import AnimatedSemiCircularProgressIndicator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.darthacheron.fitbe.components.SegmentedCircularProgressIndicator
+import org.darthacheron.fitbe.ui.BodyWeightColors
 import org.koin.compose.koinInject
 
 @Composable
@@ -34,8 +35,11 @@ fun BodyWeightSummary(bodyWeightSummaryViewModel: BodyWeightSummaryViewModel = k
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            AnimatedSemiCircularProgressIndicator(
-                progress = if (uiState.totalWeight == null) 0f else 1f,
+            val values = uiState.cumulatedWeights()
+
+            SegmentedCircularProgressIndicator(
+                values = values,
+                colors = BodyWeightColors,
                 modifier = Modifier.fillMaxSize(),
                 centerText = uiState.totalWeightText(),
                 bottomText = uiState.targetWeightText()

@@ -59,20 +59,11 @@ import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.health.components.dateLabel
 import org.darthacheron.fitbe.health.components.representatives
 import org.darthacheron.fitbe.settings.WeightUnit
+import org.darthacheron.fitbe.ui.BodyWeightColors
 import org.darthacheron.fitbe.utils.StackedAreaPlotDoubleDataAdapter
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
-
-@Suppress("MagicNumber")
-private val colorPalette =
-    listOf(
-        Color(0xFFE3DAC9),
-        Color(0xFFCC6666),
-        Color(0xFFE6BC00),
-        Color(0xFF0F5E9C),
-        Color(0xFF8068A0)
-    )
 
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
@@ -155,7 +146,7 @@ fun PlotBodyWeights(
                 StackedAreaPlot(
                     data = StackedAreaPlotDoubleDataAdapter(dates, yData),
                     styles =
-                        colorPalette.map {
+                        BodyWeightColors.map {
                             StackedAreaStyle(
                                 LineStyle(brush = SolidColor(Color.White), strokeWidth = 8.dp),
                                 AreaStyle(brush = SolidColor(it))
@@ -170,7 +161,7 @@ fun PlotBodyWeights(
                     barWidth = 0.8f,
                     bar = { xIndex, barIndex ->
                         DefaultVerticalBar(
-                            brush = SolidColor(colorPalette[barIndex]),
+                            brush = SolidColor(BodyWeightColors[barIndex]),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             if (!thumbnail) {

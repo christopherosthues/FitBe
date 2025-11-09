@@ -8,6 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import org.darthacheron.fitbe.settings.ThemeMode
 
+val boneColor = Color(0xFFE3DAC9)
+val muscleColor = Color(0xFFCC6666)
+val fatColor = Color(0xFFE6BC00)
+val waterColor = Color(0xFF0F5E9C)
+val bodyWeightColor = Color(0xFF8068A0)
+
+@Suppress("MagicNumber")
+val BodyWeightColors =
+    listOf(
+        boneColor,
+        muscleColor,
+        fatColor,
+        waterColor,
+        bodyWeightColor
+    )
+
 private val LightColorScheme =
     lightColorScheme(
         primary = Color(0xFFFFC107), // A vibrant, warm yellow (Amber 500)

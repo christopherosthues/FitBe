@@ -17,6 +17,24 @@ class BodyWeightSummaryUiState(
     val bodyWaterPercentage: Double? = null,
     val weightUnit: WeightUnit = WeightUnit.KG,
 ) : UiState<BodyWeightSummaryError>(isLoading, error) {
+    fun cumulatedWeights(): List<Float> {
+        if (totalWeight != null) {
+            val boneMassPercentage = (boneMass ?: 0.0) / totalWeight
+            val muscleMassPercentage = (muscleMass ?: 0.0) / totalWeight
+            val bodyFatPercentage = (bodyFatPercentage ?: 0.0) / 100.0
+            val bodyWaterPercentage = (bodyWaterPercentage ?: 0.0) / 100.0
+            val totalWeightPercentage = 1 - boneMassPercentage - muscleMassPercentage - bodyFatPercentage - bodyWaterPercentage
+
+            return listOf(
+                boneMassPercentage.toFloat(),
+                muscleMassPercentage.toFloat(),
+                bodyFatPercentage.toFloat(),
+                bodyWaterPercentage.toFloat(),
+                totalWeightPercentage.toFloat()
+            )
+        }
+        return listOf()
+    }
 
     @Composable
     fun totalWeightText(): String {
