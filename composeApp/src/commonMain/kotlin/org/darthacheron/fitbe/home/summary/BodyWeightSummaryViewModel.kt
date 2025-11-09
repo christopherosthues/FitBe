@@ -64,11 +64,15 @@ class BodyWeightSummaryViewModel(
             settingsFlow
         ) { targetWeight, bodyWeights, settings ->
 
-            val lastWeight = bodyWeights.maxByOrNull { it.date }?.weightInKg
+            val lastWeight = bodyWeights.maxByOrNull { it.date }
 
             BodyWeightSummaryUiState(
-                lastWeight = weightUnitConverter.convert(lastWeight, WeightUnit.KG, settings.weightUnit),
+                totalWeight = weightUnitConverter.convert(lastWeight?.weightInKg, WeightUnit.KG, settings.weightUnit),
                 targetWeight = weightUnitConverter.convert(targetWeight, WeightUnit.KG, settings.weightUnit),
+                muscleMass = weightUnitConverter.convert(lastWeight?.muscleMassInKg, WeightUnit.KG, settings.weightUnit),
+                boneMass = weightUnitConverter.convert(lastWeight?.boneMassInKg, WeightUnit.KG, settings.weightUnit),
+                bodyFatPercentage = lastWeight?.bodyFatPercentage,
+                bodyWaterPercentage = lastWeight?.bodyWaterInPercentage,
                 weightUnit = settings.weightUnit,
                 isLoading = false
             )
