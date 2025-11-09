@@ -1,6 +1,8 @@
 package org.darthacheron.fitbe.home.summary
 
 import androidx.compose.runtime.Composable
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.body_weight_summary_target_weight
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.utils.roundToDecimals
@@ -50,11 +52,11 @@ class BodyWeightSummaryUiState(
     @Composable
     fun targetWeightText(): String? {
         return targetWeight?.let {
-//            stringResource(
-//                Res.string.body_weight_summary_target_weight,
-                it.roundToDecimals(1).toString() + " " +
+            stringResource(
+                Res.string.body_weight_summary_target_weight,
+                it.roundToDecimals(1),
                 stringResource(weightUnit.toStringResource())
-//            )
+            )
         }
     }
 

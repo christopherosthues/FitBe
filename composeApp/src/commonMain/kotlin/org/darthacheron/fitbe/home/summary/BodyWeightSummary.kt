@@ -16,7 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.darthacheron.fitbe.components.SegmentedCircularProgressIndicator
+import org.darthacheron.fitbe.components.AnimatedSegmentedCircularProgressIndicator
 import org.darthacheron.fitbe.ui.BodyWeightColors
 import org.koin.compose.koinInject
 
@@ -37,7 +37,7 @@ fun BodyWeightSummary(bodyWeightSummaryViewModel: BodyWeightSummaryViewModel = k
         ) {
             val values = uiState.cumulatedWeights()
 
-            SegmentedCircularProgressIndicator(
+            AnimatedSegmentedCircularProgressIndicator(
                 values = values,
                 colors = BodyWeightColors,
                 modifier = Modifier.fillMaxSize(),

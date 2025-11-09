@@ -5,6 +5,7 @@ package org.darthacheron.fitbe.utils
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.daysUntil
@@ -16,6 +17,44 @@ import kotlin.time.Instant
 import org.darthacheron.fitbe.components.date.DateRange
 import org.darthacheron.fitbe.components.date.DateUnit
 import kotlin.time.ExperimentalTime
+
+fun LocalDate.daysOfMonth(): Int {
+    val firstDay = this.firstDayOfMonth()
+    val nextMonth = firstDay.nextMonth()
+    return firstDay.daysUntil(nextMonth)
+}
+
+fun LocalDate.nextMonth(): LocalDate {
+    val year = if (this.month == Month.DECEMBER) {
+        this.year + 1
+    } else {
+        this.year
+    }
+    return LocalDate(year, this.month.nextMonthNumber(), 1)
+}
+
+fun Month.nextMonthNumber(): Int {
+    return when(this) {
+        Month.JANUARY -> 2
+        Month.FEBRUARY -> 3
+        Month.MARCH -> 4
+        Month.APRIL -> 5
+        Month.MAY -> 6
+        Month.JUNE -> 7
+        Month.JULY -> 8
+        Month.AUGUST -> 9
+        Month.SEPTEMBER -> 10
+        Month.OCTOBER -> 11
+        Month.NOVEMBER -> 12
+        Month.DECEMBER -> 1
+    }
+}
+
+fun LocalDate.daysOfYear(): Int {
+    val year = this.year
+    val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+    return if (isLeap) 366 else 365
+}
 
 @OptIn(ExperimentalTime::class)
 fun toDateSpan(

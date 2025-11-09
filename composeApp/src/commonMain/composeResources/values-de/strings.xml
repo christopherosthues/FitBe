@@ -772,6 +772,9 @@
     <string name="steps_add_dialog_error_invalid_steps">Geben Sie einen Wert zwischen 0 und 500.000 ein.</string>
     <string name="steps_add_dialog_error_invalid_total_steps">Die Gesamtanzahl an Schritten pro Tag muss zwischen 0 und 500.000 liegen.</string>
 
+    <!-- Body weight summary -->
+    <string name="body_weight_summary_target_weight">Ziel: %1$d %2$s</string>
+
     <!-- Body weight Overview -->
     <string name="body_weight_overview_content_description_add_body_weight">Körpergewicht eintragen</string>
     <string name="body_weight_overview_error_loading">Fehler beim Laden der Gewichtsdaten.</string>

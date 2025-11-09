@@ -30,10 +30,13 @@ import org.darthacheron.fitbe.profile.ProfileDefaults
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.ui.TopBarManager
+import org.darthacheron.fitbe.utils.daysOfMonth
+import org.darthacheron.fitbe.utils.daysOfYear
 import org.darthacheron.fitbe.utils.firstDayOfIsoWeek
 import org.darthacheron.fitbe.utils.firstDayOfMonth
 import org.darthacheron.fitbe.utils.firstDayOfYear
 import org.darthacheron.fitbe.utils.isoWeekAndYear
+import org.darthacheron.fitbe.utils.nextMonth
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.darthacheron.fitbe.utils.roundUpToNextTen
 import org.jetbrains.compose.resources.StringResource
@@ -194,14 +197,7 @@ class BeverageOverviewViewModel(
             representativeDateSelector = { group -> group.first().date.firstDayOfMonth() },
             daysInPeriodSelector = { group ->
                 val localDate = group.first().date.firstDayOfMonth()
-                val firstDay = localDate.firstDayOfMonth()
-                val nextMonth =
-                    if (firstDay.month == Month.DECEMBER) {
-                        LocalDate(firstDay.year + 1, 1, 1)
-                    } else {
-                        LocalDate(firstDay.year, firstDay.monthNumber + 1, 1)
-                    }
-                firstDay.daysUntil(nextMonth)
+                localDate.daysOfMonth()
             }
         )
     }
@@ -214,9 +210,7 @@ class BeverageOverviewViewModel(
             representativeDateSelector = { group -> group.first().date.firstDayOfYear() },
             daysInPeriodSelector = { group ->
                 val date = group.first().date.firstDayOfYear()
-                val year = date.year
-                val isLeap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
-                if (isLeap) 366 else 365
+                date.daysOfYear()
             }
         )
     }

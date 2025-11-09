@@ -1,6 +1,5 @@
 package org.darthacheron.fitbe.home.summary
 
-import AnimatedSemiCircularProgressIndicator
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.darthacheron.fitbe.components.CircularWaveAnimationProgressIndicator
+import org.darthacheron.fitbe.components.AnimatedSemiCircularProgressIndicator
 import org.koin.compose.koinInject
 
 @Composable
