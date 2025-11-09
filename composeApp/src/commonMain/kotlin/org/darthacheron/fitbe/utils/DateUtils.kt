@@ -102,16 +102,11 @@ fun LocalDate.firstDayOfIsoWeek(): LocalDate {
     return this.minus(DatePeriod(days = dayOfWeek - 1))
 }
 
-fun LocalDate.firstDayOfMonth(): LocalDate = LocalDate(this.year, this.monthNumber, 1)
+fun LocalDate.firstDayOfMonth(): LocalDate = LocalDate(this.year, this.month, 1)
 
 fun Instant.lastDayOfMonth(): Instant {
     val date = this.toLocalDateTime(TimeZone.UTC).date
-    val firstOfNextMonth =
-        if (date.monthNumber == 12) {
-            LocalDate(date.year + 1, 1, 1)
-        } else {
-            LocalDate(date.year, date.monthNumber + 1, 1)
-        }
+    val firstOfNextMonth = date.nextMonth()
     return firstOfNextMonth.minus(DatePeriod(days = 1)).atStartOfDayIn(TimeZone.UTC)
 }
 
