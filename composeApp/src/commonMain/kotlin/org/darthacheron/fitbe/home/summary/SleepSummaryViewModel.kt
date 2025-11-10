@@ -2,7 +2,10 @@ package org.darthacheron.fitbe.home.summary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.profile_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,6 +20,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
+import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -27,6 +31,9 @@ class SleepSummaryViewModel(
     private val profileRepository: ProfileRepository,
     private val sleepRepository: SleepRepository,
 ) : ViewModel() {
+    private val isLoading = MutableStateFlow(true)
+    private val errorMessage = MutableStateFlow<StringResource?>(null)
+
     private val targetSleep: StateFlow<Int?> =
         profileRepository.getTargetValueFlow { it?.targetSleepDuration?.toInt() }
             .stateIn(viewModelScope, SharingStarted.Lazily, null)
@@ -37,14 +44,14 @@ class SleepSummaryViewModel(
                 sleepRepository.getSleeps(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date, it)
             } ?: flowOf(emptyList())
         }.onStart {
-//                isLoading.value = true
-//                errorMessage.value = null
+            isLoading.value = true
+            errorMessage.value = null
         }.catch {
-//                isLoading.value = false
-//                errorMessage.value = Res.string.beverages_daily_view_error_loading
+            isLoading.value = false
+            errorMessage.value = Res.string.profile_error_loading
             emit(emptyList())
         }.map { sleeps ->
-//                isLoading.value = false
+            isLoading.value = false
             sleeps
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -56,10 +63,14 @@ class SleepSummaryViewModel(
         combine(
             targetSleep,
             totalSleep,
-        ) { targetSleep, totalSleep ->
+            isLoading,
+            errorMessage
+        ) { targetSleep, totalSleep, isLoading, errorMessage ->
             val sleepHours = totalSleep / 60
             val sleepMinutes = totalSleep % 60
             SleepSummaryUiState(
+                isLoading = isLoading,
+                error = SleepSummaryError(errorMessage),
                 target = targetSleep,
                 total = totalSleep,
                 progress = if (targetSleep != null && targetSleep > 0) {

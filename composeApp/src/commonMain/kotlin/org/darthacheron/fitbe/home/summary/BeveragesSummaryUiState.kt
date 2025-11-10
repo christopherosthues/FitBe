@@ -6,18 +6,17 @@ import fitbe.composeapp.generated.resources.beverages_daily_view_content_descrip
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_percent
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total
 import fitbe.composeapp.generated.resources.beverages_daily_view_progress_total_target
-import org.darthacheron.fitbe.health.beverages.BeverageDailyError
 import org.darthacheron.fitbe.ui.UiState
 import org.darthacheron.fitbe.utils.roundToDecimals
 import org.jetbrains.compose.resources.stringResource
 
 class BeveragesSummaryUiState(
     isLoading: Boolean = true,
-    error: BeverageDailyError = BeverageDailyError(),
+    error: BeveragesSummaryError = BeveragesSummaryError(),
     val progress: Float = 0f,
     val total: Double = 0.0,
     val target: Int? = null,
-) : UiState<BeverageDailyError>(isLoading, error) {
+) : UiState<BeveragesSummaryError>(isLoading, error) {
     val progressInPercent = (progress * 100).toInt()
 
     @Composable

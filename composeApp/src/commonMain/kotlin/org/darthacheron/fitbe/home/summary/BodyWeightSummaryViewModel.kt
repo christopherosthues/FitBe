@@ -2,7 +2,10 @@ package org.darthacheron.fitbe.home.summary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.profile_error_loading
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -19,6 +22,7 @@ import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.settings.SettingsRepository
 import org.darthacheron.fitbe.settings.WeightUnit
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
+import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -30,6 +34,8 @@ class BodyWeightSummaryViewModel(
     private val bodyWeightRepository: BodyWeightRepository,
     private val weightUnitConverter: WeightUnitConverter,
 ) : ViewModel() {
+    private val isLoading = MutableStateFlow(true)
+    private val errorMessage = MutableStateFlow<StringResource?>(null)
 
     private val settingsFlow = settingsRepository.getSettingsFlow()
 
@@ -45,14 +51,14 @@ class BodyWeightSummaryViewModel(
                 )
             } ?: flowOf(emptyList())
         }.onStart {
-//                isLoading.value = true
-//                errorMessage.value = null
+            isLoading.value = true
+            errorMessage.value = null
         }.catch {
-//                isLoading.value = false
-//                errorMessage.value = Res.string.beverages_daily_view_error_loading
+            isLoading.value = false
+            errorMessage.value = Res.string.profile_error_loading
             emit(emptyList())
         }.map { bodyWeights ->
-//                isLoading.value = false
+            isLoading.value = false
             bodyWeights
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -61,20 +67,23 @@ class BodyWeightSummaryViewModel(
         combine(
             targetWeight,
             bodyWeightFlow,
-            settingsFlow
-        ) { targetWeight, bodyWeights, settings ->
+            settingsFlow,
+            isLoading,
+            errorMessage
+        ) { targetWeight, bodyWeights, settings, isLoading, errorMessage ->
 
             val lastWeight = bodyWeights.maxByOrNull { it.date }
 
             BodyWeightSummaryUiState(
+                isLoading = isLoading,
+                error = BodyWeightSummaryError(errorMessage),
                 totalWeight = weightUnitConverter.convert(lastWeight?.weightInKg, WeightUnit.KG, settings.weightUnit),
                 targetWeight = weightUnitConverter.convert(targetWeight, WeightUnit.KG, settings.weightUnit),
                 muscleMass = weightUnitConverter.convert(lastWeight?.muscleMassInKg, WeightUnit.KG, settings.weightUnit),
                 boneMass = weightUnitConverter.convert(lastWeight?.boneMassInKg, WeightUnit.KG, settings.weightUnit),
                 bodyFatPercentage = lastWeight?.bodyFatPercentage,
                 bodyWaterPercentage = lastWeight?.bodyWaterInPercentage,
-                weightUnit = settings.weightUnit,
-                isLoading = false
+                weightUnit = settings.weightUnit
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), BodyWeightSummaryUiState())
 }
