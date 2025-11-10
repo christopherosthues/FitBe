@@ -139,14 +139,6 @@ class SettingsViewModel(
         _uiState.update { it.copy(error = SettingsError()) }
     }
 
-    fun showExportDialog() {
-        _uiState.update { it.copy(showExportDialog = true) }
-    }
-
-    fun hideExportDialog() {
-        _uiState.update { it.copy(showExportDialog = false) }
-    }
-
     fun onExportAllChanged(isChecked: Boolean) {
         _uiState.update {
             it.copy(

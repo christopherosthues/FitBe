@@ -11,7 +11,6 @@ class SettingsUiState(
     val persistedSettings: Settings = Settings(),
     error: SettingsError = SettingsError(),
 
-    val showExportDialog: Boolean = false,
     val exportAll: Boolean = false,
     val exportBeverages: Boolean = false,
     val exportSleep: Boolean = false,
@@ -31,7 +30,6 @@ class SettingsUiState(
         currentThemeMode: ThemeMode = this.currentThemeMode,
         persistedSettings: Settings = this.persistedSettings,
         error: SettingsError = this.error,
-        showExportDialog: Boolean = this.showExportDialog,
         exportAll: Boolean = this.exportAll,
         exportBeverages: Boolean = this.exportBeverages,
         exportSleep: Boolean = this.exportSleep,
@@ -49,7 +47,6 @@ class SettingsUiState(
         currentThemeMode = currentThemeMode,
         persistedSettings = persistedSettings,
         error = error,
-        showExportDialog = showExportDialog,
         exportAll = exportAll,
         exportBeverages = exportBeverages,
         exportSleep = exportSleep,

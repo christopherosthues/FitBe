@@ -1,11 +1,11 @@
 package org.darthacheron.fitbe.settings
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -30,8 +30,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -72,6 +74,7 @@ fun SettingsView(
         viewModel.updateTopBarConfig()
     }
     val uiState by viewModel.uiState.collectAsState()
+    var showExportDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -86,10 +89,10 @@ fun SettingsView(
         }
     }
 
-    if (uiState.showExportDialog) {
+    if (showExportDialog) {
         ExportDialog(
             uiState = uiState,
-            onDismissRequest = { viewModel.hideExportDialog() },
+            onDismissRequest = { showExportDialog = false },
             onExportClick = { viewModel.exportData() },
             onExportAllChanged = viewModel::onExportAllChanged,
             onExportBeveragesChanged = viewModel::onExportBeveragesChanged,
@@ -249,7 +252,7 @@ fun SettingsView(
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                Button(onClick = { viewModel.showExportDialog() }) {
+                Button(onClick = { showExportDialog = true }) {
                     Text(text = stringResource(Res.string.settings_export_button))
                 }
             }
@@ -264,9 +267,11 @@ private fun CheckboxWithLabel(checked: Boolean, onCheckedChange: (Boolean) -> Un
             Checkbox(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
             Text(text = label, modifier = Modifier.padding(start = 8.dp))
         }
-        if (subContent != null && checked) {
-            Row(modifier = Modifier.padding(start = 32.dp)) {
-                subContent()
+        AnimatedVisibility(visible = subContent != null && checked) {
+            if (subContent != null) {
+                Row(modifier = Modifier.padding(start = 32.dp)) {
+                    subContent()
+                }
             }
         }
     }
@@ -291,7 +296,7 @@ private fun ExportDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(text = stringResource(Res.string.settings_export_title)) },
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 CheckboxWithLabel(uiState.exportAll, onExportAllChanged, stringResource(Res.string.settings_export_all))
                 CheckboxWithLabel(uiState.exportBeverages, onExportBeveragesChanged, stringResource(Res.string.settings_export_beverages), enabled = !uiState.exportAll)
                 CheckboxWithLabel(uiState.exportSleep, onExportSleepChanged, stringResource(Res.string.settings_export_sleep), enabled = !uiState.exportAll)
@@ -306,7 +311,7 @@ private fun ExportDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = {
+            Button(onClick = {
                 onExportClick()
                 onDismissRequest()
             }) {
