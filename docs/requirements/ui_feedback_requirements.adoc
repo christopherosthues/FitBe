@@ -11,7 +11,7 @@ This section defines the application-wide requirements for communicating system 
 
 - *REQ-UI-03*: For non-critical errors (e.g., failure to save a setting), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed. The message must be user-friendly and clearly state the nature of the error.
 - *REQ-UI-04*: Input validation errors must be displayed inline, directly below the relevant input field, as soon as the input becomes invalid. The error message should guide the user on how to correct the input.
-- *REQ-UI-05*: For critical errors that prevent a feature from functioning correctly (e.g., failure to load the profiles database), a full-screen message shall be displayed, explaining the issue and providing guidance if possible.
+- *REQ-UI-05*: For critical errors that prevent a feature from functioning correctly (e.g., failure to load the profiles database), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed, explaining the issue and providing guidance if possible.
 
 === Empty States
 

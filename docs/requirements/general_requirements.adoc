@@ -9,9 +9,12 @@
 === Supported Platforms
 
 - *REQ-PLT-01*: The application must be fully functional on the following platforms:
-    ** Android
-    ** iOS
-    ** Desktop (Windows, Linux, and macOS)
+    ** Android (minimum Android 5.0 (API level 21))
+    ** iOS (minimum iOS13)
+    ** Windows (minimum Windows 10 (x86-64, arm64))
+    ** Linux (Ubuntu 20.04 (x86-64, arm64))
+    ** macOS (minimum macOS 12 x64, macOS 13 arm64)
+    ** Web (Browsers with WasmGC support)
 
 === Data Storage
 
@@ -22,3 +25,24 @@
 
 - *REQ-DTA-03*: The application shall provide a mechanism for users to synchronize their data between different devices running FitBe.
 - *REQ-DTA-04*: This synchronization must occur over a local network (e.g., Wi-Fi or Bluetooth). It must not use any intermediate cloud service or central server, in adherence to the local-only data storage policy (REQ-DTA-01, REQ-DTA-02).
+
+=== Data Export
+
+- *REQ-DTA-05*: The application shall provide a feature for users to export their data to a file.
+- *REQ-DTA-06*: The export formats shall be JSON, XML and CSV, and the file shall be saved to a user-accessible location on the local device.
+- *REQ-DTA-07*: The user must be able to export all data associated with a specific profile (e.g., all recorded health metrics).
+- *REQ-DTA-08*: The user must be able to export application-wide configuration data, such as custom-defined exercises or equipment.
+
+=== Data Import
+
+- *REQ-DTA-09*: The application shall provide a feature to import data from a file, allowing users to restore or add data.
+- *REQ-DTA-10*: The import functionality must support the same formats available for export (JSON, XML, CSV).
+- *REQ-DTA-11*: It shall be possible to import data for:
+    ** The currently active user profile (health metrics, etc.).
+    ** The application-wide list of user-defined equipment.
+    ** The application-wide list of user-defined exercises.
+- *REQ-DTA-12*: During the import process, if an entry from the file has an ID that already exists in the local database, the system must prompt the user for action.
+- *REQ-DTA-13*: The user prompt for handling duplicate entries must provide the following choices:
+    ** **Ignore**: The entry from the file is skipped, and the existing data is kept.
+    ** **Override**: The existing data is replaced with the entry from the file.
+- *REQ-DTA-14*: The prompt shall include an option to apply the selected action (Ignore or Override) to all subsequent duplicates found within the same import operation.
