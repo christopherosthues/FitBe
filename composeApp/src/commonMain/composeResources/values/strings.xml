@@ -844,6 +844,18 @@
     <string name="settings_error_saving">Failed to save settings. Please try again.</string>
     <string name="settings_content_description_back">Navigate back</string>
 
+    <string name="settings_export_title">Export Data</string>
+    <string name="settings_export_all">Export All</string>
+    <string name="settings_export_beverages">Beverages</string>
+    <string name="settings_export_sleep">Sleep</string>
+    <string name="settings_export_steps">Steps</string>
+    <string name="settings_export_weight">Body Weight</string>
+    <string name="settings_export_exercises">Exercises</string>
+    <string name="settings_export_equipment">Equipment</string>
+    <string name="settings_export_include_defaults">Include default entries</string>
+    <string name="settings_export_button">Export</string>
+    <string name="settings_export_not_implemented_yet">Export functionality is not yet implemented.</string>
+
     <!-- Weight Unit -->
     <string name="weight_unit_kg">kg</string>
     <string name="weight_unit_pound">lb</string>

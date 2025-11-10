@@ -1,9 +1,7 @@
 package org.darthacheron.fitbe.settings
 
 import org.darthacheron.fitbe.ui.UiState
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 class SettingsUiState(
     isLoading: Boolean = false,
     val currentWeightUnit: WeightUnit = WeightUnit.KG,
@@ -11,8 +9,20 @@ class SettingsUiState(
     val currentBodyMeasurementUnit: BodyMeasurementUnit = BodyMeasurementUnit.CM,
     val currentThemeMode: ThemeMode = ThemeMode.SYSTEM,
     val persistedSettings: Settings = Settings(),
-    error: SettingsError = SettingsError()
+    error: SettingsError = SettingsError(),
+
+    val showExportDialog: Boolean = false,
+    val exportAll: Boolean = false,
+    val exportBeverages: Boolean = false,
+    val exportSleep: Boolean = false,
+    val exportSteps: Boolean = false,
+    val exportWeight: Boolean = false,
+    val exportExercises: Boolean = false,
+    val exportExercisesIncludeDefaults: Boolean = false,
+    val exportEquipment: Boolean = false,
+    val exportEquipmentIncludeDefaults: Boolean = false
 ) : UiState<SettingsError>(isLoading, error) {
+
     fun copy(
         isLoading: Boolean = this.isLoading,
         currentWeightUnit: WeightUnit = this.currentWeightUnit,
@@ -20,15 +30,34 @@ class SettingsUiState(
         currentBodyMeasurementUnit: BodyMeasurementUnit = this.currentBodyMeasurementUnit,
         currentThemeMode: ThemeMode = this.currentThemeMode,
         persistedSettings: Settings = this.persistedSettings,
-        error: SettingsError = this.error
-    ): SettingsUiState =
-        SettingsUiState(
-            isLoading = isLoading,
-            currentWeightUnit = currentWeightUnit,
-            currentDistanceUnit = currentDistanceUnit,
-            currentBodyMeasurementUnit = currentBodyMeasurementUnit,
-            currentThemeMode = currentThemeMode,
-            persistedSettings = persistedSettings,
-            error = error
-        )
+        error: SettingsError = this.error,
+        showExportDialog: Boolean = this.showExportDialog,
+        exportAll: Boolean = this.exportAll,
+        exportBeverages: Boolean = this.exportBeverages,
+        exportSleep: Boolean = this.exportSleep,
+        exportSteps: Boolean = this.exportSteps,
+        exportWeight: Boolean = this.exportWeight,
+        exportExercises: Boolean = this.exportExercises,
+        exportExercisesIncludeDefaults: Boolean = this.exportExercisesIncludeDefaults,
+        exportEquipment: Boolean = this.exportEquipment,
+        exportEquipmentIncludeDefaults: Boolean = this.exportEquipmentIncludeDefaults
+    ): SettingsUiState = SettingsUiState(
+        isLoading = isLoading,
+        currentWeightUnit = currentWeightUnit,
+        currentDistanceUnit = currentDistanceUnit,
+        currentBodyMeasurementUnit = currentBodyMeasurementUnit,
+        currentThemeMode = currentThemeMode,
+        persistedSettings = persistedSettings,
+        error = error,
+        showExportDialog = showExportDialog,
+        exportAll = exportAll,
+        exportBeverages = exportBeverages,
+        exportSleep = exportSleep,
+        exportSteps = exportSteps,
+        exportWeight = exportWeight,
+        exportExercises = exportExercises,
+        exportExercisesIncludeDefaults = exportExercisesIncludeDefaults,
+        exportEquipment = exportEquipment,
+        exportEquipmentIncludeDefaults = exportEquipmentIncludeDefaults
+    )
 }
