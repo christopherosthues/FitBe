@@ -20,14 +20,14 @@ import fitbe.composeapp.generated.resources.beverages_chart_annotation_beverage_
 import fitbe.composeapp.generated.resources.beverages_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.beverages_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
-import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultBar
+import io.github.koalaplot.core.bar.DefaultBarPosition
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
-import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.VerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotEntry
 import io.github.koalaplot.core.line.AreaBaseline
-import io.github.koalaplot.core.line.AreaPlot
-import io.github.koalaplot.core.line.LinePlot
+import io.github.koalaplot.core.line.AreaPlot2
+import io.github.koalaplot.core.line.LinePlot2
 import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
@@ -119,7 +119,7 @@ fun PlotBeverages(
         ) {
             // TODO: accessible plot data
             if (dates.size > 1) {
-                AreaPlot(
+                AreaPlot2(
                     data = beverages.map { Point(it.date, it.amountMl.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
@@ -127,15 +127,16 @@ fun PlotBeverages(
                         LineStyle(
                             brush = SolidColor(MaterialTheme.colorScheme.primary),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             } else if (dates.size == 1) {
                 val beveragesChartData = toVerticalBarData(beverages)
                 VerticalBarPlot(
                     data = beveragesChartData,
                     barWidth = 0.8f,
-                    bar = { index ->
-                        DefaultVerticalBar(
+                    bar = { index, _, _ ->
+                        DefaultBar(
                             brush = SolidColor(Color(0xFFCC6666)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -151,7 +152,7 @@ fun PlotBeverages(
                                             text =
                                                 stringResource(
                                                     Res.string.beverages_chart_annotation_beverage_value,
-                                                    beveragesChartData[index].y.yMax
+                                                    beveragesChartData[index].y.end
                                                 )
                                         )
                                     }
@@ -162,24 +163,26 @@ fun PlotBeverages(
                 )
             }
             if (beverages.isNotEmpty()) {
-                LinePlot(
+                LinePlot2(
                     data = beverages.map { Point(it.date, it.amountMl.toInt()) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(MaterialTheme.colorScheme.primary),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
 
             if (targetBeverages != null && targetBeverages > 0) {
-                LinePlot(
+                LinePlot2(
                     data = dates.map { Point(it, targetBeverages) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
         }
@@ -188,5 +191,5 @@ fun PlotBeverages(
 
 private fun toVerticalBarData(steps: List<BeverageOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> =
     steps.map {
-        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.amountMl.toInt()))
+        DefaultVerticalBarPlotEntry(it.date, DefaultBarPosition(0, it.amountMl.toInt()))
     }

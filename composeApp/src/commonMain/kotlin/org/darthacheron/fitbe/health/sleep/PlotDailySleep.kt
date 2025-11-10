@@ -21,12 +21,12 @@ import fitbe.composeapp.generated.resources.sleep_chart_annotation_sleep_value
 import fitbe.composeapp.generated.resources.sleep_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.sleep_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
-import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultBar
+import io.github.koalaplot.core.bar.DefaultBarPosition
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
-import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.VerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotEntry
-import io.github.koalaplot.core.line.LinePlot
+import io.github.koalaplot.core.line.LinePlot2
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
 import io.github.koalaplot.core.util.VerticalRotation
@@ -116,8 +116,8 @@ fun PlotDailySleep(
             VerticalBarPlot(
                 data = sleepsChartData,
                 barWidth = 0.8f,
-                bar = { index ->
-                    DefaultVerticalBar(
+                bar = { index, _, _ ->
+                    DefaultBar(
                         brush = SolidColor(Color(0xFFCC6666)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -133,7 +133,7 @@ fun PlotDailySleep(
                                         text =
                                             stringResource(
                                                 Res.string.sleep_chart_annotation_sleep_value,
-                                                sleepsChartData[index].y.yMax.toString()
+                                                sleepsChartData[index].y.end.toString()
                                             )
                                     )
                                 }
@@ -144,13 +144,14 @@ fun PlotDailySleep(
             )
 
             if (targetSleepDuration != null && targetSleepDuration > 0) {
-                LinePlot(
+                LinePlot2(
                     data = listOf(Point(date, targetSleepDuration)),
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
         }
@@ -158,4 +159,4 @@ fun PlotDailySleep(
 }
 
 private fun toVerticalBarData(date: LocalDate, sleep: Int): List<VerticalBarPlotEntry<LocalDate, Int>> =
-    listOf(DefaultVerticalBarPlotEntry(date, DefaultVerticalBarPosition(0, sleep)))
+    listOf(DefaultVerticalBarPlotEntry(date, DefaultBarPosition(0, sleep)))

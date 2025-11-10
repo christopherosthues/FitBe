@@ -20,14 +20,14 @@ import fitbe.composeapp.generated.resources.steps_chart_annotation_steps_value
 import fitbe.composeapp.generated.resources.steps_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.steps_chart_y_axis_title
 import io.github.koalaplot.core.ChartLayout
-import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultBar
+import io.github.koalaplot.core.bar.DefaultBarPosition
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotEntry
-import io.github.koalaplot.core.bar.DefaultVerticalBarPosition
 import io.github.koalaplot.core.bar.VerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotEntry
 import io.github.koalaplot.core.line.AreaBaseline
-import io.github.koalaplot.core.line.AreaPlot
-import io.github.koalaplot.core.line.LinePlot
+import io.github.koalaplot.core.line.AreaPlot2
+import io.github.koalaplot.core.line.LinePlot2
 import io.github.koalaplot.core.style.AreaStyle
 import io.github.koalaplot.core.style.LineStyle
 import io.github.koalaplot.core.util.ExperimentalKoalaPlotApi
@@ -119,7 +119,7 @@ fun PlotSteps(
         ) {
             // TODO: accessible plot data
             if (dates.size > 1) {
-                AreaPlot(
+                AreaPlot2(
                     data = stepsData.map { Point(it.date, it.steps.toInt()) },
                     areaBaseline = AreaBaseline.ConstantLine(0),
                     areaStyle = AreaStyle(brush = SolidColor(Color(0xFFCC6666))),
@@ -127,15 +127,16 @@ fun PlotSteps(
                         LineStyle(
                             brush = SolidColor(MaterialTheme.colorScheme.primary),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             } else if (dates.size == 1) {
                 val stepsChartData = toVerticalBarData(stepsData)
                 VerticalBarPlot(
                     data = stepsChartData,
                     barWidth = 0.8f,
-                    bar = { index ->
-                        DefaultVerticalBar(
+                    bar = { index, _, _ ->
+                        DefaultBar(
                             brush = SolidColor(Color(0xFFCC6666)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -151,7 +152,7 @@ fun PlotSteps(
                                             text =
                                                 stringResource(
                                                     Res.string.steps_chart_annotation_steps_value,
-                                                    stepsChartData[index].y.yMax
+                                                    stepsChartData[index].y.end
                                                 )
                                         )
                                     }
@@ -162,24 +163,26 @@ fun PlotSteps(
                 )
             }
             if (stepsData.isNotEmpty()) {
-                LinePlot(
+                LinePlot2(
                     data = stepsData.map { Point(it.date, it.steps.toInt()) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(MaterialTheme.colorScheme.primary),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
 
             if (targetSteps != null && targetSteps > 0) {
-                LinePlot(
+                LinePlot2(
                     data = dates.map { Point(it, targetSteps) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
         }
@@ -188,5 +191,5 @@ fun PlotSteps(
 
 private fun toVerticalBarData(steps: List<StepsOverview>): List<VerticalBarPlotEntry<LocalDate, Int>> =
     steps.map {
-        DefaultVerticalBarPlotEntry(it.date, DefaultVerticalBarPosition(0, it.steps.toInt()))
+        DefaultVerticalBarPlotEntry(it.date, DefaultBarPosition(0, it.steps.toInt()))
     }

@@ -32,12 +32,12 @@ import fitbe.composeapp.generated.resources.body_weight_chart_annotation_total_w
 import fitbe.composeapp.generated.resources.body_weight_chart_thumbnail_title
 import fitbe.composeapp.generated.resources.local_time_format
 import io.github.koalaplot.core.ChartLayout
-import io.github.koalaplot.core.bar.DefaultVerticalBar
+import io.github.koalaplot.core.bar.DefaultBar
 import io.github.koalaplot.core.bar.DefaultVerticalBarPlotStackedPointEntry
 import io.github.koalaplot.core.bar.StackedVerticalBarPlot
 import io.github.koalaplot.core.bar.VerticalBarPlotStackedPointEntry
 import io.github.koalaplot.core.line.AreaBaseline
-import io.github.koalaplot.core.line.LinePlot
+import io.github.koalaplot.core.line.LinePlot2
 import io.github.koalaplot.core.line.StackedAreaPlot
 import io.github.koalaplot.core.line.StackedAreaStyle
 import io.github.koalaplot.core.style.AreaStyle
@@ -161,8 +161,8 @@ fun PlotDailyBodyWeights(
                 StackedVerticalBarPlot(
                     data = toVerticalStackedBodyWeightData(bodyWeights),
                     barWidth = 0.8f,
-                    bar = { xIndex, barIndex ->
-                        DefaultVerticalBar(
+                    bar = { xIndex, barIndex, _ ->
+                        DefaultBar(
                             brush = SolidColor(BodyWeightColors[barIndex]),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -222,13 +222,14 @@ fun PlotDailyBodyWeights(
             }
 
             if (targetBodyWeight != null && targetBodyWeight > 0.0) {
-                LinePlot(
+                LinePlot2(
                     data = times.map { Point(it, targetBodyWeight) },
                     lineStyle =
                         LineStyle(
                             brush = SolidColor(Color(0xFFED7D31)),
                             strokeWidth = 2.dp
-                        )
+                        ),
+                    symbol = { Box {} }
                 )
             }
         }
