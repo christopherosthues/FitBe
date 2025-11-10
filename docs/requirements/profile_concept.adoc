@@ -1,0 +1,46 @@
+== Profile Management
+
+=== Data Model
+
+The core data model for a user profile is defined by the `Profile` data class.
+
+[source,kotlin]
+----
+data class Profile(
+    val id: Uuid,
+    val name: String,
+    val gender: Gender,
+    val dateOfBirth: LocalDate?,
+    val bodyHeight: Double?,
+    val targetKcal: UInt?,
+    val targetBeverageInMilliliter: UInt?,
+    val targetWeight: Double?,
+    val targetSleepDuration: UInt?,
+    val targetSteps: UInt?
+)
+----
+
+- Data is persisted using a `ProfileEntity` which maps to a `profiles` table in the local Room database.
+- The `name` field must be unique across all profiles.
+- `bodyHeight` is stored in centimeters (cm).
+- `targetWeight` is stored in kilograms (kg).
+
+=== Functional Requirements
+
+- *REQ-PRF-01*: The system shall allow users to create, view, edit, and delete profiles.
+- *REQ-PRF-02*: The application must support multiple profiles. The user shall be able to switch the active profile, which dictates the data displayed throughout the app.
+- *REQ-PRF-03*: When no profiles exist, the system shall prompt the user to create one.
+- *REQ-PRF-04*: Profile data shall be editable via a dedicated form. The form shall have a view mode (read-only) and an edit mode.
+- *REQ-PRF-05*: The form shall contain input fields for all properties defined in the `Profile` data model.
+- *REQ-PRF-06*: All user inputs must be validated in real-time. Feedback on validation errors must be displayed to the user immediately.
+    - *Name*: Must not be blank and must be unique.
+    - *Numeric Targets*: Must be positive numbers within a reasonable range (e.g., weight, height, kcal).
+- *REQ-PRF-07*: The user must explicitly save changes via a "Save" action. Saving is only permitted if all fields are valid.
+- *REQ-PRF-08*: The user must be able to cancel an edit operation, which discards all changes and reverts the form to its last saved state.
+- *REQ-PRF-09*: The user must be able to delete the currently active profile. A confirmation dialog shall be displayed before deletion to prevent accidental data loss.
+- *REQ-PRF-10*: All data with units (e.g., weight, height) must be displayed in the unit format selected in the application settings. The system shall perform the necessary conversions for display, while storing the data in base metric units (kg, cm).
+
+=== Non-Functional Requirements
+
+- Profile data must be persisted locally on the device.
+- The UI must remain responsive during validation and data conversion operations.

@@ -1,0 +1,42 @@
+== Home Dashboard
+
+=== Functional Requirements
+
+- The home screen shall serve as the primary user interface upon application launch.
+- It must display a horizontally scrollable pager containing summary cards for various health metrics.
+- A visual pager indicator shall be present to show the current page and allow for direct page navigation.
+- The dashboard shall display summaries for: Beverages, Steps, Body Weight, and Sleep.
+
+=== Summary Cards
+
+==== Beverage Summary
+
+- *REQ-BEV-01*: The summary must display the total fluid intake for the current day, measured in liters.
+- *REQ-BEV-02*: If a daily target is set in the user's profile, the summary shall display the progress towards this target as a percentage and as a fraction (e.g., "1.5 / 2.0 L").
+- *REQ-BEV-03*: A circular progress indicator with a wave animation shall be used to visualize the progress.
+
+==== Steps Summary
+
+- *REQ-STP-01*: The summary must display the total number of steps taken on the current day.
+- *REQ-STP-02*: If a daily target is set, progress shall be shown as a percentage and a fraction (e.g., "8,000 / 10,000").
+- *REQ-STP-03*: A circular progress indicator shall visualize the progress.
+
+==== Body Weight Summary
+
+- *REQ-WGT-01*: The summary must display the user's last recorded weight for the day.
+- *REQ-WGT-02*: The weight shall be displayed in the unit selected in the application settings (kg or lbs).
+- *REQ-WGT-03*: If available, the summary shall display a breakdown of the weight, including muscle mass and bone mass.
+- *REQ-WGT-04*: A segmented circular progress indicator shall be used to visualize the composition of the body weight.
+- *REQ-WGT-05*: If a target weight is set, it shall be displayed below the current weight.
+
+==== Sleep Summary
+
+- *REQ-SLP-01*: The summary must display the total sleep duration for the current day, summing up all sleep intervals.
+- *REQ-SLP-02*: The duration shall be displayed in hours and minutes.
+- *REQ-SLP-03*: If a target is set, progress shall be shown as a percentage and a fraction (e.g., "7h 30m / 8h").
+- *REQ-SLP-04*: A circular progress indicator shall visualize the progress.
+
+=== Non-Functional Requirements
+
+- The UI must be responsive and provide a smooth scrolling experience.
+- The data displayed in the summaries shall be updated in near real-time as new health data is recorded.

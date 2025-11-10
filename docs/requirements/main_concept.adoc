@@ -1,0 +1,16 @@
+= FitBe Application: Functional Specification
+:toc:
+
+This document provides a complete functional specification for the FitBe application. It details the features, requirements, and data models necessary for implementation.
+
+include::introduction.adoc[]
+
+include::general_requirements.adoc[]
+
+include::ui_feedback_requirements.adoc[]
+
+include::home_dashboard_concept.adoc[]
+
+include::profile_concept.adoc[]
+
+include::settings_concept.adoc[]

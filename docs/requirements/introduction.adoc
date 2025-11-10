@@ -1,0 +1,9 @@
+== Introduction
+
+=== Purpose
+
+This document serves as the primary guide for the development team. It describes the full functionality of the FitBe application, including user-facing features, underlying business logic, and data structures. The requirements herein should form the basis for implementation, testing, and validation.
+
+=== Scope
+
+The scope of this document covers the core features of the FitBe application: user profile management, application settings, and the home dashboard for daily health metric summaries.

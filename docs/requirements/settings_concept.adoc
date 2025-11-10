@@ -1,0 +1,38 @@
+== Application Settings
+
+=== Data Model
+
+The `Settings` data class defines the structure for all user-configurable settings.
+
+[source,kotlin]
+----
+data class Settings(
+    val weightUnit: WeightUnit,
+    val distanceUnit: DistanceUnit,
+    val bodyMeasurementUnit: BodyMeasurementUnit,
+    val themeMode: ThemeMode,
+    val selectedProfileId: Uuid?
+)
+----
+
+- The `selectedProfileId` is a `Uuid` that links to the currently active user profile.
+
+=== Functional Requirements
+
+- *REQ-SET-01*: The system shall allow users to configure units of measurement for weight, distance, and body measurements.
+- *REQ-SET-02*: The user must be able to choose the application's theme (Light, Dark, or System default).
+- *REQ-SET-03*: All settings shall be persisted locally on the device.
+- *REQ-SET-04*: Changes to settings must be applied application-wide upon saving.
+- *REQ-SET-05*: The user must explicitly save any changes. Unsaved changes shall be discarded if the user navigates away from the settings screen.
+- *REQ-SET-06*: The user shall be able to reset all settings to their default values with a single action.
+
+=== Unit Options
+
+- *Weight Unit*: Kilograms (kg), Pounds (lb).
+- *Distance Unit*: Kilometers (km), Miles (mi).
+- *Body Measurement Unit*: Centimeters (cm), Inches (in).
+
+=== Non-Functional Requirements
+
+- The settings screen must be easy to navigate and understand.
+- The application must reflect the new settings immediately after they are saved.

@@ -1,0 +1,24 @@
+== General & Architectural Requirements
+
+=== Architecture
+
+- *REQ-ARC-01*: The application shall be developed using the Kotlin programming language.
+- *REQ-ARC-02*: The application shall follow the Model-View-ViewModel (MVVM) architectural pattern to ensure a clean separation of concerns.
+- *REQ-ARC-03*: The user interface shall be implemented using Compose Multiplatform to enable a single codebase for the UI across all supported platforms.
+
+=== Supported Platforms
+
+- *REQ-PLT-01*: The application must be fully functional on the following platforms:
+    ** Android
+    ** iOS
+    ** Desktop (Windows, Linux, and macOS)
+
+=== Data Storage
+
+- *REQ-DTA-01*: All user data, including profiles and health metrics, must be stored exclusively on the user's local device.
+- *REQ-DTA-02*: The application shall not implement any cloud-based or remote server synchronization for user data. This is a strict privacy requirement.
+
+=== Data Synchronization
+
+- *REQ-DTA-03*: The application shall provide a mechanism for users to synchronize their data between different devices running FitBe.
+- *REQ-DTA-04*: This synchronization must occur over a local network (e.g., Wi-Fi or Bluetooth). It must not use any intermediate cloud service or central server, in adherence to the local-only data storage policy (REQ-DTA-01, REQ-DTA-02).
