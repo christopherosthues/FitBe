@@ -43,10 +43,12 @@ import org.darthacheron.fitbe.home.summary.SleepSummaryViewModel
 import org.darthacheron.fitbe.home.summary.StepsSummaryViewModel
 import org.darthacheron.fitbe.profile.ProfileRepository
 import org.darthacheron.fitbe.profile.ProfileViewModel
+import org.darthacheron.fitbe.settings.export.ExportService
 import org.darthacheron.fitbe.settings.SettingsViewModel
 import org.darthacheron.fitbe.settings.converters.BodyMeasurementUnitConverter
 import org.darthacheron.fitbe.settings.converters.DistanceUnitConverter
 import org.darthacheron.fitbe.settings.converters.WeightUnitConverter
+import org.darthacheron.fitbe.settings.export.ExportDialogViewModel
 import org.darthacheron.fitbe.ui.ActualTopBarManager
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.darthacheron.fitbe.workouts.ExercisesDashboardViewModel
@@ -102,6 +104,8 @@ val sharedModule =
         factoryOf(::PositiveNumberValidator)
         factoryOf(::StepsValidator)
         factoryOf(::PercentageValidator)
+
+        factoryOf(::ExportService)
 
         single {
             get<DatabaseFactory>()
@@ -166,4 +170,5 @@ val sharedModule =
         viewModelOf(::StepsSummaryViewModel)
         viewModelOf(::SleepSummaryViewModel)
         viewModelOf(::BodyWeightSummaryViewModel)
+        viewModelOf(::ExportDialogViewModel)
     }

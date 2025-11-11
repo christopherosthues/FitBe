@@ -2,9 +2,9 @@ package org.darthacheron.fitbe.settings
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
+import fitbe.composeapp.generated.resources.export_not_implemented_yet
 import fitbe.composeapp.generated.resources.settings_error_loading
 import fitbe.composeapp.generated.resources.settings_error_saving
-import fitbe.composeapp.generated.resources.settings_export_not_implemented_yet
 import fitbe.composeapp.generated.resources.top_bar_title_settings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -139,66 +139,10 @@ class SettingsViewModel(
         _uiState.update { it.copy(error = SettingsError()) }
     }
 
-    fun onExportAllChanged(isChecked: Boolean) {
-        _uiState.update {
-            it.copy(
-                exportAll = isChecked,
-                exportBeverages = isChecked,
-                exportSleep = isChecked,
-                exportSteps = isChecked,
-                exportWeight = isChecked,
-                exportExercises = isChecked,
-                exportEquipment = isChecked
-            )
-        }
-    }
-
-    fun onExportBeveragesChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportBeverages = isChecked)) }
-    }
-
-    fun onExportSleepChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportSleep = isChecked)) }
-    }
-
-    fun onExportStepsChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportSteps = isChecked)) }
-    }
-
-    fun onExportWeightChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportWeight = isChecked)) }
-    }
-
-    fun onExportExercisesChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportExercises = isChecked)) }
-    }
-
-    fun onExportExercisesIncludeDefaultsChanged(isChecked: Boolean) {
-        _uiState.update { it.copy(exportExercisesIncludeDefaults = isChecked) }
-    }
-
-    fun onExportEquipmentChanged(isChecked: Boolean) {
-        _uiState.update { updateExportAllState(it.copy(exportEquipment = isChecked)) }
-    }
-
-    fun onExportEquipmentIncludeDefaultsChanged(isChecked: Boolean) {
-        _uiState.update { it.copy(exportEquipmentIncludeDefaults = isChecked) }
-    }
-
-    private fun updateExportAllState(state: SettingsUiState): SettingsUiState {
-        val allSelected = state.exportBeverages &&
-            state.exportSleep &&
-            state.exportSteps &&
-            state.exportWeight &&
-            state.exportExercises &&
-            state.exportEquipment
-        return state.copy(exportAll = allSelected)
-    }
-
     fun exportData() {
         viewModelScope.launch {
             // TODO: Implement actual export logic
-            _uiState.update { it.copy(error = SettingsError(generalError = Res.string.settings_export_not_implemented_yet)) }
+            _uiState.update { it.copy(error = SettingsError(generalError = Res.string.export_not_implemented_yet)) }
         }
     }
 }

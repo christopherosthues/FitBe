@@ -17,7 +17,7 @@ class BeverageDailyUiState(
     val progress: Double = 0.0,
     val total: Double = 0.0,
     val target: Int? = null,
-) : UiState<BeverageDailyError>(isLoading, error) {
+) : UiState<BeverageDailyError>(isLoading = isLoading, error = error) {
     val progressInPercent = (progress * 100).toInt()
 
     @Composable
