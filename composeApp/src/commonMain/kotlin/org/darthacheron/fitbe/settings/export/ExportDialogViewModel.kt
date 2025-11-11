@@ -1,15 +1,8 @@
 package org.darthacheron.fitbe.settings.export
 
-import androidx.lifecycle.viewModelScope
-import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.settings_export_not_implemented_yet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.health.components.DialogViewModel
-import org.darthacheron.fitbe.health.sleep.manage.AddSleepDialogUiState
-import org.darthacheron.fitbe.settings.SettingsError
-import org.darthacheron.fitbe.settings.SettingsUiState
 
 class ExportDialogViewModel : DialogViewModel<ExportDialogUiState>() {
     override val uiState = MutableStateFlow(ExportDialogUiState())
