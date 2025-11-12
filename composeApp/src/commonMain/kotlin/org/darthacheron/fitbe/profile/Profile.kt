@@ -3,11 +3,13 @@ package org.darthacheron.fitbe.profile
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@Serializable
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Profile(
     val id: Uuid = Uuid.random(),

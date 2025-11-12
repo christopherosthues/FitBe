@@ -18,6 +18,12 @@ import kotlin.uuid.Uuid
 class SleepRepository(
     private val dao: SleepDao
 ) {
+    fun getAllSleepsForProfile(profileId: Uuid): Flow<List<Sleep>> {
+        return dao.getAllSleepsForProfile(profileId).map { sleepEntities ->
+            sleepEntities.map { it.toSleep() }
+        }
+    }
+
     suspend fun getSleep(id: Uuid): Sleep? {
         return dao.getSleep(id)?.toSleep()
     }

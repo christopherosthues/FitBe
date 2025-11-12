@@ -15,6 +15,14 @@ import kotlin.uuid.Uuid
 class BeverageRepository(
     private val beverageDao: BeverageDao
 ) {
+    fun getAllBeveragesForProfile(profileId: Uuid): Flow<List<Beverage>> {
+        return beverageDao.getAllBeveragesForProfile(profileId).map { list ->
+            list.map {
+                it.toBeverage()
+            }
+        }
+    }
+
     suspend fun getBeverage(id: Uuid): Beverage? {
         return beverageDao.getBeverage(id)?.toBeverage()
     }

@@ -13,6 +13,7 @@ data class ExportDialogUiState(
     val exportEquipment: Boolean = false,
     val exportEquipmentIncludeDefaults: Boolean = false,
     val exportPath: String = ""
+    // TODO: date range
 ) : DialogUiState {
     override val canSave: Boolean =
         (exportAll || exportBeverages || exportSleep || exportSteps || exportWeight || exportExercises || exportEquipment) && exportPath.isNotEmpty()

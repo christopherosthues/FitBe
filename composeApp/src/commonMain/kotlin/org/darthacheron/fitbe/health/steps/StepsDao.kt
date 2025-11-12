@@ -17,7 +17,9 @@ interface StepsDao {
     @Upsert
     suspend fun upsertSteps(steps: StepsEntity)
 
-    // TODO: check call sites for correct dates
+    @Query("SELECT * FROM steps WHERE profileId = :profileId ORDER BY dateUtc DESC")
+    fun getAllStepsForProfile(profileId: Uuid): Flow<List<StepsEntity>>
+
     @Query(
         """
         SELECT * FROM steps 

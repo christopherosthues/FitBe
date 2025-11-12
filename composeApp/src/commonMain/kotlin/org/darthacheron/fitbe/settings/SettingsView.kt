@@ -81,7 +81,7 @@ fun SettingsView(
     if (showExportDialog) {
         ExportDialog(
             onDismissRequest = { showExportDialog = false },
-            onExportClick = { viewModel.exportData() },
+            onExportClick = { viewModel.exportData(it) },
         )
     }
 

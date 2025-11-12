@@ -15,6 +15,12 @@ import kotlin.uuid.Uuid
 class StepsRepository(
     private val stepsDao: StepsDao
 ) {
+    fun getAllStepsForProfile(profileId: Uuid): Flow<List<Steps>> {
+        return stepsDao.getAllStepsForProfile(profileId).map { list ->
+            list.map { it.toSteps() }
+        }
+    }
+
     suspend fun getSteps(id: Uuid): Steps? {
         return stepsDao.getSteps(id)?.toSteps()
     }

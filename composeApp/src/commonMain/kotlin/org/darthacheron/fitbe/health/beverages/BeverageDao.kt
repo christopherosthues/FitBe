@@ -18,7 +18,9 @@ interface BeverageDao {
     @Upsert
     suspend fun upsertBeverage(beverage: BeverageEntity)
 
-    // TODO: check call sites for correct dates
+    @Query("SELECT * FROM beverages WHERE profileId = :profileId ORDER BY dateUtc DESC")
+    fun getAllBeveragesForProfile(profileId: Uuid): Flow<List<BeverageEntity>>
+
     @Query(
         """
         SELECT * FROM beverages 

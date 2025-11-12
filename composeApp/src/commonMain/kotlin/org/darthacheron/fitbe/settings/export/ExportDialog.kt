@@ -57,7 +57,7 @@ import org.koin.compose.koinInject
 fun ExportDialog(
     viewModel: ExportDialogViewModel = koinInject(),
     onDismissRequest: () -> Unit,
-    onExportClick: () -> Unit,
+    onExportClick: (exportState: ExportDialogUiState) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -69,13 +69,7 @@ fun ExportDialog(
                 viewModel.onExportPathChanged(it?.absolutePath() ?: "")
             }
         )
-//        rememberFilePickerLauncher(
-//            type = FileKitType.File("json", "xml", "csv"),
-//            mode = FileKitMode.Single,
-//            onResult = {
-//                viewModel.onExportPathChanged(it?.absolutePath() ?: "")
-//            }
-//        )
+    // TODO: date range
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -162,7 +156,7 @@ fun ExportDialog(
         },
         confirmButton = {
             Button(onClick = {
-                onExportClick()
+                onExportClick(uiState)
                 onDismissRequest()
             }) {
                 Text(text = stringResource(Res.string.export_export))

@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Dao
 interface SleepDao {
     @Query("SELECT * FROM sleeps WHERE id = :id")
@@ -17,7 +18,9 @@ interface SleepDao {
     @Upsert()
     suspend fun upsertSleep(sleep: SleepEntity)
 
-    // TODO: check call sites for correct dates
+    @Query("SELECT * FROM sleeps WHERE profileId = :profileId ORDER BY startDateTime DESC")
+    fun getAllSleepsForProfile(profileId: Uuid): Flow<List<SleepEntity>>
+
     @Query(
         """
         SELECT * FROM sleeps 

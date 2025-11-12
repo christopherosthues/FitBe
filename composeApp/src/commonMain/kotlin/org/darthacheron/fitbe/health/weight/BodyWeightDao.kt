@@ -7,10 +7,11 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlin.time.Instant
 import org.darthacheron.fitbe.health.steps.StepsEntity
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Dao
 interface BodyWeightDao {
     @Query("SELECT * FROM body_weights WHERE id = :id")
@@ -19,7 +20,9 @@ interface BodyWeightDao {
     @Upsert
     suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
-    // TODO: check call sites for correct dates
+    @Query("SELECT * FROM body_weights WHERE profileId = :profileId ORDER BY dateUtc DESC")
+    fun getAllBodyWeightsForProfile(profileId: Uuid): Flow<List<BodyWeightEntity>>
+
     @Query(
         """
         SELECT * FROM body_weights 

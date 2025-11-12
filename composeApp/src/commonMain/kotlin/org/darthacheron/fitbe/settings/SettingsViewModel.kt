@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
+import org.darthacheron.fitbe.settings.export.ExportDialogUiState
+import org.darthacheron.fitbe.settings.export.ExportService
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
@@ -22,7 +24,8 @@ import kotlin.uuid.ExperimentalUuidApi
 @OptIn(ExperimentalUuidApi::class)
 class SettingsViewModel(
     private val repository: SettingsRepository,
-    val topBarManager: TopBarManager
+    val topBarManager: TopBarManager,
+    private val exportService: ExportService
 ) : FitBeViewModel(topBarManager) {
     override val backNavigationIconVisible: Boolean?
         get() = true
@@ -139,10 +142,13 @@ class SettingsViewModel(
         _uiState.update { it.copy(error = SettingsError()) }
     }
 
-    fun exportData() {
+    fun exportData(exportState: ExportDialogUiState) {
         viewModelScope.launch {
-            // TODO: Implement actual export logic
-            _uiState.update { it.copy(error = SettingsError(generalError = Res.string.export_not_implemented_yet)) }
+            try {
+                exportService.export(exportState)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = SettingsError(generalError = Res.string.export_not_implemented_yet)) }
+            }
         }
     }
 }

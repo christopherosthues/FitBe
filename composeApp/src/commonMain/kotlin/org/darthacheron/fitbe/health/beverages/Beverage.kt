@@ -10,6 +10,8 @@ import fitbe.composeapp.generated.resources.beverage_in_liter
 import fitbe.composeapp.generated.resources.beverage_in_milliliter
 import fitbe.composeapp.generated.resources.beverage_in_normal_glass
 import fitbe.composeapp.generated.resources.beverage_in_small_glass
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.time.Instant
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Centiliter
 import org.darthacheron.fitbe.health.beverages.FluidUnit.Cup
@@ -28,10 +30,11 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@Serializable
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 data class Beverage(
     val id: Uuid = Uuid.random(),
-    val profileId: Uuid,
+    @Transient val profileId: Uuid = Uuid.random(),
     val date: Instant,
     val amount: Double,
     val beverage: String,
