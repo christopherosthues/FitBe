@@ -1,9 +1,6 @@
 package org.darthacheron.fitbe.settings.export
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import org.darthacheron.fitbe.health.components.DialogUiState
-import org.darthacheron.fitbe.ui.UiState
 
 data class ExportDialogUiState(
     val exportAll: Boolean = false,
@@ -14,8 +11,9 @@ data class ExportDialogUiState(
     val exportExercises: Boolean = false,
     val exportExercisesIncludeDefaults: Boolean = false,
     val exportEquipment: Boolean = false,
-    val exportEquipmentIncludeDefaults: Boolean = false
+    val exportEquipmentIncludeDefaults: Boolean = false,
+    val exportPath: String = ""
 ) : DialogUiState {
     override val canSave: Boolean =
-        exportAll || exportBeverages || exportSleep || exportSteps || exportWeight || exportExercises || exportEquipment
+        (exportAll || exportBeverages || exportSleep || exportSteps || exportWeight || exportExercises || exportEquipment) && exportPath.isNotEmpty()
 }

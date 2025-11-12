@@ -849,6 +849,8 @@
     <string name="export_cancel">Abbrechen</string>
     <string name="export_export">Exportieren</string>
     <string name="export_not_implemented_yet">Export-Funktionalität ist noch nicht implementiert.</string>
+    <string name="export_file_path">Dateipfad</string>
+    <string name="export_content_description_file_path">Wählen Sie den Dateipfad für den Datenexport aus</string>
 
     <!-- Weight Unit -->
     <string name="weight_unit_kg">kg</string>

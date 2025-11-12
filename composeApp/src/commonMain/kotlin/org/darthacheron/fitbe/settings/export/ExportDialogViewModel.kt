@@ -57,6 +57,10 @@ class ExportDialogViewModel : DialogViewModel<ExportDialogUiState>() {
         uiState.update { it.copy(exportEquipmentIncludeDefaults = isChecked) }
     }
 
+    fun onExportPathChanged(exportPath: String) {
+        uiState.update { it.copy(exportPath = exportPath) }
+    }
+
     private fun updateExportAllState(state: ExportDialogUiState): ExportDialogUiState {
         val allSelected = state.exportBeverages &&
                 state.exportSleep &&
