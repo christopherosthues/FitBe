@@ -16,15 +16,16 @@ import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.compose.getKoin
+import org.koin.compose.koinInject
 
 @Composable
 @Preview
-fun App() {
+fun App(
+    settingsViewModel: SettingsViewModel = koinInject(),
+    startUpService: StartUpService = koinInject(),
+    topBarManager: TopBarManager = koinInject()
+) {
     KoinApplication(application = {}) {
-        val koin = getKoin()
-        val settingsViewModel = remember { koin.get<SettingsViewModel>() }
-        val startUpService = remember { koin.get<StartUpService>() }
-        val topBarManager = remember { koin.get<TopBarManager>() }
         val settings = settingsViewModel.uiState.collectAsState()
 
         LaunchedEffect(Unit) {
