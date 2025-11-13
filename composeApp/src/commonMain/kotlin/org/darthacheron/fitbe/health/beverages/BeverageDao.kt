@@ -19,7 +19,7 @@ interface BeverageDao {
     suspend fun upsertBeverage(beverage: BeverageEntity)
 
     @Query("SELECT * FROM beverages WHERE profileId = :profileId ORDER BY dateUtc DESC")
-    fun getAllBeveragesForProfile(profileId: Uuid): Flow<List<BeverageEntity>>
+    suspend fun getAllBeveragesForProfile(profileId: Uuid): List<BeverageEntity>
 
     @Query(
         """

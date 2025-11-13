@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Dao
 interface StepsDao {
     @Query("SELECT * FROM steps WHERE id = :id")
@@ -18,7 +19,7 @@ interface StepsDao {
     suspend fun upsertSteps(steps: StepsEntity)
 
     @Query("SELECT * FROM steps WHERE profileId = :profileId ORDER BY dateUtc DESC")
-    fun getAllStepsForProfile(profileId: Uuid): Flow<List<StepsEntity>>
+    suspend fun getAllStepsForProfile(profileId: Uuid): List<StepsEntity>
 
     @Query(
         """

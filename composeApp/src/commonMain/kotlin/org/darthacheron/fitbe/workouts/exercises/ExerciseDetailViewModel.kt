@@ -237,7 +237,7 @@ class ExerciseDetailViewModel(
             try {
                 val parsedExerciseId = Uuid.parse(exerciseIdString)
                 val currentExerciseWithEquipment =
-                    exerciseRepository.getExerciseWithExercisesById(parsedExerciseId).firstOrNull()
+                    exerciseRepository.getExerciseWithEquipmentsById(parsedExerciseId).firstOrNull()
 
                 if (currentExerciseWithEquipment != null) {
                     val errorState =

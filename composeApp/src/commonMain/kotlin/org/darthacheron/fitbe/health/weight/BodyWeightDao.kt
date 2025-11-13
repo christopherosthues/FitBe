@@ -1,13 +1,11 @@
 package org.darthacheron.fitbe.health.weight
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Instant
-import org.darthacheron.fitbe.health.steps.StepsEntity
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -21,7 +19,7 @@ interface BodyWeightDao {
     suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
     @Query("SELECT * FROM body_weights WHERE profileId = :profileId ORDER BY dateUtc DESC")
-    fun getAllBodyWeightsForProfile(profileId: Uuid): Flow<List<BodyWeightEntity>>
+    suspend fun getAllBodyWeightsForProfile(profileId: Uuid): List<BodyWeightEntity>
 
     @Query(
         """

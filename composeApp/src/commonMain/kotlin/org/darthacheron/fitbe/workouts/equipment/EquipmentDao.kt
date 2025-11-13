@@ -44,6 +44,14 @@ interface EquipmentDao {
     @Query("SELECT * FROM training_equipment WHERE id = :equipmentId")
     fun getEquipmentWithExercises(equipmentId: Uuid): Flow<EquipmentWithExercisesEntity?>
 
+    @Transaction
+    @Query("SELECT * FROM training_equipment")
+    suspend fun getAllEquipmentWithExercises(): List<EquipmentWithExercisesEntity>
+
+    @Transaction
+    @Query("SELECT * FROM training_equipment WHERE `default` = false")
+    suspend fun getAllUserEquipmentWithExercises(): List<EquipmentWithExercisesEntity>
+
     @Query("SELECT * FROM training_equipment WHERE id = :equipmentId")
     fun getEquipmentById(equipmentId: Uuid): Flow<TrainingEquipmentEntity?>
 

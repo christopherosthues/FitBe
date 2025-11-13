@@ -11,6 +11,12 @@ class ExerciseRepository(
 ) {
     fun getAllExercises(): Flow<List<Exercise>> = exerciseDao.getAllExercises().map { it.map { e -> e.toExercise() } }
 
+    suspend fun getAllExercisesWithEquipment(): List<ExerciseWithEquipment> =
+        exerciseDao.getAllExercisesWithEquipment().map { it.toExerciseWithEquipment() }
+
+    suspend fun getAllUserExercisesWithEquipment(): List<ExerciseWithEquipment> =
+        exerciseDao.getAllUserExercisesWithEquipment().map { it.toExerciseWithEquipment() }
+
     fun getExerciseById(exerciseId: Uuid): Flow<Exercise?> =
         exerciseDao.getExerciseById(exerciseId).map { it?.toExercise() }
 
@@ -20,7 +26,7 @@ class ExerciseRepository(
     fun getDefaultExerciseWithEquipment(exerciseId: Uuid): Flow<ExerciseWithEquipment?> =
         exerciseDao.getDefaultExerciseWithEquipment(exerciseId).map { it?.toExerciseWithEquipment() }
 
-    fun getExerciseWithExercisesById(exerciseId: Uuid): Flow<ExerciseWithEquipment?> =
+    fun getExerciseWithEquipmentsById(exerciseId: Uuid): Flow<ExerciseWithEquipment?> =
         exerciseDao.getExerciseWithEquipment(exerciseId).map { it?.toExerciseWithEquipment() }
 
     suspend fun upsertExercise(exercise: Exercise) {

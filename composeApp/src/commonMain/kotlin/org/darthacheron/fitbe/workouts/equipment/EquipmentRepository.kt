@@ -10,6 +10,12 @@ import kotlin.uuid.Uuid
 class EquipmentRepository(
     private val equipmentDao: EquipmentDao
 ) {
+    suspend fun getAllEquipmentWithExercises(): List<EquipmentWithExercises> =
+        equipmentDao.getAllEquipmentWithExercises().map { it.toEquipmentWithExercises() }
+
+    suspend fun getAllUserEquipmentWithExercises(): List<EquipmentWithExercises> =
+        equipmentDao.getAllUserEquipmentWithExercises().map { it.toEquipmentWithExercises() }
+
     fun getAllEquipments(): Flow<List<TrainingEquipment>> =
         equipmentDao.getAllEquipments().map { it.map { e -> e.toTrainingEquipment() } }
 

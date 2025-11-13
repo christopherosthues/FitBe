@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlin.time.Instant
 import org.darthacheron.fitbe.utils.toDateSpan
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -15,17 +15,10 @@ import kotlin.uuid.Uuid
 class BeverageRepository(
     private val beverageDao: BeverageDao
 ) {
-    fun getAllBeveragesForProfile(profileId: Uuid): Flow<List<Beverage>> {
-        return beverageDao.getAllBeveragesForProfile(profileId).map { list ->
-            list.map {
-                it.toBeverage()
-            }
-        }
-    }
+    suspend fun getAllBeveragesForProfile(profileId: Uuid): List<Beverage> =
+        beverageDao.getAllBeveragesForProfile(profileId).map { it.toBeverage() }
 
-    suspend fun getBeverage(id: Uuid): Beverage? {
-        return beverageDao.getBeverage(id)?.toBeverage()
-    }
+    suspend fun getBeverage(id: Uuid): Beverage? = beverageDao.getBeverage(id)?.toBeverage()
 
     fun getBeverages(
         startDate: Instant,

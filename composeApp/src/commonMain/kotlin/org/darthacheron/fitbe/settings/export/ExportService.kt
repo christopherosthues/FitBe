@@ -34,21 +34,48 @@ class ExportService(
         val dataToExport = FitBeExportData(
             profile = profile,
             beverages = if (exportState.exportBeverages) {
-                // Assuming repositories have a method to get all data for a profile
-                beverageRepository.getAllBeveragesForProfile(profileId).first()
-            } else emptyList(),
+                beverageRepository.getAllBeveragesForProfile(profileId)
+            } else {
+                emptyList()
+            },
 
             steps = if (exportState.exportSteps) {
-                stepsRepository.getAllStepsForProfile(profileId).first()
-            } else emptyList(),
+                stepsRepository.getAllStepsForProfile(profileId)
+            } else {
+                emptyList()
+            },
 
             sleep = if (exportState.exportSleep) {
-                sleepRepository.getAllSleepsForProfile(profileId).first()
-            } else emptyList(),
+                sleepRepository.getAllSleepsForProfile(profileId)
+            } else {
+                emptyList()
+            },
 
             bodyWeights = if (exportState.exportWeight) {
-                bodyWeightRepository.getAllBodyWeightsForProfile(profileId).first()
-            } else emptyList()
+                bodyWeightRepository.getAllBodyWeightsForProfile(profileId)
+            } else {
+                emptyList()
+            },
+
+            exercises = if (exportState.exportExercises) {
+                if (exportState.exportExercisesIncludeDefaults) {
+                    exerciseRepository.getAllExercisesWithEquipment().map { it.toExportExercise() }
+                } else {
+                    exerciseRepository.getAllUserExercisesWithEquipment().map { it.toExportExercise() }
+                }
+            } else {
+                emptyList()
+            },
+
+            equipments = if (exportState.exportEquipment) {
+                if (exportState.exportEquipmentIncludeDefaults) {
+                    equipmentRepository.getAllEquipmentWithExercises().map { it.toExportEquipment() }
+                } else {
+                    equipmentRepository.getAllUserEquipmentWithExercises().map { it.toExportEquipment() }
+                }
+            } else {
+                emptyList()
+            }
 
             // ... handle other data types similarly
         )

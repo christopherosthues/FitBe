@@ -15,15 +15,10 @@ import kotlin.uuid.Uuid
 class BodyWeightRepository(
     private val bodyWeightDao: BodyWeightDao
 ) {
-    fun getAllBodyWeightsForProfile(profileId: Uuid): Flow<List<BodyWeight>> {
-        return bodyWeightDao.getAllBodyWeightsForProfile(profileId).map { list ->
-            list.map { it.toBodyWeight() }
-        }
-    }
+    suspend fun getAllBodyWeightsForProfile(profileId: Uuid): List<BodyWeight> =
+        bodyWeightDao.getAllBodyWeightsForProfile(profileId).map { it.toBodyWeight() }
 
-    suspend fun getBodyWeight(id: Uuid): BodyWeight? {
-        return bodyWeightDao.getBodyWeight(id)?.toBodyWeight()
-    }
+    suspend fun getBodyWeight(id: Uuid): BodyWeight? = bodyWeightDao.getBodyWeight(id)?.toBodyWeight()
 
     fun getBodyWeights(
         startDate: Instant,
