@@ -853,6 +853,7 @@
     <string name="export_exercises">Exercises</string>
     <string name="export_equipment">Equipment</string>
     <string name="export_include_defaults">Include default entries</string>
+    <string name="export_include_favorites">Include favorites</string>
     <string name="export_cancel">Cancel</string>
     <string name="export_export">Export</string>
     <string name="export_not_implemented_yet">Export functionality is not yet implemented.</string>

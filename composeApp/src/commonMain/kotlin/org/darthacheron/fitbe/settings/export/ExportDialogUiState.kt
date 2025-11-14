@@ -10,8 +10,10 @@ data class ExportDialogUiState(
     val exportWeight: Boolean = false,
     val exportExercises: Boolean = false,
     val exportExercisesIncludeDefaults: Boolean = false,
+    val exportFavoriteExercises: Boolean = false,
     val exportEquipment: Boolean = false,
     val exportEquipmentIncludeDefaults: Boolean = false,
+    val exportFavoriteEquipment: Boolean = false,
     val exportPath: String = ""
     // TODO: date range
 ) : DialogUiState {

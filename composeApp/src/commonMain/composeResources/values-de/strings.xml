@@ -846,6 +846,7 @@
     <string name="export_exercises">Übungen</string>
     <string name="export_equipment">Ausrüstung</string>
     <string name="export_include_defaults">Standardeinträge einschließen</string>
+    <string name="export_include_favorites">Favoriten einschließen</string>
     <string name="export_cancel">Abbrechen</string>
     <string name="export_export">Exportieren</string>
     <string name="export_not_implemented_yet">Export-Funktionalität ist noch nicht implementiert.</string>

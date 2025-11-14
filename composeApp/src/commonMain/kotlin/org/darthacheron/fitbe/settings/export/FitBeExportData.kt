@@ -19,13 +19,16 @@ import kotlin.uuid.Uuid
 
 @Serializable
 data class FitBeExportData(
+    val appVersion: String,
     val profile: Profile,
     val beverages: List<Beverage> = emptyList(),
     val steps: List<Steps> = emptyList(),
     val sleep: List<Sleep> = emptyList(),
     val bodyWeights: List<BodyWeight> = emptyList(),
     val exercises: List<ExportExercise> = emptyList(),
-    val equipments: List<ExportEquipment> = emptyList()
+    val equipments: List<ExportEquipment> = emptyList(),
+    val favoriteExerciseIds: List<Uuid> = emptyList(),
+    val favoriteEquipmentIds: List<Uuid> = emptyList(),
 )
 
 @Serializable

@@ -17,6 +17,22 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
+val appVersionName = project.property("appVersionName") as String
+
+val generateVersionFile by tasks.registering {
+    val outputDir = layout.buildDirectory.dir("generated/version")
+    outputs.dir(outputDir)
+    doLast {
+        val versionFile = outputDir.get().file("org/darthacheron/fitbe/Version.kt").asFile
+        versionFile.parentFile.mkdirs()
+        versionFile.writeText("""
+            package org.darthacheron.fitbe
+
+            const val APP_VERSION = "$appVersionName"
+        """.trimIndent())
+    }
+}
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -119,6 +135,9 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
+        val commonMain by getting {
+            kotlin.srcDir(generateVersionFile.map { it.outputs.files.singleFile })
+        }
     }
 }
 
@@ -169,8 +188,8 @@ android {
             libs.versions.android.targetSdk
                 .get()
                 .toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = project.property("appVersionCode").toString().toInt()
+        versionName = appVersionName
     }
     packaging {
         resources {
@@ -205,7 +224,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.darthacheron.fitbe"
-            packageVersion = "1.0.0"
+            packageVersion = appVersionName
         }
     }
 }

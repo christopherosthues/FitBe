@@ -20,7 +20,9 @@ class ExportDialogViewModel : DialogViewModel<ExportDialogUiState>() {
                 exportSteps = isChecked,
                 exportWeight = isChecked,
                 exportExercises = isChecked,
-                exportEquipment = isChecked
+                exportFavoriteExercises = isChecked,
+                exportEquipment = isChecked,
+                exportFavoriteEquipment = isChecked
             )
         }
     }
@@ -49,12 +51,20 @@ class ExportDialogViewModel : DialogViewModel<ExportDialogUiState>() {
         uiState.update { it.copy(exportExercisesIncludeDefaults = isChecked) }
     }
 
+    fun onExportFavoriteExercisesChanged(isChecked: Boolean) {
+        uiState.update { it.copy(exportFavoriteExercises = isChecked) }
+    }
+
     fun onExportEquipmentChanged(isChecked: Boolean) {
         uiState.update { updateExportAllState(it.copy(exportEquipment = isChecked)) }
     }
 
     fun onExportEquipmentIncludeDefaultsChanged(isChecked: Boolean) {
         uiState.update { it.copy(exportEquipmentIncludeDefaults = isChecked) }
+    }
+
+    fun onExportFavoriteEquipmentChanged(isChecked: Boolean) {
+        uiState.update { it.copy(exportFavoriteEquipment = isChecked) }
     }
 
     fun onExportPathChanged(exportPath: String) {

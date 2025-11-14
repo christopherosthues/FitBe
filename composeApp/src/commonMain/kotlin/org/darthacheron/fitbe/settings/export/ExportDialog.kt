@@ -38,6 +38,7 @@ import fitbe.composeapp.generated.resources.export_exercises
 import fitbe.composeapp.generated.resources.export_export
 import fitbe.composeapp.generated.resources.export_file_path
 import fitbe.composeapp.generated.resources.export_include_defaults
+import fitbe.composeapp.generated.resources.export_include_favorites
 import fitbe.composeapp.generated.resources.export_sleep
 import fitbe.composeapp.generated.resources.export_steps
 import fitbe.composeapp.generated.resources.export_title
@@ -62,13 +63,12 @@ fun ExportDialog(
     val uiState by viewModel.uiState.collectAsState()
 
     val dialogSettings = FileKitDialogSettings.createDefault()
-    val galleryLauncher =
-        rememberFileSaverLauncher(
-            dialogSettings = dialogSettings,
-            onResult = {
-                viewModel.onExportPathChanged(it?.absolutePath() ?: "")
-            }
-        )
+    val galleryLauncher = rememberFileSaverLauncher(
+        dialogSettings = dialogSettings,
+        onResult = {
+            viewModel.onExportPathChanged(it?.absolutePath() ?: "")
+        }
+    )
     // TODO: date range
 
     AlertDialog(
@@ -111,12 +111,20 @@ fun ExportDialog(
                     stringResource(Res.string.export_exercises),
                     enabled = !uiState.exportAll
                 ) {
-                    CheckboxWithLabel(
-                        uiState.exportExercisesIncludeDefaults,
-                        viewModel::onExportExercisesIncludeDefaultsChanged,
-                        stringResource(Res.string.export_include_defaults),
-                        enabled = uiState.exportExercises
-                    )
+                    Column {
+                        CheckboxWithLabel(
+                            uiState.exportExercisesIncludeDefaults,
+                            viewModel::onExportExercisesIncludeDefaultsChanged,
+                            stringResource(Res.string.export_include_defaults),
+                            enabled = uiState.exportExercises
+                        )
+                        CheckboxWithLabel(
+                            uiState.exportFavoriteExercises,
+                            viewModel::onExportFavoriteExercisesChanged,
+                            stringResource(Res.string.export_include_favorites),
+                            enabled = uiState.exportExercises
+                        )
+                    }
                 }
                 CheckboxWithLabel(
                     uiState.exportEquipment,
@@ -124,12 +132,20 @@ fun ExportDialog(
                     stringResource(Res.string.export_equipment),
                     enabled = !uiState.exportAll
                 ) {
-                    CheckboxWithLabel(
-                        uiState.exportEquipmentIncludeDefaults,
-                        viewModel::onExportEquipmentIncludeDefaultsChanged,
-                        stringResource(Res.string.export_include_defaults),
-                        enabled = uiState.exportEquipment
-                    )
+                    Column {
+                        CheckboxWithLabel(
+                            uiState.exportEquipmentIncludeDefaults,
+                            viewModel::onExportEquipmentIncludeDefaultsChanged,
+                            stringResource(Res.string.export_include_defaults),
+                            enabled = uiState.exportEquipment
+                        )
+                        CheckboxWithLabel(
+                            uiState.exportFavoriteEquipment,
+                            viewModel::onExportFavoriteEquipmentChanged,
+                            stringResource(Res.string.export_include_favorites),
+                            enabled = uiState.exportEquipment
+                        )
+                    }
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
