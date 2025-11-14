@@ -856,9 +856,18 @@
     <string name="export_include_favorites">Include favorites</string>
     <string name="export_cancel">Cancel</string>
     <string name="export_export">Export</string>
-    <string name="export_not_implemented_yet">Export functionality is not yet implemented.</string>
+    <string name="export_error_export_failed">Export failed</string>
     <string name="export_file_path">File path</string>
     <string name="export_content_description_file_path">Select file path for data export</string>
+
+    <string name="import_title">Import Data</string>
+    <string name="import_file_path">File path</string>
+    <string name="import_content_description_file_path">Select file path for data import</string>
+    <string name="import_select_profile">Select profile</string>
+    <string name="import_import_profile">Import profile</string>
+    <string name="import_error_import_failed">Import failed</string>
+    <string name="import_import">Import</string>
+    <string name="import_cancel">Cancel</string>
 
     <!-- Weight Unit -->
     <string name="weight_unit_kg">kg</string>

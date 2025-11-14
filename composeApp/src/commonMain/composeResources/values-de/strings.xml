@@ -849,9 +849,18 @@
     <string name="export_include_favorites">Favoriten einschließen</string>
     <string name="export_cancel">Abbrechen</string>
     <string name="export_export">Exportieren</string>
-    <string name="export_not_implemented_yet">Export-Funktionalität ist noch nicht implementiert.</string>
+    <string name="export_error_export_failed">Export fehlgeschlagen</string>
     <string name="export_file_path">Dateipfad</string>
     <string name="export_content_description_file_path">Wählen Sie den Dateipfad für den Datenexport aus</string>
+
+    <string name="import_title">Daten importieren</string>
+    <string name="import_file_path">Dateipfad</string>
+    <string name="import_content_description_file_path">Wählen Sie den Dateipfad für den Datenimport aus</string>
+    <string name="import_select_profile">Profil auswählen</string>
+    <string name="import_import_profile">Profil importieren</string>
+    <string name="import_error_import_failed">Import fehlgeschlagen</string>
+    <string name="import_import">Importieren</string>
+    <string name="import_cancel">Abbrechen</string>
 
     <!-- Weight Unit -->
     <string name="weight_unit_kg">kg</string>

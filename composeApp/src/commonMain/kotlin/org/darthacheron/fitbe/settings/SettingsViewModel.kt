@@ -2,7 +2,8 @@ package org.darthacheron.fitbe.settings
 
 import androidx.lifecycle.viewModelScope
 import fitbe.composeapp.generated.resources.Res
-import fitbe.composeapp.generated.resources.export_not_implemented_yet
+import fitbe.composeapp.generated.resources.export_error_export_failed
+import fitbe.composeapp.generated.resources.import_error_import_failed
 import fitbe.composeapp.generated.resources.settings_error_loading
 import fitbe.composeapp.generated.resources.settings_error_saving
 import fitbe.composeapp.generated.resources.top_bar_title_settings
@@ -16,6 +17,8 @@ import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.navigation.Screen
 import org.darthacheron.fitbe.settings.export.ExportDialogUiState
 import org.darthacheron.fitbe.settings.export.ExportService
+import org.darthacheron.fitbe.settings.import.ImportDialogUiState
+import org.darthacheron.fitbe.settings.import.ImportService
 import org.darthacheron.fitbe.ui.FitBeViewModel
 import org.darthacheron.fitbe.ui.TopBarManager
 import org.jetbrains.compose.resources.StringResource
@@ -25,7 +28,8 @@ import kotlin.uuid.ExperimentalUuidApi
 class SettingsViewModel(
     private val repository: SettingsRepository,
     val topBarManager: TopBarManager,
-    private val exportService: ExportService
+    private val exportService: ExportService,
+    private val importService: ImportService
 ) : FitBeViewModel(topBarManager) {
     override val backNavigationIconVisible: Boolean?
         get() = true
@@ -147,7 +151,17 @@ class SettingsViewModel(
             try {
                 exportService.export(exportState)
             } catch (e: Exception) {
-                _uiState.update { it.copy(error = SettingsError(generalError = Res.string.export_not_implemented_yet)) }
+                _uiState.update { it.copy(error = SettingsError(generalError = Res.string.export_error_export_failed)) }
+            }
+        }
+    }
+
+    fun importData(importState: ImportDialogUiState) {
+        viewModelScope.launch {
+            try {
+                importService.import(importState)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = SettingsError(generalError = Res.string.import_error_import_failed)) }
             }
         }
     }
