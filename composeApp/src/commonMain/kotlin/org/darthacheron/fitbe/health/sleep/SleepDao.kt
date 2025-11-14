@@ -18,6 +18,9 @@ interface SleepDao {
     @Upsert()
     suspend fun upsertSleep(sleep: SleepEntity)
 
+    @Upsert
+    suspend fun upsertAll(sleeps: List<SleepEntity>)
+
     @Query("SELECT * FROM sleeps WHERE profileId = :profileId ORDER BY startDateTime DESC")
     suspend fun getAllSleepsForProfile(profileId: Uuid): List<SleepEntity>
 

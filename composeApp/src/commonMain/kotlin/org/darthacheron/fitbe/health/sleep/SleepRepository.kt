@@ -112,6 +112,10 @@ class SleepRepository(
         dao.upsertSleep(sleep = sleep.toSleepEntity())
     }
 
+    suspend fun upsertAll(sleeps: List<Sleep>) {
+        dao.upsertAll(sleeps.map { it.toSleepEntity() })
+    }
+
     suspend fun deleteSleep(id: Uuid) {
         dao.deleteSleep(id)
     }

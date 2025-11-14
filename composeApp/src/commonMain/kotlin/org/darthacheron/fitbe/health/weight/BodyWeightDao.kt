@@ -18,6 +18,9 @@ interface BodyWeightDao {
     @Upsert
     suspend fun upsertBodyWeight(bodyWeight: BodyWeightEntity)
 
+    @Upsert
+    suspend fun upsertAll(bodyWeights: List<BodyWeightEntity>)
+
     @Query("SELECT * FROM body_weights WHERE profileId = :profileId ORDER BY dateUtc DESC")
     suspend fun getAllBodyWeightsForProfile(profileId: Uuid): List<BodyWeightEntity>
 

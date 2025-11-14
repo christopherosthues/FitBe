@@ -18,6 +18,9 @@ interface StepsDao {
     @Upsert
     suspend fun upsertSteps(steps: StepsEntity)
 
+    @Upsert
+    suspend fun upsertAll(steps: List<StepsEntity>)
+
     @Query("SELECT * FROM steps WHERE profileId = :profileId ORDER BY dateUtc DESC")
     suspend fun getAllStepsForProfile(profileId: Uuid): List<StepsEntity>
 

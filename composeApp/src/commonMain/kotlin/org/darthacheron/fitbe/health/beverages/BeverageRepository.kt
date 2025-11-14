@@ -61,6 +61,10 @@ class BeverageRepository(
         beverageDao.upsertBeverage(beverage = beverage.toBeverageEntity())
     }
 
+    suspend fun upsertAll(beverages: List<Beverage>) {
+        beverageDao.upsertAll(beverages.map { it.toBeverageEntity() })
+    }
+
     suspend fun deleteBeverage(id: Uuid) {
         beverageDao.deleteBeverage(id)
     }

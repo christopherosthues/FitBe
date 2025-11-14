@@ -4,15 +4,15 @@ This section defines the application-wide requirements for communicating system 
 
 === Loading States
 
-- *REQ-UI-01*: For initial data loading that blocks UI interaction (e.g., loading a screen for the first time), a prominent, centrally located loading indicator shall be displayed.
-- *REQ-UI-02*: For data being refreshed in the background where the user can still interact with stale data, a less intrusive indicator shall be used (e.g., a small spinner in a corner or a subtle shimmer effect).
+- *REQ-LOAD-01*: For initial data loading that blocks UI interaction (e.g., loading a screen for the first time), a prominent, centrally located loading indicator shall be displayed.
+- *REQ-LOAD-02*: For data being refreshed in the background where the user can still interact with stale data, a less intrusive indicator shall be used (e.g., a small spinner in a corner or a subtle shimmer effect).
 
 === Error Handling
 
-- *REQ-UI-03*: For non-critical errors (e.g., failure to save a setting), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed. The message must be user-friendly and clearly state the nature of the error.
-- *REQ-UI-04*: Input validation errors must be displayed inline, directly below the relevant input field, as soon as the input becomes invalid. The error message should guide the user on how to correct the input.
-- *REQ-UI-05*: For critical errors that prevent a feature from functioning correctly (e.g., failure to load the profiles database), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed, explaining the issue and providing guidance if possible.
+- *REQ-ERR-01*: For non-critical errors (e.g., failure to save a setting), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed. The message must be user-friendly and clearly state the nature of the error.
+- *REQ-ERR-02*: Input validation errors must be displayed inline, directly below the relevant input field, as soon as the input becomes invalid. The error message should guide the user on how to correct the input.
+- *REQ-ERR-03*: For critical errors that prevent a feature from functioning correctly (e.g., failure to load the profiles database), a non-modal, temporary notification (e.g., a Snackbar) shall be displayed, explaining the issue and providing guidance if possible.
 
 === Empty States
 
-- *REQ-UI-06*: When a view that is meant to display a list of data is empty (e.g., no health data logged for the day, no profiles created), it must not be blank. It shall display a clear message indicating the absence of data and should provide a direct call-to-action to encourage user input (e.g., "No steps logged today. Tap '+' to add an entry.").
+- *REQ-EMPTY-01*: When a view that is meant to display a list of data is empty (e.g., no health data logged for the day, no profiles created), it must not be blank. It shall display a clear message indicating the absence of data and should provide a direct call-to-action to encourage user input (e.g., "No steps logged today. Tap '+' to add an entry.").

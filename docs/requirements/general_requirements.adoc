@@ -18,31 +18,39 @@
 
 === Data Storage
 
-- *REQ-DTA-01*: All user data, including profiles and health metrics, must be stored exclusively on the user's local device.
-- *REQ-DTA-02*: The application shall not implement any cloud-based or remote server synchronization for user data. This is a strict privacy requirement.
+- *REQ-STO-01*: All user data, including profiles and health metrics, must be stored exclusively on the user's local device.
+- *REQ-STO-02*: The application shall not implement any cloud-based or remote server synchronization for user data. This is a strict privacy requirement.
 
 === Data Synchronization
 
-- *REQ-DTA-03*: The application shall provide a mechanism for users to synchronize their data between different devices running FitBe.
-- *REQ-DTA-04*: This synchronization must occur over a local network (e.g., Wi-Fi or Bluetooth). It must not use any intermediate cloud service or central server, in adherence to the local-only data storage policy (REQ-DTA-01, REQ-DTA-02).
+- *REQ-SYN-01*: The application shall provide a mechanism for users to synchronize their data between different devices running FitBe.
+- *REQ-SYN-02*: This synchronization must occur over a local network (e.g., Wi-Fi or Bluetooth). It must not use any intermediate cloud service or central server, in adherence to the local-only data storage policy (REQ-STO-01, REQ-STO-02).
 
 === Data Export
 
-- *REQ-DTA-05*: The application shall provide a feature for users to export their data to a file.
-- *REQ-DTA-06*: The export formats shall be JSON, XML and CSV, and the file shall be saved to a user-accessible location on the local device.
-- *REQ-DTA-07*: The user must be able to export all data associated with a specific profile (e.g., all recorded health metrics).
-- *REQ-DTA-08*: The user must be able to export application-wide configuration data, such as custom-defined exercises or equipment.
+- *REQ-EXP-01*: The application shall provide a feature for users to export their data to a file.
+- *REQ-EXP-02*: The export formats shall be JSON, XML and CSV, and the file shall be saved to a user-accessible location on the local device.
+- *REQ-EXP-03*: The user must be able to export all data associated with a specific profile (e.g., all recorded health metrics).
+- *REQ-EXP-04*: The user must be able to export application-wide configuration data, such as custom-defined exercises or equipment.
 
 === Data Import
 
-- *REQ-DTA-09*: The application shall provide a feature to import data from a file, allowing users to restore or add data.
-- *REQ-DTA-10*: The import functionality must support the same formats available for export (JSON, XML, CSV).
-- *REQ-DTA-11*: It shall be possible to import data for:
+- *REQ-IMP-01*: The application shall provide a feature to import data from a file, allowing users to restore or add data.
+- *REQ-IMP-02*: The import functionality must support the same formats available for export (JSON, XML, CSV).
+- *REQ-IMP-03*: It shall be possible to import data for:
     ** The currently active user profile (health metrics, etc.).
     ** The application-wide list of user-defined equipment.
     ** The application-wide list of user-defined exercises.
-- *REQ-DTA-12*: During the import process, if an entry from the file has an ID that already exists in the local database, the system must prompt the user for action.
-- *REQ-DTA-13*: The user prompt for handling duplicate entries must provide the following choices:
+- *REQ-IMP-04*: During the import process, if an entry from the file has an ID that already exists in the local database, the system must prompt the user for action.
+- *REQ-IMP-05*: The user prompt for handling duplicate entries must provide the following choices:
     ** **Ignore**: The entry from the file is skipped, and the existing data is kept.
     ** **Override**: The existing data is replaced with the entry from the file.
-- *REQ-DTA-14*: The prompt shall include an option to apply the selected action (Ignore or Override) to all subsequent duplicates found within the same import operation.
+- *REQ-IMP-06*: The prompt shall include an option to apply the selected action (Ignore or Override) to all subsequent duplicates found within the same import operation.
+- *REQ-IMP-07*: The user shall be able to import a complete user profile from a file.
+- *REQ-IMP-08*: When importing a user profile, the user must be presented with the following options:
+    ** **Create a new profile**: A new profile is created with the data from the file.
+    ** **Merge with an existing profile**: The user can select one of the existing profiles to merge the imported data with.
+- *REQ-IMP-09*: If "Create a new profile" is selected and a profile with the same ID already exists, the user must be prompted to either:
+    ** **Cancel** the import for this profile.
+    ** **Create a new profile with a different ID**: A new profile is created with a new unique ID, but with the data from the imported file.
+- *REQ-IMP-10*: If "Merge with an existing profile" is selected, the duplicate handling mechanism from *REQ-IMP-04*, *REQ-IMP-05* and *REQ-IMP-06* applies to the data within the profile.

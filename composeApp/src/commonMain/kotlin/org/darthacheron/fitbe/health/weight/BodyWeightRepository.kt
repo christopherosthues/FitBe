@@ -52,6 +52,10 @@ class BodyWeightRepository(
         bodyWeightDao.upsertBodyWeight(bodyWeight = bodyWeight.toBodyWeightEntity())
     }
 
+    suspend fun upsertAll(bodyWeights: List<BodyWeight>) {
+        bodyWeightDao.upsertAll(bodyWeights.map { it.toBodyWeightEntity() })
+    }
+
     suspend fun deleteBodyWeight(id: Uuid) {
         bodyWeightDao.deleteBodyWeight(id)
     }

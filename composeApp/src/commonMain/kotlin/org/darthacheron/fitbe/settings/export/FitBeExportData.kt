@@ -10,6 +10,8 @@ import org.darthacheron.fitbe.health.steps.Steps
 import org.darthacheron.fitbe.health.weight.BodyWeight
 import org.darthacheron.fitbe.profile.Profile
 import org.darthacheron.fitbe.workouts.equipment.EquipmentWithExercises
+import org.darthacheron.fitbe.workouts.equipment.TrainingEquipment
+import org.darthacheron.fitbe.workouts.exercises.Exercise
 import org.darthacheron.fitbe.workouts.exercises.ExerciseType
 import org.darthacheron.fitbe.workouts.exercises.ExerciseWithEquipment
 import org.darthacheron.fitbe.workouts.exercises.MuscleGroup
@@ -46,6 +48,20 @@ data class ExportExercise(
     val equipmentIds: List<Uuid>
 )
 
+fun ExportExercise.toExercise(): Exercise {
+    return Exercise(
+        id = this.id,
+        name = this.name,
+        guide = this.guide,
+        targetMuscleGroups = this.targetMuscleGroups,
+        imageUri = this.imageUri,
+        default = this.default,
+        recommendedFor = this.recommendedFor,
+        exerciseType = this.exerciseType,
+        dateUtc = this.dateUtc
+    )
+}
+
 @OptIn(ExperimentalUuidApi::class)
 fun ExerciseWithEquipment.toExportExercise(): ExportExercise {
     return ExportExercise(
@@ -72,6 +88,16 @@ data class ExportEquipment(
     val dateUtc: LocalDate,
     val exerciseIds: List<Uuid>
 )
+
+fun ExportEquipment.toTrainingEquipment(): TrainingEquipment {
+    return TrainingEquipment(
+        id = this.id,
+        name = this.name,
+        default = this.default,
+        imageUri = this.imageUri,
+        dateUtc = this.dateUtc
+    )
+}
 
 fun EquipmentWithExercises.toExportEquipment(): ExportEquipment {
     return ExportEquipment(

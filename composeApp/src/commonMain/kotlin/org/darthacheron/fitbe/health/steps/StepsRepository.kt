@@ -57,6 +57,10 @@ class StepsRepository(
         stepsDao.upsertSteps(steps = steps.toStepsEntity())
     }
 
+    suspend fun upsertAll(steps: List<Steps>) {
+        stepsDao.upsertAll(steps.map { it.toStepsEntity() })
+    }
+
     suspend fun deleteSteps(id: Uuid) {
         stepsDao.deleteSteps(id)
     }
