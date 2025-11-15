@@ -33,14 +33,21 @@ class ImportService(
         val jsonString = PlatformFile(importState.importPath).readString()
         val importData = Json.decodeFromString<FitBeExportData>(jsonString)
 
+
         val profileId = if (importState.importProfile) {
-            val newProfile = importData.profile.copy(id = Uuid.random())
+            val importProfileId = if (profileRepository.getProfileById(importData.profile.id) != null) {
+                importData.profile.id
+            } else {
+                Uuid.random()
+            }
+            val newProfile = importData.profile.copy(id = importProfileId)
             profileRepository.upsertProfile(newProfile)
             newProfile.id
         } else {
             importState.selectedProfileId ?: return
         }
 
+        // TODO: validation for duplicated entries
         beverageRepository.upsertAll(importData.beverages.map { it.copy(profileId = profileId) })
         stepsRepository.upsertAll(importData.steps.map { it.copy(profileId = profileId) })
         sleepRepository.upsertAll(importData.sleep.map { it.copy(profileId = profileId) })
