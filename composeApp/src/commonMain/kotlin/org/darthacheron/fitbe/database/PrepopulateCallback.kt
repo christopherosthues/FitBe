@@ -44,13 +44,12 @@ class PrepopulateCallback(
     }
 
     private suspend fun populateDefaultEquipment(equipmentDao: EquipmentDao) {
-        equipmentList.forEach { equipmentKey ->
-            val equipmentId = Uuid.random()
+        equipmentList.forEach { equipment ->
             val equipment =
                 TrainingEquipmentEntity(
-                    id = equipmentId,
-                    name = equipmentKey,
-                    imageUri = equipmentKey,
+                    id = equipment.id,
+                    name = equipment.key,
+                    imageUri = equipment.key,
                     default = true
                 )
             equipmentDao.upsertEquipment(equipment)
@@ -65,10 +64,9 @@ class PrepopulateCallback(
         equipmentMap: Map<String, Uuid>
     ) {
         exerciseList.forEach { exerciseData ->
-            val exerciseId = Uuid.random()
             val exercise =
                 ExerciseEntity(
-                    id = exerciseId,
+                    id = exerciseData.id,
                     name = exerciseData.key,
                     guide = exerciseData.key,
                     imageUri = exerciseData.key,
@@ -85,14 +83,14 @@ class PrepopulateCallback(
             val crossRefs =
                 exerciseData.equipmentKeys.mapNotNull { equipmentKey ->
                     equipmentMap[equipmentKey]?.let { mappedEquipmentId ->
-                        DefaultExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = mappedEquipmentId)
+                        DefaultExerciseEquipmentCrossRef(exerciseId = exercise.id, equipmentId = mappedEquipmentId)
                     }
                 }
             if (crossRefs.isNotEmpty()) {
                 exerciseDao.insertDefaultExerciseEquipmentCrossRefs(crossRefs)
                 exerciseDao.insertCrossRefs(
                     crossRefs.map {
-                        ExerciseEquipmentCrossRef(exerciseId = exerciseId, equipmentId = it.equipmentId)
+                        ExerciseEquipmentCrossRef(exerciseId = exercise.id, equipmentId = it.equipmentId)
                     }
                 )
             }

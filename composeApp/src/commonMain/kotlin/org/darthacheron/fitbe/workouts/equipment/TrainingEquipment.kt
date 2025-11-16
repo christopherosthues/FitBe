@@ -22,7 +22,7 @@ internal fun getEquipmentName(
     name: String,
     default: Boolean
 ): String =
-    if (default && equipmentList.contains(name)) {
+    if (default && equipmentList.any { it.key == name }) {
         DefaultEquipmentResProvider.equipmentNameMap[name]?.let { stringResource(it) } ?: name
     } else {
         name
