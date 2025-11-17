@@ -843,6 +843,8 @@
     <string name="settings_error_loading">Failed to load settings. Please try again.</string>
     <string name="settings_error_saving">Failed to save settings. Please try again.</string>
     <string name="settings_content_description_back">Navigate back</string>
+    <string name="settings_content_description_export">Export data</string>
+    <string name="settings_content_description_import">Import data</string>
 
     <string name="export_title">Export Data</string>
     <string name="export_all">Export All</string>

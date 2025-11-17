@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -38,10 +39,14 @@ import fitbe.composeapp.generated.resources.Res
 import fitbe.composeapp.generated.resources.export_export
 import fitbe.composeapp.generated.resources.export_title
 import fitbe.composeapp.generated.resources.ic_back
+import fitbe.composeapp.generated.resources.ic_export
+import fitbe.composeapp.generated.resources.ic_import
 import fitbe.composeapp.generated.resources.ic_reset
 import fitbe.composeapp.generated.resources.ic_save
 import fitbe.composeapp.generated.resources.settings_body_measurement_unit
 import fitbe.composeapp.generated.resources.settings_content_description_back
+import fitbe.composeapp.generated.resources.settings_content_description_export
+import fitbe.composeapp.generated.resources.settings_content_description_import
 import fitbe.composeapp.generated.resources.settings_content_description_reset
 import fitbe.composeapp.generated.resources.settings_content_description_save
 import fitbe.composeapp.generated.resources.settings_distance_unit
@@ -50,6 +55,7 @@ import fitbe.composeapp.generated.resources.settings_weight_unit
 import fitbe.composeapp.generated.resources.top_bar_title_settings
 import kotlinx.coroutines.launch
 import org.darthacheron.fitbe.settings.export.ExportDialog
+import org.darthacheron.fitbe.settings.import.ImportDialog
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,6 +70,7 @@ fun SettingsView(
     }
     val uiState by viewModel.uiState.collectAsState()
     var showExportDialog by remember { mutableStateOf(false) }
+    var showImportDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -82,6 +89,13 @@ fun SettingsView(
         ExportDialog(
             onDismissRequest = { showExportDialog = false },
             onExportClick = { viewModel.exportData(it) },
+        )
+    }
+
+    if (showImportDialog) {
+        ImportDialog(
+            onDismissRequest = { showImportDialog = false },
+            onImportClick = { viewModel.importData(it) },
         )
     }
 
@@ -226,13 +240,26 @@ fun SettingsView(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = stringResource(Res.string.export_title),
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                    IconButton(
+                        onClick = { showExportDialog = true }
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_export),
+                            contentDescription = stringResource(Res.string.settings_content_description_export)
+                        )
+                    }
 
-                Button(onClick = { showExportDialog = true }) {
-                    Text(text = stringResource(Res.string.export_export))
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    IconButton(
+                        onClick = { showImportDialog = true }
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_import),
+                            contentDescription = stringResource(Res.string.settings_content_description_import)
+                        )
+                    }
                 }
             }
         }

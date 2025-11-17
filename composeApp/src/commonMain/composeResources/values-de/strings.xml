@@ -836,6 +836,8 @@
     <string name="settings_error_loading">Fehler beim Laden der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_error_saving">Fehler beim Speichern der Einstellungen. Bitte versuche es erneut.</string>
     <string name="settings_content_description_back">Zurück navigieren</string>
+    <string name="settings_content_description_export">Daten exportieren</string>
+    <string name="settings_content_description_import">Daten importieren</string>
 
     <string name="export_title">Daten exportieren</string>
     <string name="export_all">Alles exportieren</string>
