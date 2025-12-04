@@ -32,7 +32,8 @@ data class BeverageEntity(
     val dateUtc: Instant,
     val amount: Double,
     val beverage: String,
-    val unit: FluidUnit
+    val unit: FluidUnit,
+    val lastModified: Instant
 ) {
     @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
     fun toBeverage(): Beverage =
@@ -42,7 +43,8 @@ data class BeverageEntity(
             date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
             amount = amount,
             beverage = beverage,
-            unit = unit
+            unit = unit,
+            lastModified = lastModified
         )
 }
 
@@ -54,5 +56,6 @@ fun Beverage.toBeverageEntity(): BeverageEntity =
         dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
         amount = this.amount,
         beverage = this.beverage,
-        unit = this.unit
+        unit = this.unit,
+        lastModified = this.lastModified
     )

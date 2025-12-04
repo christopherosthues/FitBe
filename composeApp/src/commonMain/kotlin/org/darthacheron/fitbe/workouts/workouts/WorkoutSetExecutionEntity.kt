@@ -5,10 +5,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Entity(
     tableName = "workout_set_executions",
     foreignKeys = [
@@ -52,5 +54,6 @@ data class WorkoutSetExecutionEntity(
     @ColumnInfo(name = "rest_time_seconds_after_set")
     val restTimeSecondsAfterSet: Int? = null, // Duration of rest taken *after* this set
     @ColumnInfo(name = "notes")
-    val notes: String? = null
+    val notes: String? = null,
+    val lastModified: Instant
 )

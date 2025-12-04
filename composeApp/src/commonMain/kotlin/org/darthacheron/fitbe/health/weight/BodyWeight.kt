@@ -17,5 +17,6 @@ data class BodyWeight(
     val muscleMassInKg: Double?,
     val boneMassInKg: Double?,
     val bodyWaterInPercentage: Double?,
-    val date: Instant
+    val date: Instant,
+    val lastModified: Instant
 )

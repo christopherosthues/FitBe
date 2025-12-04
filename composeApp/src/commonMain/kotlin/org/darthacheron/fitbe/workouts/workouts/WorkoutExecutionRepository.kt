@@ -3,11 +3,12 @@ package org.darthacheron.fitbe.workouts.workouts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class WorkoutExecutionRepository(
     private val workoutExecutionDao: WorkoutExecutionDao
 ) {
@@ -57,7 +58,8 @@ class WorkoutExecutionRepository(
                 actualDurationSeconds = actualDurationSeconds,
                 actualDistanceKm = actualDistanceKm,
                 restTimeSecondsAfterSet = restTimeSecondsAfterSet,
-                notes = notes
+                notes = notes,
+                lastModified = Clock.System.now()
             )
         workoutExecutionDao.insertWorkoutSetExecution(workoutSet)
     }

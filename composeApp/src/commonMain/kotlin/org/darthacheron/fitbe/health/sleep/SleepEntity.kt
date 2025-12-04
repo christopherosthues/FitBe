@@ -30,20 +30,22 @@ data class SleepEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val startDateTime: Instant,
-    val endDateTime: Instant
+    val endDateTime: Instant,
+    val lastModified: Instant
 ) {
     fun toSleep(): Sleep =
         Sleep(
             id = id,
             profileId = profileId,
             start =
-                this.startDateTime
+                startDateTime
                     .toLocalDateTime(TimeZone.currentSystemDefault())
                     .toInstant(TimeZone.currentSystemDefault()),
             end =
                 endDateTime
                     .toLocalDateTime(TimeZone.currentSystemDefault())
-                    .toInstant(TimeZone.currentSystemDefault())
+                    .toInstant(TimeZone.currentSystemDefault()),
+            lastModified = lastModified
         )
 }
 
@@ -53,5 +55,6 @@ fun Sleep.toSleepEntity(): SleepEntity =
         id = this.id,
         profileId = this.profileId,
         startDateTime = this.start.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
-        endDateTime = this.end.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
+        endDateTime = this.end.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
+        lastModified = this.lastModified
     )

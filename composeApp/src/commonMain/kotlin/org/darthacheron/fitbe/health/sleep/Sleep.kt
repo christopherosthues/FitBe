@@ -13,7 +13,8 @@ data class Sleep(
     val id: Uuid = Uuid.random(),
     @Transient val profileId: Uuid = Uuid.random(),
     val start: Instant,
-    val end: Instant
+    val end: Instant,
+    val lastModified: Instant
 ) {
     val duration = end - start
 

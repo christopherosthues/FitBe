@@ -4,10 +4,12 @@ import androidx.room.Entity
 import androidx.room.Index // Added import
 import androidx.room.PrimaryKey
 import kotlinx.datetime.LocalDate
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Entity(
     tableName = "profiles",
     indices = [Index(value = ["name"], unique = true)]
@@ -22,7 +24,8 @@ data class ProfileEntity(
     val targetSleepDuration: Int?,
     val targetSteps: Int?,
     val bodyHeightInCm: Double?,
-    val dateOfBirth: LocalDate?
+    val dateOfBirth: LocalDate?,
+    val lastModified: Instant
 ) {
     fun toProfile(): Profile =
         Profile(
@@ -35,7 +38,8 @@ data class ProfileEntity(
             targetSleepDuration = targetSleepDuration?.toUInt(),
             targetSteps = targetSteps?.toUInt(),
             bodyHeight = bodyHeightInCm,
-            dateOfBirth = dateOfBirth
+            dateOfBirth = dateOfBirth,
+            lastModified = lastModified
         )
 }
 
@@ -51,5 +55,6 @@ fun Profile.toProfileEntity(): ProfileEntity =
         targetSleepDuration = this.targetSleepDuration?.toInt(),
         targetSteps = this.targetSteps?.toInt(),
         bodyHeightInCm = this.bodyHeight,
-        dateOfBirth = this.dateOfBirth
+        dateOfBirth = this.dateOfBirth,
+        lastModified = this.lastModified
     )

@@ -4,16 +4,19 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Entity(tableName = "default_workout_templates", indices = [Index(value = ["name"], unique = true)])
 data class DefaultWorkoutTemplateEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid,
     @ColumnInfo(name = "name") val name: String,
     val description: String? = null,
-    val imageUri: String? = null
+    val imageUri: String? = null,
+    val lastModified: Instant
 ) {
     fun toWorkoutTemplateEntity(): WorkoutTemplateEntity =
         WorkoutTemplateEntity(
@@ -21,7 +24,8 @@ data class DefaultWorkoutTemplateEntity(
             name = name,
             description = description,
             imageUri = imageUri,
-            default = true
+            default = true,
+            lastModified = lastModified
         )
 
     fun toWorkoutTemplate(): WorkoutTemplate =
@@ -30,7 +34,8 @@ data class DefaultWorkoutTemplateEntity(
             name = name,
             description = description,
             imageUri = imageUri,
-            default = true
+            default = true,
+            lastModified = lastModified
         )
 }
 
@@ -41,6 +46,7 @@ fun WorkoutTemplateEntity.toDefaultWorkoutTemplateEntity(entity: WorkoutTemplate
         id = entity.id,
         name = entity.name,
         description = entity.description,
-        imageUri = entity.imageUri
+        imageUri = entity.imageUri,
+        lastModified = entity.lastModified
     )
 }

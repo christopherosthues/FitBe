@@ -9,6 +9,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -27,7 +28,8 @@ data class ExerciseEntity(
         Clock.System
             .now()
             .toLocalDateTime(TimeZone.UTC)
-            .date
+            .date,
+    val lastModified: Instant
 ) {
     fun toExercise(): Exercise =
         Exercise(
@@ -39,11 +41,12 @@ data class ExerciseEntity(
             default = default,
             recommendedFor = recommendedFor,
             exerciseType = exerciseType,
-            dateUtc = dateUtc
+            dateUtc = dateUtc,
+            lastModified = lastModified
         )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 fun Exercise.toExerciseEntity(): ExerciseEntity =
     ExerciseEntity(
         id = this.id,
@@ -54,5 +57,6 @@ fun Exercise.toExerciseEntity(): ExerciseEntity =
         default = this.default,
         recommendedFor = this.recommendedFor,
         exerciseType = this.exerciseType,
-        dateUtc = this.dateUtc
+        dateUtc = this.dateUtc,
+        lastModified = this.lastModified
     )

@@ -6,6 +6,7 @@ import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEquipmentCrossRef
 import org.darthacheron.fitbe.workouts.exercises.toExerciseEntity
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 data class EquipmentWithExercisesEntity(
@@ -22,7 +23,7 @@ data class EquipmentWithExercisesEntity(
     )
     val exercises: List<ExerciseEntity>
 ) {
-    @OptIn(ExperimentalUuidApi::class)
+    @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
     fun toEquipmentWithExercises(): EquipmentWithExercises =
         EquipmentWithExercises(
             id = equipment.id,
@@ -30,11 +31,12 @@ data class EquipmentWithExercisesEntity(
             default = equipment.default,
             dateUtc = equipment.dateUtc,
             imageUri = equipment.imageUri,
+            lastModified = equipment.lastModified,
             exercises = exercises.map { it.toExercise() }
         )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 fun EquipmentWithExercises.toEquipmentWithExercisesEntity(): EquipmentWithExercisesEntity =
     EquipmentWithExercisesEntity(
         equipment =
@@ -43,7 +45,8 @@ fun EquipmentWithExercises.toEquipmentWithExercisesEntity(): EquipmentWithExerci
                 name = this.name,
                 imageUri = this.imageUri,
                 default = this.default,
-                dateUtc = this.dateUtc
+                dateUtc = this.dateUtc,
+                lastModified = this.lastModified
             ),
         exercises = this.exercises.map { it.toExerciseEntity() }
     )

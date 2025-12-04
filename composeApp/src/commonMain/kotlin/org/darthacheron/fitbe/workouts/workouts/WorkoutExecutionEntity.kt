@@ -8,10 +8,11 @@ import androidx.room.PrimaryKey
 import kotlin.time.Instant
 import org.darthacheron.fitbe.profile.ProfileEntity // Assuming ProfileEntity exists
 import org.darthacheron.fitbe.workouts.exercises.ExerciseEntity
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Entity(
     tableName = "workout_executions",
     foreignKeys = [

@@ -6,6 +6,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -25,5 +26,6 @@ data class Profile(
         Clock.System
             .now()
             .toLocalDateTime(TimeZone.UTC)
-            .date
+            .date,
+    val lastModified: Instant
 )

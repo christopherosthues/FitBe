@@ -5,10 +5,12 @@ import kotlinx.datetime.LocalDate
 import org.darthacheron.fitbe.database.exerciseList
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 open class Exercise(
     open val id: Uuid,
     open val name: String,
@@ -18,7 +20,8 @@ open class Exercise(
     open val default: Boolean = false,
     open val recommendedFor: List<RecommendedFor>,
     open val exerciseType: ExerciseType,
-    open val dateUtc: LocalDate
+    open val dateUtc: LocalDate,
+    open val lastModified: Instant
 )
 
 @Composable

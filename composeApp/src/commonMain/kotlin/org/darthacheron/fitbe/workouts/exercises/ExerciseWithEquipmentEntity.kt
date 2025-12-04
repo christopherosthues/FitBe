@@ -5,6 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.equipment.TrainingEquipmentEntity
 import org.darthacheron.fitbe.workouts.equipment.toTrainingEquipmentEntity // Assuming this is for TrainingEquipment
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 data class ExerciseWithEquipmentEntity(
@@ -21,7 +22,7 @@ data class ExerciseWithEquipmentEntity(
     )
     val equipmentList: List<TrainingEquipmentEntity>
 ) {
-    @OptIn(ExperimentalUuidApi::class)
+    @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
     fun toExerciseWithEquipment(): ExerciseWithEquipment =
         ExerciseWithEquipment(
             id = exercise.id,
@@ -33,11 +34,12 @@ data class ExerciseWithEquipmentEntity(
             recommendedFor = exercise.recommendedFor,
             exerciseType = exercise.exerciseType,
             dateUtc = exercise.dateUtc,
+            lastModified = exercise.lastModified,
             equipmentList = equipmentList.map { it.toTrainingEquipment() }
         )
 }
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 fun toExerciseWithEquipmentEntity(exerciseWithEquipment: ExerciseWithEquipment): ExerciseWithEquipmentEntity =
     ExerciseWithEquipmentEntity(
         exercise =
@@ -50,7 +52,8 @@ fun toExerciseWithEquipmentEntity(exerciseWithEquipment: ExerciseWithEquipment):
                 default = exerciseWithEquipment.default,
                 recommendedFor = exerciseWithEquipment.recommendedFor,
                 exerciseType = exerciseWithEquipment.exerciseType,
-                dateUtc = exerciseWithEquipment.dateUtc
+                dateUtc = exerciseWithEquipment.dateUtc,
+                lastModified = exerciseWithEquipment.lastModified
             ),
         equipmentList = exerciseWithEquipment.equipmentList.map { it.toTrainingEquipmentEntity() }
     )

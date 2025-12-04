@@ -34,7 +34,8 @@ data class BodyWeightEntity(
     val bodyFatPercentage: Double?,
     val muscleMassInKg: Double?,
     val boneMassInKg: Double?,
-    val bodyWaterInPercentage: Double?
+    val bodyWaterInPercentage: Double?,
+    val lastModified: Instant
 ) {
     fun toBodyWeight(): BodyWeight =
         BodyWeight(
@@ -45,7 +46,8 @@ data class BodyWeightEntity(
             boneMassInKg = boneMassInKg,
             bodyWaterInPercentage = bodyWaterInPercentage,
             date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
-            profileId = profileId
+            profileId = profileId,
+            lastModified = lastModified
         )
 }
 
@@ -59,5 +61,6 @@ fun BodyWeight.toBodyWeightEntity(): BodyWeightEntity =
         boneMassInKg = this.boneMassInKg,
         bodyWaterInPercentage = this.bodyWaterInPercentage,
         dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
-        profileId = this.profileId
+        profileId = this.profileId,
+        lastModified = this.lastModified
     )

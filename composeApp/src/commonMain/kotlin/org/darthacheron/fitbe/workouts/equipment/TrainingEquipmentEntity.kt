@@ -9,6 +9,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -23,7 +24,8 @@ data class TrainingEquipmentEntity(
         Clock.System
             .now()
             .toLocalDateTime(TimeZone.UTC)
-            .date
+            .date,
+    val lastModified: Instant
 ) {
     fun toTrainingEquipment(): TrainingEquipment =
         TrainingEquipment(
@@ -31,7 +33,8 @@ data class TrainingEquipmentEntity(
             name = name,
             imageUri = imageUri,
             default = default,
-            dateUtc = dateUtc
+            dateUtc = dateUtc,
+            lastModified = lastModified
         )
 }
 
@@ -42,5 +45,6 @@ fun TrainingEquipment.toTrainingEquipmentEntity(): TrainingEquipmentEntity =
         name = this.name,
         imageUri = this.imageUri,
         default = this.default,
-        dateUtc = this.dateUtc
+        dateUtc = this.dateUtc,
+        lastModified = this.lastModified
     )

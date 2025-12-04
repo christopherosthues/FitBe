@@ -32,14 +32,16 @@ data class StepsEntity(
     @PrimaryKey(autoGenerate = false) val id: Uuid = Uuid.random(),
     val profileId: Uuid,
     val steps: Int,
-    val dateUtc: Instant
+    val dateUtc: Instant,
+    val lastModified: Instant
 ) {
     fun toSteps(): Steps =
         Steps(
             id = id,
             profileId = profileId,
             steps = steps.toUInt(),
-            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault())
+            date = dateUtc.toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.currentSystemDefault()),
+            lastModified = lastModified
         )
 }
 
@@ -49,5 +51,6 @@ fun Steps.toStepsEntity(): StepsEntity =
         id = this.id,
         profileId = this.profileId,
         steps = this.steps.toInt(),
-        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
+        dateUtc = this.date.toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC),
+        lastModified = this.lastModified
     )

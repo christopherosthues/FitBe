@@ -53,6 +53,7 @@ class ImportService(
         sleepRepository.upsertAll(importData.sleep.map { it.copy(profileId = profileId) })
         bodyWeightRepository.upsertAll(importData.bodyWeights.map { it.copy(profileId = profileId) })
 
+        // TODO: Check if AI has done something right
         importData.exercises.forEach { exercise ->
             exerciseRepository.upsertExercise(exercise.toExercise())
             exerciseRepository.updateExerciseEquipmentLinks(exercise.id, exercise.equipmentIds)

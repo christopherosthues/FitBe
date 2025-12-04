@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import org.darthacheron.fitbe.workouts.equipment.DefaultTrainingEquipmentEntity
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 class DefaultExerciseWithEquipmentEntity(
@@ -20,7 +21,7 @@ class DefaultExerciseWithEquipmentEntity(
     )
     val equipmentList: List<DefaultTrainingEquipmentEntity>
 ) {
-    @OptIn(ExperimentalUuidApi::class)
+    @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
     fun toExerciseWithEquipment(): ExerciseWithEquipment =
         ExerciseWithEquipment(
             id = exercise.id,
@@ -32,6 +33,7 @@ class DefaultExerciseWithEquipmentEntity(
             recommendedFor = exercise.recommendedFor,
             exerciseType = exercise.exerciseType,
             dateUtc = exercise.dateUtc,
-            equipmentList = equipmentList.map { it.toTrainingEquipment() }
+            lastModified = exercise.lastModified,
+            equipmentList = equipmentList.map { it.toTrainingEquipment() },
         )
 }
