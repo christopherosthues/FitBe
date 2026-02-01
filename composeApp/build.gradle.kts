@@ -1,13 +1,9 @@
-import com.android.build.gradle.internal.tasks.projectHasAnnotationProcessors
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
@@ -34,10 +30,24 @@ val appVersionName = project.property("appVersionName") as String
 //}
 
 kotlin {
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    androidLibrary {
+        namespace = "compose.org.darthacheron.fitbe"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        withHostTestBuilder {}.configure {
+            isIncludeAndroidResources = true
+        }
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }
+
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_25)
+        }
+
+        androidResources {
+            enable = true
         }
     }
 
@@ -52,7 +62,11 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_25)
+        }
+    }
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -131,32 +145,6 @@ kotlin {
     }
 }
 
-android {
-    namespace = "org.darthacheron.fitbe"
-    compileSdk =
-        libs.versions.android.compileSdk
-            .get()
-            .toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
-    }
-}
-
 ktlint {
     version.set(
         libs.versions.ktlint.lint
@@ -188,7 +176,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    androidRuntimeClasspath(libs.compose.uiTooling)
 
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosX64", libs.androidx.room.compiler)
