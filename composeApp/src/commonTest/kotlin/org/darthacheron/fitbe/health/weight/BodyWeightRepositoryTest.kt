@@ -55,7 +55,8 @@ class BodyWeightRepositoryTest {
                     targetKcal = 2000,
                     targetBeverageInMilliliter = 2000,
                     targetSleepDuration = 8,
-                    dateOfBirth = LocalDate(2000, 1, 1)
+                    dateOfBirth = LocalDate(2000, 1, 1),
+                    lastModified = null
                 )
             db.profileDao.upsertProfile(profile)
         }
@@ -250,7 +251,8 @@ class BodyWeightRepositoryTest {
                 muscleMassInKg = 80.0,
                 boneMassInKg = 80.0,
                 bodyFatPercentage = 80.0,
-                bodyWaterInPercentage = 80.0
+                bodyWaterInPercentage = 80.0,
+                lastModified = null
             )
         bodyWeightDao.upsertBodyWeight(entity)
     }

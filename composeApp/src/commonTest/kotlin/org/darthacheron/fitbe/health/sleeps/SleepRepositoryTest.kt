@@ -55,7 +55,8 @@ class SleepRepositoryTest {
                     targetKcal = 2000,
                     targetBeverageInMilliliter = 2000,
                     targetSleepDuration = 8,
-                    dateOfBirth = LocalDate(2000, 1, 1)
+                    dateOfBirth = LocalDate(2000, 1, 1),
+                    lastModified = null
                 )
             )
         }
@@ -282,7 +283,8 @@ class SleepRepositoryTest {
             SleepEntity(
                 profileId = testProfileId,
                 startDateTime = start,
-                endDateTime = end
+                endDateTime = end,
+                lastModified = null
             )
         )
     }

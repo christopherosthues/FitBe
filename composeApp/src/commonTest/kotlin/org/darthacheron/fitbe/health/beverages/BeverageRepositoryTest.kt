@@ -55,7 +55,8 @@ class BeverageRepositoryTest {
                     targetKcal = 2000,
                     targetBeverageInMilliliter = 2000,
                     targetSleepDuration = 8,
-                    dateOfBirth = LocalDate(2000, 1, 1)
+                    dateOfBirth = LocalDate(2000, 1, 1),
+                    lastModified = null
                 )
             db.profileDao.upsertProfile(profile)
         }
@@ -235,7 +236,8 @@ class BeverageRepositoryTest {
                 dateUtc = utcInstant,
                 amount = 250.0,
                 beverage = "Water",
-                unit = FluidUnit.Milliliter
+                unit = FluidUnit.Milliliter,
+                lastModified = null
             )
         beverageDao.upsertBeverage(entity)
     }

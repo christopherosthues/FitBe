@@ -53,7 +53,8 @@ class StepsRepositoryTest {
                     targetKcal = 2000,
                     targetBeverageInMilliliter = 2000,
                     targetSleepDuration = 8,
-                    dateOfBirth = LocalDate(2000, 1, 1)
+                    dateOfBirth = LocalDate(2000, 1, 1),
+                    lastModified = null
                 )
             profileDao.upsertProfile(profile)
         }
@@ -251,7 +252,8 @@ class StepsRepositoryTest {
             StepsEntity(
                 profileId = testProfileId,
                 dateUtc = dateUtc,
-                steps = steps
+                steps = steps,
+                lastModified = null
             )
         )
     }
