@@ -18,6 +18,6 @@ data class ExerciseWithEquipment(
     override val recommendedFor: List<RecommendedFor>,
     override val exerciseType: ExerciseType,
     override val dateUtc: LocalDate,
-    override val lastModified: Instant,
+    override val lastModified: Instant?,
     val equipmentList: List<TrainingEquipment>
 ) : Exercise(id, name, guide, targetMuscleGroups, imageUri, default, recommendedFor, exerciseType, dateUtc, lastModified)

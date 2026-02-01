@@ -39,7 +39,7 @@ data class Beverage(
     val amount: Double,
     val beverage: String,
     val unit: FluidUnit,
-    val lastModified: Instant
+    val lastModified: Instant? = null
 ) {
     @Composable
     fun localizedString(): String {

@@ -53,10 +53,12 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 0,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             ),
                             WorkoutTemplateExercise(
                                 id = Uuid.random(),
@@ -75,10 +77,12 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 1,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             ),
                             WorkoutTemplateExercise(
                                 id = Uuid.random(),
@@ -97,12 +101,15 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 2,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             )
-                        )
+                        ),
+                    lastModified = null
                 ),
                 WorkoutTemplate(
                     id = dummyTemplate2Id,
@@ -129,10 +136,12 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 0,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             ),
                             WorkoutTemplateExercise(
                                 id = Uuid.random(),
@@ -151,10 +160,12 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 1,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             ),
                             WorkoutTemplateExercise(
                                 id = Uuid.random(),
@@ -173,12 +184,15 @@ class WorkoutTemplateRepository(
                                             Clock.System
                                                 .now()
                                                 .toLocalDateTime(TimeZone.UTC)
-                                                .date
+                                                .date,
+                                        lastModified = null
                                     ),
                                 exerciseOrder = 2,
-                                sets = emptyList()
+                                sets = emptyList(),
+                                lastModified = null
                             )
-                        )
+                        ),
+                    lastModified = null
                 )
             )
         return dummyTemplates

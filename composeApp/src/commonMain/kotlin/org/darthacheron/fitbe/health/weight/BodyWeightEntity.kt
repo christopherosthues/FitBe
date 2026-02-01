@@ -35,7 +35,7 @@ data class BodyWeightEntity(
     val muscleMassInKg: Double?,
     val boneMassInKg: Double?,
     val bodyWaterInPercentage: Double?,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toBodyWeight(): BodyWeight =
         BodyWeight(

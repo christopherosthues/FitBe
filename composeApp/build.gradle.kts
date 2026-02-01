@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
@@ -19,19 +19,19 @@ plugins {
 
 val appVersionName = project.property("appVersionName") as String
 
-val generateVersionFile by tasks.registering {
-    val outputDir = layout.buildDirectory.dir("generated/version")
-    outputs.dir(outputDir)
-    doLast {
-        val versionFile = outputDir.get().file("org/darthacheron/fitbe/Version.kt").asFile
-        versionFile.parentFile.mkdirs()
-        versionFile.writeText("""
-            package org.darthacheron.fitbe
-
-            const val APP_VERSION = "$appVersionName"
-        """.trimIndent())
-    }
-}
+//val generateVersionFile by tasks.registering {
+//    val outputDir = layout.buildDirectory.dir("generated/version")
+//    outputs.dir(outputDir)
+//    doLast {
+//        val versionFile = outputDir.get().file("org/darthacheron/fitbe/Version.kt").asFile
+//        versionFile.parentFile.mkdirs()
+//        versionFile.writeText("""
+//            package org.darthacheron.fitbe
+//
+//            const val APP_VERSION = "$appVersionName"
+//        """.trimIndent())
+//    }
+//}
 
 kotlin {
     androidTarget {
@@ -79,14 +79,6 @@ kotlin {
 //    }
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.activity.compose)
-
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-//            implementation(libs.koin.androidx.compose.navigation)
-        }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -94,7 +86,7 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
             api(libs.koin.core)
@@ -133,9 +125,35 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
-        val commonMain by getting {
-            kotlin.srcDir(generateVersionFile.map { it.outputs.files.singleFile })
+//        val commonMain by getting {
+//            kotlin.srcDir(generateVersionFile.map { it.outputs.files.singleFile })
+//        }
+    }
+}
+
+android {
+    namespace = "org.darthacheron.fitbe"
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 }
 
@@ -166,42 +184,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     compilerOptions {
         freeCompilerArgs.add("-opt-in=kotlin.uuid.ExperimentalUuidApi")
         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
-}
-
-android {
-    namespace = "org.darthacheron.fitbe"
-    compileSdk =
-        libs.versions.android.compileSdk
-            .get()
-            .toInt()
-
-    defaultConfig {
-        applicationId = "org.darthacheron.fitbe"
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
-        targetSdk =
-            libs.versions.android.targetSdk
-                .get()
-                .toInt()
-        versionCode = project.property("appVersionCode").toString().toInt()
-        versionName = appVersionName
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
     }
 }
 

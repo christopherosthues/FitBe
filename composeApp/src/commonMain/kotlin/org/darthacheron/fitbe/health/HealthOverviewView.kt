@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.darthacheron.fitbe.health.beverages.BeverageOverviewViewModel
 import org.darthacheron.fitbe.health.beverages.PlotBeverages
@@ -24,7 +25,6 @@ import org.darthacheron.fitbe.health.weight.PlotBodyWeights
 import org.darthacheron.fitbe.health.weight.BodyWeightOverviewViewModel
 import org.darthacheron.fitbe.settings.Settings
 import org.darthacheron.fitbe.settings.SettingsRepository
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)

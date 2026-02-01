@@ -17,7 +17,7 @@ open class TrainingEquipment(
     open val imageUri: String? = null,
     open val default: Boolean = false,
     open val dateUtc: LocalDate,
-    open val lastModified: Instant
+    open val lastModified: Instant? = null
 )
 
 @Composable

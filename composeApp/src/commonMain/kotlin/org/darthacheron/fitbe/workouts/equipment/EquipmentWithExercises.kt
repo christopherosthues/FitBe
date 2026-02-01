@@ -14,6 +14,6 @@ data class EquipmentWithExercises(
     override val default: Boolean = false,
     override val imageUri: String? = null,
     override val dateUtc: LocalDate,
-    override val lastModified: Instant,
+    override val lastModified: Instant?,
     val exercises: List<Exercise>
 ) : TrainingEquipment(id, name, imageUri, default, dateUtc, lastModified)

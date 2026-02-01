@@ -50,7 +50,8 @@ class PrepopulateCallback(
                     id = equipment.id,
                     name = equipment.key,
                     imageUri = equipment.key,
-                    default = true
+                    default = true,
+                    lastModified = null
                 )
             equipmentDao.upsertEquipment(equipment)
             equipmentDao.insertDefaultEquipment(
@@ -73,7 +74,8 @@ class PrepopulateCallback(
                     targetMuscleGroups = exerciseData.muscleGroups,
                     recommendedFor = exerciseData.recommendedFor,
                     exerciseType = exerciseData.exerciseType,
-                    default = true
+                    default = true,
+                    lastModified = null
                 )
             exerciseDao.upsertExercise(exercise)
             exerciseDao.insertDefaultExercise(

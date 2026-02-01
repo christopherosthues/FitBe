@@ -33,7 +33,7 @@ data class StepsEntity(
     val profileId: Uuid,
     val steps: Int,
     val dateUtc: Instant,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toSteps(): Steps =
         Steps(

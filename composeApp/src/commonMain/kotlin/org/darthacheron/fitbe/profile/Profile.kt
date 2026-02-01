@@ -27,5 +27,5 @@ data class Profile(
             .now()
             .toLocalDateTime(TimeZone.UTC)
             .date,
-    val lastModified: Instant
+    val lastModified: Instant? = null
 )

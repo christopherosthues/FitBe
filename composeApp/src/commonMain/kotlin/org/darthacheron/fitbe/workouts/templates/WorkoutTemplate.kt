@@ -15,7 +15,7 @@ data class WorkoutTemplate(
     val description: String? = null,
     val imageUri: String? = null,
     val default: Boolean = false,
-    val lastModified: Instant,
+    val lastModified: Instant?,
     // This will be populated by joining with WorkoutTemplateExercise and WorkoutTemplateSet
     val exercises: List<WorkoutTemplateExercise> = emptyList()
 )

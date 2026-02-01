@@ -25,7 +25,7 @@ data class TrainingEquipmentEntity(
             .now()
             .toLocalDateTime(TimeZone.UTC)
             .date,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toTrainingEquipment(): TrainingEquipment =
         TrainingEquipment(

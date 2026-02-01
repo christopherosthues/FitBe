@@ -16,7 +16,7 @@ data class DefaultWorkoutTemplateEntity(
     @ColumnInfo(name = "name") val name: String,
     val description: String? = null,
     val imageUri: String? = null,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toWorkoutTemplateEntity(): WorkoutTemplateEntity =
         WorkoutTemplateEntity(

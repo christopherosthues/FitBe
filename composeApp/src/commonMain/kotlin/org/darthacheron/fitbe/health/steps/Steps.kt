@@ -14,5 +14,5 @@ data class Steps(
     @Transient val profileId: Uuid = Uuid.random(),
     val steps: UInt,
     val date: Instant,
-    val lastModified: Instant
+    val lastModified: Instant? = null
 )

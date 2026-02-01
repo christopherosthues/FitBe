@@ -25,7 +25,7 @@ data class ProfileEntity(
     val targetSteps: Int?,
     val bodyHeightInCm: Double?,
     val dateOfBirth: LocalDate?,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toProfile(): Profile =
         Profile(

@@ -4,7 +4,6 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.writeString
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
-import org.darthacheron.fitbe.APP_VERSION
 import org.darthacheron.fitbe.health.beverages.BeverageRepository
 import org.darthacheron.fitbe.health.sleep.SleepRepository
 import org.darthacheron.fitbe.health.steps.StepsRepository
@@ -33,7 +32,7 @@ class ExportService(
 
         // TODO: Not all properties of the profile are exported yet
         val dataToExport = FitBeExportData(
-            appVersion = APP_VERSION,
+            appVersion = "1.0.0",//APP_VERSION,
             profile = profile,
             beverages = if (exportState.exportBeverages) {
                 beverageRepository.getAllBeveragesForProfile(profileId)

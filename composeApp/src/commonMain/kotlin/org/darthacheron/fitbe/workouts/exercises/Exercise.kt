@@ -21,7 +21,7 @@ open class Exercise(
     open val recommendedFor: List<RecommendedFor>,
     open val exerciseType: ExerciseType,
     open val dateUtc: LocalDate,
-    open val lastModified: Instant
+    open val lastModified: Instant? = null
 )
 
 @Composable

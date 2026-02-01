@@ -29,7 +29,7 @@ data class ExerciseEntity(
             .now()
             .toLocalDateTime(TimeZone.UTC)
             .date,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toExercise(): Exercise =
         Exercise(

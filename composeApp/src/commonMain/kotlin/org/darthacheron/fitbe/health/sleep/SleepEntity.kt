@@ -31,7 +31,7 @@ data class SleepEntity(
     val profileId: Uuid,
     val startDateTime: Instant,
     val endDateTime: Instant,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toSleep(): Sleep =
         Sleep(

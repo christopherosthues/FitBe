@@ -173,7 +173,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
             SleepEntity(
                 profileId = profile.id,
                 startDateTime = startInstant,
-                endDateTime = endInstant
+                endDateTime = endInstant,
+                lastModified = null
             )
         sleepDao.upsertSleep(sleep)
 
@@ -189,7 +190,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                     beverage = beverageNames.random(),
                     amount = Random.nextInt(200, 1500).toDouble(),
                     unit = FluidUnit.Milliliter,
-                    profileId = profile.id
+                    profileId = profile.id,
+                    lastModified = null
                 )
             beverageDao.upsertBeverage(beverage)
         }
@@ -203,7 +205,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                         .toLocalDateTime(TimeZone.UTC)
                         .toInstant(TimeZone.UTC)
                         .minus((i - 1).days),
-                profileId = profile.id
+                profileId = profile.id,
+                lastModified = null
             )
         stepsDao.upsertSteps(steps)
 
@@ -231,7 +234,8 @@ suspend fun seedDatabase(db: FitBeDatabase) {
                 bodyFatPercentage = bodyFatPercentage.roundToDecimals(2),
                 bodyWaterInPercentage = bodyWaterPercentage.roundToDecimals(2),
                 weightInKg = weightInKg,
-                profileId = profile.id
+                profileId = profile.id,
+                lastModified = null
             )
         bodyWeightDao.upsertBodyWeight(bodyWeight)
     }

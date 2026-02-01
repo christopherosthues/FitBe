@@ -15,7 +15,7 @@ data class WorkoutTemplateEntity(
     val description: String? = null,
     val imageUri: String? = null,
     val default: Boolean = false,
-    val lastModified: Instant
+    val lastModified: Instant?
 ) {
     fun toWorkoutTemplate(): WorkoutTemplate =
         WorkoutTemplate(

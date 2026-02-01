@@ -12,6 +12,6 @@ data class WorkoutTemplateExercise(
     val workoutTemplateId: Uuid,
     val exercise: Exercise, // Optionally, you might want to hold the resolved Exercise object here
     val exerciseOrder: Int,
-    val lastModified: Instant,
+    val lastModified: Instant?,
     val sets: List<WorkoutTemplateSet> = emptyList()
 )
